@@ -8,17 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		DB8C829728280289003DDED1 /* HordeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829628280289003DDED1 /* HordeApp.swift */; };
-		DB8C829928280289003DDED1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829828280289003DDED1 /* ContentView.swift */; };
+		DB8C829928280289003DDED1 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829828280289003DDED1 /* GameView.swift */; };
 		DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB8C829A2828028B003DDED1 /* Assets.xcassets */; };
 		DB8C829E2828028B003DDED1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB8C829D2828028B003DDED1 /* Preview Assets.xcassets */; };
+		DB8C82A528280349003DDED1 /* Card+Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C82A428280349003DDED1 /* Card+Deck.swift */; };
+		DB8C82A7282804EB003DDED1 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C82A6282804EB003DDED1 /* GameViewModel.swift */; };
+		DB97BC1A282A6783001A216C /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB97BC19282A6783001A216C /* DownloadManager.swift */; };
+		DB97BC1C282A8318001A216C /* DeckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB97BC1B282A8318001A216C /* DeckManager.swift */; };
+		DB97BC1E282AEA5C001A216C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB97BC1D282AEA5C001A216C /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		DB8C829328280289003DDED1 /* Horde.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Horde.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB8C829628280289003DDED1 /* HordeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HordeApp.swift; sourceTree = "<group>"; };
-		DB8C829828280289003DDED1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DB8C829828280289003DDED1 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		DB8C829A2828028B003DDED1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DB8C829D2828028B003DDED1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DB8C82A428280349003DDED1 /* Card+Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+Deck.swift"; sourceTree = "<group>"; };
+		DB8C82A6282804EB003DDED1 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		DB97BC19282A6783001A216C /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
+		DB97BC1B282A8318001A216C /* DeckManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckManager.swift; sourceTree = "<group>"; };
+		DB97BC1D282AEA5C001A216C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,9 +62,14 @@
 			isa = PBXGroup;
 			children = (
 				DB8C829628280289003DDED1 /* HordeApp.swift */,
-				DB8C829828280289003DDED1 /* ContentView.swift */,
+				DB8C829828280289003DDED1 /* GameView.swift */,
 				DB8C829A2828028B003DDED1 /* Assets.xcassets */,
 				DB8C829C2828028B003DDED1 /* Preview Content */,
+				DB8C82A428280349003DDED1 /* Card+Deck.swift */,
+				DB8C82A6282804EB003DDED1 /* GameViewModel.swift */,
+				DB97BC19282A6783001A216C /* DownloadManager.swift */,
+				DB97BC1B282A8318001A216C /* DeckManager.swift */,
+				DB97BC1D282AEA5C001A216C /* Extensions.swift */,
 			);
 			path = Horde;
 			sourceTree = "<group>";
@@ -137,8 +152,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB8C829928280289003DDED1 /* ContentView.swift in Sources */,
+				DB8C82A7282804EB003DDED1 /* GameViewModel.swift in Sources */,
+				DB97BC1A282A6783001A216C /* DownloadManager.swift in Sources */,
+				DB8C829928280289003DDED1 /* GameView.swift in Sources */,
 				DB8C829728280289003DDED1 /* HordeApp.swift in Sources */,
+				DB97BC1C282A8318001A216C /* DeckManager.swift in Sources */,
+				DB8C82A528280349003DDED1 /* Card+Deck.swift in Sources */,
+				DB97BC1E282AEA5C001A216C /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,8 +293,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -284,7 +305,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -302,8 +323,9 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -313,7 +335,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};

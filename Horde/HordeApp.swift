@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct HordeApp: App {
+    
+    let gameViewModel = GameViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GameView()
+                .environmentObject(gameViewModel)
+                .statusBar(hidden: true)
         }
     }
 }
