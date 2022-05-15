@@ -61,7 +61,7 @@ struct GameView: View {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             castedCardViewOpacity = 0
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                gameViewModel.cardsToCast = CardsToCast(cardsFromCemetery: [], tokensFromLibrary: [], cardFromLibrary: Card(cardType: .creature, cardImage: ""))
+                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
                             }
                         }
                     }
@@ -106,15 +106,15 @@ struct HordeBoardView: View {
         HStack {
             VStack(spacing: 40) {
 
-                // Cemetery
+                // Graveyard
                 
                 ZStack {
-                    if gameViewModel.cardsOnCemetery.count > 0 {
+                    if gameViewModel.cardsOnGraveyard.count > 0 {
                         Button(action: {
                             print("Show Graveyard")
                             gameViewModel.showGraveyard = true
                         }, label: {
-                            CardView(imageUrl: gameViewModel.cardsOnCemetery.last!.cardImage)
+                            CardView(cardName: gameViewModel.cardsOnGraveyard.last!.cardName, imageUrl: gameViewModel.cardsOnGraveyard.last!.cardImage)
                                 .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                                 .cornerRadius(15)
                         })
@@ -124,7 +124,7 @@ struct HordeBoardView: View {
                             .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                             .opacity(0.5)
                     }
-                    Text("\(gameViewModel.cardsOnCemetery.count)")
+                    Text("\(gameViewModel.cardsOnGraveyard.count)")
                         .fontWeight(.bold)
                         .font(.title)
                         .foregroundColor(.white)
@@ -193,7 +193,7 @@ struct ControlBarView: View {
                     .font(.largeTitle)
                     .foregroundColor(.white)
             }.frame(width: 80)
-            */
+
             // Undo
             
             Button(action: {
@@ -203,7 +203,7 @@ struct ControlBarView: View {
                     .font(.largeTitle)
                     .foregroundColor(.white)
             }.frame(width: 80)
-            
+             */
             // BoardWipe
             
             HStack {
@@ -253,7 +253,7 @@ struct ControlBarView: View {
                         print("Create token button pressed")
                         gameViewModel.createToken(token: token)
                     }, label: {
-                        CardView(imageUrl: token.cardImage)
+                        CardView(cardName: token.cardName, imageUrl: token.cardImage)
                             .frame(width: CardSize.width.small, height: CardSize.height.small)
                             .cornerRadius(CardSize.cornerRadius.small)
                     })
@@ -266,16 +266,7 @@ struct ControlBarView: View {
                 print("New turn pressed")
                 gameViewModel.nextButtonPressed()
             }, label: {
-                Text("New turn")
-                    .fontWeight(.bold)
-                    .font(.title2)
-                    .padding()
-                    .frame(width: 150)
-                    .background(Color("MainColor"))
-                    .cornerRadius(40)
-                    .foregroundColor(.white)
-                    .padding(10)
-                    .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+                PurpleButtonLabel(text: "New Turn")
             }).disabled(gameViewModel.deck.count == 0 || nexButtonDisable)
                 .onChange(of: gameViewModel.turnStep) { _ in
                     if gameViewModel.turnStep == 1 {
@@ -311,15 +302,15 @@ struct CastedCardView: View {
             ScrollView(.horizontal) {
                 HStack(spacing: 50) {
                     // Flahsback cards if any
-                    if gameViewModel.cardsToCast.cardsFromCemetery.count > 0 {
+                    if gameViewModel.cardsToCast.cardsFromGraveyard.count > 0 {
                         VStack {
-                            Text("From Cemetery")
+                            Text("From Graveyard")
                                 .fontWeight(.bold)
                                 .font(.title)
                                 .foregroundColor(.white)
                                 .frame(height: 50)
                             HStack(spacing: 36) {
-                                ForEach(gameViewModel.cardsToCast.cardsFromCemetery) { card in
+                                ForEach(gameViewModel.cardsToCast.cardsFromGraveyard) { card in
                                     CardToCastView(card: card)
                                 }
                             }
@@ -419,7 +410,7 @@ struct GraveyardView: View {
             ScrollView(.horizontal) {
                 HStack(spacing: 50) {
                     Rectangle().frame(width: 40, height: 0)
-                    ForEach(gameViewModel.cardsOnCemetery) { card in
+                    ForEach(gameViewModel.cardsOnGraveyard) { card in
                         VStack(spacing: 15) {
                             Button(action: {
                                 print("Exile card in graveyard button pressed")
@@ -452,7 +443,8 @@ struct GraveyardView: View {
 struct CardView: View {
     @ObservedObject var downloadManager: DownloadManager
     @State var image:UIImage = UIImage()
-    var imageUrl: String
+    //var cardName: String
+    //var imageUrl: String
     
     var CardImage: Image {
         if downloadManager.imageReadyToShow {
@@ -462,9 +454,9 @@ struct CardView: View {
         return Image("BackgroundTest")
     }
     
-    init(imageUrl: String) {
-        self.imageUrl = imageUrl
-        downloadManager = DownloadManager(urlString: imageUrl)
+    init(cardName: String, imageUrl: String) {
+        //self.imageUrl = imageUrl
+        downloadManager = DownloadManager(cardName: cardName, urlString: imageUrl)
     }
     
     var body: some View {
@@ -480,7 +472,7 @@ struct CardToCastView: View {
     
     var body: some View {
         ZStack {
-            CardView(imageUrl: card.cardImage)
+            CardView(cardName: card.cardName, imageUrl: card.cardImage)
                 .frame(width: CardSize.width.big, height: CardSize.height.big)
                 .cornerRadius(CardSize.cornerRadius.big)
                 .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
@@ -552,7 +544,7 @@ struct CardOnBoardView: View {
             gameViewModel.removeOneCardOnBoard(card: card)
         }, label: {
             ZStack {
-                CardView(imageUrl: card.cardImage)
+                CardView(cardName: card.cardName, imageUrl: card.cardImage)
                     .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                     .cornerRadius(CardSize.cornerRadius.normal)
                 if card.cardCount > 1 {
@@ -605,3 +597,22 @@ struct ContentView_Previews: PreviewProvider {
         }
     }
 }
+
+struct PurpleButtonLabel: View {
+    
+    var text: String
+    
+    var body: some View {
+        Text(text)
+            .fontWeight(.bold)
+            .font(.title2)
+            .padding()
+            .frame(width: 150)
+            .background(Color("MainColor"))
+            .cornerRadius(40)
+            .foregroundColor(.white)
+            .padding(10)
+            .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+    }
+}
+

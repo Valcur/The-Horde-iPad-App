@@ -12,7 +12,7 @@ class GameViewModel: ObservableObject {
     @Published var turnStep: Int = 0
     @Published var cardsToCast: CardsToCast
     @Published var cardsOnBoard: [Card] = []
-    @Published var cardsOnCemetery: [Card] = []
+    @Published var cardsOnGraveyard: [Card] = []
     
     @Published var deck: [Card] = []
     
@@ -21,7 +21,7 @@ class GameViewModel: ObservableObject {
     @Published var damageTakenThisTurn: Int = 0
     
     /** Turn order
-        1) launch all in cemetery
+        1) launch all in graveyard
           draw until a non token card is revealed
           show them to players until next is pressed
         2) show board to let player resolve card effects and deal with the attack
@@ -32,27 +32,29 @@ class GameViewModel: ObservableObject {
     
     init() {
         //super.init()
-        cardsToCast = CardsToCast(cardsFromCemetery: [], tokensFromLibrary: [], cardFromLibrary: Card(cardType: .creature, cardImage: ""))
+        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
         
-        let deckManager = DeckManager()
-        let deckAndTokens = deckManager.getZombieClassicDeck()
+        let deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
+        print("Game initiating with deck \(deckPickedId)")
+        //let deckAndTokens = deckManager.getZombieClassicDeck()
+        let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId)
         self.deck = deckAndTokens.0
         self.tokensAvailable = deckAndTokens.1
     }
     
     func startNewHordeStep() {
         // Draw until nonToken card is drawed
-        // If cemetery have cards with flashback, take it off from cemetery
+        // If graveyard have cards with flashback, take it off from graveyard
         // Show all cards
         
         if turnStep == 1 {
             cardsToCast = drawUntilNonToken()
-            cardsToCast.cardsFromCemetery = searchCemeteryForFlashback()
+            cardsToCast.cardsFromGraveyard = searchGraveyardForFlashback()
         }
         if turnStep == 2 {
-            // Add cards to board or cemetery
+            // Add cards to board or graveyard
             if cardsToCast.cardFromLibrary.cardType == .instant || cardsToCast.cardFromLibrary.cardType == .sorcery {
-                cardsOnCemetery.append(cardsToCast.cardFromLibrary)
+                cardsOnGraveyard.append(cardsToCast.cardFromLibrary)
             } else if cardsToCast.cardFromLibrary.cardType != .token {
                 addCardToBoard(card: cardsToCast.cardFromLibrary)
             }
@@ -82,7 +84,7 @@ class GameViewModel: ObservableObject {
         // We regroup tokens
         tokensRevealed = regroupSameCardInArray(cardArray: tokensRevealed)
         
-        return CardsToCast(cardsFromCemetery: [], tokensFromLibrary: tokensRevealed, cardFromLibrary: cardRevealed)
+        return CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: tokensRevealed, cardFromLibrary: cardRevealed)
     }
     
     func regroupSameCardInArray(cardArray: [Card]) -> [Card] {
@@ -103,24 +105,24 @@ class GameViewModel: ObservableObject {
         return tmpArray
     }
     
-    func searchCemeteryForFlashback() -> [Card] {
-        var cardsFromCemetery: [Card] = []
+    func searchGraveyardForFlashback() -> [Card] {
+        var cardsFromGraveyard: [Card] = []
         var i = 0
-        while i < cardsOnCemetery.count {
-            if cardsOnCemetery[i].hasFlashback {
-                let tmpCard = cardsOnCemetery.remove(at: i)
-                cardsFromCemetery.append(tmpCard)
+        while i < cardsOnGraveyard.count {
+            if cardsOnGraveyard[i].hasFlashback {
+                let tmpCard = cardsOnGraveyard.remove(at: i)
+                cardsFromGraveyard.append(tmpCard)
                 i -= 1
             }
             i += 1
         }
-        //cardsFromCemetery = regroupSameCardInArray(cardArray: cardsFromCemetery)
-        return cardsFromCemetery
+        //cardsFromGraveyard = regroupSameCardInArray(cardArray: cardsFromGraveyard)
+        return cardsFromGraveyard
     }
     
     func sendToGraveyard(card: Card) {
         if card.cardType != .token {
-            cardsOnCemetery.append(card)
+            cardsOnGraveyard.append(card)
         }
     }
     
@@ -182,7 +184,7 @@ class GameViewModel: ObservableObject {
     }
     
     func createToken(token: Card) {
-        cardsOnBoard.append(Card(cardType: .token, cardImage: token.cardImage))
+        cardsOnBoard.append(Card(cardName: token.cardName, cardType: .token, cardImage: token.cardImage))
         cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
     }
     
@@ -195,9 +197,9 @@ class GameViewModel: ObservableObject {
     }
     
     func removeCardFromGraveyard(card: Card) {
-        for i in 0..<cardsOnCemetery.count {
-            if cardsOnCemetery[i] == card {
-                cardsOnCemetery.remove(at: i)
+        for i in 0..<cardsOnGraveyard.count {
+            if cardsOnGraveyard[i] == card {
+                cardsOnGraveyard.remove(at: i)
                 return
             }
         }
@@ -207,7 +209,7 @@ class GameViewModel: ObservableObject {
         if deck.count > 0 {
             let card = deck.removeLast()
             if card.cardType != .token {
-                cardsOnCemetery.append(card)
+                cardsOnGraveyard.append(card)
             }
             damageTakenThisTurn += 1
         }

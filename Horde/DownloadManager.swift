@@ -12,11 +12,11 @@ class DownloadManager: ObservableObject {
     @Published var data = Data()
     @Published var imageReadyToShow = false
 
-    init(urlString: String) {
+    init(cardName: String, urlString: String) {
         if urlString != "" {
             let url = URL(string: urlString)!
 
-            loadData(url: url) { (data, error) in
+            loadData(cardName: cardName, url: url) { (data, error) in
                 // Handle the loaded file data
                 if error == nil {
                     self.data = data! as Data
@@ -63,11 +63,11 @@ class DownloadManager: ObservableObject {
         task.resume()
     }
     
-    func loadData(url: URL, completion: @escaping (Data?, Error?) -> Void) {
+    func loadData(cardName: String, url: URL, completion: @escaping (Data?, Error?) -> Void) {
         // Compute a path to the URL in the cache
         let fileCachePath = FileManager.default.temporaryDirectory
             .appendingPathComponent(
-                url.lastPathComponent,
+                cardName,
                 isDirectory: false
             )
         

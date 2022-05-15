@@ -10,15 +10,22 @@ import Foundation
 class Card: Hashable, Identifiable {
     
     let id = UUID()
+    let cardName: String
     let cardType: CardType
     let cardImage: String
     let hasFlashback: Bool
     @Published var cardCount: Int = 1
     
-    init(cardType: CardType, cardImage: String, hasFlashback: Bool = false){
+    init(cardName: String, cardType: CardType, cardImage: String = "get-on-scryfall", hasFlashback: Bool = false){
         self.cardType = cardType
-        self.cardImage = cardImage
         self.hasFlashback = hasFlashback
+        self.cardName = cardName
+        
+        if cardImage == "get-on-scryfall" {
+            self.cardImage = DeckManager.getScryfallImageUrl(name: cardName)
+        } else {
+            self.cardImage = cardImage
+        }
         
         // We make a unique Int from the url for faster comparison between cards (instead of comparing url)
         /*let cardStringLength = 8 // Size
@@ -40,7 +47,7 @@ class Card: Hashable, Identifiable {
 }
 
 struct CardsToCast {
-    var cardsFromCemetery: [Card]
+    var cardsFromGraveyard: [Card]
     var tokensFromLibrary: [Card]
     var cardFromLibrary: Card
 }
