@@ -17,11 +17,8 @@ struct GameView: View {
     
     var body: some View {
         ZStack {
-            //LinearGradient(gradient: gradient, startPoint: .bottomTrailing, endPoint: .topLeading)
-                //.ignoresSafeArea()
-            Color("DarkColor")
+            LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
-                
             
             VStack {
                 HordeBoardView()
@@ -164,12 +161,19 @@ struct HordeBoardView: View {
                         .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
                 }
             }.frame(height: CardSize.height.normal * 2 + 50).padding(.bottom, 10)
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 40), count: 2), alignment: .top, spacing: 15) {
                     ForEach(gameViewModel.cardsOnBoard) { card in
                         CardOnBoardView(card: card)
+                            .transition(.scale.combined(with: .opacity))
                     }
-                }.padding(.leading, 10)
+                    /*
+                    ForEach(0..<gameViewModel.cardsOnBoard.count, id: \.self) { i in
+                        CardOnBoardView(card: gameViewModel.cardsOnBoard[i])
+                            .transition(.asymmetric(insertion: AnyTransition.scale, removal: .offset(x: -floor(i / 2 + 1) * CardSize.width.normal, y: (i % 2) * CardSize.height.normal).combined(with: .opacity)))
+                    }*/
+                }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5))
             }.frame(height: CardSize.height.normal * 2 + 50)
         }.frame(maxWidth: .infinity).padding(.leading, 10).padding(.top, 10)
     }
@@ -331,12 +335,31 @@ struct CastedCardView: View {
                         HStack(spacing: 36) {
                             // Library revealed non token card
                             /*
-                            if gameViewModel.cardsToCast.cardFromLibrary.cardType != .token {
-                                FlippingCardView(card: gameViewModel.cardsToCast.cardFromLibrary, cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count + 1)
+                            // Have to do this wierd thing otherwise the card from library don't update the cardOrder
+                            if gameViewModel.cardsToCast.tokensFromLibrary.count == 0 && gameViewModel.cardsToCast.cardFromLibrary.cardType != .token{
+                                FlippingCardView(card: gameViewModel.cardsToCast.cardFromLibrary, cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count, proxy: proxy)
+                                    .id(0)
                             }
+
                             ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
-                                FlippingCardView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0], cardOrder: $0)
+                                if $0 == 0 && gameViewModel.cardsToCast.cardFromLibrary.cardType != .token{
+                                    FlippingCardView(card: gameViewModel.cardsToCast.cardFromLibrary, cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count, proxy: proxy)
+                                        .id(0)
+                                }
+                                if $0 == gameViewModel.cardsToCast.tokensFromLibrary.count - 1 {
+                                    FlippingCardView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0], cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count - 1 - $0, proxy: proxy)
+                                        .id(1)
+                                } else {
+                                    FlippingCardView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0], cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count - 1 - $0, proxy: proxy)
+                                }
+                                
+                            }.onChange(of: gameViewModel.cardsToCast.tokensFromLibrary.count) { _ in
+                                proxy.scrollTo(1, anchor: .center)
+                                withAnimation(.easeInOut(duration: 0.1 + 0.5 * Double((gameViewModel.cardsToCast.tokensFromLibrary.count)))) {
+                                    proxy.scrollTo(0, anchor: .center)
+                                }
                             }*/
+                            
                             if gameViewModel.cardsToCast.cardFromLibrary.cardType != .token {
                                 CardToCastView(card: gameViewModel.cardsToCast.cardFromLibrary)
                             }
@@ -420,7 +443,7 @@ struct GraveyardView: View {
                                     .fontWeight(.bold)
                                     .font(.title)
                                     .foregroundColor(.white)
-                                    .frame(height: 40)
+                                    .frame(height: 30)
                             })
                             Button(action: {
                                 print("Card in graveyard pressed")
@@ -428,6 +451,45 @@ struct GraveyardView: View {
                             }, label: {
                                 CardToCastView(card: card)
                             })
+                            Text("To library")
+                                .fontWeight(.bold)
+                                .font(.title)
+                                .foregroundColor(.gray)
+                                .frame(height: 30)
+                            HStack {
+                                Button(action: {
+                                    print("Put on top of library button pressed")
+                                    gameViewModel.putOnTopOfLibrary(card: card)
+                                }, label: {
+                                    Text("Top")
+                                        .fontWeight(.bold)
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                        .frame(height: 30)
+                                })
+                                Rectangle().frame(width: 2, height: 20).foregroundColor(.white)
+                                Button(action: {
+                                    print("Shuffle into library button pressed")
+                                    gameViewModel.shuffleIntofLibrary(card: card)
+                                }, label: {
+                                    Text("Shuffle")
+                                        .fontWeight(.bold)
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                        .frame(height: 30)
+                                })
+                                Rectangle().frame(width: 2, height: 20).foregroundColor(.white)
+                                Button(action: {
+                                    print("Put at the bottom of library button pressed")
+                                    gameViewModel.putAtBottomOfLibrary(card: card)
+                                }, label: {
+                                    Text("Bottom")
+                                        .fontWeight(.bold)
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                        .frame(height: 40)
+                                })
+                            }
                         }
                     }
                     Rectangle().frame(width: 40, height: 0)
@@ -493,13 +555,17 @@ struct FlippingCardView: View {
     
     let duration : CGFloat = 0.5
     let delay: CGFloat
+    let cardOrder: Int
+    let proxy: ScrollViewProxy
     
     var card: Card
     
-    init(card: Card, cardOrder: Int) {
+    init(card: Card, cardOrder: Int, proxy: ScrollViewProxy) {
         self.card = card
+        self.cardOrder = cardOrder
         self.delay = 0.1 + CGFloat(cardOrder) * 0.5
-        print(cardOrder)
+        self.proxy = proxy
+        print("\(card.cardType == .token ? "token" : "creature") : \(cardOrder)")
     }
     
     func flipCard () {
@@ -521,7 +587,9 @@ struct FlippingCardView: View {
                 .cornerRadius(CardSize.cornerRadius.normal)
                 .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
                 .rotation3DEffect(Angle(degrees: backDegree), axis: (x: 0, y: 1, z: 0))
-        }.onChange(of: gameViewModel.turnStep) { _ in
+        }.id(cardOrder)
+        .frame(height: CardSize.height.big + 200)
+        .onChange(of: gameViewModel.turnStep) { _ in
             if gameViewModel.turnStep == 1 {
                 backDegree = 0.0
                 frontDegree = -90.0

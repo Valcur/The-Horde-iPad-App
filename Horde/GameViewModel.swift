@@ -16,7 +16,7 @@ class GameViewModel: ObservableObject {
     
     @Published var deck: [Card] = []
     
-    let tokensAvailable: [Card]
+    var tokensAvailable: [Card]
     @Published var showGraveyard = false
     @Published var damageTakenThisTurn: Int = 0
     
@@ -35,8 +35,19 @@ class GameViewModel: ObservableObject {
         cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
         
         let deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
-        print("Game initiating with deck \(deckPickedId)")
         //let deckAndTokens = deckManager.getZombieClassicDeck()
+        let deckAndTokens = DeckManager.getDeckForId(deckPickedId: 1)
+        self.deck = deckAndTokens.0
+        self.tokensAvailable = deckAndTokens.1
+        print("Game initiating with deck \(deckPickedId)")
+    }
+    
+    func startGame() {
+        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
+        
+        let deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
+        print("Game initiating with deck \(deckPickedId)")
+
         let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId)
         self.deck = deckAndTokens.0
         self.tokensAvailable = deckAndTokens.1
@@ -122,7 +133,9 @@ class GameViewModel: ObservableObject {
     
     func sendToGraveyard(card: Card) {
         if card.cardType != .token {
-            cardsOnGraveyard.append(card)
+            let tmpCard = newCardCopy(copyOfCard: card)
+            tmpCard.cardCount = 1
+            cardsOnGraveyard.append(tmpCard)
         }
     }
     
@@ -133,6 +146,12 @@ class GameViewModel: ObservableObject {
         } else {
             cardsOnBoard.append(card)
         }
+    }
+    
+    func newCardCopy(copyOfCard: Card) -> Card {
+        let tmpCard = Card(cardName: copyOfCard.cardName, cardType: copyOfCard.cardType, cardImage: copyOfCard.cardImage, hasFlashback: copyOfCard.hasFlashback)
+        tmpCard.cardCount = copyOfCard.cardCount
+        return copyOfCard
     }
     
     //MARK: BUTTONS
@@ -151,11 +170,12 @@ class GameViewModel: ObservableObject {
         var tmpArray = cardsOnBoard
         for i in 0..<tmpArray.count {
             if tmpArray[i] == card {
-                tmpArray[i].cardCount -= 1
-                if tmpArray[i].cardCount <= 0 {
-                    let tmpCard = tmpArray.remove(at: i)
-                    sendToGraveyard(card: tmpCard)
+                card.cardCount -= 1
+                if card.cardCount <= 0 {
+                    tmpArray.remove(at: i)
                 }
+                sendToGraveyard(card: card)
+                
                 cardsOnBoard = tmpArray
                 return
             }
@@ -213,5 +233,21 @@ class GameViewModel: ObservableObject {
             }
             damageTakenThisTurn += 1
         }
+    }
+    
+    func putOnTopOfLibrary(card: Card) {
+        removeCardFromGraveyard(card: card)
+        deck.append(card)
+    }
+    
+    func putAtBottomOfLibrary(card: Card) {
+        removeCardFromGraveyard(card: card)
+        deck.insert(card, at: 0)
+    }
+    
+    func shuffleIntofLibrary(card: Card) {
+        removeCardFromGraveyard(card: card)
+        deck.append(card)
+        deck.shuffle()
     }
 }

@@ -18,9 +18,18 @@ struct DeckPickerView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(0..<deckPickerViewModel.deckPickers.count, id: \.self) { i in
-                            DeckPickingView(deckId: i, deckPicker: deckPickerViewModel.deckPickers[i], proxy: proxy)
+                            DeckPickingView(deckId: i, deckPicker: deckPickerViewModel.deckPickers[i])
+                                .id(i)
                         }
-                    }.frame(width: PickerSize.width.unpicked * 3 + PickerSize.width.picked + 320)
+                    }.frame(width: PickerSize.width.unpicked * 3 + PickerSize.width.picked + 300)
+                    .onChange(of: deckPickerViewModel.deckPickedId) { _ in
+                        withAnimation {
+                           proxy.scrollTo(deckPickerViewModel.deckPickedId)
+                       }
+                    }
+                    .onAppear() {
+                        proxy.scrollTo(deckPickerViewModel.deckPickedId)
+                    }
                 }
             }
         }.ignoresSafeArea()
@@ -33,8 +42,6 @@ struct DeckPickingView: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let deckId: Int
     let deckPicker: DeckPicker
-    let proxy: ScrollViewProxy
-    @Namespace var bottomId
     
     let rotationInDegrees: CGFloat = 5
     var isDeckSelected: Bool {
@@ -51,9 +58,6 @@ struct DeckPickingView: View {
                     print("Deck \(deckId) picked")
                     deckPickerViewModel.pickDeck(deckId: deckId)
                 }
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    proxy.scrollTo(bottomId, anchor: .leading)
-                }
             }) {
                 ZStack {
                     Image(deckPicker.image)
@@ -61,8 +65,8 @@ struct DeckPickingView: View {
                         .aspectRatio(contentMode: .fill)
                         .rotationEffect(Angle.degrees(-rotationInDegrees))
                         .frame(width: PickerSize.width.picked + 150)
-                    VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
-                        .opacity(isDeckSelected ? 0.6 : 0)
+                    VisualEffectView(effect: UIBlurEffect(style: .systemThickMaterialDark))
+                        .opacity(isDeckSelected ? 0.7 : 0)
                     VStack(alignment: .center, spacing: 30) {
                         
                         // Title
@@ -110,22 +114,59 @@ struct DeckPickingView: View {
                 }.frame(width: pickerWidth(), height: UIScreen.main.bounds.height + 150)
                     .clipped()
                 .rotationEffect(Angle.degrees(rotationInDegrees))
-                .animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
+                //.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
                 
             }// .buttonStyle(StaticButtonStyle())
-            .onAppear() {
-                if isDeckSelected {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        proxy.scrollTo(bottomId, anchor: .leading)
+            
+            if isDeckSelected {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Difficulty")
+                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                            .font(.title)
+                        
+                        Button(action: {
+                            print("Difficulty set to 1x")
+                        }) {
+                            Text("1X")
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
+                                .font(.title)
+                                .frame(height: 40)
+                        }.offset(x: -10)
+                        
+                        Button(action: {
+                            print("Difficulty set to 2x")
+                        }) {
+                            Text("2X")
+                                .foregroundColor(.gray)
+                                .fontWeight(.bold)
+                                .font(.title)
+                                .frame(height: 40)
+                        }.offset(x: -20)
+                        
+                        Button(action: {
+                            print("Difficulty set to 3x")
+                        }) {
+                            Text("3X")
+                                .foregroundColor(.gray)
+                                .fontWeight(.bold)
+                                .font(.title)
+                                .frame(height: 40)
+                        }.offset(x: -30)
+                        
+                        Spacer()
                     }
-                }
+                    Spacer()
+                }.offset(x: 80, y: 110).opacity(isDeckSelected ? 1 : 0).transition(.move(edge: .top))
             }
             
             Text("art by \(deckPicker.imageArtist)")
                 .foregroundColor(.white)
                 .offset(x: isDeckSelected ? 0 : -25, y: UIScreen.main.bounds.height / 2 - 60)
                 .animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
-        }.id(bottomId)
+        }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
     }
     
     private func pickerWidth() -> CGFloat {

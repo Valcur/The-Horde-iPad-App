@@ -27,9 +27,10 @@ class DeckPickerViewModel: ObservableObject {
     
     func pickDeck(deckId: Int) {
         deckPickedId = deckId
+        savePickedDeckId()
     }
     
-    func startGame() {
+    private func savePickedDeckId() {
         UserDefaults.standard.set(deckPickedId, forKey: "DeckPickedId")
     }
 }

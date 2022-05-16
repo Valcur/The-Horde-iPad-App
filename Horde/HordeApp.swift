@@ -36,6 +36,9 @@ struct HordeAppView: View {
                     .environmentObject(gameViewModel)
                     .statusBar(hidden: true)
                     .transition(.slide)
+                    .onAppear() {
+                        gameViewModel.startGame()
+                    }
             } else {
                 DeckPickerView()
                     .environmentObject(deckPickerViewModel)
