@@ -21,14 +21,15 @@ struct DeckPickerView: View {
                             DeckPickingView(deckId: i, deckPicker: deckPickerViewModel.deckPickers[i])
                                 .id(i)
                         }
-                    }.frame(width: PickerSize.width.unpicked * 3 + PickerSize.width.picked + 300)
+                    }//.frame(width: PickerSize.width.unpicked * 3 + PickerSize.width.picked + 350)
+                        .padding([.leading, .trailing], 200)
                     .onChange(of: deckPickerViewModel.deckPickedId) { _ in
                         withAnimation {
-                           proxy.scrollTo(deckPickerViewModel.deckPickedId)
+                            proxy.scrollTo(deckPickerViewModel.deckPickedId, anchor: .center)
                        }
                     }
                     .onAppear() {
-                        proxy.scrollTo(deckPickerViewModel.deckPickedId)
+                        proxy.scrollTo(deckPickerViewModel.deckPickedId, anchor: .center)
                     }
                 }
             }
@@ -128,33 +129,36 @@ struct DeckPickingView: View {
                         
                         Button(action: {
                             print("Difficulty set to 1x")
+                            hordeAppViewModel.setDifficulty(newDifficulty: 1)
                         }) {
                             Text("1X")
-                                .foregroundColor(.white)
+                                .foregroundColor(hordeAppViewModel.difficulty == 1 ? .white : .gray)
                                 .fontWeight(.bold)
                                 .font(.title)
-                                .frame(height: 40)
-                        }.offset(x: -10)
+                                .frame(width: 80, height: 40)
+                        }.offset(x: -30)
                         
                         Button(action: {
                             print("Difficulty set to 2x")
+                            hordeAppViewModel.setDifficulty(newDifficulty: 2)
                         }) {
                             Text("2X")
-                                .foregroundColor(.gray)
+                                .foregroundColor(hordeAppViewModel.difficulty == 2 ? .white : .gray)
                                 .fontWeight(.bold)
                                 .font(.title)
-                                .frame(height: 40)
-                        }.offset(x: -20)
+                                .frame(width: 80, height: 40)
+                        }.offset(x: -40)
                         
                         Button(action: {
                             print("Difficulty set to 3x")
+                            hordeAppViewModel.setDifficulty(newDifficulty: 3)
                         }) {
                             Text("3X")
-                                .foregroundColor(.gray)
+                                .foregroundColor(hordeAppViewModel.difficulty == 3 ? .white : .gray)
                                 .fontWeight(.bold)
                                 .font(.title)
-                                .frame(height: 40)
-                        }.offset(x: -30)
+                                .frame(width: 80, height: 40)
+                        }.offset(x: -50)
                         
                         Spacer()
                     }
@@ -173,11 +177,12 @@ struct DeckPickingView: View {
         var width: CGFloat = PickerSize.width.picked
         if !isDeckSelected {
             width = PickerSize.width.unpicked
-            // First and larst larger to compensate hidden part
-            if deckId == 0 || deckId == 4 {
-                width = width + 50
-            }
+
         }
+        // First and larst larger to compensate hidden part
+        /*if deckId == 0 || deckId == 4 {
+            width = width + 50
+        }*/
         return width
     }
 }

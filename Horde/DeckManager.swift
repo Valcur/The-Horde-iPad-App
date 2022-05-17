@@ -9,7 +9,7 @@ import Foundation
  
 struct DeckManager {
     
-    static private func getZombieDeck() -> ([Card], [Card]) {
+    static private func getZombieDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
         
         /* ZOMBIE ORIGINAL
@@ -147,12 +147,12 @@ struct DeckManager {
         deck.append(Card(cardName: "Walking Corpse", cardType: .creature))
         
         // 5 Zombie Giant Tokens
-        for _ in 1...5 {
+        for _ in 1...(5 * difficulty) {
             deck.append(Card(cardName: "Zombie Giant Token", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Zombie Giant", specifiSet: "TBBD")))
         }
         
         // 55 Zombie Tokens
-        for _ in 1...55 {
+        for _ in 1...(55 * difficulty) {
             deck.append(Card(cardName: "Zombie Token", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Zombie", specifiSet: "TISD")))
         }
         
@@ -165,7 +165,7 @@ struct DeckManager {
         return (deck, tokens)
     }
 
-    static private func getZombieClassicDeck() -> ([Card], [Card]) {
+    static private func getZombieClassicDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
         
         /* ZOMBIE CLASSIC
@@ -355,7 +355,7 @@ struct DeckManager {
         return (deck, tokens)
     }
     
-    static private func getSliverDeck() -> ([Card], [Card]) {
+    static private func getSliverDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
         
         /* SLIVER HIVE
@@ -498,17 +498,17 @@ struct DeckManager {
         }
         
         // 10 Venser's Sliver
-        for _ in 1...10 {
+        for _ in 1...(10 * difficulty) {
             deck.append(Card(cardName: "Venser's Sliver",cardType: .token))
         }
         
         // 22 Sliver Construct
-        for _ in 1...22 {
+        for _ in 1...(22 * difficulty) {
             deck.append(Card(cardName: "Sliver Construct",cardType: .token))
         }
         
         // 32 Metallic Sliver
-        for _ in 1...32 {
+        for _ in 1...(32 * difficulty) {
             deck.append(Card(cardName: "Metallic Sliver",cardType: .token))
         }
         
@@ -523,7 +523,7 @@ struct DeckManager {
         return (deck, tokens)
     }
     
-    static private func getEldraziDeck() -> ([Card], [Card]) {
+    static private func getEldraziDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
         
         /* ELDRAZI HORRORS
@@ -623,7 +623,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Emrakul's Hatcher", cardType: .creature))
         
         // 1 Essence Feed
-        deck.append(Card(cardName: "Essence Feed", cardType: .creature))
+        deck.append(Card(cardName: "Essence Feed", cardType: .sorcery))
         
         // 1 Eyeless Watcher
         deck.append(Card(cardName: "Eyeless Watcher", cardType: .creature))
@@ -702,22 +702,22 @@ struct DeckManager {
         
         
         // 15 Eldrazi Horror (TEMN) 1
-        for _ in 1...15 {
+        for _ in 1...(15 * difficulty) {
             deck.append(Card(cardName: "Eldrazi Horror (TEMN)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Horror", specifiSet: "TEMN")))
         }
         
         // 25 Eldrazi Scion (DDR) 71
-        for _ in 1...25 {
+        for _ in 1...(25 * difficulty) {
             deck.append(Card(cardName: "Eldrazi Scion (DDR)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Scion", specifiSet: "TBFZ")))
         }
         
         // 5 Eldrazi (TPCA) 1
-        for _ in 1...5 {
+        for _ in 1...(5 * difficulty) {
             deck.append(Card(cardName: "Eldrazi (TPCA)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi", specifiSet: "TPCA")))
         }
         
         // 15 Eldrazi Spawn (DDP) 76
-        for _ in 1...15 {
+        for _ in 1...(15 * difficulty) {
             deck.append(Card(cardName: "Eldrazi Spawn (DDP)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Spawn", specifiSet: "TMIC")))
         }
         
@@ -735,7 +735,7 @@ struct DeckManager {
         return (deck, tokens)
     }
     
-    static private func getHumanDeck() -> ([Card], [Card]) {
+    static private func getHumanDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
         
         /* HUMAN ARMY
@@ -896,27 +896,27 @@ struct DeckManager {
         
         
         // 10 Soldier (TGRN) 2
-        for _ in 1...10 {
+        for _ in 1...(10 * difficulty) {
             deck.append(Card(cardName: "Soldier (TGRN)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TNCC")))
         }
         
         // 10 Knight (TMIC) 3
-        for _ in 1...10 {
+        for _ in 1...(10 * difficulty) {
             deck.append(Card(cardName: "Knight (TMIC)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Knight", specifiSet: "TM21")))
         }
         
         // 10 Human Warrior (TELD) 13
-        for _ in 1...10 {
+        for _ in 1...(10 * difficulty) {
             deck.append(Card(cardName: "Human Warrior (TELD)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Human Warrior", specifiSet: "TELD")))
         }
         
         // 10 Knight (TCM2) 4
-        for _ in 1...10 {
+        for _ in 1...(10 * difficulty) {
             deck.append(Card(cardName: "Knight (TCM2)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Knight", specifiSet: "TCM2")))
         }
         
         // 20 Human (TRNA) 1
-        for _ in 1...20 {
+        for _ in 1...(20 * difficulty) {
             deck.append(Card(cardName: "Human (TRNA)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Human", specifiSet: "TC20")))
         }
         
@@ -930,7 +930,7 @@ struct DeckManager {
         return (deck, tokens)
     }
     
-    static private func getPhyrexianDeck() -> ([Card], [Card]) {
+    static private func getPhyrexianDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
         
         /* PHYREXIAN PERFECTION
@@ -1112,47 +1112,47 @@ struct DeckManager {
         }
         
         // 5 Assembly-Worker (TTSR) 14
-        for _ in 1...5 {
+        for _ in 1...(5 * difficulty) {
             deck.append(Card(cardName: "Assembly-Worker TTSR", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Assembly-Worker", specifiSet: "TTSR")))
         }
         
         // 5 Construct (TMH2) 16
-        for _ in 1...5 {
+        for _ in 1...(5 * difficulty) {
             deck.append(Card(cardName: "Construct TMH2", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TMH2")))
         }
         
         // 5 Construct (TC18) 21
-        for _ in 1...5 {
+        for _ in 1...(5 * difficulty) {
             deck.append(Card(cardName: "Construct (TC18)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TC18")))
         }
         
         // 4 Construct (TZNR) 10
-        for _ in 1...4 {
+        for _ in 1...(4 * difficulty) {
             deck.append(Card(cardName: "Construct (TZNR)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TZNR")))
         }
         
         // 3 Beast (TKLD) 1
-        for _ in 1...3 {
+        for _ in 1...(3 * difficulty) {
             deck.append(Card(cardName: "Beast (TKLD)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TKLD")))
         }
         
         // 3 Golem (TRIX) 4
-        for _ in 1...3 {
+        for _ in 1...(3 * difficulty) {
             deck.append(Card(cardName: "Golem (TRIX)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TRIX")))
         }
         
         // 3 Golem (TMBS) 3
-        for _ in 1...3 {
+        for _ in 1...(3 * difficulty) {
             deck.append(Card(cardName: "Golem (TMBS)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TMBS")))
         }
         
         // 3 Wurm (TSOM) 8
-        for _ in 1...3 {
+        for _ in 1...(3 * difficulty) {
             deck.append(Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"))
         }
         
         // 3 Wurm (TSOM) 9
-        for _ in 1...3 {
+        for _ in 1...(3 * difficulty) {
             deck.append(Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477"))
         }
         
@@ -1183,17 +1183,18 @@ struct DeckManager {
     }
     
     static func getDeckForId(deckPickedId: Int) -> ([Card], [Card]) {
+        let difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
         switch deckPickedId {
         case 1:
-            return getHumanDeck()
+            return getHumanDeck(difficulty: difficulty)
         case 2:
-            return getPhyrexianDeck()
+            return getPhyrexianDeck(difficulty: difficulty)
         case 3:
-            return getSliverDeck()
+            return getSliverDeck(difficulty: difficulty)
         case 4:
-            return getEldraziDeck()
+            return getEldraziDeck(difficulty: difficulty)
         default:
-            return getZombieDeck()
+            return getZombieDeck(difficulty: difficulty)
         }
     }
 }

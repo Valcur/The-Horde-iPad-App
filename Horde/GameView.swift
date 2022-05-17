@@ -131,22 +131,23 @@ struct HordeBoardView: View {
                 
                 ZStack {
                     if gameViewModel.deck.count > 0 {
-                        ZStack(alignment: .bottom) {
-                            Rectangle()
-                                .foregroundColor(Color("CardThicknessColor"))
-                                .cornerRadius(CardSize.cornerRadius.normal, corners: [.bottomLeft, .bottomRight])
-                                .frame(width: CardSize.width.normal, height: CardSize.height.normal - 10)
-                            Button(action: {
-                                print("Library pressed")
-                                gameViewModel.sendTopLibraryCardToGraveyard()
-                            }, label: {
+                        Button(action: {
+                            print("Library pressed")
+                            gameViewModel.sendTopLibraryCardToGraveyard()
+                        }, label: {
+                            ZStack(alignment: .bottom) {
+                                Rectangle()
+                                    .foregroundColor(Color("CardThicknessColor"))
+                                    .cornerRadius(CardSize.cornerRadius.normal)
+                                    .frame(width: CardSize.width.normal, height: CardSize.height.normal + CGFloat(gameViewModel.deck.count) * cardThickness)
+                                
                                 Image("BackgroundTest")
                                     .resizable()
                                     .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                                     .cornerRadius(CardSize.cornerRadius.normal)
                                     .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
-                            })
-                        }.shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                            }
+                        }).shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                     } else {
                         RoundedRectangle(cornerRadius: CardSize.cornerRadius.normal)
                             .foregroundColor(.black)
@@ -182,16 +183,17 @@ struct HordeBoardView: View {
 struct ControlBarView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @State var nexButtonDisable = false
     
     var body: some View {
         HStack {
             
             // Help
-            /* TO DO
              
             Button(action: {
-                print("Help button tapped!")
+                print("Menu button tapped")
+                hordeAppViewModel.showMenu()
             }) {
                 Image(systemName: "questionmark")
                     .font(.largeTitle)
@@ -201,13 +203,13 @@ struct ControlBarView: View {
             // Undo
             
             Button(action: {
-                print("Undo button tapped!")
+                print("Undo button tapped")
             }) {
                 Image(systemName: "arrow.counterclockwise")
                     .font(.largeTitle)
                     .foregroundColor(.white)
             }.frame(width: 80)
-             */
+             
             // BoardWipe
             
             HStack {
@@ -303,7 +305,7 @@ struct CastedCardView: View {
         
         VStack(spacing: 30) {
             // The cards to show
-            ScrollView(.horizontal) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 50) {
                     // Flahsback cards if any
                     if gameViewModel.cardsToCast.cardsFromGraveyard.count > 0 {
@@ -416,6 +418,7 @@ struct GameIntroView: View {
 struct GraveyardView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     
     var body: some View {
         // The button to leave the menu is the background
@@ -430,7 +433,7 @@ struct GraveyardView: View {
             // The cards in the graveyard to show
             Text("Touch a permanent card to put it onto the battlefield")
                 .foregroundColor(.white)
-            ScrollView(.horizontal) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 50) {
                     Rectangle().frame(width: 40, height: 0)
                     ForEach(gameViewModel.cardsOnGraveyard) { card in
@@ -621,7 +624,7 @@ struct CardOnBoardView: View {
                         .font(.title)
                         .foregroundColor(.white)
                 }
-            }.shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+            }.shadow(color: Color("ShadowColor"), radius: 5, x: 0, y: 4)
         })
     }
 }
