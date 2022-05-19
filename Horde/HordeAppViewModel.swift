@@ -10,11 +10,13 @@ import Foundation
 class HordeAppViewModel: ObservableObject {
     @Published var readyToPlay: Bool
     @Published var shouldShowMenu: Bool
+    @Published var menuToShowId: Int
     @Published var difficulty: Int
     
     init() {
         self.readyToPlay = false
         self.shouldShowMenu = false
+        self.menuToShowId = 1
         self.difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
     }
     

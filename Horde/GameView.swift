@@ -37,7 +37,7 @@ struct GameView: View {
                     .multilineTextAlignment(.center)
                     .padding()
                     .frame(width: 300)
-                    .background(Color("MainColor"))
+                    .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
                     .cornerRadius(40)
                     .foregroundColor(.white)
                     .padding(10)
@@ -147,7 +147,7 @@ struct HordeBoardView: View {
                                     .cornerRadius(CardSize.cornerRadius.normal)
                                     .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
                             }
-                        }).shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                        }).frame(height: CardSize.height.normal).offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness / 2).shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                     } else {
                         RoundedRectangle(cornerRadius: CardSize.cornerRadius.normal)
                             .foregroundColor(.black)
@@ -189,19 +189,19 @@ struct ControlBarView: View {
     var body: some View {
         HStack {
             
-            // Help
+            // Menu
              
             Button(action: {
                 print("Menu button tapped")
                 hordeAppViewModel.showMenu()
             }) {
                 Image(systemName: "questionmark")
-                    .font(.largeTitle)
+                    .font(.subheadline)
                     .foregroundColor(.white)
-            }.frame(width: 80)
+            }.frame(maxWidth: .infinity)
 
             // Undo
-            
+            /*
             Button(action: {
                 print("Undo button tapped")
             }) {
@@ -209,7 +209,7 @@ struct ControlBarView: View {
                     .font(.largeTitle)
                     .foregroundColor(.white)
             }.frame(width: 80)
-             
+             */
             // BoardWipe
             
             HStack {
@@ -368,7 +368,7 @@ struct CastedCardView: View {
                             ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
                                 CardToCastView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
                             }
-                        }
+                        }.padding([.leading, .trailing], 30)
                     }
                 }.frame(minWidth: UIScreen.main.bounds.width, minHeight: CardSize.height.normal + 160)
             }.onTapGesture {
@@ -393,25 +393,49 @@ struct GameIntroView: View {
         }).buttonStyle(StaticButtonStyle())
         
         VStack(spacing: 50) {
-            // The cards in the graveyard to show
-            Text("The objective is for the allied team to survive and eliminate the threat of the horde.\n\nPlayers achieve victory when the horde deck has no cards remaining in its library, no cards in hand, and no creatures on the battlefield.\n\nIf the team were to attack or otherwise deal damage to the horde player, then that number of cards are put from the top of the horde's deck into its graveyard.\n\nAll players share their turn and life total, a la Two-Headed Giant, and each contributes 20 life to the starting total (one player is 20, four players is 80).\n\nAll creatures the horde controls have haste and must attack each turn if able.")
-                .foregroundColor(.white)
             
-            Text("The team takes the first three turns of the game, then alternates with the horde deck.")
-                .foregroundColor(.white)
-                .fontWeight(.bold)
+            MenuTextTitleView(text: "DeckSize")
             
-            Text("Touch anywhere to start the horde")
-                .foregroundColor(.white)
-                .fontWeight(.bold)
-                .font(.title)
+            MenuTextParagraphView(text: "To adjust the challenge, you can reduce the library size depending on the number of players.")
             
+            HStack(spacing: 50) {
+                IntroPlayerChoiceButtonView(text: "100%", isSelected: true)
+                IntroPlayerChoiceButtonView(text: "75%", isSelected: false)
+                IntroPlayerChoiceButtonView(text: "50%", isSelected: false)
+                IntroPlayerChoiceButtonView(text: "25%", isSelected: false)
+            }
+            
+            MenuTextTitleView(text: "Alternate start")
+            
+            MenuTextParagraphView(text: "To increse the difficulty, you can make the horde start with 30 life points. The horde start to mill its library only when its lifepoints are equal to 0")
+            
+            MenuTextSubtitleView(text: "Play 3 turns before sarting the horde")
+            
+            MenuTextBoldParagraphView(text: "Touch anywhere to start the horde")
             
         }.frame(width: UIScreen.main.bounds.width / 2)
         .onTapGesture {
             print("Start game button pressed")
             gameViewModel.nextButtonPressed()
         }
+    }
+}
+
+struct IntroPlayerChoiceButtonView: View {
+    
+    let text: String
+    var isSelected: Bool
+    
+    var body: some View {
+        Button(action: {
+            print("Start game button pressed")
+            //gameViewModel.nextButtonPressed()
+        }, label: {
+            Text(text)
+                .foregroundColor(isSelected ? .white : .gray)
+                .fontWeight(.bold)
+                .font(.title)
+        })
     }
 }
 
@@ -669,6 +693,7 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
+// Might remove this view, if no button have this style
 struct PurpleButtonLabel: View {
     
     var text: String
@@ -676,10 +701,10 @@ struct PurpleButtonLabel: View {
     var body: some View {
         Text(text)
             .fontWeight(.bold)
-            .font(.title2)
+            .font(.subheadline)
             .padding()
             .frame(width: 150)
-            .background(Color("MainColor"))
+            .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
             .cornerRadius(40)
             .foregroundColor(.white)
             .padding(10)

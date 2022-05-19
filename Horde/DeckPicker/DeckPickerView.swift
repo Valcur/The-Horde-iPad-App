@@ -10,6 +10,7 @@ import SwiftUI
 struct DeckPickerView: View {
     
     @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     
     var body: some View {
         ZStack{
@@ -32,8 +33,17 @@ struct DeckPickerView: View {
                         proxy.scrollTo(deckPickerViewModel.deckPickedId, anchor: .center)
                     }
                 }
-            }
-        }.ignoresSafeArea()
+            }.frame(height: UIScreen.main.bounds.height)
+            Button(action: {
+                print("Menu button tapped")
+                hordeAppViewModel.showMenu()
+            }) {
+                Image(systemName: "gear")
+                    .font(.title)
+                    .foregroundColor(.white)
+            }.frame(width: 80)
+                .position(x: 30, y: UIScreen.main.bounds.height - 30)
+        }.frame(height: UIScreen.main.bounds.height).ignoresSafeArea()
     }
 }
 

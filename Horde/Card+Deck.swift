@@ -38,7 +38,7 @@ class Card: Hashable, Identifiable {
     }
     
     static func == (lhs: Card, rhs: Card) -> Bool {
-        return lhs.cardImage == rhs.cardImage
+        return lhs.cardName == rhs.cardName
     }
     
     func hash(into hasher: inout Hasher) {

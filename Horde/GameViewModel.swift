@@ -51,6 +51,9 @@ class GameViewModel: ObservableObject {
         let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId)
         self.deck = deckAndTokens.0
         self.tokensAvailable = deckAndTokens.1
+        
+        cardsOnBoard = []
+        cardsOnGraveyard = []
     }
     
     func startNewHordeStep() {
@@ -94,6 +97,8 @@ class GameViewModel: ObservableObject {
         
         // We regroup tokens
         tokensRevealed = regroupSameCardInArray(cardArray: tokensRevealed)
+        
+        print("About to play \(cardRevealed.cardName) from library")
         
         return CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: tokensRevealed, cardFromLibrary: cardRevealed)
     }

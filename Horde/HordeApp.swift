@@ -5,9 +5,6 @@
 //  Created by Loic D on 08/05/2022.
 //
 
-
-// Icon by Superarticons
-
 import SwiftUI
 
 @main
@@ -35,7 +32,7 @@ struct HordeAppView: View {
                 GameView()
                     .environmentObject(gameViewModel)
                     .statusBar(hidden: true)
-                    .transition(.slide)
+                    .transition(.opacity)
                     .onAppear() {
                         gameViewModel.startGame()
                     }
@@ -43,9 +40,14 @@ struct HordeAppView: View {
                 DeckPickerView()
                     .environmentObject(deckPickerViewModel)
                     .statusBar(hidden: true)
-                    .transition(.slide)
+                    .transition(.opacity)
+            }
+            if hordeAppViewModel.shouldShowMenu {
+                MenuView()
+                    .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.5), value: hordeAppViewModel.readyToPlay)
+        .animation(.easeInOut(duration: 0.3), value: hordeAppViewModel.shouldShowMenu)
+        .animation(.easeInOut(duration: 0.8), value: hordeAppViewModel.readyToPlay)
     }
 }

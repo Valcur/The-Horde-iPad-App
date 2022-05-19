@@ -638,7 +638,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Hanweir, the Writhing Township", cardType: .creature))
         
         // 1 Incubator Drone
-        deck.append(Card(cardName: "ncubator Drone", cardType: .creature))
+        deck.append(Card(cardName: "Incubator Drone", cardType: .creature))
         
         // 1 It That Betrays
         deck.append(Card(cardName: "It That Betrays", cardType: .creature))
@@ -987,6 +987,230 @@ struct DeckManager {
          3 Golem (TMBS) 3
          3 Wurm (TSOM) 8
          3 Wurm (TSOM) 9
+         */
+        
+        // 1 Arcbound Crusher
+        deck.append(Card(cardName: "Arcbound Crusher",cardType: .creature))
+        
+        // 1 Arcbound Overseer
+        deck.append(Card(cardName: "Arcbound Overseer",cardType: .creature))
+        
+        // 1 Arcbound Shikari
+        deck.append(Card(cardName: "Arcbound Shikari",cardType: .creature))
+        
+        // 1 Arcbound Slith
+        deck.append(Card(cardName: "Arcbound Slith",cardType: .creature))
+        
+        // 1 Arcbound Tracker
+        deck.append(Card(cardName: "Arcbound Tracker",cardType: .creature))
+        
+        // 1 Blade Splicer
+        deck.append(Card(cardName: "Blade Splicer",cardType: .creature))
+        
+        // 1 Blightsteel Colossus
+        deck.append(Card(cardName: "Blightsteel Colossus",cardType: .creature))
+        
+        // 1 Bronze Guardian
+        deck.append(Card(cardName: "Bronze Guardian",cardType: .creature))
+        
+        // 1 Carrion Call
+        deck.append(Card(cardName: "Carrion Call",cardType: .instant))
+        
+        // 2 Cleansing Meditation
+        for _ in 1...2 {
+            deck.append(Card(cardName: "Cleansing Meditation",cardType: .sorcery))
+        }
+        
+        // 1 Core Prowler
+        deck.append(Card(cardName: "Core Prowler",cardType: .creature))
+        
+        // 1 Elesh Norn, Grand Cenobite
+        deck.append(Card(cardName: "Elesh Norn, Grand Cenobite",cardType: .creature))
+        
+        // 1 Hand of the Praetors
+        deck.append(Card(cardName: "Hand of the Praetors",cardType: .creature))
+        
+        // 1 Ich-Tekik, Salvage Splicer
+        deck.append(Card(cardName: "Ich-Tekik, Salvage Splicer",cardType: .creature))
+        
+        // 1 Inexorable Tide
+        deck.append(Card(cardName: "Inexorable Tide",cardType: .enchantment))
+        
+        // 1 Massacre Wurm
+        deck.append(Card(cardName: "Massacre Wurm",cardType: .creature))
+        
+        // 1 Maul Splicer
+        deck.append(Card(cardName: "Maul Splicer",cardType: .creature))
+        
+        // 1 Nest of Scarabs
+        deck.append(Card(cardName: "Nest of Scarabs",cardType: .enchantment))
+        
+        // 1 Phyrexian Crusader
+        deck.append(Card(cardName: "Phyrexian Crusader",cardType: .creature))
+        
+        // 1 Phyrexian Hydra
+        deck.append(Card(cardName: "Phyrexian Hydra",cardType: .creature))
+        
+        // 1 Phyrexian Obliterator
+        deck.append(Card(cardName: "Phyrexian Obliterator",cardType: .creature))
+        
+        // 1 Phyrexian Rebirth
+        deck.append(Card(cardName: "Phyrexian Rebirth",cardType: .sorcery))
+        
+        // 1 Phyrexian Swarmlord
+        deck.append(Card(cardName: "Phyrexian Swarmlord",cardType: .creature))
+        
+        // 3 Plague Wind
+        for _ in 1...3 {
+            deck.append(Card(cardName: "Plague Wind",cardType: .sorcery))
+        }
+        
+        // 1 Priests of Norn
+        deck.append(Card(cardName: "Priests of Norn",cardType: .creature))
+        
+        // 1 Reaper of Sheoldred
+        deck.append(Card(cardName: "Reaper of Sheoldred",cardType: .creature))
+        
+        // 1 Ruinous Ultimatum
+        deck.append(Card(cardName: "Ruinous Ultimatum",cardType: .sorcery))
+        
+        // 1 Scuttling Doom Engine
+        deck.append(Card(cardName: "Scuttling Doom Engine",cardType: .creature))
+        
+        // 1 Sensor Splicer
+        deck.append(Card(cardName: "Sensor Splicer",cardType: .creature))
+        
+        // 1 Spinebiter
+        deck.append(Card(cardName: "Spinebiter",cardType: .creature))
+        
+        // 1 Spread the Sickness
+        deck.append(Card(cardName: "Spread the Sickness",cardType: .sorcery))
+        
+        // 1 Triumph of the Hordes
+        deck.append(Card(cardName: "Triumph of the Hordes",cardType: .sorcery))
+        
+        // 2 Vandalblast
+        for _ in 1...2 {
+            deck.append(Card(cardName: "Vandalblast",cardType: .sorcery))
+        }
+        
+        // 1 Vedalken Humiliator
+        deck.append(Card(cardName: "Vedalken Humiliator",cardType: .creature))
+        
+        // 1 Vorinclex, Monstrous Raider
+        deck.append(Card(cardName: "Vorinclex, Monstrous Raider",cardType: .creature))
+        
+        // 1 Wake the Past
+        deck.append(Card(cardName: "Wake the Past",cardType: .sorcery))
+        
+        // 1 Wurmcoil Engine
+        deck.append(Card(cardName: "Wurmcoil Engine",cardType: .creature))
+        
+        // 25 Golem (TNPH) 3
+        for _ in 1...25 {
+            deck.append(Card(cardName: "Golem TNPH", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TCMR")))
+        }
+        
+        // 5 Assembly-Worker (TTSR) 14
+        for _ in 1...(5 * difficulty) {
+            deck.append(Card(cardName: "Assembly-Worker TTSR", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Assembly-Worker", specifiSet: "TTSR")))
+        }
+        
+        // 5 Construct (TMH2) 16
+        for _ in 1...(5 * difficulty) {
+            deck.append(Card(cardName: "Construct TMH2", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TMH2")))
+        }
+        
+        // 5 Construct (TC18) 21
+        for _ in 1...(5 * difficulty) {
+            deck.append(Card(cardName: "Construct (TC18)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TC18")))
+        }
+        
+        // 4 Construct (TZNR) 10
+        for _ in 1...(4 * difficulty) {
+            deck.append(Card(cardName: "Construct (TZNR)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TZNR")))
+        }
+        
+        // 3 Beast (TKLD) 1
+        for _ in 1...(3 * difficulty) {
+            deck.append(Card(cardName: "Beast (TKLD)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TKLD")))
+        }
+        
+        // 3 Golem (TRIX) 4
+        for _ in 1...(3 * difficulty) {
+            deck.append(Card(cardName: "Golem (TRIX)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TRIX")))
+        }
+        
+        // 3 Golem (TMBS) 3
+        for _ in 1...(3 * difficulty) {
+            deck.append(Card(cardName: "Golem (TMBS)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TMBS")))
+        }
+        
+        // 3 Wurm (TSOM) 8
+        for _ in 1...(3 * difficulty) {
+            deck.append(Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"))
+        }
+        
+        // 3 Wurm (TSOM) 9
+        for _ in 1...(3 * difficulty) {
+            deck.append(Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477"))
+        }
+        
+        let tokens: [Card] = [
+            Card(cardName: "Golem TNPH", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TCMR")),
+            Card(cardName: "Insect TSOM", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TSOM")),
+            Card(cardName: "Insect TAKH", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TAKH")),
+            Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"),
+            Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477")
+        ]
+        
+        deck.shuffle()
+        
+        return (deck, tokens)
+    }
+    
+    static private func getDinosaurDeck(difficulty: Int) -> ([Card], [Card]) {
+        var deck: [Card] = []
+        
+        /* DINAUSOR RAGE
+         
+         1 Bellowing Aegisaur -> +1/+1 counter problem
+         
+         1 Burning Sun's Avatar
+         1 Carnage Tyrant
+         1 Charging Tuskodon
+         2 Cleansing Meditation
+         1 Dinosaur Stampede
+         1 Frilled Deathspitter
+         1 Ghalta, Primal Hunger
+         1 Gigantosaurus
+         1 Goring Ceratops
+         1 Imposing Vantasaur
+         1 Marauding Raptor
+         1 Momentum Rumbler
+         1 Needletooth Raptor
+         1 Ornery Dilophosaur
+         1 Overgrown Armasaur
+         3 Plague Wind
+         1 Polyraptor
+         1 Quartzwood Crasher
+         1 Raging Swordtooth
+         1 Rampaging Ferocidon
+         1 Raptor Hatchling
+         1 Regisaur Alpha
+         1 Ridgetop Raptor
+         1 Ripscale Predator
+         1 Ruinous Ultimatum
+         1 Siegehorn Ceratops
+         1 Silverclad Ferocidons
+         1 Snapping Sailback
+         1 Sun-Crowned Hunters
+         1 Temple Altisaur
+         1 The Tarrasque
+         1 Thrash of Raptors
+         1 Thrasta, Tempest's Roar
+         2 Vandalblast
+         1 Wakening Sun's Avatar
          */
         
         // 1 Arcbound Crusher
