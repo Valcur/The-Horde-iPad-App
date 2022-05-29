@@ -83,7 +83,7 @@ struct GameView: View {
                 .opacity(gameIntroViewOpacity)
                 .ignoresSafeArea()
                 .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep != 0 {
+                    if gameViewModel.turnStep > 0 {
                         withAnimation(.easeInOut(duration: 0.3).delay(0.1)) {
                             gameIntroViewOpacity = 0
                         }
@@ -195,31 +195,19 @@ struct ControlBarView: View {
                 print("Menu button tapped")
                 hordeAppViewModel.showMenu()
             }) {
-                Image(systemName: "questionmark")
-                    .font(.subheadline)
+                Image(systemName: "gear")
+                    .font(.title)
                     .foregroundColor(.white)
-            }.frame(maxWidth: .infinity)
+            }.frame(width: 60)
 
-            // Undo
-            /*
-            Button(action: {
-                print("Undo button tapped")
-            }) {
-                Image(systemName: "arrow.counterclockwise")
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
-            }.frame(width: 80)
-             */
             // BoardWipe
             
-            HStack {
+            HStack(spacing: 10) {
                 Text("Destroy all")
                     .fontWeight(.bold)
                     .font(.subheadline)
-                    .padding()
                     .foregroundColor(.gray)
-                    .padding(10)
-                    .frame(width: 140)
+                    .frame(width: 100)
                 
                 Button(action: {
                     print("Creatures Wipe button pressed")
@@ -229,7 +217,6 @@ struct ControlBarView: View {
                         .fontWeight(.bold)
                         .font(.subheadline)
                         .foregroundColor(.white)
-                        .frame(width: 100)
                 })
                 
                 Button(action: {
@@ -240,20 +227,19 @@ struct ControlBarView: View {
                         .fontWeight(.bold)
                         .font(.subheadline)
                         .foregroundColor(.white)
-                        .frame(width: 100)
                 })
             }//.frame(maxWidth: .infinity)
             
+            Spacer()
+            
             // CreateToken
             
-            HStack {
+            HStack(spacing: 10) {
                 Text("Create")
                     .fontWeight(.bold)
                     .font(.subheadline)
-                    .padding()
                     .foregroundColor(.gray)
-                    .padding(10)
-                    .frame(width: 140)
+                    .frame(width: 80)
                 ForEach(gameViewModel.tokensAvailable) { token in
                     Button(action: {
                         print("Create token button pressed")
@@ -264,7 +250,9 @@ struct ControlBarView: View {
                             .cornerRadius(CardSize.cornerRadius.small)
                     })
                 }
-            }.frame(maxWidth: .infinity)
+            }
+            
+            Spacer()
             
             // Next
             
@@ -382,6 +370,7 @@ struct CastedCardView: View {
 struct GameIntroView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @State private var showGreeting = true
     
     var body: some View {
         // The button to leave the menu is the background
@@ -394,44 +383,84 @@ struct GameIntroView: View {
         
         VStack(spacing: 50) {
             
-            MenuTextTitleView(text: "DeckSize")
-            
-            MenuTextParagraphView(text: "To adjust the challenge, you can reduce the library size depending on the number of players.")
-            
-            HStack(spacing: 50) {
-                IntroPlayerChoiceButtonView(text: "100%", isSelected: true)
-                IntroPlayerChoiceButtonView(text: "75%", isSelected: false)
-                IntroPlayerChoiceButtonView(text: "50%", isSelected: false)
-                IntroPlayerChoiceButtonView(text: "25%", isSelected: false)
+            if gameViewModel.turnStep == -1 {
+                MenuTextTitleView(text: "Setup")
+                
+                HStack(alignment: .top, spacing: 50) {
+
+                    VStack(spacing: 30) {
+                        
+                        MenuTextSubtitleView(text: "DeckSize")
+                        
+                        MenuTextParagraphView(text: "To adjust the challenge, you can reduce the library size depending on the number of players.")
+                            .frame(height: 50)
+                        
+                        HStack(spacing: 20) {
+                            IntroPlayerChoiceButtonView(percent: 100)
+                            IntroPlayerChoiceButtonView(percent: 75)
+                            IntroPlayerChoiceButtonView(percent: 50)
+                            IntroPlayerChoiceButtonView(percent: 25)
+                        }
+                    }
+                    
+                    Rectangle()
+                        .foregroundColor(.white)
+                        .frame(width: 2, height: 130)
+                        .padding(.top, 70)
+                    
+                    VStack(spacing: 30) {
+                        
+                        MenuTextSubtitleView(text: "Config")
+                        
+                        MenuTextParagraphView(text: "Challenge options")
+                        
+                        Toggle("Horde start with a random enchantment different for every deck", isOn: $gameViewModel.shouldStartWithEnchantment)
+                            .foregroundColor(.white)
+                        
+                        Toggle("Spawn a random general different for every deck when half of the deck has been removed", isOn: $gameViewModel.shouldSpawnGeneralAtHalf)
+                            .foregroundColor(.white)
+                        
+                        Toggle("Horde draw 2 non token instead of one after half of the deck has been removed", isOn: $gameViewModel.shouldntHaveBoardWipeInFirstQuarter)
+                            .foregroundColor(.white)
+                    }
+                    
+                }.background(Color(.white).opacity(0.00000001))
+                
+                MenuTextBoldParagraphView(text: "Touch anywhere to continue")
+                
+            } else if gameViewModel.turnStep == 0 {
+                MenuTextSubtitleView(text: "Lifepoints")
+                
+                MenuTextParagraphView(text: "The horde start with 20 life points and start to mill its library only when its lifepoints are equal to 0. The Horde gains life equal to any lose of life it causes the Survivors or damage it causes to planeswalkers the Survivors control. (This app can't keep tracks of lifepoint, use another app to handle Surviors and Horde's lifepoints)")
+                
+                MenuTextTitleView(text: "Play 3 turns then touch anywhere to start")
             }
             
-            MenuTextTitleView(text: "Alternate start")
-            
-            MenuTextParagraphView(text: "To increse the difficulty, you can make the horde start with 30 life points. The horde start to mill its library only when its lifepoints are equal to 0")
-            
-            MenuTextSubtitleView(text: "Play 3 turns before sarting the horde")
-            
-            MenuTextBoldParagraphView(text: "Touch anywhere to start the horde")
-            
-        }.frame(width: UIScreen.main.bounds.width / 2)
-        .onTapGesture {
+        }.padding([.leading, .trailing], 40)
+            .transition(AnyTransition.slide)
+        /*.onTapGesture {
             print("Start game button pressed")
             gameViewModel.nextButtonPressed()
-        }
+        }*/
+            
     }
 }
 
 struct IntroPlayerChoiceButtonView: View {
     
-    let text: String
-    var isSelected: Bool
+    @EnvironmentObject var gameViewModel: GameViewModel
+    let percent: Int
+    
+    var isSelected: Bool {
+        return gameViewModel.deckPercentToKeepAtStart == percent
+    }
     
     var body: some View {
         Button(action: {
-            print("Start game button pressed")
-            //gameViewModel.nextButtonPressed()
+            print("Set deck size to \(percent)%")
+            gameViewModel.reduceLibrarySize(percentToKeep: percent)
         }, label: {
-            Text(text)
+            Text("\(percent)%")
                 .foregroundColor(isSelected ? .white : .gray)
                 .fontWeight(.bold)
                 .font(.title)
@@ -458,7 +487,7 @@ struct GraveyardView: View {
             Text("Touch a permanent card to put it onto the battlefield")
                 .foregroundColor(.white)
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 50) {
+                LazyHStack(spacing: 50) {
                     Rectangle().frame(width: 40, height: 0)
                     ForEach(gameViewModel.cardsOnGraveyard) { card in
                         VStack(spacing: 15) {
@@ -520,7 +549,8 @@ struct GraveyardView: View {
                         }
                     }
                     Rectangle().frame(width: 40, height: 0)
-                }.frame(minWidth: UIScreen.main.bounds.width, minHeight: CardSize.height.normal + 220)
+                }.frame(minWidth: UIScreen.main.bounds.width)
+                    .frame(height: CardSize.height.normal + 280)
             }.onTapGesture {
                 print("Hide graveyard button pressed")
                 gameViewModel.showGraveyard = false

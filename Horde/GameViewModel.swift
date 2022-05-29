@@ -9,7 +9,7 @@ import Foundation
 
 class GameViewModel: ObservableObject {
     
-    @Published var turnStep: Int = 0
+    @Published var turnStep: Int = -1
     @Published var cardsToCast: CardsToCast
     @Published var cardsOnBoard: [Card] = []
     @Published var cardsOnGraveyard: [Card] = []
@@ -19,6 +19,17 @@ class GameViewModel: ObservableObject {
     var tokensAvailable: [Card]
     @Published var showGraveyard = false
     @Published var damageTakenThisTurn: Int = 0
+    @Published var deckPercentToKeepAtStart: Int
+    
+    var deckPickedId = 0
+    var deckSizeAtStart = 0
+    @Published var shouldStartWithEnchantment = false
+    @Published var shouldSpawnGeneralAtHalf = false
+    @Published var shouldntHaveBoardWipeInFirstQuarter = false
+    
+    
+    // A faire
+    @Published var isMarathonMode = false
     
     /** Turn order
         1) launch all in graveyard
@@ -34,18 +45,21 @@ class GameViewModel: ObservableObject {
         //super.init()
         cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
         
-        let deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
+        deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
         //let deckAndTokens = deckManager.getZombieClassicDeck()
         let deckAndTokens = DeckManager.getDeckForId(deckPickedId: 1)
         self.deck = deckAndTokens.0
         self.tokensAvailable = deckAndTokens.1
         print("Game initiating with deck \(deckPickedId)")
+        
+        deckPercentToKeepAtStart = 100
+        turnStep = -1
     }
     
     func startGame() {
         cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
         
-        let deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
+        deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
         print("Game initiating with deck \(deckPickedId)")
 
         let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId)
@@ -54,6 +68,9 @@ class GameViewModel: ObservableObject {
         
         cardsOnBoard = []
         cardsOnGraveyard = []
+        
+        deckPercentToKeepAtStart = 100
+        turnStep = -1
     }
     
     func startNewHordeStep() {
@@ -61,6 +78,35 @@ class GameViewModel: ObservableObject {
         // If graveyard have cards with flashback, take it off from graveyard
         // Show all cards
         
+        // Setup step
+        if turnStep == 0 {
+            // Reduce library size
+            let cardsToKeep = Int(Double(deck.count) * (Double(deckPercentToKeepAtStart) / 100.0))
+            deck.removeSubrange(0..<(deck.count - cardsToKeep))
+            deckSizeAtStart = deck.count
+            
+            // Make sure no boardwipe in first quarter
+            if shouldntHaveBoardWipeInFirstQuarter {
+                let quarter = deck.count / 4
+                var hasBoardWipeInFirstQuarter = false
+                
+                repeat {
+                    deck.shuffle()
+                    for i in 1..<quarter {
+                        for boardWipe in DeckManager.boardWipesCards {
+                            if deck[deck.count - i] == boardWipe {
+                                hasBoardWipeInFirstQuarter = true
+                            }
+                        }
+                    }
+                } while hasBoardWipeInFirstQuarter
+            }
+            
+            // Spawn start enchantment
+            if shouldStartWithEnchantment {
+                addCardToBoard(card: DeckManager.getRandomCardFromStarterPermanents(deckPickedId: deckPickedId))
+            }
+        }
         if turnStep == 1 {
             cardsToCast = drawUntilNonToken()
             cardsToCast.cardsFromGraveyard = searchGraveyardForFlashback()
@@ -93,6 +139,7 @@ class GameViewModel: ObservableObject {
             if cardRevealed.cardType == .token {
                 tokensRevealed.append(cardRevealed)
             }
+            spawnGeneralIfNeeded()
         } while cardRevealed.cardType == .token && deck.count != 0
         
         // We regroup tokens
@@ -146,7 +193,7 @@ class GameViewModel: ObservableObject {
     
     func addCardToBoard(card: Card) {
         // Enchantment are placed before creatures
-        if card.cardType == .enchantment {
+        if card.cardType == .enchantment || card.cardType == .artifact  {
             cardsOnBoard.insert(card, at: 0)
         } else {
             cardsOnBoard.append(card)
@@ -157,6 +204,66 @@ class GameViewModel: ObservableObject {
         let tmpCard = Card(cardName: copyOfCard.cardName, cardType: copyOfCard.cardType, cardImage: copyOfCard.cardImage, hasFlashback: copyOfCard.hasFlashback)
         tmpCard.cardCount = copyOfCard.cardCount
         return copyOfCard
+    }
+    
+    func spawnGeneralIfNeeded() {
+        if shouldSpawnGeneralAtHalf && deck.count == deckSizeAtStart / 2 {
+            addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+            // MAKE SURE IT HAPPENS ONLY ONCE
+        }
+    }
+    
+    func setupMarathonDeckWithParameters(difficulty: Int) {
+        let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId, difficulty: difficulty)
+        self.deck = deckAndTokens.0
+        self.tokensAvailable = deckAndTokens.1
+        
+        // Reduce library size
+        let cardsToKeep = Int(Double(deck.count) * (Double(deckPercentToKeepAtStart) / 100.0))
+        deck.removeSubrange(0..<(deck.count - cardsToKeep))
+        deckSizeAtStart = deck.count
+        
+        // Make sure no boardwipe in first quarter
+        if shouldntHaveBoardWipeInFirstQuarter {
+            let quarter = deck.count / 4
+            var hasBoardWipeInFirstQuarter = false
+            
+            repeat {
+                deck.shuffle()
+                for i in 1..<quarter {
+                    for boardWipe in DeckManager.boardWipesCards {
+                        if deck[deck.count - i] == boardWipe {
+                            hasBoardWipeInFirstQuarter = true
+                        }
+                    }
+                }
+            } while hasBoardWipeInFirstQuarter
+        }
+    }
+    
+    func generateMarathonDeck(atStage: Int) {
+        deckPercentToKeepAtStart = 50
+        shouldSpawnGeneralAtHalf = false
+        shouldStartWithEnchantment = false
+        var difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
+        difficulty += atStage
+        
+        // First Stage, 50 cards normal amount of tokens
+        if atStage == 0 {
+            setupMarathonDeckWithParameters(difficulty: difficulty)
+        }
+        // Second Stage, 100 cards with twice the amount of tokens
+        // Spawn first boss
+        else if atStage == 1 {
+            setupMarathonDeckWithParameters(difficulty: difficulty)
+            addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+        }
+        // Second Stage, 150 cards with tokens x3
+        // Spawn second boss
+        else if atStage == 2 {
+            setupMarathonDeckWithParameters(difficulty: difficulty)
+            addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+        }
     }
     
     //MARK: BUTTONS
@@ -237,6 +344,8 @@ class GameViewModel: ObservableObject {
                 cardsOnGraveyard.append(card)
             }
             damageTakenThisTurn += 1
+            
+            spawnGeneralIfNeeded()
         }
     }
     
@@ -254,5 +363,9 @@ class GameViewModel: ObservableObject {
         removeCardFromGraveyard(card: card)
         deck.append(card)
         deck.shuffle()
+    }
+    
+    func reduceLibrarySize(percentToKeep: Int) {
+        deckPercentToKeepAtStart = percentToKeep
     }
 }

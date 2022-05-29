@@ -29,6 +29,7 @@ struct MenuView: View {
                     MenuButtonView(title: "Contact", id: 3)
                     // Don't show return to deck selection if already in deck selection
                     if hordeAppViewModel.readyToPlay {
+                        Spacer()
                         Button(action: {
                             print("Return to menu button pressed")
                             hordeAppViewModel.shouldShowMenu = false
@@ -38,8 +39,9 @@ struct MenuView: View {
                                 .foregroundColor(.gray)
                                 .fontWeight(.bold)
                                 .font(.largeTitle)
-                                .frame(width: 250)
-                        }).buttonStyle(StaticButtonStyle())
+                                .frame(width: 200)
+                        })
+                        Spacer()
                     }
                 }
                 ScrollView(.vertical) {
@@ -75,7 +77,7 @@ struct MenuButtonView: View {
                 .foregroundColor(isMenuSelected ? .white : .gray)
                 .fontWeight(.bold)
                 .font(.largeTitle)
-        }).buttonStyle(StaticButtonStyle())
+        })
     }
 }
 

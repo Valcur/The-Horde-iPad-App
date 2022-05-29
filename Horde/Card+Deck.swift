@@ -56,6 +56,7 @@ enum CardType {
     case token
     case creature
     case enchantment
+    case artifact
     case sorcery
     case instant
 }
