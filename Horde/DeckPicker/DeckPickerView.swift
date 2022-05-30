@@ -128,7 +128,7 @@ struct DeckPickingView: View {
                 //.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
                 
             }// .buttonStyle(StaticButtonStyle())
-            
+            /*
             if isDeckSelected {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 10) {
@@ -174,7 +174,7 @@ struct DeckPickingView: View {
                     }
                     Spacer()
                 }.offset(x: 80, y: 110).opacity(isDeckSelected ? 1 : 0).transition(.move(edge: .top))
-            }
+            }*/
             
             Text("art by \(deckPicker.imageArtist)")
                 .foregroundColor(.white)
@@ -202,10 +202,12 @@ struct DeckPickerView_Previews: PreviewProvider {
         if #available(iOS 15, *) {
             DeckPickerView()
                 .environmentObject(DeckPickerViewModel())
+                .environmentObject(HordeAppViewModel())
                 .previewInterfaceOrientation(.landscapeLeft)
         } else {
             DeckPickerView()
                 .environmentObject(DeckPickerViewModel())
+                .environmentObject(HordeAppViewModel())
         }
     }
 }

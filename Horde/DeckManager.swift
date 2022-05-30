@@ -771,7 +771,7 @@ struct DeckManager {
         1 Knight Exemplar
         1 Kyler, Sigardian Emissary
         4 Plague Wind
-        1 Radiant Destiny
+        1 Radiant Destiny -> CHANGED TO Glorious Anthem
         1 Rally the Ranks -> CHANGED TO Glorious Anthem
         1 Reverent Hoplite
         1 Ruinous Ultimatum
@@ -862,8 +862,8 @@ struct DeckManager {
             deck.append(Card(cardName: "Plague Wind", cardType: .sorcery))
         }
         
-        // 1 Radiant Destiny
-        deck.append(Card(cardName: "Radiant Destiny", cardType: .enchantment))
+        // 1 Glorious Anthem
+        deck.append(Card(cardName: "Glorious Anthem", cardType: .enchantment))
         
         // 1 Glorious Anthem
         deck.append(Card(cardName: "Glorious Anthem", cardType: .enchantment))
@@ -1337,12 +1337,12 @@ struct DeckManager {
         deck.append(Card(cardName: "Wakening Sun's Avatar", cardType: .creature))
 
         // 40 Dinosaur (TIKO)
-        for _ in 1...40 {
+        for _ in 1...(40 * difficulty) {
             deck.append(Card(cardName: "Dinosaur (TIKO)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TIKO")))
         }
         
         // 20 Dinosaur (TGN2)
-        for _ in 1...20 {
+        for _ in 1...(20 * difficulty) {
             deck.append(Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")))
         }
         

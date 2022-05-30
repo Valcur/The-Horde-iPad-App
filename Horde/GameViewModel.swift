@@ -27,9 +27,9 @@ class GameViewModel: ObservableObject {
     @Published var shouldSpawnGeneralAtHalf = false
     @Published var shouldntHaveBoardWipeInFirstQuarter = false
     
-    
-    // A faire
-    @Published var isMarathonMode = false
+    // true = 100 card deck, false = multiple deck with increasing difficulty
+    @Published var isClassicMode = true
+    var marathonStage = -1
     
     /** Turn order
         1) launch all in graveyard
@@ -42,7 +42,6 @@ class GameViewModel: ObservableObject {
      */
     
     init() {
-        //super.init()
         cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
         
         deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
@@ -65,6 +64,7 @@ class GameViewModel: ObservableObject {
         let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId)
         self.deck = deckAndTokens.0
         self.tokensAvailable = deckAndTokens.1
+        print("Game initiating with deck \(deckPickedId)")
         
         cardsOnBoard = []
         cardsOnGraveyard = []
@@ -80,34 +80,15 @@ class GameViewModel: ObservableObject {
         
         // Setup step
         if turnStep == 0 {
-            // Reduce library size
-            let cardsToKeep = Int(Double(deck.count) * (Double(deckPercentToKeepAtStart) / 100.0))
-            deck.removeSubrange(0..<(deck.count - cardsToKeep))
-            deckSizeAtStart = deck.count
-            
-            // Make sure no boardwipe in first quarter
-            if shouldntHaveBoardWipeInFirstQuarter {
-                let quarter = deck.count / 4
-                var hasBoardWipeInFirstQuarter = false
-                
-                repeat {
-                    deck.shuffle()
-                    for i in 1..<quarter {
-                        for boardWipe in DeckManager.boardWipesCards {
-                            if deck[deck.count - i] == boardWipe {
-                                hasBoardWipeInFirstQuarter = true
-                            }
-                        }
-                    }
-                } while hasBoardWipeInFirstQuarter
-            }
-            
-            // Spawn start enchantment
-            if shouldStartWithEnchantment {
-                addCardToBoard(card: DeckManager.getRandomCardFromStarterPermanents(deckPickedId: deckPickedId))
-            }
+            setupHorde()
         }
         if turnStep == 1 {
+            // If empty, start new marathon stage
+            if !isClassicMode && deck.count == 0 && marathonStage < 3 {
+                marathonStage += 1
+                generateMarathonStage(atStage: marathonStage)
+            }
+            
             cardsToCast = drawUntilNonToken()
             cardsToCast.cardsFromGraveyard = searchGraveyardForFlashback()
         }
@@ -126,6 +107,53 @@ class GameViewModel: ObservableObject {
             cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
             // Attack
             
+        }
+    }
+    
+    func setupHorde(withDifficulty: Int = -1) {
+        // Marathon setup
+        if !isClassicMode && marathonStage == -1 {
+            deckPercentToKeepAtStart = 50
+            shouldSpawnGeneralAtHalf = false
+            shouldStartWithEnchantment = false
+            marathonStage = 0
+        }
+        
+        if withDifficulty > -1 {
+            let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId, difficulty: withDifficulty)
+            self.deck = deckAndTokens.0
+            self.tokensAvailable = deckAndTokens.1
+        } else {
+            let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId)
+            self.deck = deckAndTokens.0
+            self.tokensAvailable = deckAndTokens.1
+        }
+        
+        // Reduce library size
+        let cardsToKeep = Int(Double(deck.count) * (Double(deckPercentToKeepAtStart) / 100.0))
+        deck.removeSubrange(0..<(deck.count - cardsToKeep))
+        deckSizeAtStart = deck.count
+        
+        // Make sure no boardwipe in first quarter
+        if shouldntHaveBoardWipeInFirstQuarter && marathonStage <= 0 {
+            let quarter = deck.count / 4
+            var hasBoardWipeInFirstQuarter = false
+            
+            repeat {
+                deck.shuffle()
+                for i in 1..<quarter {
+                    for boardWipe in DeckManager.boardWipesCards {
+                        if deck[deck.count - i] == boardWipe {
+                            hasBoardWipeInFirstQuarter = true
+                        }
+                    }
+                }
+            } while hasBoardWipeInFirstQuarter
+        }
+        
+        // Spawn start enchantment
+        if shouldStartWithEnchantment {
+            addCardToBoard(card: DeckManager.getRandomCardFromStarterPermanents(deckPickedId: deckPickedId))
         }
     }
     
@@ -213,56 +241,28 @@ class GameViewModel: ObservableObject {
         }
     }
     
-    func setupMarathonDeckWithParameters(difficulty: Int) {
-        let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId, difficulty: difficulty)
-        self.deck = deckAndTokens.0
-        self.tokensAvailable = deckAndTokens.1
-        
-        // Reduce library size
-        let cardsToKeep = Int(Double(deck.count) * (Double(deckPercentToKeepAtStart) / 100.0))
-        deck.removeSubrange(0..<(deck.count - cardsToKeep))
-        deckSizeAtStart = deck.count
-        
-        // Make sure no boardwipe in first quarter
-        if shouldntHaveBoardWipeInFirstQuarter {
-            let quarter = deck.count / 4
-            var hasBoardWipeInFirstQuarter = false
-            
-            repeat {
-                deck.shuffle()
-                for i in 1..<quarter {
-                    for boardWipe in DeckManager.boardWipesCards {
-                        if deck[deck.count - i] == boardWipe {
-                            hasBoardWipeInFirstQuarter = true
-                        }
-                    }
-                }
-            } while hasBoardWipeInFirstQuarter
-        }
-    }
-    
-    func generateMarathonDeck(atStage: Int) {
-        deckPercentToKeepAtStart = 50
-        shouldSpawnGeneralAtHalf = false
-        shouldStartWithEnchantment = false
+    func generateMarathonStage(atStage: Int) {
         var difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
         difficulty += atStage
         
+        setupHorde(withDifficulty: difficulty)
+        
+        // Spawn everything needed between waves
+        
         // First Stage, 50 cards normal amount of tokens
         if atStage == 0 {
-            setupMarathonDeckWithParameters(difficulty: difficulty)
+            
         }
         // Second Stage, 100 cards with twice the amount of tokens
         // Spawn first boss
         else if atStage == 1 {
-            setupMarathonDeckWithParameters(difficulty: difficulty)
             addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
         }
         // Second Stage, 150 cards with tokens x3
         // Spawn second boss
         else if atStage == 2 {
-            setupMarathonDeckWithParameters(difficulty: difficulty)
             addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+            addCardToBoard(card: DeckManager.getRandomCardFromStarterPermanents(deckPickedId: deckPickedId))
         }
     }
     
@@ -276,6 +276,10 @@ class GameViewModel: ObservableObject {
             damageTakenThisTurn = 0
         }
         startNewHordeStep()
+    }
+    
+    func isNextButtonDisabled() -> Bool {
+        return (isClassicMode && deck.count == 0) || (!isClassicMode && deck.count == 0 && marathonStage >= 2)
     }
     
     func removeOneCardOnBoard(card: Card) {

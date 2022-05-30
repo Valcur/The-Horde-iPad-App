@@ -261,7 +261,7 @@ struct ControlBarView: View {
                 gameViewModel.nextButtonPressed()
             }, label: {
                 PurpleButtonLabel(text: "New Turn")
-            }).disabled(gameViewModel.deck.count == 0 || nexButtonDisable)
+            }).disabled(gameViewModel.isNextButtonDisabled() || nexButtonDisable)
                 .onChange(of: gameViewModel.turnStep) { _ in
                     if gameViewModel.turnStep == 1 {
                         nexButtonDisable = true
@@ -364,107 +364,6 @@ struct CastedCardView: View {
                 gameViewModel.nextButtonPressed()
             }
         }
-    }
-}
-
-struct GameIntroView: View {
-    
-    @EnvironmentObject var gameViewModel: GameViewModel
-    @State private var showGreeting = true
-    
-    var body: some View {
-        // The button to leave the menu is the background
-        Button(action: {
-            print("Start game button pressed")
-            gameViewModel.nextButtonPressed()
-        }, label: {
-            VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
-        }).buttonStyle(StaticButtonStyle())
-        
-        VStack(spacing: 50) {
-            
-            if gameViewModel.turnStep == -1 {
-                MenuTextTitleView(text: "Setup")
-                
-                HStack(alignment: .top, spacing: 50) {
-
-                    VStack(spacing: 30) {
-                        
-                        MenuTextSubtitleView(text: "DeckSize")
-                        
-                        MenuTextParagraphView(text: "To adjust the challenge, you can reduce the library size depending on the number of players.")
-                            .frame(height: 50)
-                        
-                        HStack(spacing: 20) {
-                            IntroPlayerChoiceButtonView(percent: 100)
-                            IntroPlayerChoiceButtonView(percent: 75)
-                            IntroPlayerChoiceButtonView(percent: 50)
-                            IntroPlayerChoiceButtonView(percent: 25)
-                        }
-                    }
-                    
-                    Rectangle()
-                        .foregroundColor(.white)
-                        .frame(width: 2, height: 130)
-                        .padding(.top, 70)
-                    
-                    VStack(spacing: 30) {
-                        
-                        MenuTextSubtitleView(text: "Config")
-                        
-                        MenuTextParagraphView(text: "Challenge options")
-                        
-                        Toggle("Horde start with a random enchantment different for every deck", isOn: $gameViewModel.shouldStartWithEnchantment)
-                            .foregroundColor(.white)
-                        
-                        Toggle("Spawn a random general different for every deck when half of the deck has been removed", isOn: $gameViewModel.shouldSpawnGeneralAtHalf)
-                            .foregroundColor(.white)
-                        
-                        Toggle("Horde draw 2 non token instead of one after half of the deck has been removed", isOn: $gameViewModel.shouldntHaveBoardWipeInFirstQuarter)
-                            .foregroundColor(.white)
-                    }
-                    
-                }.background(Color(.white).opacity(0.00000001))
-                
-                MenuTextBoldParagraphView(text: "Touch anywhere to continue")
-                
-            } else if gameViewModel.turnStep == 0 {
-                MenuTextSubtitleView(text: "Lifepoints")
-                
-                MenuTextParagraphView(text: "The horde start with 20 life points and start to mill its library only when its lifepoints are equal to 0. The Horde gains life equal to any lose of life it causes the Survivors or damage it causes to planeswalkers the Survivors control. (This app can't keep tracks of lifepoint, use another app to handle Surviors and Horde's lifepoints)")
-                
-                MenuTextTitleView(text: "Play 3 turns then touch anywhere to start")
-            }
-            
-        }.padding([.leading, .trailing], 40)
-            .transition(AnyTransition.slide)
-        /*.onTapGesture {
-            print("Start game button pressed")
-            gameViewModel.nextButtonPressed()
-        }*/
-            
-    }
-}
-
-struct IntroPlayerChoiceButtonView: View {
-    
-    @EnvironmentObject var gameViewModel: GameViewModel
-    let percent: Int
-    
-    var isSelected: Bool {
-        return gameViewModel.deckPercentToKeepAtStart == percent
-    }
-    
-    var body: some View {
-        Button(action: {
-            print("Set deck size to \(percent)%")
-            gameViewModel.reduceLibrarySize(percentToKeep: percent)
-        }, label: {
-            Text("\(percent)%")
-                .foregroundColor(isSelected ? .white : .gray)
-                .fontWeight(.bold)
-                .font(.title)
-        })
     }
 }
 
