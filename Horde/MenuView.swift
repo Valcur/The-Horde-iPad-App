@@ -24,12 +24,7 @@ struct MenuView: View {
             
             HStack(alignment: .top) {
                 VStack(alignment: .trailing, spacing: 30) {
-                    MenuButtonView(title: "Rules", id: 1)
-                    MenuButtonView(title: "How to play", id: 2)
-                    MenuButtonView(title: "Contact", id: 3)
-                    // Don't show return to deck selection if already in deck selection
                     if hordeAppViewModel.readyToPlay {
-                        Spacer()
                         Button(action: {
                             print("Return to menu button pressed")
                             hordeAppViewModel.shouldShowMenu = false
@@ -40,9 +35,12 @@ struct MenuView: View {
                                 .fontWeight(.bold)
                                 .font(.largeTitle)
                                 .frame(width: 200)
-                        })
-                        Spacer()
+                        }).padding(.bottom, 100)
                     }
+                    MenuButtonView(title: "Rules", id: 1)
+                    MenuButtonView(title: "How to play", id: 2)
+                    MenuButtonView(title: "Contact", id: 3)
+                    // Don't show return to deck selection if already in deck selection
                 }
                 ScrollView(.vertical) {
                     if hordeAppViewModel.menuToShowId == 1 {
@@ -175,10 +173,51 @@ struct MenuTextBoldParagraphView: View {
 
 struct MenuHowToPlayView: View {
     var body: some View {
-        Text("How To play")
-            .foregroundColor(.white)
-            .fontWeight(.bold)
-            .font(.largeTitle)
+        
+        LazyVStack(alignment: .leading, spacing: 40) {
+                
+            Text("How to use the app")
+                .foregroundColor(.white)
+                .fontWeight(.bold)
+                .font(.largeTitle)
+            
+            MenuTextSubtitleView(text: "FAQ")
+            
+            VStack(alignment: .leading, spacing: 20) {
+                MenuTextBoldParagraphView(text: "How to Deal damage to the horde ?")
+                
+                MenuTextParagraphView(text: "Press the horde's library to mill its deck")
+            }
+            
+            VStack(alignment: .leading, spacing: 20) {
+                MenuTextBoldParagraphView(text: "How to keep track survivors and horde's lifepoints ?")
+                
+                MenuTextParagraphView(text: "Use another app, sorry :'(")
+            }
+            
+            VStack(alignment: .leading, spacing: 20) {
+                MenuTextBoldParagraphView(text: "How to destroy a permenent ?")
+                
+                MenuTextParagraphView(text: "Press a card on the board to destroy it")
+            }
+            
+            LazyHStack(spacing: 30) {
+                Image("TutoLibraryReveal")
+                
+                LazyVStack(alignment: .leading, spacing: 30) {
+                    
+                    MenuTextSubtitleView(text: "Reveal library top card")
+                    
+                    MenuTextParagraphView(text: "You can reveal the horde's library top card any time by pressing the Reveal Top button. You'll have access tu 3 buttons to interact with this card. the button actions are described below in order from left to right")
+                    
+                    MenuTextBoldParagraphView(text: "Put top card at the bottom of the horde's library")
+                    
+                    MenuTextBoldParagraphView(text: "Shuffle the horde's library")
+                    
+                    MenuTextBoldParagraphView(text: "Put top card on the battlefield")
+                }
+            }
+        }
     }
 }
 
@@ -194,6 +233,8 @@ struct MenuContactView: View {
             MenuTextTitleView(text: "Info")
             
             MenuTextParagraphView(text: "App icon by Superarticons")
+            
+            MenuTextBoldParagraphView(text: "Horde - iPad App is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.")
         }
     }
 }

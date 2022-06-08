@@ -53,6 +53,7 @@ class GameViewModel: ObservableObject {
         
         deckPercentToKeepAtStart = 100
         turnStep = -1
+        marathonStage = -1
     }
     
     func startGame() {
@@ -71,6 +72,7 @@ class GameViewModel: ObservableObject {
         
         deckPercentToKeepAtStart = 100
         turnStep = -1
+        marathonStage = -1
     }
     
     func startNewHordeStep() {
@@ -108,6 +110,8 @@ class GameViewModel: ObservableObject {
             // Attack
             
         }
+        
+        showLibraryTopCard = false
     }
     
     func setupHorde(withDifficulty: Int = -1) {
@@ -134,9 +138,11 @@ class GameViewModel: ObservableObject {
         deck.removeSubrange(0..<(deck.count - cardsToKeep))
         deckSizeAtStart = deck.count
         
+        // INFINITE LOOP IF TOO MANY BOARD WIPE AFETR SIZE REDUCTION ?
+        var n = 0
         // Make sure no boardwipe in first quarter
         if shouldntHaveBoardWipeInFirstQuarter && marathonStage <= 0 {
-            let quarter = deck.count / 4
+            let quarter = deck.count / 6
             var hasBoardWipeInFirstQuarter = false
             
             repeat {
@@ -148,7 +154,15 @@ class GameViewModel: ObservableObject {
                         }
                     }
                 }
-            } while hasBoardWipeInFirstQuarter
+                print("loop \(n)")
+                n += 1
+            } while hasBoardWipeInFirstQuarter && n < 100
+            
+            // Can't suffle without no board wipe wich means too many board wipe -> wouldn't be fun -> let's get a new deck
+            if n >= 100 {
+                setupHorde(withDifficulty: withDifficulty)
+                return
+            }
         }
         
         // Spawn start enchantment
@@ -220,7 +234,7 @@ class GameViewModel: ObservableObject {
     }
     
     func addCardToBoard(card: Card) {
-        // Enchantment are placed before creatures
+        // Enchantments and artifacts are placed before creatures
         if card.cardType == .enchantment || card.cardType == .artifact  {
             cardsOnBoard.insert(card, at: 0)
         } else {
@@ -325,7 +339,7 @@ class GameViewModel: ObservableObject {
     }
     
     func castCardFromGraveyard(card: Card) {
-        if card.cardType == .token || card.cardType == .creature || card.cardType == .enchantment {
+        if card.cardType == .token || card.cardType == .creature || card.cardType == .enchantment || card.cardType == .artifact {
             addCardToBoard(card: card)
             cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
             removeCardFromGraveyard(card: card)
@@ -350,12 +364,15 @@ class GameViewModel: ObservableObject {
             damageTakenThisTurn += 1
             
             spawnGeneralIfNeeded()
+            
+            showLibraryTopCard = false
         }
     }
     
     func putOnTopOfLibrary(card: Card) {
         removeCardFromGraveyard(card: card)
         deck.append(card)
+        showLibraryTopCard = false
     }
     
     func putAtBottomOfLibrary(card: Card) {
@@ -367,9 +384,32 @@ class GameViewModel: ObservableObject {
         removeCardFromGraveyard(card: card)
         deck.append(card)
         deck.shuffle()
+        showLibraryTopCard = false
     }
     
     func reduceLibrarySize(percentToKeep: Int) {
         deckPercentToKeepAtStart = percentToKeep
+    }
+    
+    @Published var showLibraryTopCard = false
+    
+    func shuffleLibrary() {
+        showLibraryTopCard = false
+        deck.shuffle()
+    }
+    
+    func putTopLibraryCardToBottom() {
+        showLibraryTopCard = false
+        putAtBottomOfLibrary(card: deck.removeLast())
+    }
+    
+    func putTopLibraryCardToBattlefield() {
+        let card = deck.last!
+        if card.cardType == .token || card.cardType == .creature || card.cardType == .enchantment || card.cardType == .artifact {
+            showLibraryTopCard = false
+            addCardToBoard(card: card)
+            cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+            deck.removeLast()
+        }
     }
 }

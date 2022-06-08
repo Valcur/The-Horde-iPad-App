@@ -146,8 +146,63 @@ struct HordeBoardView: View {
                                     .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                                     .cornerRadius(CardSize.cornerRadius.normal)
                                     .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
+                                
+                                
+                                if gameViewModel.showLibraryTopCard {
+                                    FlippingCardView(card: gameViewModel.deck.last!)
+                                        .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
+                                }
+                                
+                                /*
+                                if gameViewModel.showLibraryTopCard {
+                                    CardView(cardName: gameViewModel.deck.last!.cardName, imageUrl: gameViewModel.deck.last!.cardImage)
+                                        .frame(width: CardSize.width.normal, height: CardSize.height.normal)
+                                        .cornerRadius(CardSize.cornerRadius.normal)
+                                        .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
+                                } else {
+                                    Image("BackgroundTest")
+                                        .resizable()
+                                        .frame(width: CardSize.width.normal, height: CardSize.height.normal)
+                                        .cornerRadius(CardSize.cornerRadius.normal)
+                                        .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
+                                }
+                                 
+                                 */
                             }
                         }).frame(height: CardSize.height.normal).offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness / 2).shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                        
+                        if gameViewModel.showLibraryTopCard {
+                            HStack {
+                                // To Bottom of Library
+                                Button(action: {
+                                    gameViewModel.putTopLibraryCardToBottom()
+                                }, label: {
+                                    ButtonLabelWithImage(imageName: "square.3.stack.3d.bottom.fill")
+                                })
+                                Spacer()
+                                // Shuffle into Librarry
+                                Button(action: {
+                                    gameViewModel.shuffleLibrary()
+                                }, label: {
+                                    ButtonLabelWithImage(imageName: "shuffle")
+                                })
+                                Spacer()
+                                // To the Battlefield
+                                Button(action: {
+                                    gameViewModel.putTopLibraryCardToBattlefield()
+                                }, label: {
+                                    ButtonLabelWithImage(imageName: "arrow.up.right.square")
+                                })
+                            }.offset(y: CardSize.height.normal / 2)
+                                .frame(width: CardSize.width.normal -  20, height: 50)
+                        } else {
+                            Button(action: {
+                                print("Reveal library top card button pressed")
+                                gameViewModel.showLibraryTopCard = true
+                            }, label: {
+                                PurpleButtonLabel(text: "Reveal top")
+                            }).offset(y: CardSize.height.normal / 2)
+                        }
                     } else {
                         RoundedRectangle(cornerRadius: CardSize.cornerRadius.normal)
                             .foregroundColor(.black)
@@ -260,7 +315,7 @@ struct ControlBarView: View {
                 print("New turn pressed")
                 gameViewModel.nextButtonPressed()
             }, label: {
-                PurpleButtonLabel(text: "New Turn")
+                PurpleButtonLabel(text: "Draw")
             }).disabled(gameViewModel.isNextButtonDisabled() || nexButtonDisable)
                 .onChange(of: gameViewModel.turnStep) { _ in
                     if gameViewModel.turnStep == 1 {
@@ -503,48 +558,47 @@ struct CardToCastView: View {
         }.frame(height: CardSize.height.big + 60)
     }
 }
-/*
+
 struct FlippingCardView: View {
     @State var backDegree = 0.0
     @State var frontDegree = -90.0
+    @State var cardScale = 1.0
     @EnvironmentObject var gameViewModel: GameViewModel
     
-    let duration : CGFloat = 0.5
-    let delay: CGFloat
-    let cardOrder: Int
-    let proxy: ScrollViewProxy
+    let duration : CGFloat = 0.35
+    let delay: CGFloat = 0.0
     
     var card: Card
     
-    init(card: Card, cardOrder: Int, proxy: ScrollViewProxy) {
-        self.card = card
-        self.cardOrder = cardOrder
-        self.delay = 0.1 + CGFloat(cardOrder) * 0.5
-        self.proxy = proxy
-        print("\(card.cardType == .token ? "token" : "creature") : \(cardOrder)")
-    }
-    
     func flipCard () {
-        withAnimation(.linear(duration: duration).delay(delay)) {
+        withAnimation(.easeInOut(duration: duration).delay(delay)) {
             backDegree = 90
         }
-        withAnimation(.linear(duration: duration).delay(delay + duration)){
+        withAnimation(.easeInOut(duration: duration).delay(delay)) {
+            cardScale = 1.2
+        }
+        withAnimation(.easeInOut(duration: duration).delay(delay + duration)){
             frontDegree = 0
+        }
+        withAnimation(.easeInOut(duration: duration).delay(delay + duration)){
+            cardScale = 1.0
         }
     }
  
     var body: some View {
         ZStack {
-            CardToCastView(card: card)
+            CardView(cardName: card.cardName, imageUrl: card.cardImage)
+                .frame(width: CardSize.width.normal, height: CardSize.height.normal)
+                .cornerRadius(CardSize.cornerRadius.normal)
                 .rotation3DEffect(Angle(degrees: frontDegree), axis: (x: 0, y: 1, z: 0))
+                .scaleEffect(cardScale)
             Image("BackgroundTest")
                 .resizable()
-                .frame(width: CardSize.width.big, height: CardSize.height.big)
+                .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                 .cornerRadius(CardSize.cornerRadius.normal)
-                .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
                 .rotation3DEffect(Angle(degrees: backDegree), axis: (x: 0, y: 1, z: 0))
-        }.id(cardOrder)
-        .frame(height: CardSize.height.big + 200)
+                .scaleEffect(cardScale)
+        }
         .onChange(of: gameViewModel.turnStep) { _ in
             if gameViewModel.turnStep == 1 {
                 backDegree = 0.0
@@ -556,7 +610,7 @@ struct FlippingCardView: View {
         }
     }
 }
-*/
+
 struct CardOnBoardView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
@@ -614,10 +668,12 @@ struct ContentView_Previews: PreviewProvider {
         if #available(iOS 15, *) {
             GameView()
                 .environmentObject(GameViewModel())
+                .environmentObject(HordeAppViewModel())
                 .previewInterfaceOrientation(.landscapeLeft)
         } else {
             GameView()
                 .environmentObject(GameViewModel())
+                .environmentObject(HordeAppViewModel())
         }
     }
 }
@@ -632,7 +688,7 @@ struct PurpleButtonLabel: View {
             .fontWeight(.bold)
             .font(.subheadline)
             .padding()
-            .frame(width: 150)
+            .frame(width: 150, height: 50)
             .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
             .cornerRadius(40)
             .foregroundColor(.white)
@@ -641,3 +697,19 @@ struct PurpleButtonLabel: View {
     }
 }
 
+struct ButtonLabelWithImage: View {
+    
+    var imageName: String
+    
+    var body: some View {
+        Image(systemName: imageName)
+            .font(.subheadline)
+            .frame(width: 50, height: 50)
+            .padding()
+            .frame(width: 50, height: 50)
+            .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
+            .cornerRadius(40)
+            .foregroundColor(.white)
+            .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+    }
+}

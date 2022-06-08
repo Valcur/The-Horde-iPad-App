@@ -375,9 +375,9 @@ struct DeckManager {
          1 Diffusion Sliver
          1 Essence Sliver
          1 Frenzy Sliver
-         1 Fungus Sliver
+         1 Fungus Sliver -> Changed to Fury Sliver
          1 Fury Sliver
-         1 Hive Stirrings
+         1 Hive Stirrings -> Changed to Might Sliver
          1 Lancer Sliver
          1 Lavabelly Sliver
          1 Leeching Sliver
@@ -385,19 +385,19 @@ struct DeckManager {
          1 Megantic Sliver
          1 Might Sliver
          4 Plague Wind
-         1 Root Sliver
+         1 Root Sliver -> Changed to Sinew Sliver
          1 Ruinous Ultimatum
          1 Shifting Sliver
          1 Sidewinder Sliver
          1 Sinew Sliver
-         1 Sliver Legion
+         1 Sliver Legion -> leave this one here not as a boss ? -> Changed to Megantic Sliver
          1 Spined Sliver
          1 Spitting Sliver
-         1 Synchronous Sliver
-         1 Tempered Sliver
+         1 Synchronous Sliver -> Changed to Lavabelly Sliver
+         1 Tempered Sliver -> Changed to Might Sliver
          1 Toxin Sliver
          1 Two-Headed Sliver
-         1 Vampiric Sliver
+         1 Vampiric Sliver -> Changed to Might Sliver
          2 Vandalblast
          
          10 Venser's Sliver
@@ -430,13 +430,13 @@ struct DeckManager {
         deck.append(Card(cardName: "Frenzy Sliver",cardType: .creature))
         
         // 1 Fungus Sliver
-        deck.append(Card(cardName: "Fungus Sliver",cardType: .creature))
+        deck.append(Card(cardName: "Fury Sliver",cardType: .creature))
         
         // 1 Fury Sliver
         deck.append(Card(cardName: "Fury Sliver",cardType: .creature))
         
         // 1 Hive Stirrings
-        deck.append(Card(cardName: "Hive Stirrings",cardType: .sorcery))
+        deck.append(Card(cardName: "Might Sliver",cardType: .creature))
         
         // 1 Lancer Sliver
         deck.append(Card(cardName: "Lancer Sliver",cardType: .creature))
@@ -462,7 +462,7 @@ struct DeckManager {
         }
         
         // 1 Root Sliver
-        deck.append(Card(cardName: "Root Sliver",cardType: .creature))
+        deck.append(Card(cardName: "Sinew Sliver",cardType: .creature))
         
         // 1 Ruinous Ultimatum
         deck.append(Card(cardName: "Ruinous Ultimatum",cardType: .sorcery))
@@ -477,7 +477,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Sinew Sliver",cardType: .creature))
         
         // 1 Sliver Legion
-        deck.append(Card(cardName: "Sliver Legion",cardType: .creature))
+        deck.append(Card(cardName: "Megantic Sliver",cardType: .creature))
         
         // 1 Spined Sliver
         deck.append(Card(cardName: "Spined Sliver",cardType: .creature))
@@ -486,10 +486,10 @@ struct DeckManager {
         deck.append(Card(cardName: "Spitting Sliver",cardType: .creature))
         
         // 1 Synchronous Sliver
-        deck.append(Card(cardName: "Synchronous Sliver",cardType: .creature))
+        deck.append(Card(cardName: "Lavabelly Sliver",cardType: .creature))
         
         // 1 Tempered Sliver
-        deck.append(Card(cardName: "Tempered Sliver",cardType: .creature))
+        deck.append(Card(cardName: "Might Sliver",cardType: .creature))
         
         // 1 Toxin Sliver
         deck.append(Card(cardName: "Toxin Sliver",cardType: .creature))
@@ -498,7 +498,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Two-Headed Sliver",cardType: .creature))
         
         // 1 Vampiric Sliver
-        deck.append(Card(cardName: "Vampiric Sliver",cardType: .creature))
+        deck.append(Card(cardName: "Might Sliver",cardType: .creature))
         
         // 2 Vandalblast
         for _ in 1...2 {
@@ -749,6 +749,12 @@ struct DeckManager {
         
         /* HUMAN ARMY
          
+        MAYBE ?
+        1 Balefire Liege
+        1 Crescendo of War
+        1 Glory of Warfare
+        1 Nobilis of War
+         
         1 Adeline, Resplendent Cathar
         1 Adriana, Captain of the Guard
         1 Archetype of Courage
@@ -767,15 +773,15 @@ struct DeckManager {
         1 Hero of Bladehold
         1 Hero of Oxid Ridge
         1 Increasing Devotion
-        1 Inspiring Veteran
-        1 Knight Exemplar
+        1 Inspiring Veteran -> Changed to Balefire Liege
+        1 Knight Exemplar -> Changed to Nobilis of War
         1 Kyler, Sigardian Emissary
         4 Plague Wind
         1 Radiant Destiny -> CHANGED TO Glorious Anthem
         1 Rally the Ranks -> CHANGED TO Glorious Anthem
         1 Reverent Hoplite
         1 Ruinous Ultimatum
-        1 Shared Animosity
+        1 Shared Animosity -> Too strong ? changed to Dictate of Heliod
         1 Spare from Evil
         1 Stalwart Pathlighter
         1 Syr Alin, the Lion's Claw
@@ -783,7 +789,7 @@ struct DeckManager {
         2 Vandalblast
         1 Victory's Envoy -> CHANGED TO Blazing Archon
         1 Visions of Glory
-        1 Worthy Knight
+        1 Worthy Knight -> Changed to Angel of Glory's Rise
          
         10 Soldier (TGRN) 2
         10 Knight (TMIC) 3
@@ -849,10 +855,10 @@ struct DeckManager {
         deck.append(Card(cardName: "Increasing Devotion", cardType: .sorcery, hasFlashback: true))
         
         // 1 Inspiring Veteran
-        deck.append(Card(cardName: "Inspiring Veteran", cardType: .creature))
+        deck.append(Card(cardName: "Balefire Liege", cardType: .creature))
         
         // 1 Knight Exemplar
-        deck.append(Card(cardName: "Knight Exemplar", cardType: .creature))
+        deck.append(Card(cardName: "Nobilis of War", cardType: .creature))
         
         // 1 Kyler, Sigardian Emissary
         deck.append(Card(cardName: "Kyler, Sigardian Emissary", cardType: .creature))
@@ -875,7 +881,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Ruinous Ultimatum", cardType: .sorcery))
         
         // 1 Shared Animosity
-        deck.append(Card(cardName: "Shared Animosity", cardType: .enchantment))
+        deck.append(Card(cardName: "Dictate of Heliod", cardType: .enchantment))
         
         // 1 Spare from Evil
         deck.append(Card(cardName: "Spare from Evil", cardType: .instant))
@@ -901,7 +907,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Visions of Glory", cardType: .sorcery, hasFlashback: true))
         
         // 1 Worthy Knight
-        deck.append(Card(cardName: "Worthy Knight", cardType: .creature))
+        deck.append(Card(cardName: "Angel of Glory's Rise", cardType: .creature))
         
         
         // 10 Soldier (TGRN) 2
@@ -944,6 +950,9 @@ struct DeckManager {
         var deck: [Card] = []
         
         /* PHYREXIAN PERFECTION
+         
+         MAYBE ?
+         1 Decimator of the Provinces
          
          // Removed because mostly because of +1/+1 counters
          1 Arcbound Crusher -> CHANGED TO Master Splicer
@@ -1485,11 +1494,15 @@ struct DeckManager {
          1 Oketra the True
          1 Emmara Tandris
          1 Resolute Archangel
+         1 Akroma, Angel of Wrath
+         1 Angelic Arbiter
+         1 Gisela, Blade of Goldnight
          
          ONLY PHYREXIAN
          
          1 Poison-Tip Archer
          1 Atraxa, Praetors' Voice
+         1 Lord of Extinction
          
          ONLY SLIVER
          
@@ -1499,6 +1512,7 @@ struct DeckManager {
          ONLY DINOSAUR
          
          1 Zetalpa, Primal Dawn
+         1 End-Raze Forerunners
          
          ONLY ELDRAZI
          
@@ -1516,16 +1530,21 @@ struct DeckManager {
         switch deckPickedId {
         case 1:
             commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
-            commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
+            //commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
             commonCards.append(Card(cardName: "Assemble the Legion", cardType: .creature))
+            commonCards.append(Card(cardName: "Akroma, Angel of Wrath", cardType: .creature))
+            commonCards.append(Card(cardName: "Angelic Arbiter", cardType: .creature))
+            commonCards.append(Card(cardName: "Gisela, Blade of Goldnight", cardType: .creature))
         case 2:
             commonCards.append(Card(cardName: "Poison-Tip Archer", cardType: .creature))
             commonCards.append(Card(cardName: "Atraxa, Praetors' Voice", cardType: .creature))
+            commonCards.append(Card(cardName: "Lord of Extinction", cardType: .creature))
         case 3:
             commonCards.append(Card(cardName: "Sliver Hiverlord", cardType: .creature))
             commonCards.append(Card(cardName: "Sliver Legion", cardType: .creature))
         case 4:
             commonCards.append(Card(cardName: "Zetalpa, Primal Dawn", cardType: .creature))
+            commonCards.append(Card(cardName: "End-Raze Forerunners", cardType: .creature))
         case 5:
             commonCards.append(Card(cardName: "Brisela, Voice of Nightmares", cardType: .creature))
         default:

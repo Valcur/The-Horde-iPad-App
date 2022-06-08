@@ -74,8 +74,8 @@ struct IntroSetupView: View {
             
             Rectangle()
                 .foregroundColor(.white)
-                .frame(width: 2, height: 130)
-                .padding(.top, 70)
+                .frame(width: 2)
+                .padding([.top, .bottom], 70)
             
             VStack(spacing: 30) {
                 
@@ -129,6 +129,20 @@ struct IntroBeforeGameStartView: View {
         MenuTextSubtitleView(text: "Lifepoints")
         
         MenuTextParagraphView(text: "The horde start with 20 life points and start to mill its library only when its lifepoints are equal to 0. The Horde gains life equal to any lose of life it causes the Survivors or damage it causes to planeswalkers the Survivors control. (This app can't keep tracks of lifepoint, use another app to handle Surviors and Horde's lifepoints)")
+        
+        MenuTextSubtitleView(text: "Recommanded horde draw per turn")
+        
+        HStack(spacing: 75) {
+            HStack(spacing: 25) {
+                MenuTextParagraphView(text: "1-2 players")
+                MenuTextBoldParagraphView(text: "1 card")
+            }
+            
+            HStack(spacing: 25) {
+                MenuTextParagraphView(text: "3-4 players")
+                MenuTextBoldParagraphView(text: "2 cards")
+            }
+        }
         
         MenuTextTitleView(text: "Play 3 turns then touch anywhere to start")
     }
