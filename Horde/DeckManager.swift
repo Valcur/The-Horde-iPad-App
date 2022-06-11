@@ -13,8 +13,228 @@ struct DeckManager {
         Card(cardName: "Damnation", cardType: .sorcery),
         Card(cardName: "Ruinous Ultimatum",cardType: .sorcery),
         Card(cardName: "All Is Dust", cardType: .sorcery),
-        Card(cardName: "Plague Wind",cardType: .sorcery)
+        Card(cardName: "Plague Wind",cardType: .sorcery),
+        Card(cardName: "Ezuri's Predation", cardType: .sorcery)
     ]
+    
+    // 1 Wandering Wolf
+    
+    // 41
+    
+    // 1 Worldspine Wurm
+    // 1 Copperhoof Vorrac
+    // 1 Bellowing Tanglewurm
+    // 1 Essence of the Wild -> galere a gerer en vrai
+    // 1 Yorvo, Lord of Garenbrig
+    // 1 Ghalta, Primal Hunger
+    // 1 Goreclaw, Terror of Qal Sisma
+    // 1 Rhonas the Indomitable
+    // 1 Craterhoof Behemoth
+    // 1 Impervious Greatwurm
+    // 1 Nessian Boar
+    // 1 Hornet Queen
+    // 1 End-Raze Forerunners
+    // 1 Grothama, All-Devouring
+    
+    // 1 Steel Leaf Champion
+    // 1 Woodland Champion
+    // 1 Thragtusk
+    // 1 Mother Bear
+    
+    // 1 Winds of Qal Sisma
+    // 1 Overrun
+    // 1 Overwhelming Stampede
+    // 1 Heroic Intervention
+    // 1 Scale Up
+    // 1 Ezuri's Predation
+    // 1 Fungal Sprouting
+    // 1 Grizzly Fate
+    // 1 Shadowbeast Sighting
+    // 1 Klothys's Design
+    // 1 Call of the Herd
+    // 1 Crush of Wurms
+    // 1 Beast Attack
+    // 1 Gnaw to the Bone
+    // 1 Elephant Ambush
+    // 1 Roar of the Wurm
+    
+    // 1 Unnatural Growth
+    // 1 Sandwurm Convergence
+    // 1 Beastmaster Ascension
+    // 2 Muraganda Petroglyphs
+    // 2 Gaea's Anthem
+    
+    static private func getNatureDeck(difficulty: Int) -> ([Card], [Card]) {
+        var deck: [Card] = []
+        
+        // 1 Worldspine Wurm
+        deck.append(Card(cardName: "Worldspine Wurm", cardType: .creature))
+        
+        // 1 Copperhoof Vorrac
+        deck.append(Card(cardName: "Copperhoof Vorrac", cardType: .creature))
+        
+        // 1 Bellowing Tanglewurm
+        deck.append(Card(cardName: "Bellowing Tanglewurm", cardType: .creature))
+        
+        // 1 Essence of the Wild
+        //deck.append(Card(cardName: "Essence of the Wild", cardType: .creature))
+        
+        // 1 Yorvo, Lord of Garenbrig
+        deck.append(Card(cardName: "Yorvo, Lord of Garenbrig", cardType: .creature))
+        
+        // 1 Ghalta, Primal Hunger
+        //deck.append(Card(cardName: "Ghalta, Primal Hunger", cardType: .creature))
+        
+        // 1 Goreclaw, Terror of Qal Sisma
+        deck.append(Card(cardName: "Goreclaw, Terror of Qal Sisma", cardType: .creature))
+        
+        // 1 Rhonas the Indomitable
+        deck.append(Card(cardName: "Rhonas the Indomitable", cardType: .creature))
+        
+        // 1 Craterhoof Behemoth
+        deck.append(Card(cardName: "Craterhoof Behemoth", cardType: .creature))
+        
+        // 1 Impervious Greatwurm
+        deck.append(Card(cardName: "Impervious Greatwurm", cardType: .creature))
+        
+        // 1 Nessian Boar
+        deck.append(Card(cardName: "Nessian Boar", cardType: .creature))
+        
+        // 1 Hornet Queen
+        deck.append(Card(cardName: "Hornet Queen", cardType: .creature))
+        
+        // 1 End-Raze Forerunners
+        deck.append(Card(cardName: "End-Raze Forerunners", cardType: .creature))
+        
+        // 1 Grothama, All-Devouring
+        deck.append(Card(cardName: "Grothama, All-Devouring", cardType: .creature))
+        
+        // 1 Steel Leaf Champion
+        deck.append(Card(cardName: "Steel Leaf Champion", cardType: .creature))
+        
+        // 1 Woodland Champion
+        deck.append(Card(cardName: "Woodland Champion", cardType: .creature))
+        
+        // 1 Thragtusk -> Too many token type
+        //deck.append(Card(cardName: "Thragtusk", cardType: .creature))
+        
+        // 1 Mother Bear
+        deck.append(Card(cardName: "Mother Bear", cardType: .creature, hasFlashback: true))
+        
+        // A CHANGER SORCERY INSTANT
+        
+        // 1 Winds of Qal Sisma
+        deck.append(Card(cardName: "Winds of Qal Sisma", cardType: .sorcery))
+        
+        // 1 Overrun
+        deck.append(Card(cardName: "Overrun", cardType: .sorcery))
+        
+        // 1 Overwhelming Stampede
+        deck.append(Card(cardName: "Overwhelming Stampede", cardType: .sorcery))
+        
+        // 1 Heroic Intervention
+        deck.append(Card(cardName: "Heroic Intervention", cardType: .sorcery))
+        
+        // 1 Scale Up
+        deck.append(Card(cardName: "Scale Up", cardType: .sorcery))
+        
+        // 1 Ezuri's Predation
+        deck.append(Card(cardName: "Ezuri's Predation", cardType: .sorcery))
+        
+        // 1 Fungal Sprouting
+        deck.append(Card(cardName: "Fungal Sprouting", cardType: .sorcery))
+        
+        // 1 Grizzly Fate
+        deck.append(Card(cardName: "Grizzly Fate", cardType: .sorcery, hasFlashback: true))
+        deck.append(Card(cardName: "Grizzly Fate", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Shadowbeast Sighting
+        deck.append(Card(cardName: "Shadowbeast Sighting", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Klothys's Design
+        deck.append(Card(cardName: "Klothys's Design", cardType: .sorcery))
+        
+        // 1 Call of the Herd
+        deck.append(Card(cardName: "Call of the Herd", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Crush of Wurms
+        deck.append(Card(cardName: "Crush of Wurms", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Beast Attack
+        deck.append(Card(cardName: "Beast Attack", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Gnaw to the Bone
+        deck.append(Card(cardName: "Gnaw to the Bone", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Elephant Ambush
+        deck.append(Card(cardName: "Elephant Ambush", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Roar of the Wurm
+        deck.append(Card(cardName: "Roar of the Wurm", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Unnatural Growth
+        deck.append(Card(cardName: "Unnatural Growth", cardType: .enchantment))
+        
+        // 1 Sandwurm Convergence
+        deck.append(Card(cardName: "Sandwurm Convergence", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Sandwurm Convergence", specifiSet: "AKH")))
+        
+        // 1 Beastmaster Ascension
+        deck.append(Card(cardName: "Beastmaster Ascension", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Beastmaster Ascension", specifiSet: "ZEN")))
+        
+        // 2 Muraganda Petroglyphs
+        for _ in 1...2 {
+            deck.append(Card(cardName: "Muraganda Petroglyphs", cardType: .enchantment))
+        }
+        
+        // 3 Gaea's Anthem
+        for _ in 1...3 {
+            deck.append(Card(cardName: "Gaea's Anthem", cardType: .enchantment))
+        }
+        
+        // 20 Bear 2/2
+        for _ in 1...(20 * difficulty) {
+            deck.append(Card(cardName: "Bear", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Bear", specifiSet: "TELD")))
+        }
+        
+        // 6 Elephant 3/3
+        for _ in 1...(6 * difficulty) {
+            deck.append(Card(cardName: "Elephant", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")))
+        }
+        
+        // 10 Beast 4/4
+        for _ in 1...(10 * difficulty) {
+            deck.append(Card(cardName: "Beast", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")))
+        }
+        
+        // 5 Wurm 6/6
+        for _ in 1...(5 * difficulty) {
+            deck.append(Card(cardName: "Wurm", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TC19")))
+        }
+        
+        // 16 Elemental x/x
+        for _ in 1...(16 * difficulty) {
+            deck.append(Card(cardName: "Elemental", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "T2XM")))
+        }
+         
+        // 3 Elemental 7/7
+        for _ in 1...(3 * difficulty) {
+            deck.append(Card(cardName: "Elemental", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "TKHC")))
+        }
+        
+        let tokens: [Card] = [
+            Card(cardName: "Saproling (TC20)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
+            Card(cardName: "Insect", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TC20")),
+            Card(cardName: "Bear", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Bear", specifiSet: "TELD")),
+            Card(cardName: "Elephant", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")),
+            Card(cardName: "Beast", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")),
+            Card(cardName: "Wurm TCLB", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TCLB")),
+            Card(cardName: "Wurm TC19", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TC19"))
+        ]
+        
+        deck.shuffle()
+        
+        return (deck, tokens)
+    }
     
     static private func getZombieDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
@@ -1386,16 +1606,18 @@ struct DeckManager {
     
     static func getDeckForId(deckPickedId: Int, difficulty: Int) -> ([Card], [Card]) {
         switch deckPickedId {
-        case 1:
+        case DecksId.human:
             return getHumanDeck(difficulty: difficulty)
-        case 2:
+        case DecksId.phyrexian:
             return getPhyrexianDeck(difficulty: difficulty)
-        case 3:
+        case DecksId.sliver:
             return getSliverDeck(difficulty: difficulty)
-        case 4:
+        case DecksId.dinosaur:
             return getDinosaurDeck(difficulty: difficulty)
-        case 5:
+        case DecksId.eldrazi:
             return getEldraziDeck(difficulty: difficulty)
+        case DecksId.nature:
+            return getNatureDeck(difficulty: difficulty)
         default:
             return getZombieDeck(difficulty: difficulty)
         }
@@ -1450,18 +1672,20 @@ struct DeckManager {
         ]
         
         switch deckPickedId {
-        case 1:
+        case DecksId.human:
             commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
             commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
             commonCards.append(Card(cardName: "Assemble the Legion", cardType: .creature))
-        case 2:
+        case DecksId.phyrexian:
             commonCards.append(Card(cardName: "Propaganda", cardType: .enchantment))
-        case 3:
+        case DecksId.sliver:
             commonCards.append(Card(cardName: "Propaganda", cardType: .enchantment))
-        case 4:
+        case DecksId.dinosaur:
             commonCards.append(Card(cardName: "Gruul War Chant", cardType: .enchantment))
-        case 5:
+        case DecksId.eldrazi:
             commonCards.append(Card(cardName: "Forsaken Monument", cardType: .artifact))
+        case DecksId.nature:
+            commonCards.append(Card(cardName: "Gruul War Chant", cardType: .enchantment)) // A REFAIRE
         default:
             commonCards = [
                 Card(cardName: "Liliana's Mastery", cardType: .enchantment),
@@ -1528,25 +1752,27 @@ struct DeckManager {
         ]
         
         switch deckPickedId {
-        case 1:
+        case DecksId.human:
             commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
             //commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
             commonCards.append(Card(cardName: "Assemble the Legion", cardType: .creature))
             commonCards.append(Card(cardName: "Akroma, Angel of Wrath", cardType: .creature))
             commonCards.append(Card(cardName: "Angelic Arbiter", cardType: .creature))
             commonCards.append(Card(cardName: "Gisela, Blade of Goldnight", cardType: .creature))
-        case 2:
+        case DecksId.phyrexian:
             commonCards.append(Card(cardName: "Poison-Tip Archer", cardType: .creature))
             commonCards.append(Card(cardName: "Atraxa, Praetors' Voice", cardType: .creature))
             commonCards.append(Card(cardName: "Lord of Extinction", cardType: .creature))
-        case 3:
+        case DecksId.sliver:
             commonCards.append(Card(cardName: "Sliver Hiverlord", cardType: .creature))
             commonCards.append(Card(cardName: "Sliver Legion", cardType: .creature))
-        case 4:
+        case DecksId.dinosaur:
             commonCards.append(Card(cardName: "Zetalpa, Primal Dawn", cardType: .creature))
             commonCards.append(Card(cardName: "End-Raze Forerunners", cardType: .creature))
-        case 5:
+        case DecksId.eldrazi:
             commonCards.append(Card(cardName: "Brisela, Voice of Nightmares", cardType: .creature))
+        case DecksId.nature:
+            commonCards.append(Card(cardName: "Brisela, Voice of Nightmares", cardType: .creature)) // A REFAIRE
         default:
             commonCards = [
                 Card(cardName: "Zombie Master", cardType: .creature),
@@ -1558,6 +1784,5 @@ struct DeckManager {
     }
 }
 
-// HUMAN MISS 2 CARDS
-// DINO MISS 1 CARD + MISS POLYRAPTOR TOKEN
+
 // ELDRAI CRASH SOMETIMES

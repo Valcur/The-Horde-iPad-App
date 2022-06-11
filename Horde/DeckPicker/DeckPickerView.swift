@@ -18,12 +18,10 @@ struct DeckPickerView: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(0..<deckPickerViewModel.deckPickers.count, id: \.self) { i in
-                            DeckPickingView(deckId: i, deckPicker: deckPickerViewModel.deckPickers[i])
-                                .id(i)
+                        ForEach(deckPickerViewModel.deckPickers, id: \.self) { deck in
+                            DeckPickingView(deckPicker: deck).id(deck.id)
                         }
-                    }//.frame(width: PickerSize.width.unpicked * 3 + PickerSize.width.picked + 350)
-                        .padding([.leading, .trailing], 200)
+                    }.padding([.leading, .trailing], 200)
                     .onChange(of: deckPickerViewModel.deckPickedId) { _ in
                         withAnimation {
                             proxy.scrollTo(deckPickerViewModel.deckPickedId, anchor: .center)
@@ -51,23 +49,22 @@ struct DeckPickingView: View {
     
     @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
-    let deckId: Int
     let deckPicker: DeckPicker
     
     let rotationInDegrees: CGFloat = 5
     var isDeckSelected: Bool {
-        return deckPickerViewModel.deckPickedId == deckId
+        return deckPickerViewModel.deckPickedId == deckPicker.id
     }
     
     var body: some View {
         ZStack {
             Button(action: {
                 if isDeckSelected {
-                    print("Start game with deck \(deckId)")
+                    print("Start game with deck \(deckPicker.id)")
                     hordeAppViewModel.readyToPlay = true
                 } else {
-                    print("Deck \(deckId) picked")
-                    deckPickerViewModel.pickDeck(deckId: deckId)
+                    print("Deck \(deckPicker.id) picked")
+                    deckPickerViewModel.pickDeck(deckId: deckPicker.id)
                 }
             }) {
                 ZStack {
@@ -128,53 +125,6 @@ struct DeckPickingView: View {
                 //.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
                 
             }// .buttonStyle(StaticButtonStyle())
-            /*
-            if isDeckSelected {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Difficulty")
-                            .foregroundColor(.white)
-                            .fontWeight(.bold)
-                            .font(.title)
-                        
-                        Button(action: {
-                            print("Difficulty set to 1x")
-                            hordeAppViewModel.setDifficulty(newDifficulty: 1)
-                        }) {
-                            Text("1X")
-                                .foregroundColor(hordeAppViewModel.difficulty == 1 ? .white : .gray)
-                                .fontWeight(.bold)
-                                .font(.title)
-                                .frame(width: 80, height: 40)
-                        }.offset(x: -30)
-                        
-                        Button(action: {
-                            print("Difficulty set to 2x")
-                            hordeAppViewModel.setDifficulty(newDifficulty: 2)
-                        }) {
-                            Text("2X")
-                                .foregroundColor(hordeAppViewModel.difficulty == 2 ? .white : .gray)
-                                .fontWeight(.bold)
-                                .font(.title)
-                                .frame(width: 80, height: 40)
-                        }.offset(x: -40)
-                        
-                        Button(action: {
-                            print("Difficulty set to 3x")
-                            hordeAppViewModel.setDifficulty(newDifficulty: 3)
-                        }) {
-                            Text("3X")
-                                .foregroundColor(hordeAppViewModel.difficulty == 3 ? .white : .gray)
-                                .fontWeight(.bold)
-                                .font(.title)
-                                .frame(width: 80, height: 40)
-                        }.offset(x: -50)
-                        
-                        Spacer()
-                    }
-                    Spacer()
-                }.offset(x: 80, y: 110).opacity(isDeckSelected ? 1 : 0).transition(.move(edge: .top))
-            }*/
             
             Text("art by \(deckPicker.imageArtist)")
                 .foregroundColor(.white)
@@ -189,10 +139,6 @@ struct DeckPickingView: View {
             width = PickerSize.width.unpicked
 
         }
-        // First and larst larger to compensate hidden part
-        /*if deckId == 0 || deckId == 4 {
-            width = width + 50
-        }*/
         return width
     }
 }

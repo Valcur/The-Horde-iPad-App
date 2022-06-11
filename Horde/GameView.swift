@@ -30,11 +30,20 @@ struct GameView: View {
                 ControlBarView()
             }.ignoresSafeArea()
             
-            if gameViewModel.damageTakenThisTurn > 0 {
-                Text("Damage taken by the horde this turn : \(gameViewModel.damageTakenThisTurn)")
-                    .fontWeight(.bold)
-                    .font(.title2)
-                    .multilineTextAlignment(.center)
+            ZStack {
+                if gameViewModel.damageTakenThisTurn > 0 {
+                    Button(action: {
+                        gameViewModel.damageTakenThisTurn = 0
+                    }, label: {
+                        VStack(spacing: 5) {
+                            Text("Damage taken : \(gameViewModel.damageTakenThisTurn)")
+                                .fontWeight(.bold)
+                                .font(.title2)
+                            
+                            Text("Touch to dismiss")
+                                .font(.subheadline)
+                        }
+                    })
                     .padding()
                     .frame(width: 300)
                     .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
@@ -43,7 +52,10 @@ struct GameView: View {
                     .padding(10)
                     .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
                     .position(x: UIScreen.main.bounds.width / 2, y: 70)
-            }
+                    .animation(.easeInOut(duration: 0.3), value: gameViewModel.damageTakenThisTurn)
+                }
+            }.transition(.move(edge: .top))
+
 
             CastedCardView()
                 .opacity(castedCardViewOpacity)
@@ -411,9 +423,9 @@ struct CastedCardView: View {
                             ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
                                 CardToCastView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
                             }
-                        }.padding([.leading, .trailing], 30)
+                        }
                     }
-                }.frame(minWidth: UIScreen.main.bounds.width, minHeight: CardSize.height.normal + 160)
+                }.frame(minWidth: UIScreen.main.bounds.width, minHeight: CardSize.height.normal + 160).padding([.leading, .trailing], 30)
             }.onTapGesture {
                 print("Next button pressed")
                 gameViewModel.nextButtonPressed()

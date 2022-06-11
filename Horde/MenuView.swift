@@ -181,24 +181,34 @@ struct MenuHowToPlayView: View {
                 .fontWeight(.bold)
                 .font(.largeTitle)
             
-            MenuTextSubtitleView(text: "FAQ")
-            
-            VStack(alignment: .leading, spacing: 20) {
-                MenuTextBoldParagraphView(text: "How to Deal damage to the horde ?")
+            Group {
+                MenuTextSubtitleView(text: "FAQ")
                 
-                MenuTextParagraphView(text: "Press the horde's library to mill its deck")
-            }
-            
-            VStack(alignment: .leading, spacing: 20) {
-                MenuTextBoldParagraphView(text: "How to keep track survivors and horde's lifepoints ?")
+                VStack(alignment: .leading, spacing: 20) {
+                    MenuTextBoldParagraphView(text: "Difference between Classic and Marathon ?")
+                    
+                    MenuTextParagraphView(text: "Classic :  One deck to beat")
+                    
+                    MenuTextParagraphView(text: "Marathon :  Three half deck to beat. Token mulitplicator increase and strong permanents enters the battlefield between each new deck")
+                }
                 
-                MenuTextParagraphView(text: "Use another app, sorry :'(")
-            }
-            
-            VStack(alignment: .leading, spacing: 20) {
-                MenuTextBoldParagraphView(text: "How to destroy a permenent ?")
+                VStack(alignment: .leading, spacing: 20) {
+                    MenuTextBoldParagraphView(text: "How to Deal damage to the horde ?")
+                    
+                    MenuTextParagraphView(text: "Press the horde's library to mill its deck")
+                }
                 
-                MenuTextParagraphView(text: "Press a card on the board to destroy it")
+                VStack(alignment: .leading, spacing: 20) {
+                    MenuTextBoldParagraphView(text: "How to keep track survivors and horde's lifepoints ?")
+                    
+                    MenuTextParagraphView(text: "Use another app, sorry :'(")
+                }
+                
+                VStack(alignment: .leading, spacing: 20) {
+                    MenuTextBoldParagraphView(text: "How to destroy a permenent ?")
+                    
+                    MenuTextParagraphView(text: "Press a card on the board to destroy it")
+                }
             }
             
             LazyHStack(spacing: 30) {

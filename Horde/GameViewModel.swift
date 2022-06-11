@@ -73,6 +73,7 @@ class GameViewModel: ObservableObject {
         deckPercentToKeepAtStart = 100
         turnStep = -1
         marathonStage = -1
+        showLibraryTopCard = false
     }
     
     func startNewHordeStep() {
