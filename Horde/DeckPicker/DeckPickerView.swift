@@ -18,6 +18,7 @@ struct DeckPickerView: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
+                        DeckPickingIntro()
                         ForEach(deckPickerViewModel.deckPickers, id: \.self) { deck in
                             DeckPickingView(deckPicker: deck).id(deck.id)
                         }
@@ -117,12 +118,9 @@ struct DeckPickingView: View {
                         .frame(width: 500, height: UIScreen.main
                             .bounds.height)
                         .transition(.opacity)
-                        //.opacity(isDeckSelected ? 1 : 0)
-                        //
                 }.frame(width: pickerWidth(), height: UIScreen.main.bounds.height + 150)
                     .clipped()
                 .rotationEffect(Angle.degrees(rotationInDegrees))
-                //.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
                 
             }// .buttonStyle(StaticButtonStyle())
             
@@ -140,6 +138,31 @@ struct DeckPickingView: View {
 
         }
         return width
+    }
+}
+
+struct DeckPickingIntro: View {
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 30) {
+            MenuTextTitleView(text: "Intro")
+            
+            MenuTextBoldParagraphView(text: "Never played the horde format ?")
+            
+            // Would be cool to put Image as a parameter of MenuParagraphView
+            Text("The horde is a cooperative format created by Peter Knudson where player teams up against a self played deck. Go to \(Image(systemName: "gear")) > Rules to read the rules")
+                .foregroundColor(.white)
+                .font(.subheadline)
+                .multilineTextAlignment(.leading)
+            
+            MenuTextBoldParagraphView(text: "Before starting your first match")
+            
+            Text("Go to \(Image(systemName: "gear")) > How To Play to learn how tu use this app")
+                .foregroundColor(.white)
+                .font(.subheadline)
+                .multilineTextAlignment(.leading)
+        
+        }.frame(width: UIScreen.main.bounds.width / 2).padding([.leading, .trailing], 60)
     }
 }
 

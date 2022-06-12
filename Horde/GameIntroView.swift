@@ -49,27 +49,30 @@ struct IntroSetupView: View {
                 
                 MenuTextSubtitleView(text: "Token multiplicator")
                 
-                MenuTextParagraphView(text: "Increase the amount of tokens to make the horde draw more cards")
+                MenuTextParagraphView(text: "Increase the amount of tokens to make the horde draw more cards each times")
                 
                 HStack(spacing: 20) {
                     IntroDifficultyChoiceButtonView(multiplicator: 1)
                     IntroDifficultyChoiceButtonView(multiplicator: 2)
                     IntroDifficultyChoiceButtonView(multiplicator: 3)
+                    IntroDifficultyChoiceButtonView(multiplicator: 4)
+                }
+                    
+                MenuTextSubtitleView(text: "Deck Size")
+                
+                MenuTextParagraphView(text: "Reduce the library size depending on the number of players, or increase it's size to make the game longer")
+                
+                HStack(spacing: 20) {
+                    IntroPlayerChoiceButtonView(percent: 25)
+                    IntroPlayerChoiceButtonView(percent: 50)
+                    IntroPlayerChoiceButtonView(percent: 75)
+                    IntroPlayerChoiceButtonView(percent: 100)
+                    IntroPlayerChoiceButtonView(percent: 200)
+                    IntroPlayerChoiceButtonView(percent: 300)
                 }
                 
-                if gameViewModel.isClassicMode {
-                    
-                    MenuTextSubtitleView(text: "DeckSize")
-                    
-                    MenuTextParagraphView(text: "Reduce the library size depending on the number of players.")
-                    
-                    HStack(spacing: 20) {
-                        IntroPlayerChoiceButtonView(percent: 100)
-                        IntroPlayerChoiceButtonView(percent: 75)
-                        IntroPlayerChoiceButtonView(percent: 50)
-                        IntroPlayerChoiceButtonView(percent: 25)
-                    }
-                }
+                //if gameViewModel.isClassicMode {
+                //}
             }
             
             Rectangle()
@@ -81,21 +84,29 @@ struct IntroSetupView: View {
                 
                 MenuTextSubtitleView(text: "Config")
                 
-                if gameViewModel.isClassicMode {
-                    Toggle("Horde start with a random enchantment different for every deck", isOn: $gameViewModel.shouldStartWithEnchantment)
-                        .foregroundColor(.white)
-                    
-                    Toggle("Spawn a random general different for every deck when half of the deck has been removed", isOn: $gameViewModel.shouldSpawnGeneralAtHalf)
+                Toggle("Horde start with a random permanent (different for every deck)", isOn: $gameViewModel.gameConfig.shared.shouldStartWithWeakPermanent)
+                    .foregroundColor(.white)
+                
+                if gameViewModel.gameConfig.isClassicMode {
+                    Toggle("Spawn a random powerfull permanent (different for every deck) when half of the deck has been removed", isOn: $gameViewModel.gameConfig.classic.shouldSpawnStrongPermanentAtHalf)
                         .foregroundColor(.white)
                 }
                 
-                Toggle("No board wipes in the first quarter", isOn: $gameViewModel.shouldntHaveBoardWipeInFirstQuarter)
+                Toggle("PUSSY MODE : Replace board wipes with powefull permanents", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll)
                     .foregroundColor(.white)
+                
+                if !gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll {
+                    Toggle("No board wipes in the first quarter", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
+                        .foregroundColor(.white)
+                } else {
+                    Toggle("No powerfull permanents in the first quarter", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
+                        .foregroundColor(.white)
+                }
             }
             
         }.background(Color(.white).opacity(0.00000001))
             .frame(height: UIScreen.main.bounds.height / 2)
-            .animation(.easeInOut(duration: 0.3), value: gameViewModel.isClassicMode)
+            .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
         
         MenuTextBoldParagraphView(text: "Touch anywhere to continue")
     }
@@ -107,20 +118,20 @@ struct GameModeSwitchButtonView: View {
     let title: String
     let setModeToClassic: Bool
     var isSelected: Bool {
-        return gameViewModel.isClassicMode == setModeToClassic
+        return gameViewModel.gameConfig.isClassicMode == setModeToClassic
     }
     
     var body: some View {
         Button(action: {
             print("Set mode to \(title)")
-            gameViewModel.isClassicMode = setModeToClassic
+            gameViewModel.changeGameMode(isClassicMode: setModeToClassic)
         }, label: {
             Text(title)
                 .foregroundColor(isSelected ? .white : .gray)
                 .fontWeight(.bold)
                 .font(.largeTitle)
                 .scaleEffect(isSelected ? 1 : 0.7)
-        }).animation(.easeInOut(duration: 0.3), value: gameViewModel.isClassicMode)
+        }).animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
     }
 }
 
@@ -166,7 +177,7 @@ struct IntroDifficultyChoiceButtonView: View {
             Text("\(multiplicator)x")
                 .foregroundColor(isSelected ? .white : .gray)
                 .fontWeight(.bold)
-                .font(.title)
+                .font(.title2)
         })
     }
 }
@@ -177,7 +188,7 @@ struct IntroPlayerChoiceButtonView: View {
     let percent: Int
     
     var isSelected: Bool {
-        return gameViewModel.deckPercentToKeepAtStart == percent
+        return gameViewModel.gameConfig.shared.deckSize == percent
     }
     
     var body: some View {
@@ -188,7 +199,7 @@ struct IntroPlayerChoiceButtonView: View {
             Text("\(percent)%")
                 .foregroundColor(isSelected ? .white : .gray)
                 .fontWeight(.bold)
-                .font(.title)
+                .font(.title2)
         })
     }
 }

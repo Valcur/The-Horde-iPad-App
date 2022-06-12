@@ -111,6 +111,10 @@ struct HordeBoardView: View {
     @EnvironmentObject var gameViewModel: GameViewModel
     let cardThickness: CGFloat = 0.4
     
+    var deckThickness: CGFloat {
+        return gameViewModel.deck.count < 250 ? CGFloat(gameViewModel.deck.count) * cardThickness : 250 * cardThickness
+    }
+    
     var body: some View {
         HStack {
             VStack(spacing: 40) {
@@ -151,18 +155,18 @@ struct HordeBoardView: View {
                                 Rectangle()
                                     .foregroundColor(Color("CardThicknessColor"))
                                     .cornerRadius(CardSize.cornerRadius.normal)
-                                    .frame(width: CardSize.width.normal, height: CardSize.height.normal + CGFloat(gameViewModel.deck.count) * cardThickness)
+                                    .frame(width: CardSize.width.normal, height: CardSize.height.normal + deckThickness)
                                 
                                 Image("BackgroundTest")
                                     .resizable()
                                     .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                                     .cornerRadius(CardSize.cornerRadius.normal)
-                                    .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
+                                    .offset(y: -deckThickness)
                                 
                                 
                                 if gameViewModel.showLibraryTopCard {
                                     FlippingCardView(card: gameViewModel.deck.last!)
-                                        .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
+                                        .offset(y: -deckThickness)
                                 }
                                 
                                 /*
@@ -181,7 +185,7 @@ struct HordeBoardView: View {
                                  
                                  */
                             }
-                        }).frame(height: CardSize.height.normal).offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness / 2).shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                        }).frame(height: CardSize.height.normal).offset(y: -deckThickness / 2).shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                         
                         if gameViewModel.showLibraryTopCard {
                             HStack {
@@ -226,7 +230,7 @@ struct HordeBoardView: View {
                         .fontWeight(.bold)
                         .font(.title)
                         .foregroundColor(.white)
-                        .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
+                        .offset(y: -deckThickness)
                 }
             }.frame(height: CardSize.height.normal * 2 + 50).padding(.bottom, 10)
             
@@ -453,8 +457,7 @@ struct GraveyardView: View {
             Text("Touch a permanent card to put it onto the battlefield")
                 .foregroundColor(.white)
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 50) {
-                    Rectangle().frame(width: 40, height: 0)
+                LazyHStack(spacing: 20) {
                     ForEach(gameViewModel.cardsOnGraveyard) { card in
                         VStack(spacing: 15) {
                             Button(action: {
@@ -480,6 +483,17 @@ struct GraveyardView: View {
                                 .frame(height: 30)
                             HStack {
                                 Button(action: {
+                                    print("Put at the bottom of library button pressed")
+                                    gameViewModel.putAtBottomOfLibrary(card: card)
+                                }, label: {
+                                    Text("Bottom")
+                                        .fontWeight(.bold)
+                                        .font(.subheadline)
+                                        .foregroundColor(.white)
+                                        .frame(height: 40)
+                                })
+                                Rectangle().frame(width: 2, height: 20).foregroundColor(.white)
+                                Button(action: {
                                     print("Put on top of library button pressed")
                                     gameViewModel.putOnTopOfLibrary(card: card)
                                 }, label: {
@@ -500,22 +514,10 @@ struct GraveyardView: View {
                                         .foregroundColor(.white)
                                         .frame(height: 30)
                                 })
-                                Rectangle().frame(width: 2, height: 20).foregroundColor(.white)
-                                Button(action: {
-                                    print("Put at the bottom of library button pressed")
-                                    gameViewModel.putAtBottomOfLibrary(card: card)
-                                }, label: {
-                                    Text("Bottom")
-                                        .fontWeight(.bold)
-                                        .font(.subheadline)
-                                        .foregroundColor(.white)
-                                        .frame(height: 40)
-                                })
                             }
                         }
                     }
-                    Rectangle().frame(width: 40, height: 0)
-                }.frame(minWidth: UIScreen.main.bounds.width)
+                }.padding([.leading, .trailing], 20).frame(minWidth: UIScreen.main.bounds.width)
                     .frame(height: CardSize.height.normal + 280)
             }.onTapGesture {
                 print("Hide graveyard button pressed")
@@ -587,7 +589,7 @@ struct FlippingCardView: View {
             backDegree = 90
         }
         withAnimation(.easeInOut(duration: duration).delay(delay)) {
-            cardScale = 1.2
+            cardScale = 1.1
         }
         withAnimation(.easeInOut(duration: duration).delay(delay + duration)){
             frontDegree = 0

@@ -189,7 +189,7 @@ struct MenuHowToPlayView: View {
                     
                     MenuTextParagraphView(text: "Classic :  One deck to beat")
                     
-                    MenuTextParagraphView(text: "Marathon :  Three half deck to beat. Token mulitplicator increase and strong permanents enters the battlefield between each new deck")
+                    MenuTextParagraphView(text: "Marathon :  Three deck to beat. Token mulitplicator increase and strong permanents enters the battlefield between each new deck")
                 }
                 
                 VStack(alignment: .leading, spacing: 20) {
@@ -218,7 +218,7 @@ struct MenuHowToPlayView: View {
                     
                     MenuTextSubtitleView(text: "Reveal library top card")
                     
-                    MenuTextParagraphView(text: "You can reveal the horde's library top card any time by pressing the Reveal Top button. You'll have access tu 3 buttons to interact with this card. the button actions are described below in order from left to right")
+                    MenuTextParagraphView(text: "You can reveal the horde's library top card any time by pressing the Reveal Top button. You'll have access to 3 buttons to interact with this card. the button actions are described below in order from left to right")
                     
                     MenuTextBoldParagraphView(text: "Put top card at the bottom of the horde's library")
                     

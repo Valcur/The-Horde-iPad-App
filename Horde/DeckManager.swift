@@ -357,7 +357,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Twilights Call", cardType: .sorcery))
         
         // 1 Army of the Damned
-        deck.append(Card(cardName: "Army of the Damned", cardType: .sorcery, cardImage: DeckManager.getScryfallImageUrl(name: "Army of the Damned", specifiSet: "ISD")))
+        deck.append(Card(cardName: "Army of the Damned", cardType: .sorcery, cardImage: DeckManager.getScryfallImageUrl(name: "Army of the Damned", specifiSet: "ISD"), hasFlashback: true))
         
         // 1 Endless Ranks of the Dead
         deck.append(Card(cardName: "Endless Ranks of the Dead", cardType: .enchantment))
@@ -1783,6 +1783,3 @@ struct DeckManager {
         return commonCards.randomElement()!
     }
 }
-
-
-// ELDRAI CRASH SOMETIMES

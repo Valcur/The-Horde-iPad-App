@@ -19,16 +19,13 @@ class GameViewModel: ObservableObject {
     var tokensAvailable: [Card]
     @Published var showGraveyard = false
     @Published var damageTakenThisTurn: Int = 0
-    @Published var deckPercentToKeepAtStart: Int
+
     
     var deckPickedId = 0
     var deckSizeAtStart = 0
-    @Published var shouldStartWithEnchantment = false
-    @Published var shouldSpawnGeneralAtHalf = false
-    @Published var shouldntHaveBoardWipeInFirstQuarter = false
     
-    // true = 100 card deck, false = multiple deck with increasing difficulty
-    @Published var isClassicMode = true
+    @Published var gameConfig: GameConfig
+    
     var marathonStage = -1
     
     /** Turn order
@@ -51,9 +48,10 @@ class GameViewModel: ObservableObject {
         self.tokensAvailable = deckAndTokens.1
         print("Game initiating with deck \(deckPickedId)")
         
-        deckPercentToKeepAtStart = 100
         turnStep = -1
         marathonStage = -1
+        
+        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveBoardWipeInFirstQuarter: false, shouldntHaveBoardWipeAtAll: false, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanentAtHalf: false))
     }
     
     func startGame() {
@@ -70,7 +68,7 @@ class GameViewModel: ObservableObject {
         cardsOnBoard = []
         cardsOnGraveyard = []
         
-        deckPercentToKeepAtStart = 100
+        gameConfig.shared.deckSize = 100
         turnStep = -1
         marathonStage = -1
         showLibraryTopCard = false
@@ -87,7 +85,7 @@ class GameViewModel: ObservableObject {
         }
         if turnStep == 1 {
             // If empty, start new marathon stage
-            if !isClassicMode && deck.count == 0 && marathonStage < 3 {
+            if !gameConfig.isClassicMode && deck.count == 0 && marathonStage < 3 {
                 marathonStage += 1
                 generateMarathonStage(atStage: marathonStage)
             }
@@ -117,13 +115,14 @@ class GameViewModel: ObservableObject {
     
     func setupHorde(withDifficulty: Int = -1) {
         // Marathon setup
-        if !isClassicMode && marathonStage == -1 {
-            deckPercentToKeepAtStart = 50
-            shouldSpawnGeneralAtHalf = false
-            shouldStartWithEnchantment = false
+        if !gameConfig.isClassicMode && marathonStage == -1 {
+            gameConfig.shared.deckSize = 50
+            gameConfig.shared.shouldStartWithWeakPermanent = false
+            gameConfig.classic.shouldSpawnStrongPermanentAtHalf = false
             marathonStage = 0
         }
         
+        // Get deck
         if withDifficulty > -1 {
             let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId, difficulty: withDifficulty)
             self.deck = deckAndTokens.0
@@ -134,15 +133,32 @@ class GameViewModel: ObservableObject {
             self.tokensAvailable = deckAndTokens.1
         }
         
-        // Reduce library size
-        let cardsToKeep = Int(Double(deck.count) * (Double(deckPercentToKeepAtStart) / 100.0))
-        deck.removeSubrange(0..<(deck.count - cardsToKeep))
-        deckSizeAtStart = deck.count
-        
-        // INFINITE LOOP IF TOO MANY BOARD WIPE AFETR SIZE REDUCTION ?
+        // Reduce or increase library size
+        if gameConfig.shared.deckSize <= 100 {
+            let cardsToKeep = Int(Double(deck.count) * (Double(gameConfig.shared.deckSize) / 100.0))
+            deck.removeSubrange(0..<(deck.count - cardsToKeep))
+            deckSizeAtStart = deck.count
+        } else {
+            let deck200 = DeckManager.getDeckForId(deckPickedId: deckPickedId).0
+            
+            for card in deck200 {
+                self.deck.append(card)
+            }
+            
+            if gameConfig.shared.deckSize == 300 {
+                let deck300 = DeckManager.getDeckForId(deckPickedId: deckPickedId).0
+                
+                for card in deck300 {
+                    self.deck.append(card)
+                }
+            }
+            
+            self.deck.shuffle()
+        }
+
+        // No boardwipe in first quarter
         var n = 0
-        // Make sure no boardwipe in first quarter
-        if shouldntHaveBoardWipeInFirstQuarter && marathonStage <= 0 {
+        if gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter && marathonStage <= 0 {
             let quarter = deck.count / 6
             var hasBoardWipeInFirstQuarter = false
             
@@ -166,8 +182,13 @@ class GameViewModel: ObservableObject {
             }
         }
         
+        // Replace Board Wipes with storng permanents
+        if gameConfig.shared.shouldntHaveBoardWipeAtAll {
+            removeBoardWipeFromDeck()
+        }
+        
         // Spawn start enchantment
-        if shouldStartWithEnchantment {
+        if gameConfig.shared.shouldStartWithWeakPermanent {
             addCardToBoard(card: DeckManager.getRandomCardFromStarterPermanents(deckPickedId: deckPickedId))
         }
     }
@@ -182,7 +203,7 @@ class GameViewModel: ObservableObject {
             if cardRevealed.cardType == .token {
                 tokensRevealed.append(cardRevealed)
             }
-            spawnGeneralIfNeeded()
+            spawnStrongPermanentIfNeeded()
         } while cardRevealed.cardType == .token && deck.count != 0
         
         // We regroup tokens
@@ -249,8 +270,8 @@ class GameViewModel: ObservableObject {
         return copyOfCard
     }
     
-    func spawnGeneralIfNeeded() {
-        if shouldSpawnGeneralAtHalf && deck.count == deckSizeAtStart / 2 {
+    func spawnStrongPermanentIfNeeded() {
+        if gameConfig.classic.shouldSpawnStrongPermanentAtHalf && deck.count == deckSizeAtStart / 2 {
             addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
             // MAKE SURE IT HAPPENS ONLY ONCE
         }
@@ -281,6 +302,17 @@ class GameViewModel: ObservableObject {
         }
     }
     
+    func removeBoardWipeFromDeck() {
+        for i in 0..<deck.count {
+            for boardWipe in DeckManager.boardWipesCards {
+                if deck[i] == boardWipe {
+                    deck.remove(at: i)
+                    deck.insert(DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId), at: i)
+                }
+            }
+        }
+    }
+    
     //MARK: BUTTONS
     
     // Player pressed the next button
@@ -294,7 +326,7 @@ class GameViewModel: ObservableObject {
     }
     
     func isNextButtonDisabled() -> Bool {
-        return (isClassicMode && deck.count == 0) || (!isClassicMode && deck.count == 0 && marathonStage >= 2)
+        return (gameConfig.isClassicMode && deck.count == 0) || (!gameConfig.isClassicMode && deck.count == 0 && marathonStage >= 2)
     }
     
     func removeOneCardOnBoard(card: Card) {
@@ -364,7 +396,7 @@ class GameViewModel: ObservableObject {
             }
             damageTakenThisTurn += 1
             
-            spawnGeneralIfNeeded()
+            spawnStrongPermanentIfNeeded()
             
             showLibraryTopCard = false
         }
@@ -389,7 +421,7 @@ class GameViewModel: ObservableObject {
     }
     
     func reduceLibrarySize(percentToKeep: Int) {
-        deckPercentToKeepAtStart = percentToKeep
+        gameConfig.shared.deckSize = percentToKeep
     }
     
     @Published var showLibraryTopCard = false
@@ -413,4 +445,32 @@ class GameViewModel: ObservableObject {
             deck.removeLast()
         }
     }
+    
+    func changeGameMode(isClassicMode: Bool) {
+        if isClassicMode {
+            gameConfig.shared.deckSize = 100
+        } else {
+            gameConfig.shared.deckSize = 50
+        }
+        self.gameConfig.isClassicMode = isClassicMode
+    }
+}
+
+struct GameConfig {
+    var isClassicMode: Bool
+    var shared: SharedParameters
+    var classic: ClassicModeParameters
+}
+
+// ADD OPTION TO CHOOSE HOW MANY STRONG PERMANENT THOURGHT THE DECK SHOULD SPAWN
+
+struct SharedParameters {
+    var shouldStartWithWeakPermanent: Bool
+    var shouldntHaveBoardWipeInFirstQuarter: Bool
+    var shouldntHaveBoardWipeAtAll: Bool
+    var deckSize: Int
+}
+
+struct ClassicModeParameters {
+    var shouldSpawnStrongPermanentAtHalf: Bool
 }
