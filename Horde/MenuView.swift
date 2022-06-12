@@ -22,26 +22,26 @@ struct MenuView: View {
                     .opacity(0.00000001)
             }).buttonStyle(StaticButtonStyle())
             
+            if hordeAppViewModel.readyToPlay {
+                Button(action: {
+                    print("Return to menu button pressed")
+                    hordeAppViewModel.shouldShowMenu = false
+                    hordeAppViewModel.readyToPlay = false
+                }, label: {
+                    Text("Exit")
+                        .foregroundColor(.gray)
+                        .fontWeight(.bold)
+                        .font(.largeTitle)
+                        .frame(width: 100, height: 80)
+                }).position(x: 60, y: 40)
+            }
+            
             HStack(alignment: .top) {
                 VStack(alignment: .trailing, spacing: 30) {
-                    if hordeAppViewModel.readyToPlay {
-                        Button(action: {
-                            print("Return to menu button pressed")
-                            hordeAppViewModel.shouldShowMenu = false
-                            hordeAppViewModel.readyToPlay = false
-                        }, label: {
-                            Text("Return to deck selection")
-                                .foregroundColor(.gray)
-                                .fontWeight(.bold)
-                                .font(.largeTitle)
-                                .frame(width: 200)
-                        }).padding(.bottom, 100)
-                    }
                     MenuButtonView(title: "Rules", id: 1)
                     MenuButtonView(title: "How to play", id: 2)
                     MenuButtonView(title: "Contact", id: 3)
-                    // Don't show return to deck selection if already in deck selection
-                }
+                }.padding(.top)
                 ScrollView(.vertical) {
                     if hordeAppViewModel.menuToShowId == 1 {
                         MenuRulesView()
@@ -51,7 +51,7 @@ struct MenuView: View {
                         MenuContactView()
                     }
                 }.frame(width: UIScreen.main.bounds.width * 0.75).padding(30)
-            }.padding([.leading, .trailing], 20).padding(.top, 50).padding(.bottom, 50)
+            }.padding([.leading, .trailing], 20).padding(.top, hordeAppViewModel.readyToPlay ? 100 : 50).padding(.bottom, 50)
         }.ignoresSafeArea()
     }
 }
@@ -199,7 +199,7 @@ struct MenuHowToPlayView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "How to keep track survivors and horde's lifepoints ?")
+                    MenuTextBoldParagraphView(text: "How to keep track of survivors and horde's lifepoints ?")
                     
                     MenuTextParagraphView(text: "Use another app, sorry :'(")
                 }

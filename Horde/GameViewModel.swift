@@ -13,19 +13,16 @@ class GameViewModel: ObservableObject {
     @Published var cardsToCast: CardsToCast
     @Published var cardsOnBoard: [Card] = []
     @Published var cardsOnGraveyard: [Card] = []
-    
     @Published var deck: [Card] = []
     
-    var tokensAvailable: [Card]
     @Published var showGraveyard = false
     @Published var damageTakenThisTurn: Int = 0
+    @Published var showLibraryTopCard = false
 
-    
+    @Published var gameConfig: GameConfig
     var deckPickedId = 0
     var deckSizeAtStart = 0
-    
-    @Published var gameConfig: GameConfig
-    
+    var tokensAvailable: [Card]
     var marathonStage = -1
     
     /** Turn order
@@ -423,8 +420,6 @@ class GameViewModel: ObservableObject {
     func reduceLibrarySize(percentToKeep: Int) {
         gameConfig.shared.deckSize = percentToKeep
     }
-    
-    @Published var showLibraryTopCard = false
     
     func shuffleLibrary() {
         showLibraryTopCard = false
