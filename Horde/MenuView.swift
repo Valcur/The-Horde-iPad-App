@@ -118,6 +118,13 @@ struct MenuRulesView: View {
                 MenuTextParagraphView(text: "The Zombie deck is built so that, hopefully, the Horde deck is not presented with any decisions. In order for the deck to gather the co-op experience, many awesome Zombie cards were omitted. However, there are lots of cards that the Survivors might play that cause the Horde to make a choice (such as Fact or Fiction or Chainer's Edict). In this case, the Horde makes this choice as randomly as possible.\n\nThe Zombie tokens and cards from the Horde deck use the stack, so you can respond to them coming into to play, or counter them.\n\nThe Horde has infinite mana, so cards like Propaganda and Mana Leak don't work. Sorry!\n\nIf you return a permanent to the Horde's hand, it gets cast again on their next main phase.\n\nThere are a LOT of Magic cards in existence. If something doesn't work the way it's supposed to, just come up with the most fair way to execute the card. If you can't, cycle it. This is a casual format.")
             }
 
+            Group {
+                MenuTextTitleView(text: "Additional rules")
+                
+                MenuTextParagraphView(text: "If the horde need to choose a target, it choose the BEST target. BEST is higher strength, then higher Mana Value. If still multiple possible targets, target at random")
+                
+                MenuTextParagraphView(text: "If survivors have planeswalkers, each time a creature controlled by the horde isn't blocked : heads or tails for each creature to know if it deals damage to the planeswalker or the survivors. Target the planeswalker with higher Mana Value first if survivors have multiple planeswalkers")
+            }
         }
     }
 }
@@ -208,6 +215,18 @@ struct MenuHowToPlayView: View {
                     MenuTextBoldParagraphView(text: "How to destroy a permenent ?")
                     
                     MenuTextParagraphView(text: "Press a card on the board to destroy it")
+                }
+                
+                VStack(alignment: .leading, spacing: 20) {
+                    MenuTextBoldParagraphView(text: "How to play a horde turn ?")
+                    
+                    MenuTextParagraphView(text: "Press the draw button until the horde have drawn enough cards and create tokens if a card told you to. All the creatures controlled by the horde are now attacking, remove the creatures you destroyed during the combat. The turn is now over")
+                }
+                
+                VStack(alignment: .leading, spacing: 20) {
+                    MenuTextBoldParagraphView(text: "I want to replace Plague Wind with Damnation")
+                    
+                    MenuTextParagraphView(text: "Threre is no way to edit the decklist for now. This is a casual format, just pretend Plague Wind are Damnation. Same if you don't like another card")
                 }
             }
             

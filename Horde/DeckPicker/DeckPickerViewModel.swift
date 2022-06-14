@@ -13,13 +13,13 @@ class DeckPickerViewModel: ObservableObject {
     var deckPickers: [DeckPicker]
 
     init() {
-        self.deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
+        self.deckPickedId = -1//UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? -1
         self.deckPickers = [
-            DeckPicker(id: DecksId.zombie, title: "Zombie", intro: "The original horde deck by Peter Knudson", specialRules: "All creatures controlled by the Horde have haste", image: "Zombie", imageArtist: "Ryan Yee"),
+            DeckPicker(id: DecksId.zombie, title: "Zombie", intro: "The original horde deck by Peter Knudson", specialRules: "All creatures controlled by the Horde have haste", image: "Zombie", imageArtist: "Grzegorz Rutkowski"),
             
-            DeckPicker(id: DecksId.human, title: "Human", intro: "A modified version of the Armies of Men deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste and are Humans in addition to their other creature types.", image: "Human", imageArtist: "Karl Kopinski"),
+            DeckPicker(id: DecksId.human, title: "Human", intro: "A modified version of the Armies of Men deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste and are Humans in addition to their other creature types.", image: "Human", imageArtist: "Antonio José Manzanedo"),
             
-            DeckPicker(id: DecksId.phyrexian, title: "Phyrexian", intro: "A modified version of the Phyrexian Perfection deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste and are Phyrexians in addition to their other creature types. The Survivors share poison counters. They do not lose the game for having 10 or more poison counters. Every time the Survivors gain one or more poison counters, each Survivor exiles 1 card from the top of each of their libraries face down for each poison counter.", image: "Phyrexian", imageArtist: "Daarken"),
+            DeckPicker(id: DecksId.phyrexian, title: "Phyrexian", intro: "A modified version of the Phyrexian Perfection deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste and are Phyrexians in addition to their other creature types. The Survivors share poison counters. They do not lose the game for having 10 or more poison counters. Every time the Survivors gain one or more poison counters, each Survivor exiles 1 card from the top of each of their libraries face down for each poison counter.", image: "Phyrexian", imageArtist: "Igor Kieryluk"),
             
             DeckPicker(id: DecksId.sliver, title: "Sliver", intro: "A modified version of the Sliver Hive deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste. All of the artifact slivers in the Horde deck are treated as tokens.", image: "Sliver", imageArtist: "Aleksi Briclot"),
             
@@ -27,7 +27,7 @@ class DeckPickerViewModel: ObservableObject {
             
             DeckPicker(id: DecksId.eldrazi, title: "Eldrazi", intro: "A modified version of the Eldrazi Horror deck by TenkayCrit", specialRules: "All tokens controlled by the Horde have haste. All eldrazi spawn the Horde controls cannot attack or block. If the Horde controls 10 eldrazi spawn at the start of its precombat main phase, they are sacrificed, and the Horde casts the three eldrazi titans from exile.", image: "Eldrazi", imageArtist: "Aleksi Briclot"),
             
-            DeckPicker(id: DecksId.nature, title: "Nature", intro: "The planes warp, bend, and tear as these unknowable eldritch abominations force their way into our reality. This Horde sucks all life out of your forces until there is nothing left. But that isn't the worst of it. If enough eldrazi seep into our world, nothing will be able to stop their titanic progenitors from traveling through space and time to devour reality itself.", specialRules: "All tokens controlled by the Horde have haste.", image: "Nature", imageArtist: "Grzegorz Rutkowski")
+            DeckPicker(id: DecksId.nature, title: "Nature", intro: "", specialRules: "All tokens controlled by the Horde have haste.", image: "Nature", imageArtist: "Grzegorz Rutkowski")
         ]
         
         deckPickers.sort {

@@ -2,11 +2,10 @@
 
 This project is an iPad App made to playe the horde format for Magic the Gathering (https://mtg.fandom.com/wiki/Horde_Magic). It allow players to play with their own magic deck while this app handle the horde deck.
 
-5 different decks are in the app for now
+7 different decks are in the app with a lot of different options to adapt the challenge to what you like most
 
 ![IMG_0362](https://user-images.githubusercontent.com/16020608/168678550-5d4fb6cc-da8c-4ad3-949f-a003c7af8dcf.PNG)
 
-Will add more over time
 Note : the app handle the horde battlefield, library and graveyard. You need another app to track survivors life.
 
 ![IMG_0361](https://user-images.githubusercontent.com/16020608/168282835-3bed1f0a-e23e-4bed-9fca-a0c2b216ea4b.PNG)

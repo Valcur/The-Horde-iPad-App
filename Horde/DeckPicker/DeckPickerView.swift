@@ -18,10 +18,11 @@ struct DeckPickerView: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        DeckPickingIntro()
+                        DeckPickingIntro().id(-1)
                         ForEach(deckPickerViewModel.deckPickers, id: \.self) { deck in
                             DeckPickingView(deckPicker: deck).id(deck.id)
                         }
+                        //DeckPickingMore()
                     }.padding([.leading, .trailing], 200)
                     .onChange(of: deckPickerViewModel.deckPickedId) { _ in
                         withAnimation {
@@ -42,7 +43,7 @@ struct DeckPickerView: View {
                     .foregroundColor(.white)
             }.frame(width: 80)
                 .position(x: 30, y: UIScreen.main.bounds.height - 30)
-        }.frame(height: UIScreen.main.bounds.height).ignoresSafeArea()
+        }.ignoresSafeArea().frame(height: UIScreen.main.bounds.height)
     }
 }
 
@@ -135,7 +136,6 @@ struct DeckPickingView: View {
         var width: CGFloat = PickerSize.width.picked
         if !isDeckSelected {
             width = PickerSize.width.unpicked
-
         }
         return width
     }
@@ -162,6 +162,15 @@ struct DeckPickingIntro: View {
                 .font(.subheadline)
                 .multilineTextAlignment(.leading)
         
+        }.frame(width: UIScreen.main.bounds.width / 3).padding(.trailing, 80)
+    }
+}
+
+struct DeckPickingMore: View {
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 30) {
+            // Suggestion like using quests
         }.frame(width: UIScreen.main.bounds.width / 2).padding([.leading, .trailing], 60)
     }
 }

@@ -17,11 +17,16 @@ struct DeckManager {
         Card(cardName: "Ezuri's Predation", cardType: .sorcery)
     ]
     
-    // 1 Wandering Wolf
+    // 1 Parallel Evolution
+    // 1 Second Harvest
+    
     
     // 41
     
     // 1 Worldspine Wurm
+    // 1 Impervious Greatwurm
+    // 1 Beastmaster Ascension
+    
     // 1 Copperhoof Vorrac
     // 1 Bellowing Tanglewurm
     // 1 Essence of the Wild -> galere a gerer en vrai
@@ -30,7 +35,6 @@ struct DeckManager {
     // 1 Goreclaw, Terror of Qal Sisma
     // 1 Rhonas the Indomitable
     // 1 Craterhoof Behemoth
-    // 1 Impervious Greatwurm
     // 1 Nessian Boar
     // 1 Hornet Queen
     // 1 End-Raze Forerunners
@@ -48,7 +52,7 @@ struct DeckManager {
     // 1 Scale Up
     // 1 Ezuri's Predation
     // 1 Fungal Sprouting
-    // 1 Grizzly Fate
+    // 2 Grizzly Fate
     // 1 Shadowbeast Sighting
     // 1 Klothys's Design
     // 1 Call of the Herd
@@ -57,18 +61,24 @@ struct DeckManager {
     // 1 Gnaw to the Bone
     // 1 Elephant Ambush
     // 1 Roar of the Wurm
+    // 1 Predatory Rampage
     
     // 1 Unnatural Growth
     // 1 Sandwurm Convergence
-    // 1 Beastmaster Ascension
     // 2 Muraganda Petroglyphs
     // 2 Gaea's Anthem
     
     static private func getNatureDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
         
+        // MOVE TO BOSS
         // 1 Worldspine Wurm
         deck.append(Card(cardName: "Worldspine Wurm", cardType: .creature))
+        // 1 Impervious Greatwurm
+        deck.append(Card(cardName: "Impervious Greatwurm", cardType: .creature))
+        // 1 Beastmaster Ascension
+        deck.append(Card(cardName: "Beastmaster Ascension", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Beastmaster Ascension", specifiSet: "ZEN")))
+        
         
         // 1 Copperhoof Vorrac
         deck.append(Card(cardName: "Copperhoof Vorrac", cardType: .creature))
@@ -76,14 +86,8 @@ struct DeckManager {
         // 1 Bellowing Tanglewurm
         deck.append(Card(cardName: "Bellowing Tanglewurm", cardType: .creature))
         
-        // 1 Essence of the Wild
-        //deck.append(Card(cardName: "Essence of the Wild", cardType: .creature))
-        
         // 1 Yorvo, Lord of Garenbrig
         deck.append(Card(cardName: "Yorvo, Lord of Garenbrig", cardType: .creature))
-        
-        // 1 Ghalta, Primal Hunger
-        //deck.append(Card(cardName: "Ghalta, Primal Hunger", cardType: .creature))
         
         // 1 Goreclaw, Terror of Qal Sisma
         deck.append(Card(cardName: "Goreclaw, Terror of Qal Sisma", cardType: .creature))
@@ -93,9 +97,6 @@ struct DeckManager {
         
         // 1 Craterhoof Behemoth
         deck.append(Card(cardName: "Craterhoof Behemoth", cardType: .creature))
-        
-        // 1 Impervious Greatwurm
-        deck.append(Card(cardName: "Impervious Greatwurm", cardType: .creature))
         
         // 1 Nessian Boar
         deck.append(Card(cardName: "Nessian Boar", cardType: .creature))
@@ -114,9 +115,6 @@ struct DeckManager {
         
         // 1 Woodland Champion
         deck.append(Card(cardName: "Woodland Champion", cardType: .creature))
-        
-        // 1 Thragtusk -> Too many token type
-        //deck.append(Card(cardName: "Thragtusk", cardType: .creature))
         
         // 1 Mother Bear
         deck.append(Card(cardName: "Mother Bear", cardType: .creature, hasFlashback: true))
@@ -144,7 +142,7 @@ struct DeckManager {
         // 1 Fungal Sprouting
         deck.append(Card(cardName: "Fungal Sprouting", cardType: .sorcery))
         
-        // 1 Grizzly Fate
+        // 2 Grizzly Fate
         deck.append(Card(cardName: "Grizzly Fate", cardType: .sorcery, hasFlashback: true))
         deck.append(Card(cardName: "Grizzly Fate", cardType: .sorcery, hasFlashback: true))
         
@@ -172,14 +170,20 @@ struct DeckManager {
         // 1 Roar of the Wurm
         deck.append(Card(cardName: "Roar of the Wurm", cardType: .sorcery, hasFlashback: true))
         
+        // 1 Parallel Evolution
+        deck.append(Card(cardName: "Parallel Evolution", cardType: .sorcery, hasFlashback: true))
+        
+        // 1 Second Harvest
+        deck.append(Card(cardName: "Second Harvest", cardType: .instant))
+        
+        // 1 Predatory Rampage
+        deck.append(Card(cardName: "Predatory Rampage", cardType: .sorcery))
+        
         // 1 Unnatural Growth
         deck.append(Card(cardName: "Unnatural Growth", cardType: .enchantment))
         
         // 1 Sandwurm Convergence
         deck.append(Card(cardName: "Sandwurm Convergence", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Sandwurm Convergence", specifiSet: "AKH")))
-        
-        // 1 Beastmaster Ascension
-        deck.append(Card(cardName: "Beastmaster Ascension", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Beastmaster Ascension", specifiSet: "ZEN")))
         
         // 2 Muraganda Petroglyphs
         for _ in 1...2 {
@@ -197,12 +201,12 @@ struct DeckManager {
         }
         
         // 6 Elephant 3/3
-        for _ in 1...(6 * difficulty) {
+        for _ in 1...(8 * difficulty) {
             deck.append(Card(cardName: "Elephant", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")))
         }
         
         // 10 Beast 4/4
-        for _ in 1...(10 * difficulty) {
+        for _ in 1...(12 * difficulty) {
             deck.append(Card(cardName: "Beast", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")))
         }
         
@@ -212,7 +216,7 @@ struct DeckManager {
         }
         
         // 16 Elemental x/x
-        for _ in 1...(16 * difficulty) {
+        for _ in 1...(12 * difficulty) {
             deck.append(Card(cardName: "Elemental", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "T2XM")))
         }
          
@@ -1578,7 +1582,7 @@ struct DeckManager {
         let tokens: [Card] = [
             Card(cardName: "Saproling (TC20)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
             Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")),
-            Card(cardName: "Polyraptor", cardType: .token)
+            Card(cardName: "Polyraptor Token", cardType: .token)
         ]
         
         deck.shuffle()
@@ -1675,7 +1679,7 @@ struct DeckManager {
         case DecksId.human:
             commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
             commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
-            commonCards.append(Card(cardName: "Assemble the Legion", cardType: .creature))
+            commonCards.append(Card(cardName: "Assemble the Legion", cardType: .enchantment))
         case DecksId.phyrexian:
             commonCards.append(Card(cardName: "Propaganda", cardType: .enchantment))
         case DecksId.sliver:
@@ -1755,9 +1759,9 @@ struct DeckManager {
         case DecksId.human:
             commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
             //commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
-            commonCards.append(Card(cardName: "Assemble the Legion", cardType: .creature))
+            commonCards.append(Card(cardName: "Assemble the Legion", cardType: .enchantment)) // -> already in decklist
             commonCards.append(Card(cardName: "Akroma, Angel of Wrath", cardType: .creature))
-            commonCards.append(Card(cardName: "Angelic Arbiter", cardType: .creature))
+            commonCards.append(Card(cardName: "Angelic Arbiter", cardType: .creature)) // -> already in decklist
             commonCards.append(Card(cardName: "Gisela, Blade of Goldnight", cardType: .creature))
         case DecksId.phyrexian:
             commonCards.append(Card(cardName: "Poison-Tip Archer", cardType: .creature))

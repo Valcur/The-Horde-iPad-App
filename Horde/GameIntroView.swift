@@ -88,8 +88,54 @@ struct IntroSetupView: View {
                     .foregroundColor(.white)
                 
                 if gameViewModel.gameConfig.isClassicMode {
-                    Toggle("Spawn a random powerfull permanent (different for every deck) when half of the deck has been removed", isOn: $gameViewModel.gameConfig.classic.shouldSpawnStrongPermanentAtHalf)
-                        .foregroundColor(.white)
+                    VStack(spacing: 15)  {
+                        Toggle("Spawn one or multiple random powerfull permanent (different for every deck) when a certain amount of card of the deck has been removed", isOn: $gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
+                            .foregroundColor(.white)
+                        
+                        if gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents {
+                            HStack(spacing: 20) {
+                                // Spawn at 25
+                                Button(action: {
+                                    gameViewModel.gameConfig.classic.spawnStrongPermanentAt25.toggle()
+                                }, label: {
+                                    Text("25%")
+                                        .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt25 ? .white : .gray)
+                                        .fontWeight(.bold)
+                                        .font(.title2)
+                                })
+                                
+                                // Spawn at 50
+                                Button(action: {
+                                    gameViewModel.gameConfig.classic.spawnStrongPermanentAt50.toggle()
+                                }, label: {
+                                    Text("50%")
+                                        .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt50 ? .white : .gray)
+                                        .fontWeight(.bold)
+                                        .font(.title2)
+                                })
+                                
+                                // Spawn at 75
+                                Button(action: {
+                                    gameViewModel.gameConfig.classic.spawnStrongPermanentAt75.toggle()
+                                }, label: {
+                                    Text("75%")
+                                        .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt75 ? .white : .gray)
+                                        .fontWeight(.bold)
+                                        .font(.title2)
+                                })
+                                
+                                // Spawn at 100
+                                Button(action: {
+                                    gameViewModel.gameConfig.classic.spawnStrongPermanentAt100.toggle()
+                                }, label: {
+                                    Text("100%")
+                                        .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt100 ? .white : .gray)
+                                        .fontWeight(.bold)
+                                        .font(.title2)
+                                })
+                            }
+                        }
+                    }
                 }
                 
                 Toggle("PUSSY MODE : Replace board wipes with powefull permanents", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll)
@@ -107,6 +153,7 @@ struct IntroSetupView: View {
         }.background(Color(.white).opacity(0.00000001))
             .frame(height: UIScreen.main.bounds.height / 2)
             .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
+            .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
         
         MenuTextBoldParagraphView(text: "Touch anywhere to continue")
     }

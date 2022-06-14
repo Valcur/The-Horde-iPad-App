@@ -48,7 +48,7 @@ class GameViewModel: ObservableObject {
         turnStep = -1
         marathonStage = -1
         
-        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveBoardWipeInFirstQuarter: false, shouldntHaveBoardWipeAtAll: false, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanentAtHalf: false))
+        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveBoardWipeInFirstQuarter: false, shouldntHaveBoardWipeAtAll: false, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
     }
     
     func startGame() {
@@ -115,7 +115,7 @@ class GameViewModel: ObservableObject {
         if !gameConfig.isClassicMode && marathonStage == -1 {
             gameConfig.shared.deckSize = 50
             gameConfig.shared.shouldStartWithWeakPermanent = false
-            gameConfig.classic.shouldSpawnStrongPermanentAtHalf = false
+            gameConfig.classic.shouldSpawnStrongPermanents = false
             marathonStage = 0
         }
         
@@ -268,9 +268,20 @@ class GameViewModel: ObservableObject {
     }
     
     func spawnStrongPermanentIfNeeded() {
-        if gameConfig.classic.shouldSpawnStrongPermanentAtHalf && deck.count == deckSizeAtStart / 2 {
-            addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
-            // MAKE SURE IT HAPPENS ONLY ONCE
+        // MAKE SURE IT HAPPENS ONLY ONCE
+        if gameConfig.classic.shouldSpawnStrongPermanents {
+            if gameConfig.classic.spawnStrongPermanentAt25 == true && deck.count == deckSizeAtStart - deckSizeAtStart / 4 {
+                addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+            }
+            if gameConfig.classic.spawnStrongPermanentAt50 == true && deck.count == deckSizeAtStart / 2 {
+                addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+            }
+            if gameConfig.classic.spawnStrongPermanentAt75 == true && deck.count == deckSizeAtStart / 4 {
+                addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+            }
+            if gameConfig.classic.spawnStrongPermanentAt100 == true && deck.count == 0 {
+                addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+            }
         }
     }
     
@@ -467,5 +478,9 @@ struct SharedParameters {
 }
 
 struct ClassicModeParameters {
-    var shouldSpawnStrongPermanentAtHalf: Bool
+    var shouldSpawnStrongPermanents: Bool
+    var spawnStrongPermanentAt25: Bool
+    var spawnStrongPermanentAt50: Bool
+    var spawnStrongPermanentAt75: Bool
+    var spawnStrongPermanentAt100: Bool
 }
