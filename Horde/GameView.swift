@@ -458,7 +458,7 @@ struct GraveyardView: View {
                 .foregroundColor(.white)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 20) {
-                    ForEach(gameViewModel.cardsOnGraveyard) { card in
+                    ForEach(gameViewModel.cardsOnGraveyard, id: \.self) { card in
                         VStack(spacing: 15) {
                             Button(action: {
                                 print("Exile card in graveyard button pressed")
@@ -535,7 +535,7 @@ struct CardView: View {
     
     var CardImage: Image {
         if downloadManager.imageReadyToShow {
-            return Image(uiImage: UIImage(data: downloadManager.data)!)
+            return Image(uiImage: (UIImage(data: downloadManager.data)) ?? UIImage(named: "BackgroundTest")!)
                 
         }
         return Image("BackgroundTest")

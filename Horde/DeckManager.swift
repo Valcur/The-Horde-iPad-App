@@ -14,6 +14,7 @@ struct DeckManager {
         Card(cardName: "Ruinous Ultimatum",cardType: .sorcery),
         Card(cardName: "All Is Dust", cardType: .sorcery),
         Card(cardName: "Plague Wind",cardType: .sorcery),
+        Card(cardName: "Wakening Sun's Avatar",cardType: .creature),
         Card(cardName: "Ezuri's Predation", cardType: .sorcery)
     ]
     
@@ -1582,7 +1583,7 @@ struct DeckManager {
         let tokens: [Card] = [
             Card(cardName: "Saproling (TC20)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
             Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")),
-            Card(cardName: "Polyraptor Token", cardType: .token)
+            Card(cardName: "Polyraptor", cardType: .token)
         ]
         
         deck.shuffle()

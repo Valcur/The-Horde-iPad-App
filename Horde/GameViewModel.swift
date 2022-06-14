@@ -69,6 +69,7 @@ class GameViewModel: ObservableObject {
         turnStep = -1
         marathonStage = -1
         showLibraryTopCard = false
+        damageTakenThisTurn = 0
     }
     
     func startNewHordeStep() {
@@ -468,7 +469,7 @@ struct GameConfig {
     var classic: ClassicModeParameters
 }
 
-// ADD OPTION TO CHOOSE HOW MANY STRONG PERMANENT THOURGHT THE DECK SHOULD SPAWN
+// GRAVEYARD CRASH WHEN SAME PERMANENT MULTIPLE TIMES CLICK ON IT
 
 struct SharedParameters {
     var shouldStartWithWeakPermanent: Bool
