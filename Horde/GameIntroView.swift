@@ -138,7 +138,7 @@ struct IntroSetupView: View {
                     }
                 }
                 
-                Toggle("PUSSY MODE : Replace board wipes with powefull permanents", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll)
+                Toggle("Replace board wipes with powefull permanents", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll)
                     .foregroundColor(.white)
                 
                 if !gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll {

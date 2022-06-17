@@ -18,69 +18,51 @@ struct DeckManager {
         Card(cardName: "Ezuri's Predation", cardType: .sorcery)
     ]
     
-    // 1 Parallel Evolution
-    // 1 Second Harvest
-    
-    
-    // 41
-    
-    // 1 Worldspine Wurm
-    // 1 Impervious Greatwurm
-    // 1 Beastmaster Ascension
-    
-    // 1 Copperhoof Vorrac
-    // 1 Bellowing Tanglewurm
-    // 1 Essence of the Wild -> galere a gerer en vrai
-    // 1 Yorvo, Lord of Garenbrig
-    // 1 Ghalta, Primal Hunger
-    // 1 Goreclaw, Terror of Qal Sisma
-    // 1 Rhonas the Indomitable
-    // 1 Craterhoof Behemoth
-    // 1 Nessian Boar
-    // 1 Hornet Queen
-    // 1 End-Raze Forerunners
-    // 1 Grothama, All-Devouring
-    
-    // 1 Steel Leaf Champion
-    // 1 Woodland Champion
-    // 1 Thragtusk
-    // 1 Mother Bear
-    
-    // 1 Winds of Qal Sisma
-    // 1 Overrun
-    // 1 Overwhelming Stampede
-    // 1 Heroic Intervention
-    // 1 Scale Up
-    // 1 Ezuri's Predation
-    // 1 Fungal Sprouting
-    // 2 Grizzly Fate
-    // 1 Shadowbeast Sighting
-    // 1 Klothys's Design
-    // 1 Call of the Herd
-    // 1 Crush of Wurms
-    // 1 Beast Attack
-    // 1 Gnaw to the Bone
-    // 1 Elephant Ambush
-    // 1 Roar of the Wurm
-    // 1 Predatory Rampage
-    
-    // 1 Unnatural Growth
-    // 1 Sandwurm Convergence
-    // 2 Muraganda Petroglyphs
-    // 2 Gaea's Anthem
-    
     static private func getNatureDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
+    
+        // 1 Copperhoof Vorrac
+        // 1 Bellowing Tanglewurm
+        // 1 Essence of the Wild -> galere a gerer en vrai
+        // 1 Yorvo, Lord of Garenbrig
+        // 1 Ghalta, Primal Hunger
+        // 1 Goreclaw, Terror of Qal Sisma
+        // 1 Rhonas the Indomitable
+        // 1 Craterhoof Behemoth
+        // 1 Nessian Boar
+        // 1 Hornet Queen
+        // 1 End-Raze Forerunners
+        // 1 Grothama, All-Devouring
         
-        // MOVE TO BOSS
-        // 1 Worldspine Wurm
-        deck.append(Card(cardName: "Worldspine Wurm", cardType: .creature))
-        // 1 Impervious Greatwurm
-        deck.append(Card(cardName: "Impervious Greatwurm", cardType: .creature))
-        // 1 Beastmaster Ascension
-        deck.append(Card(cardName: "Beastmaster Ascension", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Beastmaster Ascension", specifiSet: "ZEN")))
+        // 1 Steel Leaf Champion
+        // 1 Woodland Champion
+        // 1 Thragtusk
+        // 1 Mother Bear
         
+        // 1 Winds of Qal Sisma
+        // 1 Overrun
+        // 1 Overwhelming Stampede
+        // 1 Heroic Intervention
+        // 1 Scale Up
+        // 1 Ezuri's Predation
+        // 1 Fungal Sprouting
+        // 2 Grizzly Fate
+        // 1 Shadowbeast Sighting
+        // 1 Klothys's Design
+        // 1 Call of the Herd
+        // 1 Crush of Wurms
+        // 1 Beast Attack
+        // 1 Parallel Evolution
+        // 1 Second Harvest
+        // 1 Elephant Ambush
+        // 1 Roar of the Wurm
+        // 1 Predatory Rampage
         
+        // 1 Unnatural Growth
+        // 1 Sandwurm Convergence
+        // 2 Muraganda Petroglyphs
+        // 2 Gaea's Anthem
+
         // 1 Copperhoof Vorrac
         deck.append(Card(cardName: "Copperhoof Vorrac", cardType: .creature))
         
@@ -161,9 +143,6 @@ struct DeckManager {
         
         // 1 Beast Attack
         deck.append(Card(cardName: "Beast Attack", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Gnaw to the Bone
-        deck.append(Card(cardName: "Gnaw to the Bone", cardType: .sorcery, hasFlashback: true))
         
         // 1 Elephant Ambush
         deck.append(Card(cardName: "Elephant Ambush", cardType: .sorcery, hasFlashback: true))
@@ -1680,7 +1659,6 @@ struct DeckManager {
         case DecksId.human:
             commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
             commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
-            commonCards.append(Card(cardName: "Assemble the Legion", cardType: .enchantment))
         case DecksId.phyrexian:
             commonCards.append(Card(cardName: "Propaganda", cardType: .enchantment))
         case DecksId.sliver:
@@ -1690,7 +1668,7 @@ struct DeckManager {
         case DecksId.eldrazi:
             commonCards.append(Card(cardName: "Forsaken Monument", cardType: .artifact))
         case DecksId.nature:
-            commonCards.append(Card(cardName: "Gruul War Chant", cardType: .enchantment)) // A REFAIRE
+            commonCards.append(Card(cardName: "Primal Rage", cardType: .enchantment))
         default:
             commonCards = [
                 Card(cardName: "Liliana's Mastery", cardType: .enchantment),
@@ -1759,10 +1737,9 @@ struct DeckManager {
         switch deckPickedId {
         case DecksId.human:
             commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
-            //commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
-            commonCards.append(Card(cardName: "Assemble the Legion", cardType: .enchantment)) // -> already in decklist
+            commonCards.append(Card(cardName: "Assemble the Legion", cardType: .enchantment))
             commonCards.append(Card(cardName: "Akroma, Angel of Wrath", cardType: .creature))
-            commonCards.append(Card(cardName: "Angelic Arbiter", cardType: .creature)) // -> already in decklist
+            commonCards.append(Card(cardName: "Angelic Arbiter", cardType: .creature))
             commonCards.append(Card(cardName: "Gisela, Blade of Goldnight", cardType: .creature))
         case DecksId.phyrexian:
             commonCards.append(Card(cardName: "Poison-Tip Archer", cardType: .creature))
@@ -1777,7 +1754,9 @@ struct DeckManager {
         case DecksId.eldrazi:
             commonCards.append(Card(cardName: "Brisela, Voice of Nightmares", cardType: .creature))
         case DecksId.nature:
-            commonCards.append(Card(cardName: "Brisela, Voice of Nightmares", cardType: .creature)) // A REFAIRE
+            commonCards.append(Card(cardName: "Worldspine Wurm", cardType: .creature))
+            commonCards.append(Card(cardName: "Impervious Greatwurm", cardType: .creature))
+            commonCards.append(Card(cardName: "Beastmaster Ascension", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Beastmaster Ascension", specifiSet: "ZEN")))
         default:
             commonCards = [
                 Card(cardName: "Zombie Master", cardType: .creature),

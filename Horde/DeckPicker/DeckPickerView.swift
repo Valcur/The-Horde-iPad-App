@@ -23,7 +23,7 @@ struct DeckPickerView: View {
                             DeckPickingView(deckPicker: deck).id(deck.id)
                         }
                         //DeckPickingMore()
-                    }.padding([.leading, .trailing], 200)
+                    }.padding(.trailing, 200)
                     .onChange(of: deckPickerViewModel.deckPickedId) { _ in
                         withAnimation {
                             proxy.scrollTo(deckPickerViewModel.deckPickedId, anchor: .center)
@@ -149,20 +149,13 @@ struct DeckPickingIntro: View {
             
             MenuTextBoldParagraphView(text: "Never played the horde format ?")
             
-            // Would be cool to put Image as a parameter of MenuParagraphView
-            Text("The horde is a cooperative format created by Peter Knudson where player teams up against a self played deck. Go to \(Image(systemName: "gear")) > Rules to read the rules")
-                .foregroundColor(.white)
-                .font(.subheadline)
-                .multilineTextAlignment(.leading)
+            MenuTextWithImageParagraphView(text1: "The horde is a cooperative format created by Peter Knudson where player teams up against a self played deck. Go to", image: Image(systemName: "gear"), text2: "> Rules to read the rules")
             
             MenuTextBoldParagraphView(text: "Before starting your first match")
             
-            Text("Go to \(Image(systemName: "gear")) > How To Play to learn how tu use this app")
-                .foregroundColor(.white)
-                .font(.subheadline)
-                .multilineTextAlignment(.leading)
+            MenuTextWithImageParagraphView(text1: "Go to", image: Image(systemName: "gear"), text2: "> How To Play to learn how tu use this app")
         
-        }.frame(width: UIScreen.main.bounds.width / 3).padding(.trailing, 80)
+        }.frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 80)
     }
 }
 

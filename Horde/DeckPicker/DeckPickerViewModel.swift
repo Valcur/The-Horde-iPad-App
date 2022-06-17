@@ -13,7 +13,7 @@ class DeckPickerViewModel: ObservableObject {
     var deckPickers: [DeckPicker]
 
     init() {
-        self.deckPickedId = -1//UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? -1
+        self.deckPickedId = -1
         self.deckPickers = [
             DeckPicker(id: DecksId.zombie, title: "Zombie", intro: "The original horde deck by Peter Knudson", specialRules: "All creatures controlled by the Horde have haste", image: "Zombie", imageArtist: "Grzegorz Rutkowski"),
             

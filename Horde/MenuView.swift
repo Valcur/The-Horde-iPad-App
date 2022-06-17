@@ -165,6 +165,20 @@ struct MenuTextParagraphView: View {
     }
 }
 
+struct MenuTextWithImageParagraphView: View {
+    
+    let text1: String
+    let image: Image
+    let text2: String
+    
+    var body: some View {
+        Text("\(text1) \(image) \(text2)")
+            .foregroundColor(.white)
+            .font(.subheadline)
+            .multilineTextAlignment(.leading)
+    }
+}
+
 struct MenuTextBoldParagraphView: View {
     
     let text: String
@@ -239,11 +253,11 @@ struct MenuHowToPlayView: View {
                     
                     MenuTextParagraphView(text: "You can reveal the horde's library top card any time by pressing the Reveal Top button. You'll have access to 3 buttons to interact with this card. the button actions are described below in order from left to right")
                     
-                    MenuTextBoldParagraphView(text: "Put top card at the bottom of the horde's library")
+                    MenuTextBoldParagraphView(text: "Put it at the bottom of the horde's library")
                     
-                    MenuTextBoldParagraphView(text: "Shuffle the horde's library")
+                    MenuTextBoldParagraphView(text: "Shuffle it in the horde's library")
                     
-                    MenuTextBoldParagraphView(text: "Put top card on the battlefield")
+                    MenuTextBoldParagraphView(text: "Cast it")
                 }
             }
         }
@@ -257,7 +271,15 @@ struct MenuContactView: View {
             
             MenuTextParagraphView(text: "If you have any problem or a suggestion about this app, feel free to contact me at")
             
-            MenuTextBoldParagraphView(text: "aaaaa")
+            MenuTextBoldParagraphView(text: "aaa@mail")
+            
+            MenuTextTitleView(text: "Donation")
+            
+            MenuTextParagraphView(text: "This app is free and doesn't have any in-app purchase. You can still help me with a small donation")
+            
+            Link(destination: URL(string: "google.com")!) {
+                PurpleButtonLabel(text: "Donate")
+            }
             
             MenuTextTitleView(text: "Info")
             

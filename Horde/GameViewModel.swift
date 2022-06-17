@@ -24,6 +24,7 @@ class GameViewModel: ObservableObject {
     var deckSizeAtStart = 0
     var tokensAvailable: [Card]
     var marathonStage = -1
+    var strongPermanentsAlreadySpawned: [Bool]
     
     /** Turn order
         1) launch all in graveyard
@@ -49,6 +50,8 @@ class GameViewModel: ObservableObject {
         marathonStage = -1
         
         gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveBoardWipeInFirstQuarter: false, shouldntHaveBoardWipeAtAll: false, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
+        
+        strongPermanentsAlreadySpawned = [false, false, false, false]
     }
     
     func startGame() {
@@ -70,6 +73,8 @@ class GameViewModel: ObservableObject {
         marathonStage = -1
         showLibraryTopCard = false
         damageTakenThisTurn = 0
+        
+        strongPermanentsAlreadySpawned = [false, false, false, false]
     }
     
     func startNewHordeStep() {
@@ -269,20 +274,24 @@ class GameViewModel: ObservableObject {
     }
     
     func spawnStrongPermanentIfNeeded() {
-        // MAKE SURE IT HAPPENS ONLY ONCE
         if gameConfig.classic.shouldSpawnStrongPermanents {
-            if gameConfig.classic.spawnStrongPermanentAt25 == true && deck.count == deckSizeAtStart - deckSizeAtStart / 4 {
+            if gameConfig.classic.spawnStrongPermanentAt25 == true && !strongPermanentsAlreadySpawned[0] && deck.count == deckSizeAtStart - deckSizeAtStart / 4 {
                 addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+                strongPermanentsAlreadySpawned[0] = true
             }
-            if gameConfig.classic.spawnStrongPermanentAt50 == true && deck.count == deckSizeAtStart / 2 {
+            if gameConfig.classic.spawnStrongPermanentAt50 == true && !strongPermanentsAlreadySpawned[1] && deck.count == deckSizeAtStart / 2 {
                 addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+                strongPermanentsAlreadySpawned[1] = true
             }
-            if gameConfig.classic.spawnStrongPermanentAt75 == true && deck.count == deckSizeAtStart / 4 {
+            if gameConfig.classic.spawnStrongPermanentAt75 == true && !strongPermanentsAlreadySpawned[2] && deck.count == deckSizeAtStart / 4 {
                 addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+                strongPermanentsAlreadySpawned[2] = true
             }
-            if gameConfig.classic.spawnStrongPermanentAt100 == true && deck.count == 0 {
+            if gameConfig.classic.spawnStrongPermanentAt100 == true && !strongPermanentsAlreadySpawned[3] && deck.count == 0 {
                 addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+                strongPermanentsAlreadySpawned[3] = true
             }
+            cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
         }
     }
     
@@ -388,6 +397,15 @@ class GameViewModel: ObservableObject {
         }
     }
     
+    func castCardFromGraveyard(cardId: Int) {
+        let card = cardsOnGraveyard[cardId]
+        if card.cardType == .token || card.cardType == .creature || card.cardType == .enchantment || card.cardType == .artifact {
+            addCardToBoard(card: cardsOnGraveyard[cardId])
+            cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+            cardsOnGraveyard.remove(at: cardId)
+        }
+    }
+    
     func removeCardFromGraveyard(card: Card) {
         for i in 0..<cardsOnGraveyard.count {
             if cardsOnGraveyard[i] == card {
@@ -443,14 +461,16 @@ class GameViewModel: ObservableObject {
         putAtBottomOfLibrary(card: deck.removeLast())
     }
     
-    func putTopLibraryCardToBattlefield() {
+    func castTopLibraryCard() {
         let card = deck.last!
+        showLibraryTopCard = false
         if card.cardType == .token || card.cardType == .creature || card.cardType == .enchantment || card.cardType == .artifact {
-            showLibraryTopCard = false
             addCardToBoard(card: card)
             cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
-            deck.removeLast()
+        } else {
+            sendToGraveyard(card: card)
         }
+        deck.removeLast()
     }
     
     func changeGameMode(isClassicMode: Bool) {

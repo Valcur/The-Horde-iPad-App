@@ -458,11 +458,12 @@ struct GraveyardView: View {
                 .foregroundColor(.white)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 20) {
-                    ForEach(gameViewModel.cardsOnGraveyard, id: \.self) { card in
+                    //ForEach(gameViewModel.cardsOnGraveyard, id: \.self) { card in
+                    ForEach(0..<gameViewModel.cardsOnGraveyard.count, id: \.self) { i in
                         VStack(spacing: 15) {
                             Button(action: {
                                 print("Exile card in graveyard button pressed")
-                                gameViewModel.removeCardFromGraveyard(card: card)
+                                gameViewModel.removeCardFromGraveyard(card: gameViewModel.cardsOnGraveyard[i])
                             }, label: {
                                 Text("Exile")
                                     .fontWeight(.bold)
@@ -472,9 +473,9 @@ struct GraveyardView: View {
                             })
                             Button(action: {
                                 print("Card in graveyard pressed")
-                                gameViewModel.castCardFromGraveyard(card: card)
+                                gameViewModel.castCardFromGraveyard(cardId: i)
                             }, label: {
-                                CardToCastView(card: card)
+                                CardToCastView(card: gameViewModel.cardsOnGraveyard[i])
                             })
                             Text("To library")
                                 .fontWeight(.bold)
@@ -484,7 +485,7 @@ struct GraveyardView: View {
                             HStack {
                                 Button(action: {
                                     print("Put at the bottom of library button pressed")
-                                    gameViewModel.putAtBottomOfLibrary(card: card)
+                                    gameViewModel.putAtBottomOfLibrary(card: gameViewModel.cardsOnGraveyard[i])
                                 }, label: {
                                     Text("Bottom")
                                         .fontWeight(.bold)
@@ -495,7 +496,7 @@ struct GraveyardView: View {
                                 Rectangle().frame(width: 2, height: 20).foregroundColor(.white)
                                 Button(action: {
                                     print("Put on top of library button pressed")
-                                    gameViewModel.putOnTopOfLibrary(card: card)
+                                    gameViewModel.putOnTopOfLibrary(card: gameViewModel.cardsOnGraveyard[i])
                                 }, label: {
                                     Text("Top")
                                         .fontWeight(.bold)
@@ -506,7 +507,7 @@ struct GraveyardView: View {
                                 Rectangle().frame(width: 2, height: 20).foregroundColor(.white)
                                 Button(action: {
                                     print("Shuffle into library button pressed")
-                                    gameViewModel.shuffleIntofLibrary(card: card)
+                                    gameViewModel.shuffleIntofLibrary(card: gameViewModel.cardsOnGraveyard[i])
                                 }, label: {
                                     Text("Shuffle")
                                         .fontWeight(.bold)
@@ -588,13 +589,13 @@ struct FlippingCardView: View {
         withAnimation(.easeInOut(duration: duration).delay(delay)) {
             backDegree = 90
         }
-        withAnimation(.easeInOut(duration: duration).delay(delay)) {
+        withAnimation(.easeInOut(duration: duration / 2).delay(delay)) {
             cardScale = 1.1
         }
         withAnimation(.easeInOut(duration: duration).delay(delay + duration)){
             frontDegree = 0
         }
-        withAnimation(.easeInOut(duration: duration).delay(delay + duration)){
+        withAnimation(.easeInOut(duration: duration / 2).delay(delay + duration + duration / 2)){
             cardScale = 1.0
         }
     }
