@@ -84,9 +84,9 @@ struct DeckPickingView: View {
                         Text(deckPicker.title)
                             .foregroundColor(.white)
                             .fontWeight(.bold)
-                            .font(.largeTitle)
-                            .padding(.top, 100)
-                            .scaleEffect(isDeckSelected ? 2 : 1)
+                            .font(.system(size: 70))
+                            .padding(.top, isDeckSelected ? 100 : 0)
+                            .scaleEffect(isDeckSelected ? 1 : 0.5)
                         
                         if isDeckSelected {
                             Spacer()
@@ -149,7 +149,7 @@ struct DeckPickingIntro: View {
             
             MenuTextBoldParagraphView(text: "Never played the horde format ?")
             
-            MenuTextWithImageParagraphView(text1: "The horde is a cooperative format created by Peter Knudson where player teams up against a self played deck. Go to", image: Image(systemName: "gear"), text2: "> Rules to read the rules")
+            MenuTextWithImageParagraphView(text1: "The horde is a cooperative format where player teams up against a self played deck. Go to", image: Image(systemName: "gear"), text2: "> Rules to read the rules")
             
             MenuTextBoldParagraphView(text: "Before starting your first match")
             

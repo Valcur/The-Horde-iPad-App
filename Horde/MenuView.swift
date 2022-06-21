@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct MenuView: View {
     
@@ -36,12 +37,13 @@ struct MenuView: View {
                 }).position(x: 60, y: 40)
             }
             
-            HStack(alignment: .top) {
-                VStack(alignment: .trailing, spacing: 30) {
+            HStack(alignment: .top, spacing: 0) {
+                VStack(alignment: .trailing, spacing: 0) {
                     MenuButtonView(title: "Rules", id: 1)
                     MenuButtonView(title: "How to play", id: 2)
                     MenuButtonView(title: "Contact", id: 3)
-                }.padding(.top)
+                    Spacer()
+                }
                 ScrollView(.vertical) {
                     if hordeAppViewModel.menuToShowId == 1 {
                         MenuRulesView()
@@ -50,9 +52,9 @@ struct MenuView: View {
                     } else {
                         MenuContactView()
                     }
-                }.frame(width: UIScreen.main.bounds.width * 0.75).padding(30)
-            }.padding([.leading, .trailing], 20).padding(.top, hordeAppViewModel.readyToPlay ? 100 : 50).padding(.bottom, 50)
-        }.ignoresSafeArea()
+                }.frame(width: UIScreen.main.bounds.width * 0.75)
+            }.padding(.trailing, 20).padding(.top, hordeAppViewModel.readyToPlay ? 100 : 50).padding(.bottom, 50)
+        }.ignoresSafeArea().frame(width: UIScreen.main.bounds.width)
     }
 }
 
@@ -75,6 +77,7 @@ struct MenuButtonView: View {
                 .foregroundColor(isMenuSelected ? .white : .gray)
                 .fontWeight(.bold)
                 .font(.largeTitle)
+                .frame(maxWidth: .infinity, alignment: .trailing).frame(height: 80).padding(.trailing, 30)
         })
     }
 }
@@ -121,11 +124,11 @@ struct MenuRulesView: View {
             Group {
                 MenuTextTitleView(text: "Additional rules")
                 
-                MenuTextParagraphView(text: "If the horde need to choose a target, it choose the BEST target. BEST is higher strength, then higher Mana Value. If still multiple possible targets, target at random")
+                MenuTextParagraphView(text: "If the horde ha to choose a target, it choose the BEST target. BEST is higher strength, then higher Mana Value. If still multiple possible targets, targets randomly")
                 
-                MenuTextParagraphView(text: "If survivors have planeswalkers, each time a creature controlled by the horde isn't blocked : heads or tails for each creature to know if it deals damage to the planeswalker or the survivors. Target the planeswalker with higher Mana Value first if survivors have multiple planeswalkers")
+                MenuTextParagraphView(text: "If survivors have planeswalkers, each time a creature controlled by the horde isn't blocked : heads or tails for each of those creature to know if it deals damage to the planeswalker or the survivors. Target the planeswalker with higher Mana Value first if survivors have multiple planeswalkers")
             }
-        }
+        }.padding(.trailing, 30)
     }
 }
 
@@ -206,11 +209,17 @@ struct MenuHowToPlayView: View {
                 MenuTextSubtitleView(text: "FAQ")
                 
                 VStack(alignment: .leading, spacing: 20) {
+                    MenuTextBoldParagraphView(text: "Is an internet connection required to use this app ?")
+                    
+                    MenuTextParagraphView(text: "Card images are downloaded the first time you draw them then saved wich means you will need an internet connection (MTG back is shown while the image is downloading). After some time you'll have all of them already download and won't need an internet connection anymore")
+                }
+                
+                VStack(alignment: .leading, spacing: 20) {
                     MenuTextBoldParagraphView(text: "Difference between Classic and Marathon ?")
                     
-                    MenuTextParagraphView(text: "Classic :  One deck to beat")
+                    MenuTextParagraphView(text: "Classic : One deck to beat")
                     
-                    MenuTextParagraphView(text: "Marathon :  Three deck to beat. Token mulitplicator increase and strong permanents enters the battlefield between each new deck")
+                    MenuTextParagraphView(text: "Marathon : Three deck to beat. Token mulitplicator increase and strong permanents enters the battlefield between each new deck")
                 }
                 
                 VStack(alignment: .leading, spacing: 20) {
@@ -234,7 +243,7 @@ struct MenuHowToPlayView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     MenuTextBoldParagraphView(text: "How to play a horde turn ?")
                     
-                    MenuTextParagraphView(text: "Press the draw button until the horde have drawn enough cards and create tokens if a card told you to. All the creatures controlled by the horde are now attacking, remove the creatures you destroyed during the combat. The turn is now over")
+                    MenuTextParagraphView(text: "Press the draw button until the horde have drawn enough cards and create tokens if a card told you to. All the creatures controlled by the horde are now attacking, : block them, lose life and remove the creatures you destroyed during the combat. The turn is now over")
                 }
                 
                 VStack(alignment: .leading, spacing: 20) {
@@ -260,24 +269,37 @@ struct MenuHowToPlayView: View {
                     MenuTextBoldParagraphView(text: "Cast it")
                 }
             }
-        }
+        }.padding(.trailing, 30)
     }
 }
 
 struct MenuContactView: View {
+    
+    @State var mailCopied = false
+    let donateButtonUrl = "https://www.paypal.com/donate/?hosted_button_id=PQGAKEXDJLX4L"
+    
     var body: some View {
         LazyVStack(alignment: .leading, spacing: 30) {
             MenuTextTitleView(text: "Contact")
             
             MenuTextParagraphView(text: "If you have any problem or a suggestion about this app, feel free to contact me at")
             
-            MenuTextBoldParagraphView(text: "aaa@mail")
+            Text(verbatim: mailCopied ? "Copied to clipboard !" : "Touch to copy : loic.danjean@burning-beard.com")
+                .foregroundColor(.white)
+                .fontWeight(.bold)
+                .font(.subheadline)
+                .frame(height: 40)
+                .onTapGesture(count: 1) {
+                    UIPasteboard.general.setValue("loic.danjean@burning-beard.com",
+                        forPasteboardType: UTType.plainText.identifier)
+                    mailCopied = true
+                }
             
             MenuTextTitleView(text: "Donation")
             
-            MenuTextParagraphView(text: "This app is free and doesn't have any in-app purchase. You can still help me with a small donation")
+            MenuTextParagraphView(text: "This app is free and doesn't have any in-app purchase. You can help me with a small donation")
             
-            Link(destination: URL(string: "google.com")!) {
+            Link(destination: URL(string: donateButtonUrl)!) {
                 PurpleButtonLabel(text: "Donate")
             }
             
@@ -286,7 +308,7 @@ struct MenuContactView: View {
             MenuTextParagraphView(text: "App icon by Superarticons")
             
             MenuTextBoldParagraphView(text: "Horde - iPad App is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.")
-        }
+        }.padding(.trailing, 30)
     }
 }
 
