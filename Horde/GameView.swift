@@ -22,7 +22,6 @@ struct GameView: View {
             
             VStack {
                 HordeBoardView()
-                    //.frame(height: UIScreen.main.bounds.height - 89)
                     .frame(height: CardSize.height.normal * 2 + 60)
                 
                 Spacer()
@@ -70,7 +69,7 @@ struct GameView: View {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             castedCardViewOpacity = 0
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
+                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
                             }
                         }
                     }
@@ -127,7 +126,7 @@ struct HordeBoardView: View {
                             print("Show Graveyard")
                             gameViewModel.showGraveyard = true
                         }, label: {
-                            CardView(cardName: gameViewModel.cardsOnGraveyard.last!.cardName, imageUrl: gameViewModel.cardsOnGraveyard.last!.cardImage)
+                            CardView(card: gameViewModel.cardsOnGraveyard.last!)
                                 .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                                 .cornerRadius(15)
                         })
@@ -168,22 +167,6 @@ struct HordeBoardView: View {
                                     FlippingCardView(card: gameViewModel.deck.last!)
                                         .offset(y: -deckThickness)
                                 }
-                                
-                                /*
-                                if gameViewModel.showLibraryTopCard {
-                                    CardView(cardName: gameViewModel.deck.last!.cardName, imageUrl: gameViewModel.deck.last!.cardImage)
-                                        .frame(width: CardSize.width.normal, height: CardSize.height.normal)
-                                        .cornerRadius(CardSize.cornerRadius.normal)
-                                        .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
-                                } else {
-                                    Image("BackgroundTest")
-                                        .resizable()
-                                        .frame(width: CardSize.width.normal, height: CardSize.height.normal)
-                                        .cornerRadius(CardSize.cornerRadius.normal)
-                                        .offset(y: -CGFloat(gameViewModel.deck.count) * cardThickness)
-                                }
-                                 
-                                 */
                             }
                         }).frame(height: CardSize.height.normal).offset(y: -deckThickness / 2).shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                         
@@ -205,7 +188,7 @@ struct HordeBoardView: View {
                                 Spacer()
                                 // To the Battlefield
                                 Button(action: {
-                                    gameViewModel.putTopLibraryCardToBattlefield()
+                                    gameViewModel.castTopLibraryCard()
                                 }, label: {
                                     ButtonLabelWithImage(imageName: "arrow.up.right.square")
                                 })
@@ -234,17 +217,14 @@ struct HordeBoardView: View {
                 }
             }.frame(height: CardSize.height.normal * 2 + 50).padding(.bottom, 10)
             
+            // Board
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 40), count: 2), alignment: .top, spacing: 15) {
                     ForEach(gameViewModel.cardsOnBoard) { card in
                         CardOnBoardView(card: card)
                             .transition(.scale.combined(with: .opacity))
                     }
-                    /*
-                    ForEach(0..<gameViewModel.cardsOnBoard.count, id: \.self) { i in
-                        CardOnBoardView(card: gameViewModel.cardsOnBoard[i])
-                            .transition(.asymmetric(insertion: AnyTransition.scale, removal: .offset(x: -floor(i / 2 + 1) * CardSize.width.normal, y: (i % 2) * CardSize.height.normal).combined(with: .opacity)))
-                    }*/
                 }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5))
             }.frame(height: CardSize.height.normal * 2 + 50)
         }.frame(maxWidth: .infinity).padding(.leading, 10).padding(.top, 10)
@@ -316,7 +296,7 @@ struct ControlBarView: View {
                         print("Create token button pressed")
                         gameViewModel.createToken(token: token)
                     }, label: {
-                        CardView(cardName: token.cardName, imageUrl: token.cardImage)
+                        CardView(card: token)
                             .frame(width: CardSize.width.small, height: CardSize.height.small)
                             .cornerRadius(CardSize.cornerRadius.small)
                     })
@@ -394,33 +374,6 @@ struct CastedCardView: View {
                             .foregroundColor(.white)
                             .frame(height: 50)
                         HStack(spacing: 36) {
-                            // Library revealed non token card
-                            /*
-                            // Have to do this wierd thing otherwise the card from library don't update the cardOrder
-                            if gameViewModel.cardsToCast.tokensFromLibrary.count == 0 && gameViewModel.cardsToCast.cardFromLibrary.cardType != .token{
-                                FlippingCardView(card: gameViewModel.cardsToCast.cardFromLibrary, cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count, proxy: proxy)
-                                    .id(0)
-                            }
-
-                            ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
-                                if $0 == 0 && gameViewModel.cardsToCast.cardFromLibrary.cardType != .token{
-                                    FlippingCardView(card: gameViewModel.cardsToCast.cardFromLibrary, cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count, proxy: proxy)
-                                        .id(0)
-                                }
-                                if $0 == gameViewModel.cardsToCast.tokensFromLibrary.count - 1 {
-                                    FlippingCardView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0], cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count - 1 - $0, proxy: proxy)
-                                        .id(1)
-                                } else {
-                                    FlippingCardView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0], cardOrder: gameViewModel.cardsToCast.tokensFromLibrary.count - 1 - $0, proxy: proxy)
-                                }
-                                
-                            }.onChange(of: gameViewModel.cardsToCast.tokensFromLibrary.count) { _ in
-                                proxy.scrollTo(1, anchor: .center)
-                                withAnimation(.easeInOut(duration: 0.1 + 0.5 * Double((gameViewModel.cardsToCast.tokensFromLibrary.count)))) {
-                                    proxy.scrollTo(0, anchor: .center)
-                                }
-                            }*/
-                            
                             if gameViewModel.cardsToCast.cardFromLibrary.cardType != .token {
                                 CardToCastView(card: gameViewModel.cardsToCast.cardFromLibrary)
                             }
@@ -531,8 +484,7 @@ struct GraveyardView: View {
 struct CardView: View {
     @ObservedObject var downloadManager: DownloadManager
     @State var image:UIImage = UIImage()
-    //var cardName: String
-    //var imageUrl: String
+    let card: Card
     
     var CardImage: Image {
         if downloadManager.imageReadyToShow {
@@ -542,13 +494,13 @@ struct CardView: View {
         return Image("BackgroundTest")
     }
     
-    init(cardName: String, imageUrl: String) {
-        //self.imageUrl = imageUrl
-        downloadManager = DownloadManager(cardName: cardName, urlString: imageUrl)
+    init(card: Card) {
+        downloadManager = DownloadManager(card: card)
+        self.card = card
     }
     
     var body: some View {
-        CardImage
+        card.cardUIImage
             .resizable()
     }
 }
@@ -560,7 +512,7 @@ struct CardToCastView: View {
     
     var body: some View {
         ZStack {
-            CardView(cardName: card.cardName, imageUrl: card.cardImage)
+            CardView(card: card)
                 .frame(width: CardSize.width.big, height: CardSize.height.big)
                 .cornerRadius(CardSize.cornerRadius.big)
                 .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
@@ -602,7 +554,7 @@ struct FlippingCardView: View {
  
     var body: some View {
         ZStack {
-            CardView(cardName: card.cardName, imageUrl: card.cardImage)
+            CardView(card: card)
                 .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                 .cornerRadius(CardSize.cornerRadius.normal)
                 .rotation3DEffect(Angle(degrees: frontDegree), axis: (x: 0, y: 1, z: 0))
@@ -637,7 +589,7 @@ struct CardOnBoardView: View {
             gameViewModel.removeOneCardOnBoard(card: card)
         }, label: {
             ZStack {
-                CardView(cardName: card.cardName, imageUrl: card.cardImage)
+                CardView(card: card)
                     .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                     .cornerRadius(CardSize.cornerRadius.normal)
                 if card.cardCount > 1 {
@@ -658,7 +610,6 @@ struct CardSize {
     
     struct width {
         static let big = (UIScreen.main.bounds.height / 100) * 6.3 * 5.5 as CGFloat as CGFloat
-        //static let normal = 226.8 as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 6.3 * 4.5 as CGFloat
         static let small = 54 as CGFloat
     }
@@ -666,14 +617,12 @@ struct CardSize {
     struct height {
         static let big = (UIScreen.main.bounds.height / 100) * 8.8 * 5.5 as CGFloat as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 8.8 * 4.5 as CGFloat
-        //static let normal = 316.8 as CGFloat
         static let small = 75 as CGFloat
     }
     
     struct cornerRadius {
         static let big = (UIScreen.main.bounds.height / 100) * 0.35 * 5.5 as CGFloat as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 0.35 * 4.5 as CGFloat
-        //static let normal = 316.8 as CGFloat
         static let small = 3 as CGFloat
     }
 }
@@ -693,7 +642,7 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-// Might remove this view, if no button have this style
+// Change name, not purple anymore
 struct PurpleButtonLabel: View {
     
     var text: String

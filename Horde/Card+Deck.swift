@@ -6,35 +6,28 @@
 //
 
 import Foundation
+import SwiftUI
 
 class Card: Hashable, Identifiable {
     
     let id = UUID()
     let cardName: String
     let cardType: CardType
-    let cardImage: String
+    let cardImageURL: String
+    var cardUIImage: Image = Image("BackgroundTest")
     let hasFlashback: Bool
     @Published var cardCount: Int = 1
     
-    init(cardName: String, cardType: CardType, cardImage: String = "get-on-scryfall", hasFlashback: Bool = false){
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", hasFlashback: Bool = false){
         self.cardType = cardType
         self.hasFlashback = hasFlashback
         self.cardName = cardName
         
-        if cardImage == "get-on-scryfall" {
-            self.cardImage = DeckManager.getScryfallImageUrl(name: cardName)
+        if cardImageURL == "get-on-scryfall" {
+            self.cardImageURL = DeckManager.getScryfallImageUrl(name: cardName)
         } else {
-            self.cardImage = cardImage
+            self.cardImageURL = cardImageURL
         }
-        
-        // We make a unique Int from the url for faster comparison between cards (instead of comparing url)
-        /*let cardStringLength = 8 // Size
-        let cardStringInUrl = String(cardImage.suffix(cardStringLength + 4).prefix(cardStringLength))
-        var cardNumberTmp: CLongLong = 1
-        for char in cardStringInUrl {
-            cardNumberTmp += CLongLong(char.hexDigitValue ?? 0) * cardNumberTmp
-        }
-        print("my number is \(cardNumberTmp)")*/
     }
     
     static func == (lhs: Card, rhs: Card) -> Bool {
@@ -42,7 +35,7 @@ class Card: Hashable, Identifiable {
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(cardImage)
+        hasher.combine(cardImageURL)
     }
 }
 

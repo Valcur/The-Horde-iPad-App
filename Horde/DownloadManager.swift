@@ -6,24 +6,28 @@
 //
 
 import Foundation
+import SwiftUI
 
-class DownloadManager: ObservableObject {
+@MainActor class DownloadManager: ObservableObject {
     
     @Published var data = Data()
     @Published var imageReadyToShow = false
+    let card: Card
 
-    init(cardName: String, urlString: String) {
-        if urlString != "" {
-            let url = URL(string: urlString)!
+    init(card: Card) {
+        self.card = card
+        if card.cardImageURL != "" {
+            let url = URL(string: card.cardImageURL)!
 
-            loadData(cardName: cardName, url: url) { (data, error) in
+            self.loadData(cardName: card.cardName, url: url) { (data, error) in
                 // Handle the loaded file data
                 if error == nil {
-                    self.data = data! as Data
-                    self.imageReadyToShow = true
+                    DispatchQueue.main.async {
+                        self.data = data! as Data
+                        self.imageReadyToShow = true
+                        self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "BackgroundTest")!)
+                    }
                 }
-                // If the data is an image, use UIImage(data: data) to
-                // load the image
             }
         }
     }
@@ -54,7 +58,7 @@ class DownloadManager: ObservableObject {
             }
 
             // Handle potential file system errors
-            catch let fileError {
+            catch _ {
                 completion(error)
             }
         }

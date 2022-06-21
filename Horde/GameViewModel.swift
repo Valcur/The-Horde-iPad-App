@@ -37,7 +37,7 @@ class GameViewModel: ObservableObject {
      */
     
     init() {
-        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
+        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
         
         deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
         //let deckAndTokens = deckManager.getZombieClassicDeck()
@@ -49,13 +49,13 @@ class GameViewModel: ObservableObject {
         turnStep = -1
         marathonStage = -1
         
-        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveBoardWipeInFirstQuarter: false, shouldntHaveBoardWipeAtAll: false, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
+        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveBoardWipeInFirstQuarter: true, shouldntHaveStrongCardsInFirstQuarter: true, shouldntHaveBoardWipeAtAll: false, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
         
         strongPermanentsAlreadySpawned = [false, false, false, false]
     }
     
     func startGame() {
-        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImage: ""))
+        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
         
         deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
         print("Game initiating with deck \(deckPickedId)")
@@ -159,33 +159,46 @@ class GameViewModel: ObservableObject {
             self.deck.shuffle()
         }
 
-        // No boardwipe in first quarter
+        // No boardwipe in first quarter & no strong cards
         var n = 0
-        if gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter && marathonStage <= 0 {
+        if (gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter || gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter) && marathonStage <= 0 {
+            var cardsToCheck: [Card] = []
+            
+            if gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter {
+                cardsToCheck = DeckManager.boardWipesCards
+            }
+            
+            if gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter {
+                let moreCardsToCheck = DeckManager.getStrongCardsListForDeck(deckPickedId: deckPickedId)
+                for card in moreCardsToCheck {
+                    cardsToCheck.append(card)
+                }
+            }
+            
             let quarter = deck.count / 6
-            var hasBoardWipeInFirstQuarter = false
+            var hasStrongCardInFirstQuarter = false
             
             repeat {
                 deck.shuffle()
                 for i in 1..<quarter {
-                    for boardWipe in DeckManager.boardWipesCards {
-                        if deck[deck.count - i] == boardWipe {
-                            hasBoardWipeInFirstQuarter = true
+                    for strongCard in cardsToCheck {
+                        if deck[deck.count - i] == strongCard {
+                            hasStrongCardInFirstQuarter = true
                         }
                     }
                 }
                 print("loop \(n)")
                 n += 1
-            } while hasBoardWipeInFirstQuarter && n < 100
+            } while hasStrongCardInFirstQuarter && n < 100
             
-            // Can't suffle without no board wipe wich means too many board wipe -> wouldn't be fun -> let's get a new deck
+            // Can't suffle without no strong cards wich means too many strong cards -> wouldn't be fun -> let's get a new deck
             if n >= 100 {
                 setupHorde(withDifficulty: withDifficulty)
                 return
             }
         }
         
-        // Replace Board Wipes with storng permanents
+        // Replace Board Wipes with strong permanents
         if gameConfig.shared.shouldntHaveBoardWipeAtAll {
             removeBoardWipeFromDeck()
         }
@@ -268,7 +281,7 @@ class GameViewModel: ObservableObject {
     }
     
     func newCardCopy(copyOfCard: Card) -> Card {
-        let tmpCard = Card(cardName: copyOfCard.cardName, cardType: copyOfCard.cardType, cardImage: copyOfCard.cardImage, hasFlashback: copyOfCard.hasFlashback)
+        let tmpCard = Card(cardName: copyOfCard.cardName, cardType: copyOfCard.cardType, cardImageURL: copyOfCard.cardImageURL, hasFlashback: copyOfCard.hasFlashback)
         tmpCard.cardCount = copyOfCard.cardCount
         return copyOfCard
     }
@@ -385,7 +398,7 @@ class GameViewModel: ObservableObject {
     }
     
     func createToken(token: Card) {
-        cardsOnBoard.append(Card(cardName: token.cardName, cardType: .token, cardImage: token.cardImage))
+        cardsOnBoard.append(Card(cardName: token.cardName, cardType: .token, cardImageURL: token.cardImageURL))
         cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
     }
     
@@ -489,11 +502,10 @@ struct GameConfig {
     var classic: ClassicModeParameters
 }
 
-// GRAVEYARD CRASH WHEN SAME PERMANENT MULTIPLE TIMES CLICK ON IT
-
 struct SharedParameters {
     var shouldStartWithWeakPermanent: Bool
     var shouldntHaveBoardWipeInFirstQuarter: Bool
+    var shouldntHaveStrongCardsInFirstQuarter: Bool
     var shouldntHaveBoardWipeAtAll: Bool
     var deckSize: Int
 }
