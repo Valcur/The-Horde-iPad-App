@@ -14,20 +14,22 @@ struct DeckManager {
         Card(cardName: "Ruinous Ultimatum",cardType: .sorcery),
         Card(cardName: "All Is Dust", cardType: .sorcery),
         Card(cardName: "Plague Wind",cardType: .sorcery),
+        Card(cardName: "Phyrexian Rebirth",cardType: .sorcery),
         Card(cardName: "Wakening Sun's Avatar",cardType: .creature),
         Card(cardName: "Ezuri's Predation", cardType: .sorcery)
     ]
     
     static private func getNatureDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
-    
+        
+        // 1 Sandwurm Convergence
+
+        
         // 1 Copperhoof Vorrac
         // 1 Bellowing Tanglewurm
-        // 1 Essence of the Wild -> galere a gerer en vrai
         // 1 Yorvo, Lord of Garenbrig
-        // 1 Ghalta, Primal Hunger
         // 1 Goreclaw, Terror of Qal Sisma
-        // 1 Rhonas the Indomitable
+        // 1 Rhonas the Indomitable -> cool si j'arrive a remplacer
         // 1 Craterhoof Behemoth
         // 1 Nessian Boar
         // 1 Hornet Queen
@@ -36,7 +38,6 @@ struct DeckManager {
         
         // 1 Steel Leaf Champion
         // 1 Woodland Champion
-        // 1 Thragtusk
         // 1 Mother Bear
         
         // 1 Winds of Qal Sisma
@@ -54,7 +55,7 @@ struct DeckManager {
         // 1 Beast Attack
         // 1 Parallel Evolution
         // 1 Second Harvest
-        // 1 Elephant Ambush
+        // 2 Elephant Ambush
         // 1 Roar of the Wurm
         // 1 Predatory Rampage
         
@@ -144,7 +145,8 @@ struct DeckManager {
         // 1 Beast Attack
         deck.append(Card(cardName: "Beast Attack", cardType: .sorcery, hasFlashback: true))
         
-        // 1 Elephant Ambush
+        // 2 Elephant Ambush
+        deck.append(Card(cardName: "Elephant Ambush", cardType: .sorcery, hasFlashback: true))
         deck.append(Card(cardName: "Elephant Ambush", cardType: .sorcery, hasFlashback: true))
         
         // 1 Roar of the Wurm
@@ -163,7 +165,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Unnatural Growth", cardType: .enchantment))
         
         // 1 Sandwurm Convergence
-        deck.append(Card(cardName: "Sandwurm Convergence", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Sandwurm Convergence", specifiSet: "AKH")))
+        deck.append(Card(cardName: "Sandwurm Convergence", cardType: .enchantment, cardImageURL: DeckManager.getScryfallImageUrl(name: "Sandwurm Convergence", specifiSet: "AKH")))
         
         // 2 Muraganda Petroglyphs
         for _ in 1...2 {
@@ -177,42 +179,42 @@ struct DeckManager {
         
         // 20 Bear 2/2
         for _ in 1...(20 * difficulty) {
-            deck.append(Card(cardName: "Bear", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Bear", specifiSet: "TELD")))
+            deck.append(Card(cardName: "Bear", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Bear", specifiSet: "TELD")))
         }
         
         // 6 Elephant 3/3
         for _ in 1...(8 * difficulty) {
-            deck.append(Card(cardName: "Elephant", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")))
+            deck.append(Card(cardName: "Elephant", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")))
         }
         
         // 10 Beast 4/4
         for _ in 1...(12 * difficulty) {
-            deck.append(Card(cardName: "Beast", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")))
+            deck.append(Card(cardName: "Beast", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")))
         }
         
         // 5 Wurm 6/6
         for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Wurm", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TC19")))
+            deck.append(Card(cardName: "Wurm", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TC19")))
         }
         
         // 16 Elemental x/x
         for _ in 1...(12 * difficulty) {
-            deck.append(Card(cardName: "Elemental", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "T2XM")))
+            deck.append(Card(cardName: "Elemental", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "T2XM")))
         }
          
         // 3 Elemental 7/7
         for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "Elemental", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "TKHC")))
+            deck.append(Card(cardName: "Elemental", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "TKHC")))
         }
         
         let tokens: [Card] = [
-            Card(cardName: "Saproling (TC20)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
-            Card(cardName: "Insect", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TC20")),
-            Card(cardName: "Bear", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Bear", specifiSet: "TELD")),
-            Card(cardName: "Elephant", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")),
-            Card(cardName: "Beast", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")),
-            Card(cardName: "Wurm TCLB", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TCLB")),
-            Card(cardName: "Wurm TC19", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TC19"))
+            Card(cardName: "Saproling (TC20)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
+            Card(cardName: "Insect", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TC20")),
+            Card(cardName: "Bear", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Bear", specifiSet: "TELD")),
+            Card(cardName: "Elephant", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")),
+            Card(cardName: "Beast", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")),
+            Card(cardName: "Wurm TCLB", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TCLB")),
+            Card(cardName: "Wurm TC19", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TC19"))
         ]
         
         deck.shuffle()
@@ -341,7 +343,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Twilights Call", cardType: .sorcery))
         
         // 1 Army of the Damned
-        deck.append(Card(cardName: "Army of the Damned", cardType: .sorcery, cardImage: DeckManager.getScryfallImageUrl(name: "Army of the Damned", specifiSet: "ISD"), hasFlashback: true))
+        deck.append(Card(cardName: "Army of the Damned", cardType: .sorcery, cardImageURL: DeckManager.getScryfallImageUrl(name: "Army of the Damned", specifiSet: "ISD"), hasFlashback: true))
         
         // 1 Endless Ranks of the Dead
         deck.append(Card(cardName: "Endless Ranks of the Dead", cardType: .enchantment))
@@ -359,207 +361,16 @@ struct DeckManager {
         
         // 5 Zombie Giant Tokens
         for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Zombie Giant Token", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Zombie Giant", specifiSet: "TBBD")))
+            deck.append(Card(cardName: "Zombie Giant Token", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Zombie Giant", specifiSet: "TBBD")))
         }
         
         // 55 Zombie Tokens
         for _ in 1...(55 * difficulty) {
-            deck.append(Card(cardName: "Zombie Token", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Zombie", specifiSet: "TISD")))
+            deck.append(Card(cardName: "Zombie Token", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Zombie", specifiSet: "TISD")))
         }
         
         let tokens: [Card] = [
-            Card(cardName: "Zombie Token", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Zombie", specifiSet: "TISD"))
-        ]
-        
-        deck.shuffle()
-        
-        return (deck, tokens)
-    }
-
-    // OLD, PROBABLY GONNA BE REMOVED
-    static private func getZombieClassicDeck(difficulty: Int) -> ([Card], [Card]) {
-        var deck: [Card] = []
-        
-        /* ZOMBIE CLASSIC
-         
-         1 Army of the Damned
-         1 Bad Moon
-         1 Barter in Blood
-         1 Cackling Fiend
-         1 Call to the Grave
-         1 Cemetery Reaper
-         1 Death Baron
-         1 Delirium Skeins
-         1 Diregraf Ghoul
-         1 Dread Slaver
-         1 Endless Ranks of the Dead
-         1 Erebos, God of the Dead
-         1 Fleshbag Marauder
-         1 Ghoulraiser
-         1 Gluttonous Zombie
-         1 Grave Betrayal
-         1 Grave Titan
-         1 Infectious Horror
-         1 Intimidation
-         1 Liliana's Reaver
-         1 Maalfeld Twins
-         1 Nested Ghoul
-         1 Nocturnal Raid
-         1 Noxious Ghoul
-         1 Plague Wind
-         1 Raving Dead
-         1 Rotting Fensnake
-         1 Rotting Mastodon
-         1 Sibsig Icebreakers
-         1 Smallpox
-         1 Soulless One
-         1 Sutured Ghoul
-         1 Syphon Flesh
-         1 Twilight's Call
-         1 Unbreathing Horde
-         1 Undead Warchief
-         1 Vengeful Dead
-         1 Wight of Precinct Six
-         1 Zombie Apocalypse
-         1 Zombie Brute
-         5 Big Zombie tokens
-         55 Zombie tokens
-         */
-        
-        /*
-        // 1 Army of the Damned
-        deck.append(Card(cardType: .sorcery, cardImage: getCardUrl(imageUrlPart: "7/8/787503ed-ebf5-4309-8dc6-3de925ea28a6"), hasFlashback: true))
-        
-        // 1 Bad Moon
-        deck.append(Card(cardType: .enchantment, cardImage: getCardUrl(imageUrlPart: "8/f/8f8a75da-ea3c-43e7-9d32-1c92f8ec0fd2")))
-        
-        // 1 Barter in Blood
-        deck.append(Card(cardType: .sorcery, cardImage: getCardUrl(imageUrlPart: "2/3/23986add-b33d-4bad-86f3-e2d0f99cf949")))
-        
-        // 1 Cackling Fiend
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "a/e/ae410ae8-1e72-4727-96df-c7c195063fb5")))
-        
-        // 1 Call to the Grave
-        deck.append(Card(cardType: .enchantment, cardImage: getCardUrl(imageUrlPart: "5/e/5e1324b6-dba0-4aff-a403-a45d2b405f5b")))
-        
-        // 1 Cemetery Reaper
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "9/0/9008e94a-cfec-473f-ae75-57586e45098d")))
-        
-        // 1 Death Baron
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "1/1/11641a17-e979-4edb-adba-789f21fd017d")))
-        
-        // 1 Delirium Skeins
-        deck.append(Card(cardType: .sorcery, cardImage: getCardUrl(imageUrlPart: "6/4/64b0d9e7-4a0f-4f07-99ae-31c3c9f0037a")))
-        
-        // 1 Diregraf Ghoul
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "5/c/5cf2d355-404e-4c21-9bc2-973d09a845a5")))
-        
-        // 1 Dread Slaver
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "3/d/3d8a3abd-a4a2-48e6-b709-1c0240a76c5e")))
-        
-        // 1 Endless Ranks of the Dead
-        deck.append(Card(cardType: .enchantment, cardImage: getCardUrl(imageUrlPart: "1/5/155ae16c-f32b-421d-a92a-bf13d9f32891")))
-        
-        // 1 Erebos, God of the Dead
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "a/c/ac8bdb4c-2d68-4cb4-904f-1649427751dc")))
-        
-        // 1 Fleshbag Marauder
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "a/0/a03c738c-88d9-4cf6-a650-20ce6e5565bc")))
-        
-        // 1 Ghoulraiser
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "8/5/850ccdcb-2cd7-4f27-aa9b-917a62a5e94d")))
-        
-        // 1 Gluttonous Zombie
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "d/b/db909e95-7979-41f0-b17a-874c4137fcc1")))
-        
-        // 1 Grave Betrayal
-        deck.append(Card(cardType: .enchantment, cardImage: getCardUrl(imageUrlPart: "4/7/47b38c68-8e72-4afc-bb5e-0b40880fdda9")))
-        
-        // 1 Grave Titan
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "8/f/8f1a018f-ce08-428b-9be2-937204dd25c2")))
-        
-        // 1 Infectious Horror
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "d/1/d17aaa92-10ca-4f70-b45e-5a51e9192efb")))
-        
-        // 1 Intimidation
-        deck.append(Card(cardType: .enchantment, cardImage: getCardUrl(imageUrlPart: "1/b/1b9e1724-91cf-422e-909b-ddb69a6f9f76")))
-        
-        // 1 Liliana's Reaver
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "f/a/fa9396f3-a93c-47ee-91da-78af864c86c3")))
-        
-        // 1 Maalfeld Twins
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "f/a/fa715fde-8339-447b-8ac8-3126830bece8")))
-        
-        // 1 Nested Ghoul
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "c/0/c035ff58-9df3-4db4-b9d0-97d58080ecfe")))
-        
-        // 1 Nocturnal Raid
-        deck.append(Card(cardType: .instant, cardImage: getCardUrl(imageUrlPart: "0/0/0015fee8-068a-421e-9143-bcb575371f9a")))
-        
-        // 1 Noxious Ghoul
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "7/d/7d67511b-c130-44d5-8536-4278a695627c")))
-        
-        // 1 Plague Wind
-        deck.append(Card(cardType: .sorcery, cardImage: getCardUrl(imageUrlPart: "7/2/72d21d0d-7de7-4f03-8663-002c9290512f")))
-        
-        // 1 Raving Dead
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "5/d/5d24d153-a014-4524-a496-9fe1c41cbc2b")))
-        
-        // 1 Rotting Fensnake
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "c/2/c21cbb10-9157-4887-a752-29b9e94fc77a")))
-        
-        // 1 Rotting Mastodon
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "1/5/1564a20a-0e57-4ced-9eda-7acff74274e7")))
-        
-        // 1 Sibsig Icebreakers
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "3/8/3835752e-11a6-406c-8bff-b7d4f2f31d85")))
-        
-        // 1 Smallpox
-        deck.append(Card(cardType: .sorcery, cardImage: getCardUrl(imageUrlPart: "c/2/c28db9a4-6696-460b-a9d3-98f4a31abe75")))
-        
-        // 1 Soulless One
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "4/1/410a214b-09c4-49bd-a461-3330d0249ae5")))
-        
-        // 1 Sutured Ghoul
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "8/3/8390d9b7-5adf-4039-8682-02bfba421ff9")))
-        
-        // 1 Syphon Flesh
-        deck.append(Card(cardType: .sorcery, cardImage: getCardUrl(imageUrlPart: "6/3/63124d37-d16c-48d6-b1a2-a1a3834b3dc1")))
-        
-        // 1 Twilight's Call
-        deck.append(Card(cardType: .sorcery, cardImage: getCardUrl(imageUrlPart: "a/6/a6e04dd2-75ad-4427-93cc-37226340c2fb")))
-        
-        // 1 Unbreathing Horde
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "d/d/dd119aa8-8414-4942-9a28-3e68a9a52a8e")))
-        
-        // 1 Undead Warchief
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "0/1/01482b0c-d05b-4356-9144-e044159f4dcb")))
-        
-        // 1 Vengeful Dead
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "7/c/7c11c11d-9809-4031-8cbc-21aef07d7f1f")))
-        
-        // 1 Wight of Precinct Six
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "3/2/32aec0ec-0feb-4276-ab9c-5bb18b5005a0")))
-        
-        // 1 Zombie Apocalypse
-        deck.append(Card(cardType: .sorcery, cardImage: getCardUrl(imageUrlPart: "8/5/854ae40d-ee52-434e-8fe0-1b5a0d4ea58b")))
-        
-        // 1 Zombie Brute
-        deck.append(Card(cardType: .creature, cardImage: getCardUrl(imageUrlPart: "b/3/b37db470-3aef-4fc4-98ce-63b5fb2546f6")))
-        
-        // 5 Big Zombie tokens
-        for _ in 1...5 {
-            deck.append(Card(cardType: .token, cardImage: getCardUrl(imageUrlPart: "b/e/be7e26e1-5db6-49ba-a88e-c79d889cd364")))
-        }
-       
-        // 55 Zombie tokens
-        for _ in 1...55 {
-            deck.append(Card(cardType: .token, cardImage: getCardUrl(imageUrlPart: "8/a/8a98d0bf-4106-4ff1-89d4-3f6040b2cd5e")))
-        }
-        */
-        let tokens: [Card] = [
-            //Card(cardType: .token, cardImage: getCardUrl(imageUrlPart: "8/a/8a98d0bf-4106-4ff1-89d4-3f6040b2cd5e")),
-            //Card(cardType: .token, cardImage: getCardUrl(imageUrlPart: "b/e/be7e26e1-5db6-49ba-a88e-c79d889cd364"))
+            Card(cardName: "Zombie Token", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Zombie", specifiSet: "TISD"))
         ]
         
         deck.shuffle()
@@ -915,32 +726,32 @@ struct DeckManager {
         
         // 15 Eldrazi Horror (TEMN) 1
         for _ in 1...(15 * difficulty) {
-            deck.append(Card(cardName: "Eldrazi Horror (TEMN)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Horror", specifiSet: "TEMN")))
+            deck.append(Card(cardName: "Eldrazi Horror (TEMN)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi Horror", specifiSet: "TEMN")))
         }
         
         // 25 Eldrazi Scion (DDR) 71
         for _ in 1...(25 * difficulty) {
-            deck.append(Card(cardName: "Eldrazi Scion (DDR)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Scion", specifiSet: "TBFZ")))
+            deck.append(Card(cardName: "Eldrazi Scion (DDR)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi Scion", specifiSet: "TBFZ")))
         }
         
         // 5 Eldrazi (TPCA) 1
         for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Eldrazi (TPCA)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi", specifiSet: "TPCA")))
+            deck.append(Card(cardName: "Eldrazi (TPCA)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi", specifiSet: "TPCA")))
         }
         
         // 15 Eldrazi Spawn (DDP) 76
         for _ in 1...(15 * difficulty) {
-            deck.append(Card(cardName: "Eldrazi Spawn (DDP)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Spawn", specifiSet: "TMIC")))
+            deck.append(Card(cardName: "Eldrazi Spawn (DDP)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi Spawn", specifiSet: "TMIC")))
         }
         
         let tokens: [Card] = [
-            Card(cardName: "Eldrazi Spawn (DDP)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Spawn", specifiSet: "TMIC")),
-            Card(cardName: "Eldrazi Scion (DDR)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Scion", specifiSet: "TBFZ")),
-            Card(cardName: "Eldrazi Horror (TEMN)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi Horror", specifiSet: "TEMN")),
-            Card(cardName: "Eldrazi (TBFZ)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Eldrazi", specifiSet: "TBFZ")),
-            Card(cardName: "Emrakul, the Aeons Torn", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Emrakul, the Aeons Torn", specifiSet: "ROE")),
-            Card(cardName: "Kozilek, Butcher of Truth", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Kozilek, Butcher of Truth", specifiSet: "ROE")),
-            Card(cardName: "Ulamog, the Infinite Gyre", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Ulamog, the Infinite Gyre", specifiSet: "ROE"))
+            Card(cardName: "Eldrazi Spawn (DDP)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi Spawn", specifiSet: "TMIC")),
+            Card(cardName: "Eldrazi Scion (DDR)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi Scion", specifiSet: "TBFZ")),
+            Card(cardName: "Eldrazi Horror (TEMN)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi Horror", specifiSet: "TEMN")),
+            Card(cardName: "Eldrazi (TBFZ)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi", specifiSet: "TBFZ")),
+            Card(cardName: "Emrakul, the Aeons Torn", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Emrakul, the Aeons Torn", specifiSet: "ROE")),
+            Card(cardName: "Kozilek, Butcher of Truth", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Kozilek, Butcher of Truth", specifiSet: "ROE")),
+            Card(cardName: "Ulamog, the Infinite Gyre", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Ulamog, the Infinite Gyre", specifiSet: "ROE"))
         ]
 
         deck.shuffle()
@@ -1116,33 +927,33 @@ struct DeckManager {
         
         // 10 Soldier (TGRN) 2
         for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Soldier (TGRN)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TNCC")))
+            deck.append(Card(cardName: "Soldier (TGRN)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TNCC")))
         }
         
         // 10 Knight (TMIC) 3
         for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Knight (TMIC)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Knight", specifiSet: "TM21")))
+            deck.append(Card(cardName: "Knight (TMIC)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Knight", specifiSet: "TM21")))
         }
         
         // 10 Human Warrior (TELD) 13
         for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Human Warrior (TELD)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Human Warrior", specifiSet: "TELD")))
+            deck.append(Card(cardName: "Human Warrior (TELD)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Human Warrior", specifiSet: "TELD")))
         }
         
         // 10 Knight (TCM2) 4
         for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Knight (TCM2)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Knight", specifiSet: "TCM2")))
+            deck.append(Card(cardName: "Knight (TCM2)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Knight", specifiSet: "TCM2")))
         }
         
         // 20 Human (TRNA) 1
         for _ in 1...(20 * difficulty) {
-            deck.append(Card(cardName: "Human (TRNA)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Human", specifiSet: "TC20")))
+            deck.append(Card(cardName: "Human (TRNA)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Human", specifiSet: "TC20")))
         }
         
         
         let tokens: [Card] = [
-            Card(cardName: "Human (TRNA)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Human", specifiSet: "TC20")),
-            Card(cardName: "Soldier (TC14)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TC14"))
+            Card(cardName: "Human (TRNA)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Human", specifiSet: "TC20")),
+            Card(cardName: "Soldier (TC14)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TC14"))
         ]
         
         deck.shuffle()
@@ -1331,60 +1142,60 @@ struct DeckManager {
         
         // 25 Golem (TNPH) 3
         for _ in 1...25 {
-            deck.append(Card(cardName: "Golem TNPH", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TCMR")))
+            deck.append(Card(cardName: "Golem TNPH", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TCMR")))
         }
         
         // 5 Assembly-Worker (TTSR) 14
         for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Assembly-Worker TTSR", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Assembly-Worker", specifiSet: "TTSR")))
+            deck.append(Card(cardName: "Assembly-Worker TTSR", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Assembly-Worker", specifiSet: "TTSR")))
         }
         
         // 5 Construct (TMH2) 16
         for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Construct TMH2", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TMH2")))
+            deck.append(Card(cardName: "Construct TMH2", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TMH2")))
         }
         
         // 5 Construct (TC18) 21
         for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Construct (TC18)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TC18")))
+            deck.append(Card(cardName: "Construct (TC18)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TC18")))
         }
         
         // 4 Construct (TZNR) 10
         for _ in 1...(4 * difficulty) {
-            deck.append(Card(cardName: "Construct (TZNR)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TZNR")))
+            deck.append(Card(cardName: "Construct (TZNR)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TZNR")))
         }
         
         // 3 Beast (TKLD) 1
         for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "Beast (TKLD)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TKLD")))
+            deck.append(Card(cardName: "Beast (TKLD)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TKLD")))
         }
         
         // 3 Golem (TRIX) 4
         for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "Golem (TRIX)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TRIX")))
+            deck.append(Card(cardName: "Golem (TRIX)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TRIX")))
         }
         
         // 3 Golem (TMBS) 3
         for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "Golem (TMBS)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TMBS")))
+            deck.append(Card(cardName: "Golem (TMBS)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TMBS")))
         }
         
         // 3 Wurm (TSOM) 8
         for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"))
+            deck.append(Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImageURL: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"))
         }
         
         // 3 Wurm (TSOM) 9
         for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477"))
+            deck.append(Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImageURL: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477"))
         }
         
         let tokens: [Card] = [
-            Card(cardName: "Golem TNPH", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TCMR")),
-            Card(cardName: "Insect TSOM", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TSOM")),
-            Card(cardName: "Insect TAKH", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TAKH")),
-            Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"),
-            Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImage: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477")
+            Card(cardName: "Insect TSOM", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TSOM")),
+            Card(cardName: "Insect TAKH", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TAKH")),
+            Card(cardName: "Golem TNPH", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TCMR")),
+            Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImageURL: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"),
+            Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImageURL: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477")
         ]
         
         deck.shuffle()
@@ -1551,17 +1362,17 @@ struct DeckManager {
 
         // 40 Dinosaur (TIKO)
         for _ in 1...(40 * difficulty) {
-            deck.append(Card(cardName: "Dinosaur (TIKO)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TIKO")))
+            deck.append(Card(cardName: "Dinosaur (TIKO)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TIKO")))
         }
         
         // 20 Dinosaur (TGN2)
         for _ in 1...(20 * difficulty) {
-            deck.append(Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")))
+            deck.append(Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")))
         }
         
         let tokens: [Card] = [
-            Card(cardName: "Saproling (TC20)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
-            Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImage: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")),
+            Card(cardName: "Saproling (TC20)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
+            Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")),
             Card(cardName: "Polyraptor", cardType: .token)
         ]
         
@@ -1614,7 +1425,7 @@ struct DeckManager {
          1 Ghostly Prison
          1 Hissing Miasma
          1 Authority of the Consuls
-         1 Dictate of Heliod
+         1 Glorious Anthem
          
          ONLY ZOMBIE -> NO COMMONS
          
@@ -1652,7 +1463,7 @@ struct DeckManager {
             Card(cardName: "Ghostly Prison", cardType: .enchantment),
             Card(cardName: "Hissing Miasma", cardType: .enchantment),
             Card(cardName: "Authority of the Consuls", cardType: .enchantment),
-            Card(cardName: "Dictate of Heliod", cardType: .enchantment)
+            Card(cardName: "Glorious Anthem", cardType: .enchantment)
         ]
         
         switch deckPickedId {
@@ -1756,7 +1567,7 @@ struct DeckManager {
         case DecksId.nature:
             commonCards.append(Card(cardName: "Worldspine Wurm", cardType: .creature))
             commonCards.append(Card(cardName: "Impervious Greatwurm", cardType: .creature))
-            commonCards.append(Card(cardName: "Beastmaster Ascension", cardType: .enchantment, cardImage: DeckManager.getScryfallImageUrl(name: "Beastmaster Ascension", specifiSet: "ZEN")))
+            commonCards.append(Card(cardName: "Beastmaster Ascension", cardType: .enchantment, cardImageURL: DeckManager.getScryfallImageUrl(name: "Beastmaster Ascension", specifiSet: "ZEN")))
         default:
             commonCards = [
                 Card(cardName: "Zombie Master", cardType: .creature),
@@ -1766,4 +1577,133 @@ struct DeckManager {
         
         return commonCards.randomElement()!
     }
+    
+    static func getStrongCardsListForDeck(deckPickedId: Int) -> [Card] {
+        
+        /* TOO STRONG TO DRAW EARLY
+         
+         ZOMBIE
+         
+         Grave Titan
+         Army of the Damned
+         
+         HUMAN
+         
+         True Conviction
+         Collective Blessing
+         Kyler, Sigardian Emissary
+         Blade Historian
+         Frontline Medic
+         
+         PHYREXIAN
+         
+         Vorinclex, Monstruous Raider
+         Massacre Wurm
+         Bronze Guardian
+         Triumph of the Hordes
+         Elesh Norn, Grand Cenobite
+         Skithiryx, the Blight Dragon
+         Blightsteel Colossus
+         Phyrexian Hydra
+         Urabrask the Hidden
+         Phyrexian Obliterator
+         
+         SLIVER
+         
+         Shifting Sliver
+         Megantic Sliver
+         Fury Sliver
+         
+         DINOSAUR
+         
+         Gigantosaurus
+         Ghalta, Primal Hunger
+         Goring Ceratops
+         The Tarrasque
+         Silverclad Ferocidons
+         Collective Blessing
+         
+         ELDRAZI
+         
+         Desolation Twin
+         Breaker of Armies
+         Ulamog's Crusher
+         Bane of Bala Ged
+         Void Winnower
+         Pathrazer of Ulamog
+         Hand of Emrakul
+         
+         NATURE
+         
+         Craterhoof Behemoth
+         Nessian Boar
+         End-Raze Forerunners
+         Grothama, All-Devouring
+         Crush of Wurms
+         Parallel Evolution
+         Second Harvest
+         Predatory Rampage
+         Unnatural Growth
+         Sandwurm Convergence
+         
+         */
+        
+        var cardArray: [Card] = []
+        
+        switch deckPickedId {
+        case DecksId.human:
+            cardArray.append(Card(cardName: "True Conviction", cardType: .enchantment))
+            cardArray.append(Card(cardName: "Collective Blessing", cardType: .enchantment))
+            cardArray.append(Card(cardName: "Kyler, Sigardian Emissary", cardType: .creature))
+            cardArray.append(Card(cardName: "Blade Historian", cardType: .creature))
+            cardArray.append(Card(cardName: "Frontline Medic", cardType: .creature))
+        case DecksId.phyrexian:
+            cardArray.append(Card(cardName: "Vorinclex, Monstrous Raider",cardType: .creature))
+            cardArray.append(Card(cardName: "Massacre Wurm",cardType: .creature))
+            cardArray.append(Card(cardName: "Bronze Guardian",cardType: .creature))
+            cardArray.append(Card(cardName: "Triumph of the Hordes",cardType: .sorcery))
+            cardArray.append(Card(cardName: "Elesh Norn, Grand Cenobite",cardType: .creature))
+            cardArray.append(Card(cardName: "Skithiryx, the Blight Dragon",cardType: .creature))
+            cardArray.append(Card(cardName: "Blightsteel Colossus",cardType: .creature))
+            cardArray.append(Card(cardName: "Phyrexian Hydra",cardType: .creature))
+            cardArray.append(Card(cardName: "Urabrask the Hidden",cardType: .creature))
+            cardArray.append(Card(cardName: "Phyrexian Obliterator",cardType: .creature))
+        case DecksId.sliver:
+            cardArray.append(Card(cardName: "Shifting Sliver",cardType: .creature))
+            cardArray.append(Card(cardName: "Megantic Sliver",cardType: .creature))
+            cardArray.append(Card(cardName: "Fury Sliver",cardType: .creature))
+        case DecksId.dinosaur:
+            cardArray.append(Card(cardName: "Gigantosaurus", cardType: .creature))
+            cardArray.append(Card(cardName: "Ghalta, Primal Hunger", cardType: .creature))
+            cardArray.append(Card(cardName: "Goring Ceratops", cardType: .creature))
+            cardArray.append(Card(cardName: "The Tarrasque", cardType: .creature))
+            cardArray.append(Card(cardName: "Silverclad Ferocidons", cardType: .creature))
+            cardArray.append(Card(cardName: "Collective Blessing", cardType: .enchantment))
+        case DecksId.eldrazi:
+            cardArray.append(Card(cardName: "Desolation Twin", cardType: .creature))
+            cardArray.append(Card(cardName: "Breaker of Armies", cardType: .creature))
+            cardArray.append(Card(cardName: "Ulamog's Crusher", cardType: .creature))
+            cardArray.append(Card(cardName: "Bane of Bala Ged", cardType: .creature))
+            cardArray.append(Card(cardName: "Void Winnower", cardType: .creature))
+            cardArray.append(Card(cardName: "Pathrazer of Ulamog", cardType: .creature))
+            cardArray.append(Card(cardName: "Hand of Emrakul", cardType: .creature))
+        case DecksId.nature:
+            cardArray.append(Card(cardName: "Craterhoof Behemoth", cardType: .creature))
+            cardArray.append(Card(cardName: "Nessian Boar", cardType: .creature))
+            cardArray.append(Card(cardName: "End-Raze Forerunners", cardType: .creature))
+            cardArray.append(Card(cardName: "Grothama, All-Devouring", cardType: .creature))
+            cardArray.append(Card(cardName: "Crush of Wurms", cardType: .sorcery, hasFlashback: true))
+            cardArray.append(Card(cardName: "Parallel Evolution", cardType: .sorcery, hasFlashback: true))
+            cardArray.append(Card(cardName: "Second Harvest", cardType: .instant))
+            cardArray.append(Card(cardName: "Predatory Rampage", cardType: .sorcery))
+            cardArray.append(Card(cardName: "Unnatural Growth", cardType: .enchantment))
+            cardArray.append(Card(cardName: "Sandwurm Convergence", cardType: .enchantment, cardImageURL: DeckManager.getScryfallImageUrl(name: "Sandwurm Convergence", specifiSet: "AKH")))
+        default:
+            cardArray.append(Card(cardName: "Grave Titan", cardType: .creature))
+            cardArray.append(Card(cardName: "Army of the Damned", cardType: .sorcery, cardImageURL: DeckManager.getScryfallImageUrl(name: "Army of the Damned", specifiSet: "ISD"), hasFlashback: true))
+        }
+        
+        return []
+    }
 }
+// CARD WITH NO NAME IN NATURE ?
