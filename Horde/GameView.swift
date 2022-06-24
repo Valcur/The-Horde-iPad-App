@@ -291,18 +291,21 @@ struct ControlBarView: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .frame(width: 80)
-                ForEach(gameViewModel.tokensAvailable) { token in
-                    Button(action: {
-                        print("Create token button pressed")
-                        gameViewModel.createToken(token: token)
-                    }, label: {
-                        CardView(card: token)
-                            .frame(width: CardSize.width.small, height: CardSize.height.small)
-                            .cornerRadius(CardSize.cornerRadius.small)
-                    })
-                }
+                ScrollView(.horizontal) {
+                    HStack(spacing: 10) {
+                        ForEach(gameViewModel.tokensAvailable) { token in
+                            Button(action: {
+                                print("Create token button pressed")
+                                gameViewModel.createToken(token: token)
+                            }, label: {
+                                CardView(card: token)
+                                    .frame(width: CardSize.width.small, height: CardSize.height.small)
+                                    .cornerRadius(CardSize.cornerRadius.small)
+                            })
+                        }
+                    }
+                }.frame(maxWidth: UIScreen.main.bounds.width / 2)
             }
-            
             Spacer()
             
             // Next
@@ -541,13 +544,13 @@ struct FlippingCardView: View {
         withAnimation(.easeInOut(duration: duration).delay(delay)) {
             backDegree = 90
         }
-        withAnimation(.easeInOut(duration: duration / 2).delay(delay)) {
+        withAnimation(.easeInOut(duration: duration / 1.5).delay(delay)) {
             cardScale = 1.1
         }
         withAnimation(.easeInOut(duration: duration).delay(delay + duration)){
             frontDegree = 0
         }
-        withAnimation(.easeInOut(duration: duration / 2).delay(delay + duration + duration / 2)){
+        withAnimation(.easeInOut(duration: duration / 1.5).delay(delay + duration + duration / 1.5)){
             cardScale = 1.0
         }
     }
@@ -598,7 +601,8 @@ struct CardOnBoardView: View {
                         .font(.title)
                         .foregroundColor(.white)
                 }
-            }.shadow(color: Color("ShadowColor"), radius: 5, x: 0, y: 4)
+            }
+            .shadow(color: Color("ShadowColor"), radius: 5, x: 0, y: 4)
         })
     }
 }
