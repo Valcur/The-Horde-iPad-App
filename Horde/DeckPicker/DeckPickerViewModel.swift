@@ -17,7 +17,7 @@ class DeckPickerViewModel: ObservableObject {
         self.deckPickers = [
             DeckPicker(id: DecksId.zombie, title: "Zombie", intro: "The original horde deck by Peter Knudson", specialRules: "All creatures controlled by the Horde have haste", image: "Zombie", imageArtist: "Grzegorz Rutkowski"),
             
-            DeckPicker(id: DecksId.human, title: "Human", intro: "A modified version of the Armies of Men deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste and are Humans in addition to their other creature types.", image: "Human", imageArtist: "Antonio José Manzanedo"),
+            DeckPicker(id: DecksId.human, title: "Human", intro: "A modified version of the Armies of Men deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste and are Humans in addition to their other creature types. All tokens controlled by the Horde are white", image: "Human", imageArtist: "Antonio José Manzanedo"),
             
             DeckPicker(id: DecksId.phyrexian, title: "Phyrexian", intro: "A modified version of the Phyrexian Perfection deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste. The Survivors share poison counters. They do not lose the game for having 10 or more poison counters. Every time the Survivors gain one or more poison counters, each Survivor exiles 1 card from the top of each of their libraries face down for each poison counter.", image: "Phyrexian", imageArtist: "Igor Kieryluk"),
             
@@ -63,7 +63,7 @@ struct DecksId {
     static let human = 1
     static let dinosaur = 2
     static let nature = 3
-    static let phyrexian = 4
-    static let sliver = 5
+    static let phyrexian = 5
+    static let sliver = 4
     static let eldrazi = 6
 }
