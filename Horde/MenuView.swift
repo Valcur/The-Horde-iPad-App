@@ -44,15 +44,19 @@ struct MenuView: View {
                     MenuButtonView(title: "Contact", id: 3)
                     Spacer()
                 }
-                ScrollView(.vertical) {
-                    if hordeAppViewModel.menuToShowId == 1 {
+                if hordeAppViewModel.menuToShowId == 1 {
+                    ScrollView(.vertical) {
                         MenuRulesView()
-                    } else if hordeAppViewModel.menuToShowId == 2 {
+                    }.frame(width: UIScreen.main.bounds.width * 0.75)
+                } else if hordeAppViewModel.menuToShowId == 2 {
+                    ScrollView(.vertical) {
                         MenuHowToPlayView()
-                    } else {
+                    }.frame(width: UIScreen.main.bounds.width * 0.75)
+                } else {
+                    ScrollView(.vertical) {
                         MenuContactView()
-                    }
-                }.frame(width: UIScreen.main.bounds.width * 0.75)
+                    }.frame(width: UIScreen.main.bounds.width * 0.75)
+                }
             }.padding(.trailing, 20).padding(.top, hordeAppViewModel.readyToPlay ? 100 : 50).padding(.bottom, 50)
         }.ignoresSafeArea().frame(width: UIScreen.main.bounds.width)
     }
@@ -127,6 +131,8 @@ struct MenuRulesView: View {
                 MenuTextParagraphView(text: "If the horde ha to choose a target, it choose the BEST target. BEST is higher strength, then higher Mana Value. If still multiple possible targets, targets randomly")
                 
                 MenuTextParagraphView(text: "If survivors have planeswalkers, each time a creature controlled by the horde isn't blocked : heads or tails for each of those creature to know if it deals damage to the planeswalker or the survivors. Target the planeswalker with higher Mana Value first if survivors have multiple planeswalkers")
+                
+                MenuTextBoldParagraphView(text: "Remember that this is a casual format, you can change as many rules as you want. What matters is that you have fun :)")
             }
         }.padding(.trailing, 30)
     }
@@ -175,7 +181,7 @@ struct MenuTextWithImageParagraphView: View {
     let text2: String
     
     var body: some View {
-        Text("\(text1) \(image) \(text2)")
+        Text("\(text1)\(image)\(text2)")
             .foregroundColor(.white)
             .font(.subheadline)
             .multilineTextAlignment(.leading)
@@ -237,7 +243,7 @@ struct MenuHowToPlayView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     MenuTextBoldParagraphView(text: "How to destroy a permenent ?")
                     
-                    MenuTextParagraphView(text: "Press a card on the board to destroy it")
+                    MenuTextParagraphView(text: "Touch a card on the board to destroy it")
                 }
                 
                 VStack(alignment: .leading, spacing: 20) {
@@ -284,7 +290,7 @@ struct MenuContactView: View {
             
             MenuTextParagraphView(text: "If you have any problem or a suggestion about this app, feel free to contact me at")
             
-            Text(verbatim: mailCopied ? "Copied to clipboard !" : "Touch to copy : loic.danjean@burning-beard.com")
+            Text(verbatim: mailCopied ? "Copied to clipboard !" : "loic.danjean@burning-beard.com (Touch to copy)")
                 .foregroundColor(.white)
                 .fontWeight(.bold)
                 .font(.subheadline)
@@ -307,7 +313,7 @@ struct MenuContactView: View {
             
             MenuTextParagraphView(text: "App icon by Superarticons")
             
-            MenuTextBoldParagraphView(text: "Horde - iPad App is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.")
+            MenuTextBoldParagraphView(text: "This app is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.")
         }.padding(.trailing, 30)
     }
 }
