@@ -1,15 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "200.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "afr-87-acererak-the-archlich.jpg",
+      "filename" : "400.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "600.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
