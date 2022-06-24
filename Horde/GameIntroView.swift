@@ -10,13 +10,18 @@ import SwiftUI
 struct GameIntroView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @State var isDeckBeingGenerated: Bool = false
     
     var body: some View {
         // The button to leave the menu is the background
         ZStack {
             Button(action: {
                 print("Start game button pressed")
-                gameViewModel.nextButtonPressed()
+                isDeckBeingGenerated = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    gameViewModel.nextButtonPressed()
+                    isDeckBeingGenerated = false
+                }
             }, label: {
                 VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
             }).buttonStyle(StaticButtonStyle())
@@ -24,7 +29,7 @@ struct GameIntroView: View {
             VStack(spacing: 50) {
                 
                 if gameViewModel.turnStep == -1 {
-                    IntroSetupView()
+                    IntroSetupView(isDeckBeingGenerated: $isDeckBeingGenerated)
                 } else if gameViewModel.turnStep == 0 {
                     IntroBeforeGameStartView()
                 }
@@ -38,6 +43,7 @@ struct GameIntroView: View {
 struct IntroSetupView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @Binding var isDeckBeingGenerated: Bool
     
     var body: some View {
         ZStack {
@@ -142,17 +148,17 @@ struct IntroSetupView: View {
                         }
                     }
                     
-                    Toggle("remove strong cards that would end the game almost instantly from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
+                    Toggle("Remove the strongest cards from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
                         .foregroundColor(.white)
                     
                     Toggle("Replace board wipes with powefull permanents", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll)
                         .foregroundColor(.white)
                     
                     if !gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll {
-                        Toggle("No board wipes at the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
+                        Toggle("Remove board wipes from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
                             .foregroundColor(.white)
                     } else {
-                        Toggle("No powerfull permanents at the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
+                        Toggle("Remove powerfull permanents from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
                             .foregroundColor(.white)
                     }
                 }
@@ -162,7 +168,7 @@ struct IntroSetupView: View {
             .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
             .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
         
-        MenuTextBoldParagraphView(text: "Touch to continue")
+        MenuTextBoldParagraphView(text: isDeckBeingGenerated ? "Generating deck, please wait ..." : "Touch to continue").scaleEffect(isDeckBeingGenerated ? 1.2 : 1)
     }
 }
 
