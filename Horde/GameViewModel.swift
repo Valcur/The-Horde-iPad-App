@@ -40,7 +40,6 @@ class GameViewModel: ObservableObject {
         cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
         
         deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
-        //let deckAndTokens = deckManager.getZombieClassicDeck()
         let deckAndTokens = DeckManager.getDeckForId(deckPickedId: 1)
         self.deck = deckAndTokens.0
         self.tokensAvailable = deckAndTokens.1
@@ -75,6 +74,8 @@ class GameViewModel: ObservableObject {
         damageTakenThisTurn = 0
         
         strongPermanentsAlreadySpawned = [false, false, false, false]
+        
+        print("All good")
     }
     
     func startNewHordeStep() {
@@ -160,7 +161,6 @@ class GameViewModel: ObservableObject {
         }
 
         // No boardwipe in first quarter & no strong cards
-        var n = 0
         if (gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter || gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter) && marathonStage <= 0 {
             var cardsToCheck: [Card] = []
             
@@ -175,21 +175,33 @@ class GameViewModel: ObservableObject {
                 }
             }
             
-            let quarter = deck.count / 6
+            let difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
+            let quarter = getSafeZoneCardCount(difficulty: difficulty)
             var hasStrongCardInFirstQuarter = false
+            var nbrOfTokens = 0
+            
+            // Average number of tokens = size / ((token-spell ratio) + 1)
+            let tokenSpellRatio = 2.0/(3.0 * Float16(difficulty))
+            let averageNumberOfTokens = Int(floor(Float16(quarter) / (tokenSpellRatio + 1)))
+            
+            var n = 0
             
             repeat {
+                nbrOfTokens = 0
                 deck.shuffle()
                 for i in 1..<quarter {
+                    if deck[deck.count - i].cardType == .token {
+                        nbrOfTokens += 1
+                    }
                     for strongCard in cardsToCheck {
                         if deck[deck.count - i] == strongCard {
                             hasStrongCardInFirstQuarter = true
                         }
                     }
                 }
-                print("loop \(n)")
+                print("loop \(n) + \(averageNumberOfTokens)")
                 n += 1
-            } while hasStrongCardInFirstQuarter && n < 100
+            } while (hasStrongCardInFirstQuarter || nbrOfTokens >= averageNumberOfTokens + 1) && n < 100
             
             // Can't suffle without no strong cards wich means too many strong cards -> wouldn't be fun -> let's get a new deck
             if n >= 100 {
@@ -207,6 +219,21 @@ class GameViewModel: ObservableObject {
         if gameConfig.shared.shouldStartWithWeakPermanent {
             addCardToBoard(card: DeckManager.getRandomCardFromStarterPermanents(deckPickedId: deckPickedId))
         }
+    }
+    
+    // Number of cards at the begining that shouldn't have strong cards in it
+    func getSafeZoneCardCount(difficulty: Int) -> Int {
+        var n = 16
+        
+        if gameConfig.shared.deckSize == 75 {
+            n = 14
+        } else if gameConfig.shared.deckSize == 50 {
+            n = 9
+        } else if gameConfig.shared.deckSize == 25 {
+            n = 7
+        }
+        
+        return n * difficulty
     }
     
     func drawUntilNonToken() -> CardsToCast {
