@@ -176,16 +176,40 @@ class GameViewModel: ObservableObject {
             }
             
             let difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
-            let quarter = getSafeZoneCardCount(difficulty: difficulty)
+            let sizeAndnbrOfTokens = getSafeZoneCardCountAndAverageTokens(difficulty: difficulty)
+            let quarter = sizeAndnbrOfTokens.0
+            let averageNumberOfTokens = sizeAndnbrOfTokens.1
+            
             var hasStrongCardInFirstQuarter = false
             var nbrOfTokens = 0
             
-            // Average number of tokens = size / ((token-spell ratio) + 1)
-            let tokenSpellRatio = 2.0/(3.0 * Float16(difficulty))
-            let averageNumberOfTokens = Int(floor(Float16(quarter) / (tokenSpellRatio + 1)))
-            
             var n = 0
             
+            // For each card in safe zone if too strong, switch it with a random not strong card from the non safe zone
+            repeat {
+                nbrOfTokens = 0
+                deck.shuffle()
+                for i in 1..<quarter {
+                    
+                    if isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: cardsToCheck) {
+                        var cardIdToSwitchWith: Int
+                        repeat {
+                            cardIdToSwitchWith = Int.random(in: 0..<deck.count - quarter)
+                            let cardTmp = deck[deck.count - i]
+                            deck[deck.count - i] = deck[cardIdToSwitchWith]
+                            deck[cardIdToSwitchWith] = cardTmp
+                        } while isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: cardsToCheck)
+                    }
+                    
+                    if deck[deck.count - i].cardType == .token {
+                        nbrOfTokens += 1
+                    }
+                }
+                print("loop \(n) + in \(quarter) max \(averageNumberOfTokens) has \(nbrOfTokens) tokens ")
+                n += 1
+            } while nbrOfTokens >= averageNumberOfTokens && n < 100
+            
+            /*
             repeat {
                 nbrOfTokens = 0
                 deck.shuffle()
@@ -199,10 +223,10 @@ class GameViewModel: ObservableObject {
                         }
                     }
                 }
-                print("loop \(n) + \(averageNumberOfTokens)")
+                print("loop \(n) + in \(quarter) max \(averageNumberOfTokens)")
                 n += 1
-            } while (hasStrongCardInFirstQuarter || nbrOfTokens >= averageNumberOfTokens + 1) && n < 100
-            
+            } while (hasStrongCardInFirstQuarter || nbrOfTokens >= averageNumberOfTokens) && n < 100
+            */
             // Can't suffle without no strong cards wich means too many strong cards -> wouldn't be fun -> let's get a new deck
             if n >= 100 {
                 setupHorde(withDifficulty: withDifficulty)
@@ -221,19 +245,29 @@ class GameViewModel: ObservableObject {
         }
     }
     
+    func isCardAStrongCard(card: Card, cardsToCheck: [Card]) -> Bool {
+        for strongCard in cardsToCheck {
+            if card == strongCard {
+                return true
+            }
+        }
+        return false
+    }
+    
     // Number of cards at the begining that shouldn't have strong cards in it
-    func getSafeZoneCardCount(difficulty: Int) -> Int {
-        var n = 16
+    func getSafeZoneCardCountAndAverageTokens(difficulty: Int) -> (Int, Int) {
+        var n = 6 // Number of real cards you wan to draw on average before storng cards come
         
         if gameConfig.shared.deckSize == 75 {
-            n = 14
+            n = 5
         } else if gameConfig.shared.deckSize == 50 {
-            n = 9
+            n = 4
         } else if gameConfig.shared.deckSize == 25 {
-            n = 7
+            n = 3
         }
-        
-        return n * difficulty
+    
+        let averageNbrOfToken: Int = Int((Double(n * difficulty) * 1.5).rounded())
+        return (n + averageNbrOfToken, averageNbrOfToken + (difficulty <= 2 ? 1 : 2))
     }
     
     func drawUntilNonToken() -> CardsToCast {

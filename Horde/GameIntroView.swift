@@ -164,7 +164,7 @@ struct IntroSetupView: View {
                 }
             }.padding([.leading, .trailing], 50)
         }.background(Color(.white).opacity(0.00000001))
-            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2)
+            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 1.8)
             .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
             .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
         

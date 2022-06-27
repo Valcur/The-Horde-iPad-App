@@ -128,7 +128,7 @@ struct MenuRulesView: View {
             Group {
                 MenuTextTitleView(text: "Additional rules")
                 
-                MenuTextParagraphView(text: "If the horde ha to choose a target, it choose the BEST target. BEST is higher strength, then higher Mana Value. If still multiple possible targets, targets randomly")
+                MenuTextParagraphView(text: "If the horde has to choose a target, it choose the BEST target. BEST is higher strength, then higher Mana Value. If still multiple possible targets, targets randomly")
                 
                 MenuTextParagraphView(text: "If survivors have planeswalkers, each time a creature controlled by the horde isn't blocked : heads or tails for each of those creature to know if it deals damage to the planeswalker or the survivors. Target the planeswalker with higher Mana Value first if survivors have multiple planeswalkers")
                 
