@@ -36,3 +36,78 @@ struct StaticButtonStyle: ButtonStyle {
         configuration.label
     }
 }
+
+
+
+import UIKit
+
+class MyAppDelegate: NSObject, UIApplicationDelegate {
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let config = UISceneConfiguration(name: "My Scene Delegate", sessionRole: connectingSceneSession.role)
+        config.delegateClass = MySceneDelegate.self
+        return config
+    }
+}
+
+class MySceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        if let windowScene = scene as? UIWindowScene {
+            let window = UIWindow(windowScene: windowScene)
+            let rootView = HordeAppNoHomeIndicatorView()
+            let hostingController = HostingController(rootView: rootView)
+            window.rootViewController = hostingController
+            self.window = window
+            window.makeKeyAndVisible()
+        }
+    }
+}
+
+class HostingController: UIHostingController<HordeAppNoHomeIndicatorView> {
+    /*override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }*/
+    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
+        return [.bottom]
+    }
+}
+
+struct GradientView: View {
+    
+    let gradient: Gradient
+    
+    init(gradientId: Int) {
+        switch gradientId {
+        case 1:
+            gradient = Gradient(colors: [Color("GradientLightColor"), Color("GradientDarkColor")])
+            break
+        case 3:
+            gradient = Gradient(colors: [Color("GradientLight3Color"), Color("GradientDark3Color")])
+            break
+        case 4:
+            gradient = Gradient(colors: [Color("GradientLight4Color"), Color("GradientDark4Color")])
+            break
+        case 5:
+            gradient = Gradient(colors: [Color("GradientLight5Color"), Color("GradientDark5Color")])
+            break
+        case 6:
+            gradient = Gradient(colors: [Color("GradientLight6Color"), Color("GradientDark6Color")])
+            break
+        case 7:
+            gradient = Gradient(colors: [Color("GradientLight7Color"), Color("GradientDark7Color")])
+            break
+        default:
+            gradient = Gradient(colors: [Color("GradientLight2Color"), Color("GradientDark2Color")])
+            break
+        }
+    }
+    
+    var body: some View {
+        LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
+    }
+}

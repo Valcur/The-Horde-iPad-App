@@ -41,6 +41,7 @@ struct MenuView: View {
                 VStack(alignment: .trailing, spacing: 0) {
                     MenuButtonView(title: "Rules", id: 1)
                     MenuButtonView(title: "How to play", id: 2)
+                    MenuButtonView(title: "Custom", id: 4)
                     MenuButtonView(title: "Contact", id: 3)
                     Spacer()
                 }
@@ -52,9 +53,13 @@ struct MenuView: View {
                     ScrollView(.vertical) {
                         MenuHowToPlayView()
                     }.frame(width: UIScreen.main.bounds.width * 0.75)
-                } else {
+                } else if hordeAppViewModel.menuToShowId == 3 {
                     ScrollView(.vertical) {
                         MenuContactView()
+                    }.frame(width: UIScreen.main.bounds.width * 0.75)
+                } else {
+                    ScrollView(.vertical) {
+                        MenuCustomView()
                     }.frame(width: UIScreen.main.bounds.width * 0.75)
                 }
             }.padding(.trailing, 20).padding(.top, hordeAppViewModel.readyToPlay ? 100 : 50).padding(.bottom, 50)
@@ -147,6 +152,7 @@ struct MenuTextTitleView: View {
             .foregroundColor(.white)
             .fontWeight(.bold)
             .font(.largeTitle)
+            .multilineTextAlignment(.center)
     }
 }
 
@@ -315,6 +321,43 @@ struct MenuContactView: View {
             
             MenuTextBoldParagraphView(text: "This app is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.")
         }.padding(.trailing, 30)
+    }
+}
+
+struct MenuCustomView: View {
+    
+    var body: some View {
+        LazyVStack(alignment: .leading, spacing: 30) {
+            MenuTextTitleView(text: "Background Color")
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    MenuCustomBackgroundColorChoiceView(gradientId: 1)
+                    MenuCustomBackgroundColorChoiceView(gradientId: 2)
+                    MenuCustomBackgroundColorChoiceView(gradientId: 3)
+                    MenuCustomBackgroundColorChoiceView(gradientId: 4)
+                    MenuCustomBackgroundColorChoiceView(gradientId: 5)
+                    MenuCustomBackgroundColorChoiceView(gradientId: 6)
+                    MenuCustomBackgroundColorChoiceView(gradientId: 7)
+                }
+            }
+        }.padding(.trailing, 30)
+    }
+}
+
+struct MenuCustomBackgroundColorChoiceView: View {
+    
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    let gradientId: Int
+    
+    var body: some View {
+        Button(action: {
+            print("Changing background color to \(gradientId)")
+            hordeAppViewModel.setBackgroundColorGradientTo(gradientId: gradientId)
+        }, label: {
+            GradientView(gradientId: gradientId).cornerRadius(15).frame(width: 150, height: 150).overlay(
+                RoundedRectangle(cornerRadius: 19).stroke(hordeAppViewModel.gradientId == gradientId ? .white : .clear, lineWidth: 4)).padding(10)
+        })
     }
 }
 
