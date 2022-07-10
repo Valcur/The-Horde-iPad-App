@@ -99,7 +99,7 @@ struct IntroSetupView: View {
                     
                     if gameViewModel.gameConfig.isClassicMode {
                         VStack(spacing: 15)  {
-                            Toggle("Spawn one or more random powerfull permanent (different for every deck) when a certain number of cards have been removed from the deck", isOn: $gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
+                            Toggle("Spawn a random powerfull permanent (different for every deck) when reaching milestone", isOn: $gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
                                 .foregroundColor(.white)
                             
                             if gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents {
@@ -200,8 +200,10 @@ struct IntroBeforeGameStartView: View {
         MenuTextSubtitleView(text: "Lifepoints")
         
         MenuTextParagraphView(text: "The horde start with 20 life points and only mills its library when his lifepoints are equal to 0. Each time a permanent or an ability controlled by the horde deals damage to the survivors, the Horde gains that much life. (This app can't keep tracks of lifepoint, use another app to handle Surviors and Horde's lifepoints)")
+            .frame(width: UIScreen.main.bounds.width - 80)
         
         MenuTextSubtitleView(text: "Recommanded horde draw per turn")
+            .frame(width: UIScreen.main.bounds.width)
         
         HStack(spacing: 75) {
             HStack(spacing: 25) {

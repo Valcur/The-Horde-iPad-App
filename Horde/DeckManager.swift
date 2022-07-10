@@ -447,7 +447,7 @@ struct DeckManager {
         deck.append(Card(cardName: "Diffusion Sliver",cardType: .creature))
         
         // 1 Essence Sliver
-        deck.append(Card(cardName: "Essence Sliver",cardType: .sorcery))
+        deck.append(Card(cardName: "Essence Sliver",cardType: .creature))
         
         // 1 Frenzy Sliver
         deck.append(Card(cardName: "Frenzy Sliver",cardType: .creature))
