@@ -10,13 +10,23 @@ import SwiftUI
 @main
 struct HordeApp: App {
     
-    let hordeAppViewModel = HordeAppViewModel()
+    @UIApplicationDelegateAdaptor(MyAppDelegate.self) var appDelegate
+    //let hordeAppViewModel = HordeAppViewModel()
     
     var body: some Scene {
         WindowGroup {
-            HordeAppView()
-                .environmentObject(hordeAppViewModel)
+            
         }
+    }
+}
+
+struct HordeAppNoHomeIndicatorView: View {
+    
+    let hordeAppViewModel = HordeAppViewModel()
+    
+    var body: some View {
+        HordeAppView()
+            .environmentObject(hordeAppViewModel)
     }
 }
 
@@ -29,13 +39,25 @@ struct HordeAppView: View {
     var body: some View {
         ZStack {
             if hordeAppViewModel.readyToPlay {
-                GameView()
-                    .environmentObject(gameViewModel)
-                    .statusBar(hidden: true)
-                    .transition(.opacity)
-                    .onAppear() {
-                        gameViewModel.startGame()
-                    }
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    // It's an iPad (or macOS Catalyst)
+                    GameView()
+                        .environmentObject(gameViewModel)
+                        .statusBar(hidden: true)
+                        .transition(.opacity)
+                        .onAppear() {
+                            gameViewModel.startGame()
+                        }
+                } else if UIDevice.current.userInterfaceIdiom == .phone {
+                    // It's an iPhone
+                    GameView_iPhone()
+                        .environmentObject(gameViewModel)
+                        .statusBar(hidden: true)
+                        .transition(.opacity)
+                        .onAppear() {
+                            gameViewModel.startGame()
+                        }
+                }
             } else {
                 DeckPickerView()
                     .environmentObject(deckPickerViewModel)
@@ -43,8 +65,15 @@ struct HordeAppView: View {
                     .transition(.opacity)
             }
             if hordeAppViewModel.shouldShowMenu {
-                MenuView()
-                    .transition(.opacity)
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    // It's an iPad (or macOS Catalyst)
+                    MenuView()
+                        .transition(.opacity)
+                } else if UIDevice.current.userInterfaceIdiom == .phone {
+                    // It's an iPhone
+                    MenuView_iPhone()
+                        .transition(.opacity)
+                }
             }
         }
         .animation(.easeInOut(duration: 0.3), value: hordeAppViewModel.shouldShowMenu)

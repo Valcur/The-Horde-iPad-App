@@ -326,9 +326,11 @@ struct MenuContactView: View {
 
 struct MenuCustomView: View {
     
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    
     var body: some View {
-        LazyVStack(alignment: .leading, spacing: 30) {
-            MenuTextTitleView(text: "Background Color")
+        LazyVStack(alignment: .leading, spacing: 30) {            
+            MenuTextSubtitleView(text: "Background Color")
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
@@ -340,6 +342,16 @@ struct MenuCustomView: View {
                     MenuCustomBackgroundColorChoiceView(gradientId: 6)
                     MenuCustomBackgroundColorChoiceView(gradientId: 7)
                 }
+            }
+            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                MenuTextSubtitleView(text: "Battlefield")
+                
+                Toggle("One big row of cards instead of two small rows", isOn: $hordeAppViewModel.oneRowBoardInsteadOfTwo)
+                    .foregroundColor(.white)
+                    .onChange(of: hordeAppViewModel.oneRowBoardInsteadOfTwo) { _ in
+                        hordeAppViewModel.saveBattlefieldRowStylePreference()
+                    }
             }
         }.padding(.trailing, 30)
     }

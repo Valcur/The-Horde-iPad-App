@@ -10,15 +10,14 @@ import SwiftUI
 struct GameView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @State var castedCardViewOpacity: CGFloat = 0
     @State var graveyardViewOpacity: CGFloat = 0
     @State var gameIntroViewOpacity: CGFloat = 1
-    let gradient = Gradient(colors: [Color("GradientLightColor"), Color("GradientDarkColor")])
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
-                .ignoresSafeArea()
+            GradientView(gradientId: hordeAppViewModel.gradientId)
             
             VStack {
                 HordeBoardView()
@@ -225,7 +224,7 @@ struct HordeBoardView: View {
                         CardOnBoardView(card: card)
                             .transition(.scale.combined(with: .opacity))
                     }
-                }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5))
+                }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5), value: gameViewModel.cardsOnBoard)
             }.frame(height: CardSize.height.normal * 2 + 50)
         }.frame(maxWidth: .infinity).padding(.leading, 10).padding(.top, 10)
     }
@@ -475,7 +474,7 @@ struct GraveyardView: View {
                         }
                     }
                 }.padding([.leading, .trailing], 20).frame(minWidth: UIScreen.main.bounds.width)
-                    .frame(height: CardSize.height.normal + 280)
+                    .frame(height: CardSize.height.normal + 290)
             }.onTapGesture {
                 print("Hide graveyard button pressed")
                 gameViewModel.showGraveyard = false
@@ -607,6 +606,26 @@ struct CardOnBoardView: View {
     }
 }
 
+struct ZoomOnCardView: View {
+    
+    @EnvironmentObject var gameViewModel: GameViewModel
+    
+    var body: some View {
+        // The button to leave the menu is the background
+        ZStack {
+            Button(action: {
+                print("UnZoom")
+                gameViewModel.shouldZoomOnCard = false
+            }, label: {
+                VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+            }).buttonStyle(StaticButtonStyle())
+            
+            CardView(card: gameViewModel.cardToZoomIn)
+                .frame(width: CardSize_iPhone.width.big_cast, height: CardSize_iPhone.height.big_cast)
+                .cornerRadius(CardSize_iPhone.cornerRadius.big_cast)
+        }
+    }
+}
 
 // card's size is 6.3 by 8.8
 

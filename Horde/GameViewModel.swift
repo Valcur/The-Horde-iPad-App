@@ -26,6 +26,9 @@ class GameViewModel: ObservableObject {
     var marathonStage = -1
     var strongPermanentsAlreadySpawned: [Bool]
     
+    @Published var cardToZoomIn = Card(cardName: "Polyraptor", cardType: .token)
+    @Published var shouldZoomOnCard: Bool = false
+    
     /** Turn order
         1) launch all in graveyard
           draw until a non token card is revealed
@@ -180,7 +183,6 @@ class GameViewModel: ObservableObject {
             let quarter = sizeAndnbrOfTokens.0
             let averageNumberOfTokens = sizeAndnbrOfTokens.1
             
-            var hasStrongCardInFirstQuarter = false
             var nbrOfTokens = 0
             
             var n = 0

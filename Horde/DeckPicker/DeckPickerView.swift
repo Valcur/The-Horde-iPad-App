@@ -74,18 +74,18 @@ struct DeckPickingView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .rotationEffect(Angle.degrees(-rotationInDegrees))
-                        .frame(width: PickerSize.width.picked + 150)
+                        .frame(width: PickerSize.width.picked + 250)
                     VisualEffectView(effect: UIBlurEffect(style: .systemThickMaterialDark))
-                        .opacity(isDeckSelected ? 0.7 : 0)
-                    VStack(alignment: .center, spacing: 30) {
+                        .opacity(isDeckSelected ? 0.7 : 0).scaleEffect(1.2)
+                    VStack(alignment: .center, spacing: PickerSize.vStackSpacing) {
                         
                         // Title
                         
                         Text(deckPicker.title)
                             .foregroundColor(.white)
                             .fontWeight(.bold)
-                            .font(.system(size: 70))
-                            .padding(.top, isDeckSelected ? 100 : 0)
+                            .font(.system(size: PickerSize.titleFontSize))
+                            .padding(.top, isDeckSelected ? PickerSize.titlePaddingTop : 0)
                             .scaleEffect(isDeckSelected ? 1 : 0.5)
                         
                         if isDeckSelected {
@@ -112,14 +112,14 @@ struct DeckPickingView: View {
                                 .foregroundColor(.white)
                                 .fontWeight(.bold)
                                 .font(.title)
-                                .padding(.bottom, 100)
+                                .padding(.bottom, PickerSize.titlePaddingTop)
                         }
                         
                     }.rotationEffect(Angle.degrees(-rotationInDegrees))
                         .frame(width: 500, height: UIScreen.main
                             .bounds.height)
                         .transition(.opacity)
-                }.frame(width: pickerWidth(), height: UIScreen.main.bounds.height + 150)
+                }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: pickerWidth(), height: UIScreen.main.bounds.height + 150)
                     .clipped()
                 .rotationEffect(Angle.degrees(rotationInDegrees))
                 
@@ -127,7 +127,8 @@ struct DeckPickingView: View {
             
             Text("art by \(deckPicker.imageArtist)")
                 .foregroundColor(.white)
-                .offset(x: isDeckSelected ? 0 : -25, y: UIScreen.main.bounds.height / 2 - 60)
+                .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+                .offset(x: isDeckSelected ? 0 : -25, y: UIScreen.main.bounds.height / 2.3)
                 .animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
         }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
     }
@@ -185,7 +186,10 @@ struct DeckPickerView_Previews: PreviewProvider {
 
 struct PickerSize {
     struct width {
-        static let unpicked: CGFloat = 300
-        static let picked: CGFloat = 700
+        static let unpicked: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 300 : 250
+        static let picked: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 700 : 450
     }
+    static let titlePaddingTop: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 100 : 0
+    static let vStackSpacing: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 30 : 15
+    static let titleFontSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 70 : 60
 }
