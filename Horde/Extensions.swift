@@ -111,3 +111,15 @@ struct GradientView: View {
             .ignoresSafeArea()
     }
 }
+
+struct CardSearchTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .foregroundColor(.white)
+            .padding(10)
+            .background(Color.black.opacity(0.2))
+            .cornerRadius(30)
+            .shadow(color: .gray, radius: 10)
+    }
+}
+
