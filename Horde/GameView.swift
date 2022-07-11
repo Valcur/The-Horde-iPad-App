@@ -517,7 +517,7 @@ struct CardToCastView: View {
             CardView(card: card)
                 .frame(width: CardSize.width.big, height: CardSize.height.big)
                 .cornerRadius(CardSize.cornerRadius.big)
-                .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
             if card.cardCount > 1 {
                 Text("x\(card.cardCount)")
                     .fontWeight(.bold)
@@ -601,7 +601,7 @@ struct CardOnBoardView: View {
                         .foregroundColor(.white)
                 }
             }
-            .shadow(color: Color("ShadowColor"), radius: 5, x: 0, y: 4)
+            .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
         })
     }
 }
@@ -680,7 +680,7 @@ struct PurpleButtonLabel: View {
             .cornerRadius(40)
             .foregroundColor(.white)
             .padding(10)
-            .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+            .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
     }
 }
 
@@ -697,6 +697,6 @@ struct ButtonLabelWithImage: View {
             .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
             .cornerRadius(40)
             .foregroundColor(.white)
-            .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+            .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
     }
 }
