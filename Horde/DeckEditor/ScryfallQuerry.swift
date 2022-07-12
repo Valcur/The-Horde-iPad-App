@@ -7,65 +7,73 @@ import Foundation
 
 // MARK: - ScryfallQuerry
 struct ScryfallQuerry: Codable {
-    let object: String
-    let totalCards: Int
-    let hasMore: Bool
-    let data: [Datum]
+    let object: String?
+    let totalCards: Int?
+    let hasMore: Bool?
+    let nextPage: String?
+    let data: [Datum]?
 
     enum CodingKeys: String, CodingKey {
         case object
         case totalCards
         case hasMore
+        case nextPage
         case data
     }
 }
 
 // MARK: - Datum
 struct Datum: Codable {
-    let object: Object
-    let id, oracleID: String
-    let multiverseIDS: [Int]
+    let object: DatumObject?
+    let id, oracleID: String?
+    let multiverseIDS: [Int]?
     let mtgoID, arenaID, tcgplayerID, cardmarketID: Int?
-    let name: String
-    let lang: Lang
-    let releasedAt: String
-    let uri, scryfallURI: String
-    let layout: Layout
-    let highresImage: Bool
-    let imageStatus: ImageStatus
-    let imageUris: ImageUris
-    let manaCost: String
-    let cmc: Int
-    let typeLine, oracleText: String
-    let colors, colorIdentity: [Color]
-    let keywords: [String]
-    let producedMana: [String]?
-    let allParts: [AllPart]?
-    let legalities: Legalities
-    let games: [Game]
-    let reserved, foil, nonfoil: Bool
-    let finishes: [Finish]
-    let oversized, promo, reprint, variation: Bool
-    let setID, datumSet, setName, setType: String
-    let setURI, setSearchURI, scryfallSetURI, rulingsURI: String
-    let printsSearchURI: String
-    let collectorNumber: String
-    let digital: Bool
-    let rarity, cardBackID, artist: String
-    let artistIDS: [String]
-    let illustrationID: String
-    let borderColor: BorderColor
-    let frame: String
-    let fullArt, textless, booster, storySpotlight: Bool
-    let edhrecRank, pennyRank: Int?
-    let prices: [String: String?]
-    let relatedUris: RelatedUris
-    let purchaseUris: PurchaseUris?
-    let flavorText, power, toughness, securityStamp: String?
+    let name: String?
+    let lang: Lang?
+    let releasedAt: String?
+    let uri, scryfallURI: String?
+    let layout: Layout?
+    let highresImage: Bool?
+    let imageStatus: ImageStatus?
+    let imageUris: ImageUris?
+    let manaCost: String?
+    let cmc: Int?
+    let typeLine, oracleText: String?
+    let colors, colorIdentity: [ColorIdentity]?
+    let keywords: [String]?
+    let legalities: Legalities?
+    let games: [Game]?
+    let reserved, foil, nonfoil: Bool?
+    let finishes: [Finish]?
+    let oversized, promo, reprint, variation: Bool?
+    let setID, datumSet, setName: String?
+    let setType: SetType?
+    let setURI, setSearchURI, scryfallSetURI, rulingsURI: String?
+    let printsSearchURI: String?
+    let collectorNumber: String?
+    let digital: Bool?
+    let rarity: Rarity?
+    let flavorText, cardBackID, artist: String?
+    let artistIDS: [String]?
+    let illustrationID: String?
+    let borderColor: BorderColor?
+    let frame: String?
+    let fullArt, textless, booster, storySpotlight: Bool?
+    let edhrecRank: Int?
     let preview: Preview?
-    let mtgoFoilID: Int?
-    let frameEffects: [String]?
+    let prices: [String: String?]?
+    let relatedUris: RelatedUris?
+    let purchaseUris: PurchaseUris?
+    let power, toughness: String?
+    let allParts: [AllPart]?
+    let securityStamp: SecurityStamp?
+    let cardFaces: [CardFace]?
     let watermark: String?
+    let frameEffects: [String]?
+    let mtgoFoilID: Int?
+    let producedMana: [ColorIdentity]?
+    let pennyRank: Int?
+    let promoTypes: [String]?
 
     enum CodingKeys: String, CodingKey {
         case object, id
@@ -89,10 +97,7 @@ struct Datum: Codable {
         case oracleText
         case colors
         case colorIdentity
-        case keywords
-        case producedMana
-        case allParts
-        case legalities, games, reserved, foil, nonfoil, finishes, oversized, promo, reprint, variation
+        case keywords, legalities, games, reserved, foil, nonfoil, finishes, oversized, promo, reprint, variation
         case setID
         case datumSet
         case setName
@@ -104,6 +109,7 @@ struct Datum: Codable {
         case printsSearchURI
         case collectorNumber
         case digital, rarity
+        case flavorText
         case cardBackID
         case artist
         case artistIDS
@@ -114,25 +120,29 @@ struct Datum: Codable {
         case textless, booster
         case storySpotlight
         case edhrecRank
-        case pennyRank
-        case prices
+        case preview, prices
         case relatedUris
         case purchaseUris
-        case flavorText
         case power, toughness
+        case allParts
         case securityStamp
-        case preview
-        case mtgoFoilID
-        case frameEffects
+        case cardFaces
         case watermark
+        case frameEffects
+        case mtgoFoilID
+        case producedMana
+        case pennyRank
+        case promoTypes
     }
 }
 
 // MARK: - AllPart
 struct AllPart: Codable {
-    let object, id, component, name: String
-    let typeLine: String
-    let uri: String
+    let object: AllPartObject?
+    let id: String?
+    let component: Component?
+    let name, typeLine: String?
+    let uri: String?
 
     enum CodingKeys: String, CodingKey {
         case object, id, component, name
@@ -141,15 +151,68 @@ struct AllPart: Codable {
     }
 }
 
-enum BorderColor: String, Codable {
-    case black = "black"
+enum Component: String, Codable {
+    case comboPiece = "combo_piece"
+    case token = "token"
 }
 
-enum Color: String, Codable {
+enum AllPartObject: String, Codable {
+    case relatedCard = "related_card"
+}
+
+enum BorderColor: String, Codable {
+    case black = "black"
+    case borderless = "borderless"
+    case silver = "silver"
+    case white = "white"
+}
+
+// MARK: - CardFace
+struct CardFace: Codable {
+    let object, name, manaCost, typeLine: String?
+    let oracleText: String?
+    let colors: [ColorIdentity]?
+    let power, toughness, artist, artistID: String?
+    let illustrationID: String?
+    let imageUris: ImageUris?
+    let flavorName, flavorText: String?
+    let colorIndicator: [ColorIdentity]?
+
+    enum CodingKeys: String, CodingKey {
+        case object, name
+        case manaCost
+        case typeLine
+        case oracleText
+        case colors, power, toughness, artist
+        case artistID
+        case illustrationID
+        case imageUris
+        case flavorName
+        case flavorText
+        case colorIndicator
+    }
+}
+
+enum ColorIdentity: String, Codable {
     case b = "B"
+    case c = "C"
     case g = "G"
+    case r = "R"
     case u = "U"
     case w = "W"
+}
+
+// MARK: - ImageUris
+struct ImageUris: Codable {
+    let small, normal, large: String?
+    let png: String?
+    let artCrop, borderCrop: String?
+
+    enum CodingKeys: String, CodingKey {
+        case small, normal, large, png
+        case artCrop
+        case borderCrop
+    }
 }
 
 enum Finish: String, Codable {
@@ -168,51 +231,48 @@ enum ImageStatus: String, Codable {
     case lowres = "lowres"
 }
 
-// MARK: - ImageUris
-struct ImageUris: Codable {
-    let small, normal, large: String
-    let png: String
-    let artCrop, borderCrop: String
-
-    enum CodingKeys: String, CodingKey {
-        case small, normal, large, png
-        case artCrop
-        case borderCrop
-    }
-}
-
 enum Lang: String, Codable {
     case en = "en"
 }
 
 enum Layout: String, Codable {
+    case host = "host"
+    case modalDfc = "modal_dfc"
     case normal = "normal"
+    case transform = "transform"
 }
 
 // MARK: - Legalities
 struct Legalities: Codable {
-    let standard, future, historic, gladiator: Alchemy
-    let pioneer, explorer, modern, legacy: Alchemy
-    let pauper, vintage, penny, commander: Alchemy
-    let brawl, historicbrawl, alchemy, paupercommander: Alchemy
-    let duel, oldschool, premodern: Alchemy
+    let standard, future, historic, gladiator: Alchemy?
+    let pioneer, explorer, modern, legacy: Alchemy?
+    let pauper, vintage, penny, commander: Alchemy?
+    let brawl, historicbrawl, alchemy: Alchemy?
+    let paupercommander: Paupercommander?
+    let duel, oldschool, premodern: Alchemy?
 }
 
 enum Alchemy: String, Codable {
+    case banned = "banned"
+    case legal = "legal"
+    case notLegal = "not_legal"
+}
+
+enum Paupercommander: String, Codable {
     case legal = "legal"
     case notLegal = "not_legal"
     case restricted = "restricted"
 }
 
-enum Object: String, Codable {
+enum DatumObject: String, Codable {
     case card = "card"
 }
 
 // MARK: - Preview
 struct Preview: Codable {
-    let source: String
-    let sourceURI: String
-    let previewedAt: String
+    let source: String?
+    let sourceURI: String?
+    let previewedAt: String?
 
     enum CodingKeys: String, CodingKey {
         case source
@@ -223,18 +283,43 @@ struct Preview: Codable {
 
 // MARK: - PurchaseUris
 struct PurchaseUris: Codable {
-    let tcgplayer, cardmarket, cardhoarder: String
+    let tcgplayer, cardmarket, cardhoarder: String?
+}
+
+enum Rarity: String, Codable {
+    case common = "common"
+    case mythic = "mythic"
+    case rare = "rare"
+    case uncommon = "uncommon"
 }
 
 // MARK: - RelatedUris
 struct RelatedUris: Codable {
+    let tcgplayerInfiniteArticles, tcgplayerInfiniteDecks, edhrec: String?
     let gatherer: String?
-    let tcgplayerInfiniteArticles, tcgplayerInfiniteDecks, edhrec: String
 
     enum CodingKeys: String, CodingKey {
-        case gatherer
         case tcgplayerInfiniteArticles
         case tcgplayerInfiniteDecks
-        case edhrec
+        case edhrec, gatherer
     }
+}
+
+enum SecurityStamp: String, Codable {
+    case arena = "arena"
+    case oval = "oval"
+    case triangle = "triangle"
+}
+
+enum SetType: String, Codable {
+    case alchemy = "alchemy"
+    case box = "box"
+    case commander = "commander"
+    case core = "core"
+    case draftInnovation = "draft_innovation"
+    case duelDeck = "duel_deck"
+    case expansion = "expansion"
+    case funny = "funny"
+    case masters = "masters"
+    case starter = "starter"
 }

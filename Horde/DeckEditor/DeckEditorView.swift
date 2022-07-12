@@ -9,11 +9,15 @@ import SwiftUI
 
 struct DeckEditorView: View {
     
+    @State private var username: String = ""
+    
     var body: some View {
-        HStack(spacing: 0) {
-            LeftPanelView()
-            RightPanelView()
-                .frame(width: CardSize.width.normal + 80)
+        GeometryReader { _ in
+            HStack(spacing: 0) {
+                LeftPanelView()
+                RightPanelView()
+                    .frame(width: CardSize.width.normal + 80)
+            }
         }.ignoresSafeArea()
     }
 }
@@ -27,9 +31,11 @@ struct LeftPanelView: View {
             GradientView(gradientId: hordeAppViewModel.gradientId)
             VStack {
                 TopControlRowView()
+                Spacer()
                 DeckListView()
+                Spacer()
                 BottomControlRowView()
-            }
+            }.ignoresSafeArea()
         }
     }
 }
@@ -37,16 +43,20 @@ struct LeftPanelView: View {
 struct RightPanelView: View {
     
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     
     var body: some View {
         ZStack {
             Color.black
             GradientView(gradientId: hordeAppViewModel.gradientId)
                 .opacity(0.8)
-            VStack {
-                CardSearchView()
-            }.padding(10)
-        }.ignoresSafeArea()
+            
+            if deckEditorViewModel.cardToShow == nil {
+                CardSearchView().padding(10)
+            } else {
+                CardShowView(card: deckEditorViewModel.cardToShow!).padding(10)
+            }
+        }
     }
 }
 
@@ -57,16 +67,15 @@ struct CardSearchView: View {
     @State private var isSearchingForTokens: Bool = false
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             // TextField + Selector token/non-token
             HStack {
-                HStack {
-                    ZStack(alignment: .leading) {
-                        if cardSearchTextFieldText == "" {
-                            Text("Search...")
-                                .foregroundColor(.gray)
-                                .font(.title3)
-                        }
+                ZStack(alignment: .leading) {
+                    if cardSearchTextFieldText == "" {
+                        Text("Search...")
+                            .foregroundColor(.gray)
+                            .font(.title3)
+                    }
 
                         TextField("", text: $cardSearchTextFieldText, onCommit: {
                             deckEditorViewModel.searchCardsFor(text: cardSearchTextFieldText, searchingForTokens: isSearchingForTokens)
@@ -75,11 +84,11 @@ struct CardSearchView: View {
                         .font(.title3)
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
-                    }
+                        .padding(.vertical, 10)
+                        .overlay(Rectangle().frame(height: 2).padding(.top, 35))
+                        .foregroundColor(.gray)
                 }
-                    .padding(.vertical, 10)
-                    .overlay(Rectangle().frame(height: 2).padding(.top, 35))
-                    .foregroundColor(.gray)
+
                 Button(action: {
                     isSearchingForTokens.toggle()
                 }, label: {
@@ -88,33 +97,31 @@ struct CardSearchView: View {
                         .font(.title3)
                         .foregroundColor(isSearchingForTokens ? .white : .gray)
                 })
-            }.frame(height: 50)
+            }.ignoresSafeArea(.keyboard)
             
             // Search result
             ScrollView {
                 VStack(spacing: 0) {
-                    CardSearchResultView(cardName: "AAA")
-                    CardSearchResultView(cardName: "AAA")
-                    CardSearchResultView(cardName: "AAA")
-                    CardSearchResultView(cardName: "AAA")
-                    CardSearchResultView(cardName: "AAA")
-                    CardSearchResultView(cardName: "AAA")
+                    ForEach(deckEditorViewModel.searchResult, id: \.self) { card in
+                        CardSearchResultView(card: card)
+                    }
                 }
-            }
+            }.ignoresSafeArea(.keyboard)
         }
     }
 }
 
 struct CardSearchResultView: View {
     
-    let cardName: String
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    let card: Card
     
     var body: some View {
         Button(action: {
-            
+            deckEditorViewModel.cardToShow = card
         }, label: {
             HStack {
-                Text(cardName)
+                Text(card.cardName)
                     .font(.subheadline)
                     .foregroundColor(.white)
                 Spacer()
@@ -124,16 +131,113 @@ struct CardSearchResultView: View {
 }
 
 struct CardShowView: View {
+    
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    @State var card: Card
+    @State var cardType: CardType
+    
+    init(card: Card) {
+        self.card = card
+        self.cardType = card.cardType
+    }
+    
     var body: some View {
         VStack {
-            // Return Button
+            ZStack(alignment: .topLeading) {
+                ZStack(alignment: .bottom) {
+                    // Card to show
+                    CardView(card: card)
+                        //.frame(width: CardSize.width.normal, height: CardSize.height.normal)
+                        .aspectRatio(contentMode: .fit)
+                        .cornerRadius(CardSize.cornerRadius.normal)
+                        .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+                    
+                    // Add or Remove to selected deck
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            
+                        }, label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(.white)
+                                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+                        }).scaleEffect(1.5)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            
+                        }, label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.largeTitle)
+                                .foregroundColor(.white)
+                                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+                        }).scaleEffect(1.5)
+                        Spacer()
+                    }.offset(y: 20)
+                }
+                
+                // Return Button
+                Button(action: {
+                    deckEditorViewModel.cardToShow = nil
+                }, label: {
+                    Image(systemName: "chevron.backward")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                }).padding()
+            }
             
-            // Card to show
+            //Spacer()
             
             // Select card type
+            MenuTextParagraphView(text: "Change card type").padding(.top, 50)
             
-            // Add or Remove to selected deck
+            VStack(spacing: 10) {
+                HStack {
+                    CardShowTypeSelectorView(text: "Creature", cardType: .creature, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Token", cardType: .token, cardShowedcardType: $cardType)
+                }
+                HStack {
+                    CardShowTypeSelectorView(text: "Instant", cardType: .instant, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Sorcery", cardType: .sorcery, cardShowedcardType: $cardType)
+                }
+                HStack {
+                    CardShowTypeSelectorView(text: "Artifact", cardType: .artifact, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Enchantment", cardType: .enchantment, cardShowedcardType: $cardType)
+                }
+            }.padding().onChange(of: cardType) { _ in
+                self.card.cardType = cardType
+            }
+            
+            // Enable/Disable flashback
+            
+            
+            Toggle("Should this card be cast by the Horde from graveyard ? (like flashback)", isOn: $card.hasFlashback)
+                .foregroundColor(.white)
+                .padding()
+            
+            Spacer()
+            
         }
+    }
+}
+
+struct CardShowTypeSelectorView: View {
+    
+    var text: String
+    var cardType: CardType
+    @Binding var cardShowedcardType: CardType
+    
+    var body: some View {
+        Button(action: {
+            cardShowedcardType = cardType
+        }, label: {
+            Text(text)
+                .fontWeight(.bold)
+                .font(.title3)
+                .foregroundColor(cardShowedcardType == cardType ? .white : .gray)
+        }).frame(maxWidth: .infinity)
     }
 }
 
@@ -153,13 +257,13 @@ struct TopControlRowView: View {
                 DeckListSelectorView(deckListName: "Weak", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
                 Spacer()
                 DeckListSelectorView(deckListName: "Powerfull", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
-            }.frame(height: 50)
+            }
             
             HStack() {
                 MenuTextParagraphView(text: deckEditorViewModel.deckSelectionInfo)
                 Spacer()
-            }.frame(height: 30)
-        }.padding([.leading, .trailing, .top], 20)
+            }
+        }.padding([.leading, .trailing, .top], 10)
     }
 }
 
@@ -176,7 +280,7 @@ struct DeckListSelectorView: View {
             }, label: {
                 Text(deckListName)
                     .fontWeight(.bold)
-                    .font(.title)
+                    .font(.title2)
                     .foregroundColor(deckEditorViewModel.selectedDeckList == deckListNumber ? .white : .gray)
             })
         }
@@ -190,7 +294,7 @@ struct BottomControlRowView: View {
             Spacer()
             MenuTextSubtitleView(text: "Import")
             MenuTextSubtitleView(text: "Export")
-        }.frame(height: 50).padding([.leading, .trailing, .bottom], 20)
+        }.padding([.leading, .trailing, .bottom], 10)
     }
 }
 
@@ -220,7 +324,7 @@ struct DeckListView: View {
                     CardOnBoardView(card: card)
                         .transition(.scale.combined(with: .opacity))
                 }
-            }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
+            }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
         }
     }
 }

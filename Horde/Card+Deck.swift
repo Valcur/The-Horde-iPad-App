@@ -12,10 +12,10 @@ class Card: Hashable, Identifiable {
     
     let id = UUID()
     let cardName: String
-    let cardType: CardType
+    var cardType: CardType // Can be changed in deckeditor
     let cardImageURL: String
     var cardUIImage: Image = Image("BackgroundTest")
-    let hasFlashback: Bool
+    var hasFlashback: Bool
     @Published var cardCount: Int = 1
     
     init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", hasFlashback: Bool = false){
