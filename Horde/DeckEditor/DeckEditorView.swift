@@ -9,14 +9,18 @@ import SwiftUI
 
 struct DeckEditorView: View {
     
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State private var username: String = ""
     
     var body: some View {
         GeometryReader { _ in
             HStack(spacing: 0) {
                 LeftPanelView()
-                RightPanelView()
-                    .frame(width: CardSize.width.normal + 80)
+                if deckEditorViewModel.selectedDeckListNumber != DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList {
+                    RightPanelView()
+                        .frame(width: CardSize.width.normal + 80)
+                        .transition(.move(edge: .trailing))
+                }
             }
         }.ignoresSafeArea()
     }
@@ -156,18 +160,30 @@ struct CardShowView: View {
                     HStack {
                         Spacer()
                         Button(action: {
-                            
+                            if deckEditorViewModel.removeCardShouldBeAnimated() {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    deckEditorViewModel.removeCardFromSelectedDeck(card: self.card)
+                                }
+                            } else {
+                                deckEditorViewModel.removeCardFromSelectedDeck(card: self.card)
+                            }
                         }, label: {
                             Image(systemName: "minus.circle.fill")
                                 .font(.largeTitle)
                                 .foregroundColor(.white)
                                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
-                        }).scaleEffect(1.5)
+                        }).scaleEffect(1.5).disabled(!deckEditorViewModel.isRemoveOneCardButtonEnable())
                         
                         Spacer()
                         
                         Button(action: {
-                            
+                            if deckEditorViewModel.addCardShouldBeAnimated() {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    deckEditorViewModel.addCardToSelectedDeck(card: self.card)
+                                }
+                            } else {
+                                deckEditorViewModel.addCardToSelectedDeck(card: self.card)
+                            }
                         }, label: {
                             Image(systemName: "plus.circle.fill")
                                 .font(.largeTitle)
@@ -206,12 +222,17 @@ struct CardShowView: View {
                     CardShowTypeSelectorView(text: "Artifact", cardType: .artifact, cardShowedcardType: $cardType)
                     CardShowTypeSelectorView(text: "Enchantment", cardType: .enchantment, cardShowedcardType: $cardType)
                 }
-            }.padding().onChange(of: cardType) { _ in
+            }.padding().onChange(of: card) { _ in
+                self.cardType = self.card.cardType
+            }.onChange(of: cardType) { _ in
                 self.card.cardType = cardType
+            }.onChange(of: deckEditorViewModel.cardToShow) { _ in
+                if deckEditorViewModel.cardToShow != nil {
+                    self.card = deckEditorViewModel.cardToShow!
+                }
             }
             
             // Enable/Disable flashback
-            
             
             Toggle("Should this card be cast by the Horde from graveyard ? (like flashback)", isOn: $card.hasFlashback)
                 .foregroundColor(.white)
@@ -225,13 +246,17 @@ struct CardShowView: View {
 
 struct CardShowTypeSelectorView: View {
     
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     var text: String
     var cardType: CardType
     @Binding var cardShowedcardType: CardType
     
     var body: some View {
         Button(action: {
-            cardShowedcardType = cardType
+            withAnimation(.easeInOut(duration: 0.3)) {
+                deckEditorViewModel.changeCardTypeFromSelectedDeck(card: deckEditorViewModel.cardToShow!, newCardType: cardType)
+                cardShowedcardType = cardType
+            }
         }, label: {
             Text(text)
                 .fontWeight(.bold)
@@ -257,12 +282,12 @@ struct TopControlRowView: View {
                 DeckListSelectorView(deckListName: "Weak", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
                 Spacer()
                 DeckListSelectorView(deckListName: "Powerfull", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
-            }
+            }.frame(height: 50)
             
             HStack() {
                 MenuTextParagraphView(text: deckEditorViewModel.deckSelectionInfo)
                 Spacer()
-            }
+            }.frame(height: 30)
         }.padding([.leading, .trailing, .top], 10)
     }
 }
@@ -276,12 +301,14 @@ struct DeckListSelectorView: View {
     var body: some View {
         VStack {
             Button(action: {
-                deckEditorViewModel.changeSelectedDeckTo(newSelectedDeck: deckListNumber)
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    deckEditorViewModel.changeSelectedDeckTo(newSelectedDeck: deckListNumber)
+                }
             }, label: {
                 Text(deckListName)
                     .fontWeight(.bold)
                     .font(.title2)
-                    .foregroundColor(deckEditorViewModel.selectedDeckList == deckListNumber ? .white : .gray)
+                    .foregroundColor(deckEditorViewModel.selectedDeckListNumber == deckListNumber ? .white : .gray)
             })
         }
     }
@@ -294,7 +321,7 @@ struct BottomControlRowView: View {
             Spacer()
             MenuTextSubtitleView(text: "Import")
             MenuTextSubtitleView(text: "Export")
-        }.padding([.leading, .trailing, .bottom], 10)
+        }.padding([.leading, .trailing, .bottom], 10).frame(height: 50)
     }
 }
 
@@ -302,15 +329,11 @@ struct DeckListView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     var deckListToShow: [Card] {
-        if deckEditorViewModel.selectedDeckList == DeckEditorViewModel.DeckSelectionNumber.deckList {
-            return deckEditorViewModel.deck.deckList
-        } else if deckEditorViewModel.selectedDeckList == DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList {
-            return deckEditorViewModel.deck.tooStrongPermanentsList
-        } else if deckEditorViewModel.selectedDeckList == DeckEditorViewModel.DeckSelectionNumber.availableTokensList {
+        if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList {
             return deckEditorViewModel.deck.availableTokensList
-        } else if deckEditorViewModel.selectedDeckList == DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList {
+        } else if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList {
             return deckEditorViewModel.deck.weakPermanentsList
-        } else if deckEditorViewModel.selectedDeckList == DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList {
+        } else if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList {
             return deckEditorViewModel.deck.powerfullPermanentsList
         }
         return []
@@ -319,12 +342,154 @@ struct DeckListView: View {
     var body: some View {
         // Show the current selected list
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 0), count: 2), alignment: .top, spacing: 15) {
-                ForEach(deckListToShow) { card in
-                    CardOnBoardView(card: card)
-                        .transition(.scale.combined(with: .opacity))
+            if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.deckList {
+                DeckListMainDeckView()
+                    .animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
+            } else if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList {
+                DeckListTooStrongView()
+                    .animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
+            } else {
+                LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 5), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+                    ForEach(deckListToShow) { card in
+                        Button(action: {
+                            deckEditorViewModel.cardToShow = card
+                        }, label: {
+                            CardOnDeckListView(card: card)
+                        }).transition(.scale.combined(with: .opacity))
+                    }
+                }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
+            }
+        }
+    }
+}
+
+struct DeckListMainDeckView: View {
+    
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    
+    var body: some View {
+        HStack(spacing: 40) {
+            // Creatures
+            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 10), spacing: 20), count: 2), alignment: .top, spacing: 15) {
+                ForEach(deckEditorViewModel.deck.deckList.creatures) { card in
+                    Button(action: {
+                        deckEditorViewModel.cardToShow = card
+                    }, label: {
+                        CardOnDeckListView(card: card)
+                    }).transition(.scale.combined(with: .opacity))
                 }
-            }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
+            }
+            // Artifacts and Enchantments
+            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 5), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+                ForEach(deckEditorViewModel.deck.deckList.artifactsAndEnchantments) { card in
+                    Button(action: {
+                        deckEditorViewModel.cardToShow = card
+                    }, label: {
+                        CardOnDeckListView(card: card)
+                    }).transition(.scale.combined(with: .opacity))
+                }
+            }
+            // Instant and Sorceries
+            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 5), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+                ForEach(deckEditorViewModel.deck.deckList.instantsAndSorceries) { card in
+                    Button(action: {
+                        deckEditorViewModel.cardToShow = card
+                    }, label: {
+                        CardOnDeckListView(card: card)
+                    }).transition(.scale.combined(with: .opacity))
+                }
+            }
+            // Tokens
+            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 5), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+                ForEach(deckEditorViewModel.deck.deckList.tokens) { card in
+                    Button(action: {
+                        deckEditorViewModel.cardToShow = card
+                    }, label: {
+                        CardOnDeckListView(card: card)
+                    }).transition(.scale.combined(with: .opacity))
+                }
+            }
+        }
+    }
+}
+
+struct DeckListTooStrongView: View {
+    
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    
+    var body: some View {
+        HStack(spacing: 40) {
+            // Creatures
+            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 10), spacing: 20), count: 2), alignment: .top, spacing: 15) {
+                ForEach(deckEditorViewModel.deck.deckList.creatures) { card in
+                    Button(action: {
+                        deckEditorViewModel.addCardToSelectedDeck(card: card)
+                    }, label: {
+                        CardOnDeckListView(card: card)
+                            .transition(.scale.combined(with: .opacity))
+                            .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
+                    })
+                }
+            }
+            // Artifacts and Enchantments
+            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 5), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+                ForEach(deckEditorViewModel.deck.deckList.artifactsAndEnchantments) { card in
+                    Button(action: {
+                        deckEditorViewModel.addCardToSelectedDeck(card: card)
+                    }, label: {
+                        CardOnDeckListView(card: card)
+                            .transition(.scale.combined(with: .opacity))
+                            .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
+                    })
+                }
+            }
+            // Instant and Sorceries
+            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 5), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+                ForEach(deckEditorViewModel.deck.deckList.instantsAndSorceries) { card in
+                    Button(action: {
+                        deckEditorViewModel.addCardToSelectedDeck(card: card)
+                    }, label: {
+                        CardOnDeckListView(card: card)
+                            .transition(.scale.combined(with: .opacity))
+                            .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
+                    })
+                }
+            }
+            // Tokens
+            LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 5), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+                ForEach(deckEditorViewModel.deck.deckList.tokens) { card in
+                    Button(action: {
+                        deckEditorViewModel.addCardToSelectedDeck(card: card)
+                    }, label: {
+                        CardOnDeckListView(card: card)
+                            .transition(.scale.combined(with: .opacity))
+                            .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
+                    })
+                }
+            }
+        }
+    }
+}
+
+struct CardOnDeckListView: View {
+    
+    var card: Card
+    
+    var body: some View {
+        ZStack {
+            CardView(card: card)
+                .frame(width: CardSize.width.normal, height: CardSize.height.normal)
+                .cornerRadius(CardSize.cornerRadius.normal)
+            if card.cardCount > 1 {
+                Text("x\(card.cardCount)")
+                    .fontWeight(.bold)
+                    .font(.title)
+                    .foregroundColor(.white)
+            }
+        }
+        .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
+        .onChange(of: card.cardCount) { _ in
+            print("Change detected")
         }
     }
 }

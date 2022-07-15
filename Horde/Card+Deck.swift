@@ -37,6 +37,13 @@ class Card: Hashable, Identifiable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(cardImageURL)
     }
+    
+    func recreateCard() -> Card {
+        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, hasFlashback: self.hasFlashback)
+        tmpCard.cardCount = self.cardCount
+        tmpCard.cardUIImage = self.cardUIImage
+        return tmpCard
+    }
 }
 
 struct CardsToCast {
@@ -52,4 +59,19 @@ enum CardType {
     case artifact
     case sorcery
     case instant
+}
+
+struct DeckEditorCardList {
+    var deckList: MainDeckList
+    var tooStrongPermanentsList: [Card]
+    var availableTokensList: [Card]
+    var weakPermanentsList: [Card]
+    var powerfullPermanentsList: [Card]
+}
+
+struct MainDeckList {
+    var creatures: [Card]
+    var tokens: [Card]
+    var instantsAndSorceries: [Card]
+    var artifactsAndEnchantments: [Card]
 }
