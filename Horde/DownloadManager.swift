@@ -29,7 +29,7 @@ import SwiftUI
                         DispatchQueue.main.async {
                             self.data = data! as Data
                             self.imageReadyToShow = true
-                            self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "BackgroundTest")!)
+                            self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
                         }
                     }
                 }

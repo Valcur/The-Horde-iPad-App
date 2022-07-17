@@ -15,7 +15,7 @@ class DeckEditorViewModel: ObservableObject {
     @Published var searchProgressInfo: String = "Let's search some cards"
     @Published var searchResult: [CardFromCardSearch] = []
     @Published var cardToShow: Card? = nil
-    var deckId: Int = 8
+    var deckId: Int = 10
     
     init() {
         deck = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
@@ -26,20 +26,60 @@ class DeckEditorViewModel: ObservableObject {
     }
     
     func loadExistingDeck() {
-        addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-        addCardToSelectedDeck(card: Card(cardName: "Death by Dragons", cardType: .sorcery, specificSet: "cma"))
-        addCardToSelectedDeck(card: Card(cardName: "Dragon Appeasement", cardType: .enchantment, specificSet: "ARB"))
-        addCardToSelectedDeck(card: Card(cardName: "Ancient Copper Dragon", cardType: .creature, hasFlashback: true, specificSet: "CLB"))
-        addCardToSelectedDeck(card: Card(cardName: "Cat Dragon", cardType: .token, specificSet: "T2X2"))
-        addCardToSelectedDeck(card: Card(cardName: "Dragon", cardType: .token, specificSet: "TCLB"))
+        let deckData: String = UserDefaults.standard.object(forKey: "Deck_\(deckId)") as? String ?? ""
         
-        selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
-        addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-        
-        selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
-        addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-        
-        selectedDeckListNumber = DeckSelectionNumber.deckList
+        if deckData != "" {
+            let allLines = deckData.components(separatedBy: "\n")
+            
+            for line in allLines {
+                if line != "" {
+                    // Change current decklist to add cards to
+                    if line == DeckDataPattern.deck {
+                        selectedDeckListNumber = DeckSelectionNumber.deckList
+                    } else if line == DeckDataPattern.tooStrong {
+                        selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
+                    } else if line == DeckDataPattern.availableTokens {
+                        selectedDeckListNumber = DeckSelectionNumber.availableTokensList
+                    } else if line == DeckDataPattern.weakPermanents {
+                        selectedDeckListNumber = DeckSelectionNumber.weakPermanentsList
+                    } else if line == DeckDataPattern.powerfullPermanents {
+                        selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
+                    } else
+                    {
+                        // Or add card if its a card
+                        let cardDataArray = line.components(separatedBy: " ")
+                        
+                        let cardCount = Int(cardDataArray[0]) ?? 0
+                        var cardName = cardDataArray[4]
+                        for i in 5..<cardDataArray.count {
+                            cardName += " " + cardDataArray[i]
+                        }
+                        
+                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardDataArray[3] == DeckDataPattern.cardHaveFlashback, specificSet: cardDataArray[1])
+                        card.cardCount = cardCount
+                        addCardToSelectedDeck(card: card, onlyAddOne: false)
+                    }
+                }
+            }
+            selectedDeckListNumber = DeckSelectionNumber.deckList
+        } else {
+            
+            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
+            addCardToSelectedDeck(card: Card(cardName: "Death by Dragons", cardType: .sorcery, specificSet: "cma"))
+            addCardToSelectedDeck(card: Card(cardName: "Dragon Appeasement", cardType: .enchantment, specificSet: "ARB"))
+            addCardToSelectedDeck(card: Card(cardName: "Ancient Copper Dragon", cardType: .creature, hasFlashback: true, specificSet: "CLB"))
+            addCardToSelectedDeck(card: Card(cardName: "Cat Dragon", cardType: .token, specificSet: "T2X2"))
+            addCardToSelectedDeck(card: Card(cardName: "Dragon", cardType: .token, specificSet: "TCLB"))
+            
+            selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
+            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
+            
+            selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
+            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
+            
+            selectedDeckListNumber = DeckSelectionNumber.deckList
+            
+        }
     }
     
     func saveDeck() {
@@ -47,13 +87,14 @@ class DeckEditorViewModel: ObservableObject {
         let deckData: String = getDeckDataString()
         print(deckData)
         
-        
+        UserDefaults.standard.set(deckData, forKey: "Deck_\(deckId)")
     }
     
     func getDeckDataString() -> String {
         var deckData: String = ""
         
         deckData.append(DeckDataPattern.deck)
+        deckData.append("\n")
         for card in deck.deckList.creatures {
             deckData.append(getCardDataString(card: card))
         }
@@ -70,22 +111,30 @@ class DeckEditorViewModel: ObservableObject {
             deckData.append(getCardDataString(card: card))
         }
         
+        deckData.append("\n")
         deckData.append(DeckDataPattern.tooStrong)
+        deckData.append("\n")
         for card in deck.tooStrongPermanentsList {
             deckData.append(getCardDataString(card: card))
         }
         
+        deckData.append("\n")
         deckData.append(DeckDataPattern.availableTokens)
+        deckData.append("\n")
         for card in deck.availableTokensList {
             deckData.append(getCardDataString(card: card))
         }
         
+        deckData.append("\n")
         deckData.append(DeckDataPattern.weakPermanents)
+        deckData.append("\n")
         for card in deck.weakPermanentsList {
             deckData.append(getCardDataString(card: card))
         }
         
+        deckData.append("\n")
         deckData.append(DeckDataPattern.powerfullPermanents)
+        deckData.append("\n")
         for card in deck.powerfullPermanentsList {
             deckData.append(getCardDataString(card: card))
         }
@@ -94,7 +143,9 @@ class DeckEditorViewModel: ObservableObject {
     }
     
     func getCardDataString(card: Card) -> String {
-        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(card.hasFlashback ? DeckDataPattern.cardHaveFlashback : DeckDataPattern.cardDontHaveFlashback) \(card.cardName)\n"
+        // For tokens we remove the set from the name
+        let cardName = card.cardType == .token ? card.cardName.replacingOccurrences(of: card.specificSet, with: "") : card.cardName
+        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(card.hasFlashback ? DeckDataPattern.cardHaveFlashback : DeckDataPattern.cardDontHaveFlashback) \(cardName)\n"
         return cardData
     }
     
@@ -421,11 +472,11 @@ class DeckEditorViewModel: ObservableObject {
     }
     
     struct DeckDataPattern {
-        static let deck = "## Horde Deck ##\n"
-        static let tooStrong = "\n## Too Strong ##\n"
-        static let availableTokens = "\n## Available Tokens ##\n"
-        static let weakPermanents = "\n## Weak Permanents ##\n"
-        static let powerfullPermanents = "\n## Powerfull Permanents ##\n"
+        static let deck = "## Horde Deck ##"
+        static let tooStrong = "## Too Strong ##"
+        static let availableTokens = "## Available Tokens ##"
+        static let weakPermanents = "## Weak Permanents ##"
+        static let powerfullPermanents = "## Powerfull Permanents ##"
         static let cardHaveFlashback = "YES"
         static let cardDontHaveFlashback = "NO"
     }

@@ -52,7 +52,7 @@ class Card: Hashable, Identifiable {
     }
     
     func recreateCard() -> Card {
-        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, hasFlashback: self.hasFlashback)
+        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, hasFlashback: self.hasFlashback, specificSet: self.specificSet)
         tmpCard.cardCount = self.cardCount
         tmpCard.cardUIImage = self.cardUIImage
         return tmpCard
