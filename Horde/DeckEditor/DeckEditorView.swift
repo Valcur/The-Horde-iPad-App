@@ -34,11 +34,12 @@ struct LeftPanelView: View {
         ZStack {
             GradientView(gradientId: hordeAppViewModel.gradientId)
             VStack {
+                BottomControlRowView()
                 TopControlRowView()
                 Spacer()
                 DeckListView()
-                Spacer()
-                BottomControlRowView()
+
+
             }.ignoresSafeArea()
         }
     }
@@ -56,9 +57,9 @@ struct RightPanelView: View {
                 .opacity(0.8)
             
             if deckEditorViewModel.cardToShow == nil {
-                CardSearchView().padding(10)
+                CardSearchView()//.padding(10)
             } else {
-                CardShowView(card: deckEditorViewModel.cardToShow!).padding(10)
+                CardShowView(card: deckEditorViewModel.cardToShow!)//.padding(10)
             }
         }
     }
@@ -101,14 +102,24 @@ struct CardSearchView: View {
                         .font(.title3)
                         .foregroundColor(isSearchingForTokens ? .white : .gray)
                 })
-            }.ignoresSafeArea(.keyboard)
+            }.ignoresSafeArea(.keyboard).padding(10)
             
             // Search result
             ScrollView {
                 VStack(spacing: 0) {
-                    ForEach(deckEditorViewModel.searchResult, id: \.self) { card in
-                        CardSearchResultView(card: card)
+                    if deckEditorViewModel.searchResult.count > 0 {
+                        ForEach(deckEditorViewModel.searchResult.indices, id: \.self) { i in
+                            CardSearchResultView(card: deckEditorViewModel.searchResult[i], cardRank: i)
+                        }
+                    } else {
+                        MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo)
                     }
+                    
+
+                    /*
+                    CardSearchResultView(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"))
+                    CardSearchResultView(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"))
+                    CardSearchResultView(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"))*/
                 }
             }.ignoresSafeArea(.keyboard)
         }
@@ -118,19 +129,42 @@ struct CardSearchView: View {
 struct CardSearchResultView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
-    let card: Card
+    let card: CardFromCardSearch
+    let cardRank: Int
     
     var body: some View {
         Button(action: {
             deckEditorViewModel.cardToShow = card
         }, label: {
             HStack {
+                ZStack{
+                    CardView(card: card, shouldImageBeSaved: false, downloadDelay: cardRank)
+                        .frame(width: 64, height: 90)
+                        .aspectRatio(contentMode: .fit)
+                        .offset(y: 15)
+                }.frame(width: 50, height: 40).clipped()
                 Text(card.cardName)
                     .font(.subheadline)
                     .foregroundColor(.white)
                 Spacer()
-            }.padding([.top, .bottom], 6)
+                CardSearchResultManaCostView(manaCost: card.getManaCostArray())
+            }.padding([.top, .bottom, .leading, .trailing], 8)
         })
+    }
+    
+    struct CardSearchResultManaCostView: View {
+        
+        let manaCost: [String]
+        
+        var body: some View {
+            HStack(spacing: 2) {
+                ForEach(manaCost, id: \.self) {
+                    Image($0)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
+            }
+        }
     }
 }
 
@@ -139,6 +173,8 @@ struct CardShowView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State var card: Card
     @State var cardType: CardType
+    
+    private let gradient = Gradient(colors: [Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.3), Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.0)])
     
     init(card: Card) {
         self.card = card
@@ -192,7 +228,9 @@ struct CardShowView: View {
                         }).scaleEffect(1.5)
                         Spacer()
                     }.offset(y: 20)
-                }
+                }.padding(10)
+                
+                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom).frame(height: 60)
                 
                 // Return Button
                 Button(action: {
@@ -201,6 +239,7 @@ struct CardShowView: View {
                     Image(systemName: "chevron.backward")
                         .font(.largeTitle)
                         .foregroundColor(.white)
+                        .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                 }).padding()
             }
             
@@ -272,23 +311,29 @@ struct TopControlRowView: View {
     
     var body: some View {
         VStack {
-            HStack() {
-                DeckListSelectorView(deckListName: "Deck", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.deckList)
+            HStack {
+                Group {
+                    DeckListSelectorView(deckListName: "Horde Deck", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.deckList)
+                    Spacer()
+                    DeckListSelectorView(deckListName: "Lategame cards", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList)
+                    Spacer()
+                    DeckListSelectorView(deckListName: "Tokens available", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.availableTokensList)
+                }
                 Spacer()
-                DeckListSelectorView(deckListName: "Strong", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList)
+                Rectangle()
+                    .foregroundColor(.white)
+                    .frame(width: 1, height: 30)
                 Spacer()
-                DeckListSelectorView(deckListName: "Tokens", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.availableTokensList)
+                DeckListSelectorView(deckListName: "Weak cards", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
                 Spacer()
-                DeckListSelectorView(deckListName: "Weak", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
-                Spacer()
-                DeckListSelectorView(deckListName: "Powerfull", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
-            }.frame(height: 50)
+                DeckListSelectorView(deckListName: "Powerfull cards", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
+            }.frame(height: 50).padding([.leading, .trailing], 20)
             
             HStack() {
                 MenuTextParagraphView(text: deckEditorViewModel.deckSelectionInfo)
                 Spacer()
             }.frame(height: 30)
-        }.padding([.leading, .trailing, .top], 10)
+        }.padding([.leading, .trailing, .top], 15)
     }
 }
 
@@ -307,7 +352,7 @@ struct DeckListSelectorView: View {
             }, label: {
                 Text(deckListName)
                     .fontWeight(.bold)
-                    .font(.title2)
+                    .font(.title3)
                     .foregroundColor(deckEditorViewModel.selectedDeckListNumber == deckListNumber ? .white : .gray)
             })
         }
@@ -315,13 +360,59 @@ struct DeckListSelectorView: View {
 }
 
 struct BottomControlRowView: View {
+    
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    
     var body: some View {
         HStack {
-            MenuTextSubtitleView(text: "Exit")
+            // Exit
+            Button(action: {
+
+            }, label: {
+                Image(systemName: "xmark")
+                    .font(.title)
+                    .foregroundColor(.white)
+            })
+            
             Spacer()
-            MenuTextSubtitleView(text: "Import")
-            MenuTextSubtitleView(text: "Export")
-        }.padding([.leading, .trailing, .bottom], 10).frame(height: 50)
+            
+            Text("Deck Name")
+                .font(.title)
+                .foregroundColor(.white)
+            
+            // Save
+            Button(action: {
+                deckEditorViewModel.saveDeck()
+            }, label: {
+                Text(" -  Save")
+                    .font(.title)
+                    .foregroundColor(.white)
+            })
+            
+            Spacer()
+            
+            // Import
+            Button(action: {
+
+            }, label: {
+                Image(systemName: "square.and.arrow.down")
+                    .font(.title)
+                    .foregroundColor(.white)
+            })
+            
+            Text("/")
+                .font(.title)
+                .foregroundColor(.white)
+            
+            // Export
+            Button(action: {
+
+            }, label: {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.title)
+                    .foregroundColor(.white)
+            })
+        }.padding(10)
     }
 }
 
@@ -330,7 +421,7 @@ struct DeckListView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     var deckListToShow: [Card] {
         if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList {
-            return deckEditorViewModel.deck.availableTokensList
+            return deckEditorViewModel.deck.availableTokensList + deckEditorViewModel.deck.deckList.tokens
         } else if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList {
             return deckEditorViewModel.deck.weakPermanentsList
         } else if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList {
@@ -368,7 +459,21 @@ struct DeckListMainDeckView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     
     var body: some View {
-        HStack(spacing: 40) {
+        HStack(spacing: 80) {
+            ForEach(0..<4, id: \.self) { i in
+                if deckEditorViewModel.getAllDecksInMainDeckList()[i].count > 0 {
+                    LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 10), spacing: 20), count: 2), alignment: .top, spacing: 15) {
+                        ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
+                            Button(action: {
+                                deckEditorViewModel.cardToShow = card
+                            }, label: {
+                                CardOnDeckListView(card: card)
+                            }).transition(.scale.combined(with: .opacity))
+                        }
+                    }.padding([.leading, .trailing], 10)
+                }
+            }
+            /*
             // Creatures
             LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 10), spacing: 20), count: 2), alignment: .top, spacing: 15) {
                 ForEach(deckEditorViewModel.deck.deckList.creatures) { card in
@@ -408,7 +513,7 @@ struct DeckListMainDeckView: View {
                         CardOnDeckListView(card: card)
                     }).transition(.scale.combined(with: .opacity))
                 }
-            }
+            }*/
         }
     }
 }
@@ -418,7 +523,23 @@ struct DeckListTooStrongView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     
     var body: some View {
-        HStack(spacing: 40) {
+        HStack(spacing: 80) {
+            ForEach(0..<4, id: \.self) { i in
+                if deckEditorViewModel.getAllDecksInMainDeckList()[i].count > 0 {
+                    LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 10), spacing: 20), count: 2), alignment: .top, spacing: 15) {
+                        ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
+                            Button(action: {
+                                deckEditorViewModel.addCardToSelectedDeck(card: card)
+                            }, label: {
+                                CardOnDeckListView(card: card)
+                                    .transition(.scale.combined(with: .opacity))
+                                    .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
+                            })
+                        }
+                    }.padding([.leading, .trailing], 10)
+                }
+            }
+            /*
             // Creatures
             LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 10), spacing: 20), count: 2), alignment: .top, spacing: 15) {
                 ForEach(deckEditorViewModel.deck.deckList.creatures) { card in
@@ -466,7 +587,7 @@ struct DeckListTooStrongView: View {
                             .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
                     })
                 }
-            }
+            }*/
         }
     }
 }
@@ -485,6 +606,13 @@ struct CardOnDeckListView: View {
                     .fontWeight(.bold)
                     .font(.title)
                     .foregroundColor(.white)
+            }
+            if card.hasFlashback {
+                Image(systemName: "arrow.clockwise")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+                    .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+                    .offset(x: CardSize.width.normal / 3, y: -CardSize.height.normal / 3)
             }
         }
         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)

@@ -29,16 +29,16 @@ struct Datum: Codable {
     let multiverseIDS: [Int]?
     let mtgoID, arenaID, tcgplayerID, cardmarketID: Int?
     let name: String?
-    let lang: Lang?
+    let lang: String?
     let releasedAt: String?
     let uri, scryfallURI: String?
     let layout: Layout?
     let highresImage: Bool?
     let imageStatus: ImageStatus?
     let imageUris: ImageUris?
-    let manaCost: String?
+    let mana_cost: String?
     let cmc: Int?
-    let typeLine, oracleText: String?
+    let type_line, oracleText: String?
     let colors, colorIdentity: [ColorIdentity]?
     let keywords: [String]?
     let legalities: Legalities?
@@ -46,7 +46,7 @@ struct Datum: Codable {
     let reserved, foil, nonfoil: Bool?
     let finishes: [Finish]?
     let oversized, promo, reprint, variation: Bool?
-    let setID, datumSet, setName: String?
+    let setID, set, setName: String?
     let setType: SetType?
     let setURI, setSearchURI, scryfallSetURI, rulingsURI: String?
     let printsSearchURI: String?
@@ -91,15 +91,15 @@ struct Datum: Codable {
         case highresImage
         case imageStatus
         case imageUris
-        case manaCost
+        case mana_cost
         case cmc
-        case typeLine
+        case type_line
         case oracleText
         case colors
         case colorIdentity
         case keywords, legalities, games, reserved, foil, nonfoil, finishes, oversized, promo, reprint, variation
         case setID
-        case datumSet
+        case set
         case setName
         case setType
         case setURI
@@ -169,7 +169,7 @@ enum BorderColor: String, Codable {
 
 // MARK: - CardFace
 struct CardFace: Codable {
-    let object, name, manaCost, typeLine: String?
+    let object, name, mana_cost, typeLine: String?
     let oracleText: String?
     let colors: [ColorIdentity]?
     let power, toughness, artist, artistID: String?
@@ -180,7 +180,7 @@ struct CardFace: Codable {
 
     enum CodingKeys: String, CodingKey {
         case object, name
-        case manaCost
+        case mana_cost
         case typeLine
         case oracleText
         case colors, power, toughness, artist
@@ -200,6 +200,7 @@ enum ColorIdentity: String, Codable {
     case r = "R"
     case u = "U"
     case w = "W"
+    case m = "M"
 }
 
 // MARK: - ImageUris
@@ -231,15 +232,16 @@ enum ImageStatus: String, Codable {
     case lowres = "lowres"
 }
 
-enum Lang: String, Codable {
-    case en = "en"
-}
-
 enum Layout: String, Codable {
+    case adventure = "adventure"
+    case leveler = "leveler"
     case host = "host"
     case modalDfc = "modal_dfc"
     case normal = "normal"
     case transform = "transform"
+    case comboPiece = "combo_piece"
+    case token = "token"
+    case doubleFacedToken = "double_faced_token"
 }
 
 // MARK: - Legalities

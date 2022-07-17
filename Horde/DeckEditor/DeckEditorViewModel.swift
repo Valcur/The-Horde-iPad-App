@@ -12,8 +12,10 @@ class DeckEditorViewModel: ObservableObject {
     @Published var selectedDeckListNumber: Int = DeckSelectionNumber.deckList
     @Published var deck: DeckEditorCardList
     @Published var deckSelectionInfo: String = ""
-    @Published var searchResult: [Card] = []
+    @Published var searchProgressInfo: String = "Let's search some cards"
+    @Published var searchResult: [CardFromCardSearch] = []
     @Published var cardToShow: Card? = nil
+    var deckId: Int = 8
     
     init() {
         deck = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
@@ -24,33 +26,87 @@ class DeckEditorViewModel: ObservableObject {
     }
     
     func loadExistingDeck() {
-        addCardToSelectedDeck(card: Card(cardName: "Polyraptor", cardType: .creature))
-        addCardToSelectedDeck(card: Card(cardName: "Counterspell", cardType: .instant))
-        addCardToSelectedDeck(card: Card(cardName: "Pacifism", cardType: .enchantment))
-        addCardToSelectedDeck(card: Card(cardName: "Veteran Adventurer", cardType: .creature))
+        addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
+        addCardToSelectedDeck(card: Card(cardName: "Death by Dragons", cardType: .sorcery, specificSet: "cma"))
+        addCardToSelectedDeck(card: Card(cardName: "Dragon Appeasement", cardType: .enchantment, specificSet: "ARB"))
+        addCardToSelectedDeck(card: Card(cardName: "Ancient Copper Dragon", cardType: .creature, hasFlashback: true, specificSet: "CLB"))
+        addCardToSelectedDeck(card: Card(cardName: "Cat Dragon", cardType: .token, specificSet: "T2X2"))
+        addCardToSelectedDeck(card: Card(cardName: "Dragon", cardType: .token, specificSet: "TCLB"))
         
         selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
-        addCardToSelectedDeck(card: Card(cardName: "Polyraptor", cardType: .creature))
+        addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
         
         selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
-        addCardToSelectedDeck(card: Card(cardName: "Polyraptor", cardType: .creature))
+        addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
         
-        //selectedDeckListNumber = DeckSelectionNumber.deckList
+        selectedDeckListNumber = DeckSelectionNumber.deckList
     }
     
     func saveDeck() {
+        // The whole deck is stored in a String, like a text file
+        let deckData: String = getDeckDataString()
+        print(deckData)
         
+        
+    }
+    
+    func getDeckDataString() -> String {
+        var deckData: String = ""
+        
+        deckData.append(DeckDataPattern.deck)
+        for card in deck.deckList.creatures {
+            deckData.append(getCardDataString(card: card))
+        }
+        deckData.append("\n")
+        for card in deck.deckList.artifactsAndEnchantments {
+            deckData.append(getCardDataString(card: card))
+        }
+        deckData.append("\n")
+        for card in deck.deckList.instantsAndSorceries {
+            deckData.append(getCardDataString(card: card))
+        }
+        deckData.append("\n")
+        for card in deck.deckList.tokens {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        deckData.append(DeckDataPattern.tooStrong)
+        for card in deck.tooStrongPermanentsList {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        deckData.append(DeckDataPattern.availableTokens)
+        for card in deck.availableTokensList {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        deckData.append(DeckDataPattern.weakPermanents)
+        for card in deck.weakPermanentsList {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        deckData.append(DeckDataPattern.powerfullPermanents)
+        for card in deck.powerfullPermanentsList {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        return deckData
+    }
+    
+    func getCardDataString(card: Card) -> String {
+        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(card.hasFlashback ? DeckDataPattern.cardHaveFlashback : DeckDataPattern.cardDontHaveFlashback) \(card.cardName)\n"
+        return cardData
     }
     
     func changeSelectedDeckTo(newSelectedDeck: Int) {
         selectedDeckListNumber = newSelectedDeck
         
         if selectedDeckListNumber == DeckSelectionNumber.deckList {
-            deckSelectionInfo = "Cards and token in your deck"
+            deckSelectionInfo = "Cards and tokens in the Horde library"
         } else if selectedDeckListNumber == DeckSelectionNumber.tooStrongPermanentsList {
-            deckSelectionInfo = "Cards too strong to be drawed during the first turns"
+            deckSelectionInfo = "Select cards that are too strong to be drawed during the first turns (like boardwipes)"
         } else if selectedDeckListNumber == DeckSelectionNumber.availableTokensList {
-            deckSelectionInfo = "Tokens that could be spawned by card drawed by the horde"
+            deckSelectionInfo = "Tokens that could be spawned by cards drawed by the horde"
         } else if selectedDeckListNumber == DeckSelectionNumber.weakPermanentsList {
             deckSelectionInfo = "Weak permanents the Horde could start with"
         } else if selectedDeckListNumber == DeckSelectionNumber.powerfullPermanentsList {
@@ -76,8 +132,10 @@ class DeckEditorViewModel: ObservableObject {
         if text == "" {
             return
         }
+        self.searchResult = []
+        self.searchProgressInfo = "Searching ..."
         
-        let scryfallSearchApi = "https://api.scryfall.com/cards/search?q=\(text)"
+        let scryfallSearchApi = "https://api.scryfall.com/cards/search?q=\(text.replacingOccurrences(of: " ", with: "+"))\(searchingForTokens ? "+type%3Atoken" : "")"
         print(scryfallSearchApi)
         
         if let url = URL(string: scryfallSearchApi) {
@@ -91,12 +149,23 @@ class DeckEditorViewModel: ObservableObject {
                         let decodedData: ScryfallQuerry = try JSONDecoder().decode(ScryfallQuerry.self,
                                                                    from: data)
                         DispatchQueue.main.async {
-                            decodedData.data!.forEach {
-                                self.searchResult.append(Card(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.typeLine ?? "Artifact")))
+                            if decodedData.data != nil {
+                                decodedData.data!.forEach {
+                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), specificSet: $0.set ?? "", manaCost: $0.mana_cost ?? ""))
+                                }
                             }
+                            self.searchProgressInfo = "Nothing found"
                         }
-                    } catch {
-                        print("decode error")
+                    } catch DecodingError.keyNotFound(let key, let context) {
+                        Swift.print("could not find key \(key) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.valueNotFound(let type, let context) {
+                        Swift.print("could not find type \(type) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.typeMismatch(let type, let context) {
+                        Swift.print("type mismatch for type \(type) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.dataCorrupted(let context) {
+                        Swift.print("data found to be corrupted in JSON: \(context.debugDescription)")
+                    } catch let error as NSError {
+                        NSLog("Error in read(from:ofType:) domain= \(error.domain), description= \(error.localizedDescription)")
                     }
                 }
             }
@@ -119,7 +188,7 @@ class DeckEditorViewModel: ObservableObject {
         } else if typeLine.contains("nstant") {
             return CardType.instant
         }
-        return CardType.token
+        return CardType.enchantment
     }
     
     func getSelectedDeck(card: Card? = nil) -> [Card] {
@@ -204,6 +273,12 @@ class DeckEditorViewModel: ObservableObject {
                 deck.tooStrongPermanentsList.append(tmpCard)
             }
         } else {
+            
+            // We can't add a token that is already in the mhorde decklist, this array is just for the tokens spawned by horde's spells
+            if selectedDeckListNumber == DeckSelectionNumber.availableTokensList && deck.deckList.tokens.contains(card) {
+                return
+            }
+            
             var deckSelected = getSelectedDeck(card: tmpCard)
             deckSelected.append(tmpCard)
             deckSelected = regroupSameCardInArray(cardArray: deckSelected)
@@ -333,11 +408,25 @@ class DeckEditorViewModel: ObservableObject {
         return deckSelected[deckSelected.firstIndex(of: cardToShow!)!].cardCount == 1
     }
     
+    func getAllDecksInMainDeckList() -> [[Card]] {
+        return [deck.deckList.creatures, deck.deckList.artifactsAndEnchantments, deck.deckList.instantsAndSorceries, deck.deckList.tokens]
+    }
+    
     struct DeckSelectionNumber {
         static let deckList = 1
         static let tooStrongPermanentsList = 2
         static let availableTokensList = 3
         static let weakPermanentsList = 4
         static let powerfullPermanentsList = 5
+    }
+    
+    struct DeckDataPattern {
+        static let deck = "## Horde Deck ##\n"
+        static let tooStrong = "\n## Too Strong ##\n"
+        static let availableTokens = "\n## Available Tokens ##\n"
+        static let weakPermanents = "\n## Weak Permanents ##\n"
+        static let powerfullPermanents = "\n## Powerfull Permanents ##\n"
+        static let cardHaveFlashback = "YES"
+        static let cardDontHaveFlashback = "NO"
     }
 }

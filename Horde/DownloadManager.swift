@@ -13,19 +13,24 @@ import SwiftUI
     @Published var data = Data()
     @Published var imageReadyToShow = false
     let card: Card
+    let shouldImageBeSaved: Bool
 
-    init(card: Card) {
+    init(card: Card, shouldImageBeSaved: Bool, downloadDelay: Int) {
         self.card = card
-        if card.cardImageURL != "" {
-            let url = URL(string: card.cardImageURL)!
+        self.shouldImageBeSaved = shouldImageBeSaved
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 * Double(downloadDelay)) {
+            if card.cardImageURL != "" {
+                print(card.cardImageURL)
+                let url = URL(string: card.cardImageURL)!
 
-            self.loadData(cardName: card.cardName, url: url) { (data, error) in
-                // Handle the loaded file data
-                if error == nil {
-                    DispatchQueue.main.async {
-                        self.data = data! as Data
-                        self.imageReadyToShow = true
-                        self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "BackgroundTest")!)
+                self.loadData(cardName: card.cardName, url: url) { (data, error) in
+                    // Handle the loaded file data
+                    if error == nil {
+                        DispatchQueue.main.async {
+                            self.data = data! as Data
+                            self.imageReadyToShow = true
+                            self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "BackgroundTest")!)
+                        }
                     }
                 }
             }
@@ -87,6 +92,14 @@ import SwiftUI
         download(url: url, toFile: fileCachePath) { (error) in
             let data = try? Data(contentsOf: fileCachePath)
             completion(data, error)
+            // If temporary image, we delete it after retrieveing it
+            if !self.shouldImageBeSaved {
+                do {
+                    try FileManager.default.removeItem(at: fileCachePath)
+                } catch _ {
+                    print("Temporary image supression failed")
+                }
+            }
         }
     }
 }

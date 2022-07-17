@@ -487,6 +487,7 @@ struct CardView: View {
     @ObservedObject var downloadManager: DownloadManager
     @State var image:UIImage = UIImage()
     let card: Card
+    let shouldImageBeSaved: Bool
     
     var CardImage: Image {
         if downloadManager.imageReadyToShow {
@@ -496,9 +497,10 @@ struct CardView: View {
         return Image("BackgroundTest")
     }
     
-    init(card: Card) {
-        downloadManager = DownloadManager(card: card)
+    init(card: Card, shouldImageBeSaved: Bool = true, downloadDelay: Int = 0) {
+        downloadManager = DownloadManager(card: card, shouldImageBeSaved: shouldImageBeSaved, downloadDelay: downloadDelay)
         self.card = card
+        self.shouldImageBeSaved = shouldImageBeSaved
     }
     
     var body: some View {

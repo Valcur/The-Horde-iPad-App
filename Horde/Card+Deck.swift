@@ -16,15 +16,28 @@ class Card: Hashable, Identifiable {
     let cardImageURL: String
     var cardUIImage: Image = Image("BackgroundTest")
     var hasFlashback: Bool
+    let specificSet: String
     @Published var cardCount: Int = 1
     
-    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", hasFlashback: Bool = false){
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("MTGBackground"), hasFlashback: Bool = false, specificSet: String = ""){
         self.cardType = cardType
         self.hasFlashback = hasFlashback
-        self.cardName = cardName
+        self.cardUIImage = cardUIImage
+        self.specificSet = specificSet.uppercased()
+        
+        // Remove after "//" in name, example : "Amethyst Dragon // Explosive Crystal" -> only keep Amethyst Dragon
+        var cardNameString = ""
+        if let index = cardName.range(of: " //")?.lowerBound {
+            let substring = cardName[..<index]
+            let string = String(substring)
+            cardNameString = "\(string)"
+        } else {
+            cardNameString = "\(cardName)"
+        }
+        self.cardName = "\(cardNameString)\(cardType == .token ? " \(specificSet.uppercased())" : "")"
         
         if cardImageURL == "get-on-scryfall" {
-            self.cardImageURL = DeckManager.getScryfallImageUrl(name: cardName)
+            self.cardImageURL = Card.getScryfallImageUrl(name: cardName, specifiSet: specificSet)
         } else {
             self.cardImageURL = cardImageURL
         }
@@ -43,6 +56,44 @@ class Card: Hashable, Identifiable {
         tmpCard.cardCount = self.cardCount
         tmpCard.cardUIImage = self.cardUIImage
         return tmpCard
+    }
+    
+    static func getScryfallImageUrl(name: String, specifiSet: String = "") -> String {
+        let cardResolution = "normal"
+        //let cardNameForUrl = name.replacingOccurrences(of: " ", with: "+")
+        let cardNameForUrl = name
+            .replacingOccurrences(of: " ", with: "-")
+            .replacingOccurrences(of: "\"", with: "")
+            .replacingOccurrences(of: ",", with: "")
+            .replacingOccurrences(of: "'", with: "")
+        var url = "https://api.scryfall.com/cards/named?exact=\(cardNameForUrl)&format=img&version=\(cardResolution)"
+        // Example https://api.scryfall.com/cards/named?exact=Zombie+Giant&format=img&version=normal
+
+        if specifiSet != "" {
+            url.append("&set=\(specifiSet)")
+        }
+        print(url)
+        return url
+    }
+}
+
+class CardFromCardSearch: Card {
+    let manaCost: String
+    
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, specificSet: String = "", manaCost: String){
+        self.manaCost = manaCost
+        super.init(cardName: cardName, cardType: cardType, cardImageURL: cardImageURL, cardUIImage: cardUIImage, hasFlashback: hasFlashback, specificSet: specificSet)
+    }
+    
+    // From {3}{R}{W} to ["3", "R", "W"]
+    func getManaCostArray() -> [String] {
+        if self.manaCost == "" {
+            return []
+        }
+        var tmpString = self.manaCost.replacingOccurrences(of: "/", with: "-").replacingOccurrences(of: " -- ", with: "{//}")
+        tmpString.removeLast()
+        tmpString.removeFirst()
+        return tmpString.components(separatedBy: "}{")
     }
 }
 
