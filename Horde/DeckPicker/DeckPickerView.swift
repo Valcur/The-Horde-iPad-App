@@ -176,6 +176,7 @@ struct DeckPickerView_Previews: PreviewProvider {
                 .environmentObject(DeckPickerViewModel())
                 .environmentObject(HordeAppViewModel())
                 .previewInterfaceOrientation(.landscapeLeft)
+                .previewDevice(PreviewDevice(rawValue: "iPad Air (5th generation)"))
         } else {
             DeckPickerView()
                 .environmentObject(DeckPickerViewModel())

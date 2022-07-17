@@ -23,6 +23,7 @@
 		DB97BC1A282A6783001A216C /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB97BC19282A6783001A216C /* DownloadManager.swift */; };
 		DB97BC1C282A8318001A216C /* DeckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB97BC1B282A8318001A216C /* DeckManager.swift */; };
 		DB97BC1E282AEA5C001A216C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB97BC1D282AEA5C001A216C /* Extensions.swift */; };
+		DBA48CB228846CC3002F18A1 /* DeckEditorInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA48CB128846CC3002F18A1 /* DeckEditorInfoView.swift */; };
 		DBAEBC792833D1BB00E9137F /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAEBC782833D1BB00E9137F /* MenuView.swift */; };
 		DBAEBC7B2844C56300E9137F /* GameIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAEBC7A2844C56300E9137F /* GameIntroView.swift */; };
 /* End PBXBuildFile section */
@@ -45,6 +46,7 @@
 		DB97BC19282A6783001A216C /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		DB97BC1B282A8318001A216C /* DeckManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckManager.swift; sourceTree = "<group>"; };
 		DB97BC1D282AEA5C001A216C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		DBA48CB128846CC3002F18A1 /* DeckEditorInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckEditorInfoView.swift; sourceTree = "<group>"; };
 		DBAEBC782833D1BB00E9137F /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		DBAEBC7A2844C56300E9137F /* GameIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameIntroView.swift; sourceTree = "<group>"; };
 		DBB697422861F6070058D45B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				DB491D0A287C3E04001826E1 /* DeckEditorView.swift */,
 				DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */,
 				DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */,
+				DBA48CB128846CC3002F18A1 /* DeckEditorInfoView.swift */,
 			);
 			path = DeckEditor;
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 				DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */,
 				DB28BF98282FB13000A3BFBD /* DeckPickerView.swift in Sources */,
 				DB28BF9A282FCEE300A3BFBD /* DeckPickerViewModel.swift in Sources */,
+				DBA48CB228846CC3002F18A1 /* DeckEditorInfoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
