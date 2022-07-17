@@ -73,6 +73,7 @@
 		DB491D09287C3DEF001826E1 /* DeckEditor */ = {
 			isa = PBXGroup;
 			children = (
+				DBAEBC782833D1BB00E9137F /* MenuView.swift */,
 				DB491D0A287C3E04001826E1 /* DeckEditorView.swift */,
 				DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */,
 				DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */,
@@ -99,22 +100,18 @@
 		DB8C829528280289003DDED1 /* Horde */ = {
 			isa = PBXGroup;
 			children = (
+				DB8C829628280289003DDED1 /* HordeApp.swift */,
+				DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */,
+				DB28BF96282FB10F00A3BFBD /* DeckPicker */,
+				DBA48CB0288449CA002F18A1 /* GameView */,
 				DB491D09287C3DEF001826E1 /* DeckEditor */,
 				DBB697422861F6070058D45B /* Info.plist */,
-				DB28BF96282FB10F00A3BFBD /* DeckPicker */,
-				DB8C829628280289003DDED1 /* HordeApp.swift */,
-				DB8C829828280289003DDED1 /* GameView.swift */,
-				DB261E77286C4D150086D9B9 /* GameView_iPhone.swift */,
-				DBAEBC7A2844C56300E9137F /* GameIntroView.swift */,
-				DB8C829A2828028B003DDED1 /* Assets.xcassets */,
 				DB8C829C2828028B003DDED1 /* Preview Content */,
 				DB8C82A428280349003DDED1 /* Card+Deck.swift */,
-				DB8C82A6282804EB003DDED1 /* GameViewModel.swift */,
 				DB97BC19282A6783001A216C /* DownloadManager.swift */,
 				DB97BC1B282A8318001A216C /* DeckManager.swift */,
 				DB97BC1D282AEA5C001A216C /* Extensions.swift */,
-				DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */,
-				DBAEBC782833D1BB00E9137F /* MenuView.swift */,
+				DB8C829A2828028B003DDED1 /* Assets.xcassets */,
 			);
 			path = Horde;
 			sourceTree = "<group>";
@@ -125,6 +122,17 @@
 				DB8C829D2828028B003DDED1 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		DBA48CB0288449CA002F18A1 /* GameView */ = {
+			isa = PBXGroup;
+			children = (
+				DB8C829828280289003DDED1 /* GameView.swift */,
+				DB261E77286C4D150086D9B9 /* GameView_iPhone.swift */,
+				DB8C82A6282804EB003DDED1 /* GameViewModel.swift */,
+				DBAEBC7A2844C56300E9137F /* GameIntroView.swift */,
+			);
+			path = GameView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
