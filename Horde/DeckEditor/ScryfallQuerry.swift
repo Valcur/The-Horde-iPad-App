@@ -25,7 +25,7 @@ struct ScryfallQuerry: Codable {
 // MARK: - Datum
 struct Datum: Codable {
     let object: DatumObject?
-    let id, oracleID: String?
+    let id, oracle_id: String?
     let multiverseIDS: [Int]?
     let mtgoID, arenaID, tcgplayerID, cardmarketID: Int?
     let name: String?
@@ -49,7 +49,7 @@ struct Datum: Codable {
     let setID, set, setName: String?
     let setType: SetType?
     let setURI, setSearchURI, scryfallSetURI, rulingsURI: String?
-    let printsSearchURI: String?
+    let prints_search_uri: String?
     let collectorNumber: String?
     let digital: Bool?
     let rarity: Rarity?
@@ -77,7 +77,7 @@ struct Datum: Codable {
 
     enum CodingKeys: String, CodingKey {
         case object, id
-        case oracleID
+        case oracle_id
         case multiverseIDS
         case mtgoID
         case arenaID
@@ -106,7 +106,7 @@ struct Datum: Codable {
         case setSearchURI
         case scryfallSetURI
         case rulingsURI
-        case printsSearchURI
+        case prints_search_uri
         case collectorNumber
         case digital, rarity
         case flavorText
@@ -242,6 +242,8 @@ enum Layout: String, Codable {
     case comboPiece = "combo_piece"
     case token = "token"
     case doubleFacedToken = "double_faced_token"
+    case saga = "saga"
+    case split = "split"
 }
 
 // MARK: - Legalities
@@ -257,6 +259,7 @@ struct Legalities: Codable {
 enum Alchemy: String, Codable {
     case banned = "banned"
     case legal = "legal"
+    case restricted = "restricted"
     case notLegal = "not_legal"
 }
 
@@ -264,6 +267,7 @@ enum Paupercommander: String, Codable {
     case legal = "legal"
     case notLegal = "not_legal"
     case restricted = "restricted"
+    case banned = "banned"
 }
 
 enum DatumObject: String, Codable {

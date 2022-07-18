@@ -9,7 +9,15 @@ import SwiftUI
 
 struct DeckEditorInfoView: View {
     
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State var changingImage: Bool = false
+    @State var deckName: String = "Deck Name"
+    @State var deckIntro: String = ""
+    @State var deckRules: String = "All creatures controlled by the Horde have haste and abe  ze hz gze hag ag zg gazhr g aghrg ah hage ra gh aeg ahegrh aeghg aher haeg aehr ae rgae hrgae ae rhae g ahgr aegrhagr ef eufg hs hgdsf h"
+    
+    init() {
+        UITextView.appearance().backgroundColor = .clear
+    }
     
     var body: some View {
         ZStack {
@@ -26,64 +34,87 @@ struct DeckEditorInfoView: View {
                     .foregroundColor(.white)
             }).opacity(changingImage ? 1 : 0)
 
-            VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)).opacity(changingImage ? 0 : 0.5)
+            VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)).opacity(changingImage ? 0 : 1)
             
-            VStack(alignment: .center, spacing: 20) {
+            VStack(alignment: .center, spacing: 10) {
                 
                 // Deck Name
-                Button(action: {
-                    self.changingImage.toggle()
-                }, label: {
-                    HStack {
-                        Text("Deck Name")
+                HStack {
+                    TextField("", text: $deckName, onCommit: {
+
+                    })
+                    .foregroundColor(.white)
+                    .font(.system(size: PickerSize.titleFontSize).bold())
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .padding(.vertical, 10)
+                        
+                    
+                    Image(systemName: "pencil")
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                        .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                }.padding(.bottom, 50).frame(width: UIScreen.main.bounds.width / 2)
+                
+                HStack(spacing: 50) {
+                    // Intro
+                    VStack {
+                        Text("Intro")
                             .foregroundColor(.white)
                             .fontWeight(.bold)
-                            .font(.system(size: PickerSize.titleFontSize))
                         
-                        Image(systemName: "pencil")
-                            .foregroundColor(.white)
-                            .font(.system(size: PickerSize.titleFontSize))
-                            .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                        HStack {
+                            TextEditor(text: $deckIntro)
+                                .frame(height: 120)
+                                .padding(.vertical)
+                                .foregroundColor(.white)
+                                .font(.title3)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .padding(.horizontal, 10)
+                            
+                            Image(systemName: "pencil")
+                                .font(.largeTitle)
+                                .foregroundColor(.white)
+                                .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                        }
                     }
-                }).padding(.bottom, 100)
+                    
+                    // Special Rules
+                    
+                    VStack {
+                        Text("Special Rules")
+                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                        
+                        HStack {
+                            TextEditor(text: $deckRules)
+                                .frame(height: 120)
+                                .padding(.vertical)
+                                .foregroundColor(.white)
+                                .font(.title3)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .padding(.horizontal, 10)
+                            
+                            Image(systemName: "pencil")
+                                .font(.largeTitle)
+                                .foregroundColor(.white)
+                                .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                        }
+                    }
+                }
                 
-                // Intro
+                Spacer()
                 Button(action: {
-                    self.changingImage.toggle()
-                }, label: {
-                    HStack {
-                        Text("Deck description")
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.leading)
-                        
-                        Image(systemName: "pencil")
-                            .font(.largeTitle)
-                            .foregroundColor(.white)
-                            .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        deckEditorViewModel.showDeckEditorInfoView.toggle()
                     }
-                })
-                
-                // Special Rules
-                
-                Text("Special Rules")
-                    .foregroundColor(.white)
-                    .fontWeight(.bold)
-                
-                Button(action: {
-                    self.changingImage.toggle()
                 }, label: {
-                    HStack {
-                        Text("All creatures controlled by the Horde have haste")
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.leading)
-                        
-                        Image(systemName: "pencil")
-                            .font(.largeTitle)
-                            .foregroundColor(.white)
-                            .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
-                    }
+                    MenuTextTitleView(text: "To deck editor")
                 })
-            }.frame(width: UIScreen.main.bounds.width / 2).padding([.top], 80).opacity(changingImage ? 0 : 1)
+                Spacer()
+            }.padding([.top], 80).padding(.horizontal, 30).opacity(changingImage ? 0 : 1)
             
             // Switch between text/image edit mode
             Button(action: {

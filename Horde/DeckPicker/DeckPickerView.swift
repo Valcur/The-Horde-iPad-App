@@ -23,6 +23,9 @@ struct DeckPickerView: View {
                             DeckPickingView(deckPicker: deck).id(deck.id)
                         }
                         //DeckPickingMore()
+                        CreateNewDeckView()
+                        CreateNewDeckView()
+                        GetMoreDeckSlotView()
                     }.padding(.trailing, 400)
                     .onChange(of: deckPickerViewModel.deckPickedId) { _ in
                         withAnimation {
@@ -139,6 +142,72 @@ struct DeckPickingView: View {
             width = PickerSize.width.unpicked
         }
         return width
+    }
+}
+
+struct CreateNewDeckView: View {
+    
+    @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    let rotationInDegrees: CGFloat = 5
+    
+    var body: some View {
+        Button(action: {
+
+        }) {
+            ZStack {
+                VStack(alignment: .center, spacing: 40) {
+                    
+                    Text("Create new deck")
+                        .foregroundColor(.white)
+                        .fontWeight(.bold)
+                        .font(.title)
+                        .padding(.bottom, PickerSize.titlePaddingTop)
+                    
+                    Image(systemName: "plus")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                    
+                }.rotationEffect(Angle.degrees(-rotationInDegrees))
+                    .frame(width: 500, height: UIScreen.main
+                        .bounds.height)
+            }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: PickerSize.width.unpicked, height: UIScreen.main.bounds.height + 150)
+                .border(.white, width: 3)
+            .rotationEffect(Angle.degrees(rotationInDegrees))
+        }
+    }
+}
+
+struct GetMoreDeckSlotView: View {
+    
+    @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    let rotationInDegrees: CGFloat = 5
+    
+    var body: some View {
+        Button(action: {
+
+        }) {
+            ZStack {
+                VStack(alignment: .center, spacing: 40) {
+                    
+                    Text("Get more deck slot")
+                        .foregroundColor(.white)
+                        .fontWeight(.bold)
+                        .font(.title)
+                        .padding(.bottom, PickerSize.titlePaddingTop)
+                    
+                    Image(systemName: "cart")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                    
+                }.rotationEffect(Angle.degrees(-rotationInDegrees))
+                    .frame(width: 500, height: UIScreen.main
+                        .bounds.height)
+            }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: PickerSize.width.unpicked, height: UIScreen.main.bounds.height + 150)
+                .border(.white, width: 3)
+            .rotationEffect(Angle.degrees(rotationInDegrees))
+        }
     }
 }
 

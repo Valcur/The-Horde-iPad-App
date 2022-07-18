@@ -23,7 +23,7 @@ import SwiftUI
                 print(card.cardImageURL)
                 let url = URL(string: card.cardImageURL)!
 
-                self.loadData(cardName: card.cardName, url: url) { (data, error) in
+                self.loadData(cardName: card.cardOracleId + card.specificSet, url: url) { (data, error) in
                     // Handle the loaded file data
                     if error == nil {
                         DispatchQueue.main.async {

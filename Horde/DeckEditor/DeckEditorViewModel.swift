@@ -15,7 +15,9 @@ class DeckEditorViewModel: ObservableObject {
     @Published var searchProgressInfo: String = "Let's search some cards"
     @Published var searchResult: [CardFromCardSearch] = []
     @Published var cardToShow: Card? = nil
-    var deckId: Int = 10
+    @Published var cardToShowReprints: [Card] = []
+    @Published var showDeckEditorInfoView: Bool = false
+    var deckId: Int = 2
     
     init() {
         deck = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
@@ -23,130 +25,6 @@ class DeckEditorViewModel: ObservableObject {
         
         // If user clicked on an existing deck, load the decklist
         loadExistingDeck()
-    }
-    
-    func loadExistingDeck() {
-        let deckData: String = UserDefaults.standard.object(forKey: "Deck_\(deckId)") as? String ?? ""
-        
-        if deckData != "" {
-            let allLines = deckData.components(separatedBy: "\n")
-            
-            for line in allLines {
-                if line != "" {
-                    // Change current decklist to add cards to
-                    if line == DeckDataPattern.deck {
-                        selectedDeckListNumber = DeckSelectionNumber.deckList
-                    } else if line == DeckDataPattern.tooStrong {
-                        selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
-                    } else if line == DeckDataPattern.availableTokens {
-                        selectedDeckListNumber = DeckSelectionNumber.availableTokensList
-                    } else if line == DeckDataPattern.weakPermanents {
-                        selectedDeckListNumber = DeckSelectionNumber.weakPermanentsList
-                    } else if line == DeckDataPattern.powerfullPermanents {
-                        selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
-                    } else
-                    {
-                        // Or add card if its a card
-                        let cardDataArray = line.components(separatedBy: " ")
-                        
-                        let cardCount = Int(cardDataArray[0]) ?? 0
-                        var cardName = cardDataArray[4]
-                        for i in 5..<cardDataArray.count {
-                            cardName += " " + cardDataArray[i]
-                        }
-                        
-                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardDataArray[3] == DeckDataPattern.cardHaveFlashback, specificSet: cardDataArray[1])
-                        card.cardCount = cardCount
-                        addCardToSelectedDeck(card: card, onlyAddOne: false)
-                    }
-                }
-            }
-            selectedDeckListNumber = DeckSelectionNumber.deckList
-        } else {
-            
-            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-            addCardToSelectedDeck(card: Card(cardName: "Death by Dragons", cardType: .sorcery, specificSet: "cma"))
-            addCardToSelectedDeck(card: Card(cardName: "Dragon Appeasement", cardType: .enchantment, specificSet: "ARB"))
-            addCardToSelectedDeck(card: Card(cardName: "Ancient Copper Dragon", cardType: .creature, hasFlashback: true, specificSet: "CLB"))
-            addCardToSelectedDeck(card: Card(cardName: "Cat Dragon", cardType: .token, specificSet: "T2X2"))
-            addCardToSelectedDeck(card: Card(cardName: "Dragon", cardType: .token, specificSet: "TCLB"))
-            
-            selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
-            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-            
-            selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
-            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-            
-            selectedDeckListNumber = DeckSelectionNumber.deckList
-            
-        }
-    }
-    
-    func saveDeck() {
-        // The whole deck is stored in a String, like a text file
-        let deckData: String = getDeckDataString()
-        print(deckData)
-        
-        UserDefaults.standard.set(deckData, forKey: "Deck_\(deckId)")
-    }
-    
-    func getDeckDataString() -> String {
-        var deckData: String = ""
-        
-        deckData.append(DeckDataPattern.deck)
-        deckData.append("\n")
-        for card in deck.deckList.creatures {
-            deckData.append(getCardDataString(card: card))
-        }
-        deckData.append("\n")
-        for card in deck.deckList.artifactsAndEnchantments {
-            deckData.append(getCardDataString(card: card))
-        }
-        deckData.append("\n")
-        for card in deck.deckList.instantsAndSorceries {
-            deckData.append(getCardDataString(card: card))
-        }
-        deckData.append("\n")
-        for card in deck.deckList.tokens {
-            deckData.append(getCardDataString(card: card))
-        }
-        
-        deckData.append("\n")
-        deckData.append(DeckDataPattern.tooStrong)
-        deckData.append("\n")
-        for card in deck.tooStrongPermanentsList {
-            deckData.append(getCardDataString(card: card))
-        }
-        
-        deckData.append("\n")
-        deckData.append(DeckDataPattern.availableTokens)
-        deckData.append("\n")
-        for card in deck.availableTokensList {
-            deckData.append(getCardDataString(card: card))
-        }
-        
-        deckData.append("\n")
-        deckData.append(DeckDataPattern.weakPermanents)
-        deckData.append("\n")
-        for card in deck.weakPermanentsList {
-            deckData.append(getCardDataString(card: card))
-        }
-        
-        deckData.append("\n")
-        deckData.append(DeckDataPattern.powerfullPermanents)
-        deckData.append("\n")
-        for card in deck.powerfullPermanentsList {
-            deckData.append(getCardDataString(card: card))
-        }
-        
-        return deckData
-    }
-    
-    func getCardDataString(card: Card) -> String {
-        // For tokens we remove the set from the name
-        let cardName = card.cardType == .token ? card.cardName.replacingOccurrences(of: card.specificSet, with: "") : card.cardName
-        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(card.hasFlashback ? DeckDataPattern.cardHaveFlashback : DeckDataPattern.cardDontHaveFlashback) \(cardName)\n"
-        return cardData
     }
     
     func changeSelectedDeckTo(newSelectedDeck: Int) {
@@ -177,54 +55,7 @@ class DeckEditorViewModel: ObservableObject {
             }
         }
     }
-    
-    func searchCardsFor(text: String, searchingForTokens: Bool) {
-        
-        if text == "" {
-            return
-        }
-        self.searchResult = []
-        self.searchProgressInfo = "Searching ..."
-        
-        let scryfallSearchApi = "https://api.scryfall.com/cards/search?q=\(text.replacingOccurrences(of: " ", with: "+"))\(searchingForTokens ? "+type%3Atoken" : "")"
-        print(scryfallSearchApi)
-        
-        if let url = URL(string: scryfallSearchApi) {
-            let urlSession = URLSession(configuration: .default).dataTask(with: url) { (data, response, error) in
-                if let error = error {
-                    print(error)
-                }
-                
-                if let data = data {
-                    do {
-                        let decodedData: ScryfallQuerry = try JSONDecoder().decode(ScryfallQuerry.self,
-                                                                   from: data)
-                        DispatchQueue.main.async {
-                            if decodedData.data != nil {
-                                decodedData.data!.forEach {
-                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), specificSet: $0.set ?? "", manaCost: $0.mana_cost ?? ""))
-                                }
-                            }
-                            self.searchProgressInfo = "Nothing found"
-                        }
-                    } catch DecodingError.keyNotFound(let key, let context) {
-                        Swift.print("could not find key \(key) in JSON: \(context.debugDescription)")
-                    } catch DecodingError.valueNotFound(let type, let context) {
-                        Swift.print("could not find type \(type) in JSON: \(context.debugDescription)")
-                    } catch DecodingError.typeMismatch(let type, let context) {
-                        Swift.print("type mismatch for type \(type) in JSON: \(context.debugDescription)")
-                    } catch DecodingError.dataCorrupted(let context) {
-                        Swift.print("data found to be corrupted in JSON: \(context.debugDescription)")
-                    } catch let error as NSError {
-                        NSLog("Error in read(from:ofType:) domain= \(error.domain), description= \(error.localizedDescription)")
-                    }
-                }
-            }
-            
-            urlSession.resume()
-        }
-    }
-    
+       
     func getCardTypeFromTypeLine(typeLine: String) -> CardType {
         if typeLine.contains("oken") {
             return CardType.token
@@ -325,7 +156,7 @@ class DeckEditorViewModel: ObservableObject {
             }
         } else {
             
-            // We can't add a token that is already in the mhorde decklist, this array is just for the tokens spawned by horde's spells
+            // We can't add a token that is already in the horde decklist, this array is just for the tokens spawned by horde's spells
             if selectedDeckListNumber == DeckSelectionNumber.availableTokensList && deck.deckList.tokens.contains(card) {
                 return
             }
@@ -435,6 +266,167 @@ class DeckEditorViewModel: ObservableObject {
         return tmpArray
     }
     
+    func getAllDecksInMainDeckList() -> [[Card]] {
+        return [deck.deckList.creatures, deck.deckList.artifactsAndEnchantments, deck.deckList.instantsAndSorceries, deck.deckList.tokens]
+    }
+    
+    struct DeckSelectionNumber {
+        static let deckList = 1
+        static let tooStrongPermanentsList = 2
+        static let availableTokensList = 3
+        static let weakPermanentsList = 4
+        static let powerfullPermanentsList = 5
+    }
+    
+    struct DeckDataPattern {
+        static let deck = "## Horde Deck ##"
+        static let tooStrong = "## Too Strong ##"
+        static let availableTokens = "## Available Tokens ##"
+        static let weakPermanents = "## Weak Permanents ##"
+        static let powerfullPermanents = "## Powerfull Permanents ##"
+        static let cardHaveFlashback = "YES"
+        static let cardDontHaveFlashback = "NO"
+    }
+}
+
+// MARK: LOAD & SAVE
+extension DeckEditorViewModel {
+    func loadExistingDeck() {
+        let deckData: String = UserDefaults.standard.object(forKey: "Deck_\(deckId)") as? String ?? ""
+        
+        if deckData != "" {
+            let allLines = deckData.components(separatedBy: "\n")
+            
+            for line in allLines {
+                if line != "" {
+                    // Change current decklist to add cards to
+                    if line == DeckDataPattern.deck {
+                        selectedDeckListNumber = DeckSelectionNumber.deckList
+                    } else if line == DeckDataPattern.tooStrong {
+                        selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
+                    } else if line == DeckDataPattern.availableTokens {
+                        selectedDeckListNumber = DeckSelectionNumber.availableTokensList
+                    } else if line == DeckDataPattern.weakPermanents {
+                        selectedDeckListNumber = DeckSelectionNumber.weakPermanentsList
+                    } else if line == DeckDataPattern.powerfullPermanents {
+                        selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
+                    } else
+                    {
+                        // Or add card if its a card
+                        let cardDataArray = line.components(separatedBy: " ")
+                        
+                        let cardCount = Int(cardDataArray[0]) ?? 0
+                        var cardName = cardDataArray[4]
+                        for i in 5..<cardDataArray.count - 2 {
+                            cardName += " " + cardDataArray[i]
+                        }
+                        
+                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardDataArray[3] == DeckDataPattern.cardHaveFlashback, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
+                        card.cardCount = cardCount
+                        addCardToSelectedDeck(card: card, onlyAddOne: false)
+                    }
+                }
+            }
+            selectedDeckListNumber = DeckSelectionNumber.deckList
+        } else {
+            /*
+            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
+            addCardToSelectedDeck(card: Card(cardName: "Death by Dragons", cardType: .sorcery, specificSet: "cma"))
+            addCardToSelectedDeck(card: Card(cardName: "Dragon Appeasement", cardType: .enchantment, specificSet: "ARB"))
+            addCardToSelectedDeck(card: Card(cardName: "Ancient Copper Dragon", cardType: .creature, hasFlashback: true, specificSet: "CLB"))
+            addCardToSelectedDeck(card: Card(cardName: "Cat Dragon", cardType: .token, specificSet: "T2X2"))
+            addCardToSelectedDeck(card: Card(cardName: "Dragon", cardType: .token, specificSet: "TCLB"))
+            
+            selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
+            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
+            
+            selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
+            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
+            
+            selectedDeckListNumber = DeckSelectionNumber.deckList
+            */
+        }
+    }
+    
+    func saveDeck() {
+        // The whole deck is stored in a String, like a text file
+        let deckData: String = getDeckDataString()
+        print(deckData)
+        
+        UserDefaults.standard.set(deckData, forKey: "Deck_\(deckId)")
+    }
+    
+    func getDeckDataString() -> String {
+        var deckData: String = ""
+        
+        deckData.append(DeckDataPattern.deck)
+        deckData.append("\n")
+        for card in deck.deckList.creatures {
+            deckData.append(getCardDataString(card: card))
+        }
+        deckData.append("\n")
+        for card in deck.deckList.artifactsAndEnchantments {
+            deckData.append(getCardDataString(card: card))
+        }
+        deckData.append("\n")
+        for card in deck.deckList.instantsAndSorceries {
+            deckData.append(getCardDataString(card: card))
+        }
+        deckData.append("\n")
+        for card in deck.deckList.tokens {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        deckData.append("\n")
+        deckData.append(DeckDataPattern.tooStrong)
+        deckData.append("\n")
+        for card in deck.tooStrongPermanentsList {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        deckData.append("\n")
+        deckData.append(DeckDataPattern.availableTokens)
+        deckData.append("\n")
+        for card in deck.availableTokensList {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        deckData.append("\n")
+        deckData.append(DeckDataPattern.weakPermanents)
+        deckData.append("\n")
+        for card in deck.weakPermanentsList {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        deckData.append("\n")
+        deckData.append(DeckDataPattern.powerfullPermanents)
+        deckData.append("\n")
+        for card in deck.powerfullPermanentsList {
+            deckData.append(getCardDataString(card: card))
+        }
+        
+        return deckData
+    }
+    
+    func getCardDataString(card: Card) -> String {
+        // For tokens we remove the set from the name
+        let cardName = card.cardType == .token ? card.cardName.replacingOccurrences(of: card.specificSet, with: "") : card.cardName
+        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(card.hasFlashback ? DeckDataPattern.cardHaveFlashback : DeckDataPattern.cardDontHaveFlashback) \(cardName) \(card.cardOracleId) \(card.cardId)\n"
+        return cardData
+    }
+}
+
+// MARK: BUTTONS
+extension DeckEditorViewModel {
+    func showCard(card: Card) {
+        let tmpCard = card.recreateCard()
+        tmpCard.cardCount = 1
+        cardToShow = tmpCard
+        
+        // Start searching for card reprint
+        searchForCardReprints(card: card)
+    }
+    
     func isRemoveOneCardButtonEnable() -> Bool {
         if cardToShow == nil {
             return false
@@ -458,26 +450,103 @@ class DeckEditorViewModel: ObservableObject {
         let deckSelected = getSelectedDeck(card: cardToShow)
         return deckSelected[deckSelected.firstIndex(of: cardToShow!)!].cardCount == 1
     }
-    
-    func getAllDecksInMainDeckList() -> [[Card]] {
-        return [deck.deckList.creatures, deck.deckList.artifactsAndEnchantments, deck.deckList.instantsAndSorceries, deck.deckList.tokens]
+}
+
+// MARK: QUERRY
+extension DeckEditorViewModel {
+    func searchCardsFor(text: String, searchingForTokens: Bool) {
+        
+        if text == "" {
+            return
+        }
+        self.searchResult = []
+        self.searchProgressInfo = "Searching ..."
+        
+        let scryfallSearchApi = "https://api.scryfall.com/cards/search?q=\(text.replacingOccurrences(of: " ", with: "+"))\(searchingForTokens ? "+type%3Atoken" : "")"
+        //print(scryfallSearchApi)
+        
+        if let url = URL(string: scryfallSearchApi) {
+            let urlSession = URLSession(configuration: .default).dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    print(error)
+                }
+                
+                if let data = data {
+                    do {
+                        let decodedData: ScryfallQuerry = try JSONDecoder().decode(ScryfallQuerry.self,
+                                                                   from: data)
+                        DispatchQueue.main.async {
+                            if decodedData.data != nil {
+                                decodedData.data!.forEach {
+                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
+                                }
+                            }
+                            self.searchProgressInfo = "Nothing found"
+                        }
+                    } catch DecodingError.keyNotFound(let key, let context) {
+                        Swift.print("could not find key \(key) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.valueNotFound(let type, let context) {
+                        Swift.print("could not find type \(type) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.typeMismatch(let type, let context) {
+                        Swift.print("type mismatch for type \(type) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.dataCorrupted(let context) {
+                        Swift.print("data found to be corrupted in JSON: \(context.debugDescription)")
+                    } catch let error as NSError {
+                        NSLog("Error in read(from:ofType:) domain= \(error.domain), description= \(error.localizedDescription)")
+                    }
+                }
+            }
+            
+            urlSession.resume()
+        }
     }
-    
-    struct DeckSelectionNumber {
-        static let deckList = 1
-        static let tooStrongPermanentsList = 2
-        static let availableTokensList = 3
-        static let weakPermanentsList = 4
-        static let powerfullPermanentsList = 5
-    }
-    
-    struct DeckDataPattern {
-        static let deck = "## Horde Deck ##"
-        static let tooStrong = "## Too Strong ##"
-        static let availableTokens = "## Available Tokens ##"
-        static let weakPermanents = "## Weak Permanents ##"
-        static let powerfullPermanents = "## Powerfull Permanents ##"
-        static let cardHaveFlashback = "YES"
-        static let cardDontHaveFlashback = "NO"
+
+    // Add to cardToShowReprints every print of the cardToShow card except the one from cardToShow
+    func searchForCardReprints(card: Card) {
+
+        if card.cardOracleId == "" {
+            return
+        }
+        
+        cardToShowReprints = []
+        
+        let scryfallSearchUrl = "https://api.scryfall.com/cards/search?order=released&q=oracleid%3A\(card.cardOracleId)&unique=prints"
+        print(scryfallSearchUrl)
+        
+        if let url = URL(string: scryfallSearchUrl) {
+            let urlSession = URLSession(configuration: .default).dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    print(error)
+                }
+                
+                if let data = data {
+                    do {
+                        let decodedData: ScryfallQuerry = try JSONDecoder().decode(ScryfallQuerry.self,
+                                                                   from: data)
+                        DispatchQueue.main.async {
+                            if decodedData.data != nil {
+                                decodedData.data!.forEach {
+                                    if ($0.set ?? "").uppercased() != card.specificSet.uppercased() {
+                                        self.cardToShowReprints.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
+                                    }
+                                }
+                            }
+                        }
+                    } catch DecodingError.keyNotFound(let key, let context) {
+                        Swift.print("could not find key \(key) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.valueNotFound(let type, let context) {
+                        Swift.print("could not find type \(type) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.typeMismatch(let type, let context) {
+                        Swift.print("type mismatch for type \(type) in JSON: \(context.debugDescription)")
+                    } catch DecodingError.dataCorrupted(let context) {
+                        Swift.print("data found to be corrupted in JSON: \(context.debugDescription)")
+                    } catch let error as NSError {
+                        NSLog("Error in read(from:ofType:) domain= \(error.domain), description= \(error.localizedDescription)")
+                    }
+                }
+            }
+            
+            urlSession.resume()
+        }
     }
 }

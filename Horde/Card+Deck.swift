@@ -17,13 +17,17 @@ class Card: Hashable, Identifiable {
     var cardUIImage: Image = Image("BackgroundTest")
     var hasFlashback: Bool
     let specificSet: String
+    let cardOracleId: String    // Unique id of a card but same for each reprints
+    let cardId: String          // Unique id of card and unique between reprints
     @Published var cardCount: Int = 1
     
-    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("MTGBackground"), hasFlashback: Bool = false, specificSet: String = ""){
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("MTGBackground"), hasFlashback: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = ""){
         self.cardType = cardType
         self.hasFlashback = hasFlashback
         self.cardUIImage = cardUIImage
         self.specificSet = specificSet.uppercased()
+        self.cardOracleId = cardOracleId
+        self.cardId = cardId
         
         // Remove after "//" in name, example : "Amethyst Dragon // Explosive Crystal" -> only keep Amethyst Dragon
         var cardNameString = ""
@@ -34,10 +38,12 @@ class Card: Hashable, Identifiable {
         } else {
             cardNameString = "\(cardName)"
         }
-        self.cardName = "\(cardNameString)\(cardType == .token ? " \(specificSet.uppercased())" : "")"
+        cardNameString = cardNameString.trimmingCharacters(in: .whitespacesAndNewlines)
+        //self.cardName = "\(cardNameString)\(cardType == .token && !cardName.contains(specificSet) ?
+        self.cardName = cardNameString
         
         if cardImageURL == "get-on-scryfall" {
-            self.cardImageURL = Card.getScryfallImageUrl(name: cardName, specifiSet: specificSet)
+            self.cardImageURL = Card.getScryfallImageUrl(id: cardId, specifiSet: specificSet)
         } else {
             self.cardImageURL = cardImageURL
         }
@@ -52,12 +58,13 @@ class Card: Hashable, Identifiable {
     }
     
     func recreateCard() -> Card {
-        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, hasFlashback: self.hasFlashback, specificSet: self.specificSet)
+        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, hasFlashback: self.hasFlashback, specificSet: self.specificSet, cardOracleId: self.cardOracleId, cardId: self.cardId)
         tmpCard.cardCount = self.cardCount
         tmpCard.cardUIImage = self.cardUIImage
         return tmpCard
     }
     
+    // NEED CHANGE TO USE getUrlCardName
     static func getScryfallImageUrl(name: String, specifiSet: String = "") -> String {
         let cardResolution = "normal"
         //let cardNameForUrl = name.replacingOccurrences(of: " ", with: "+")
@@ -75,14 +82,40 @@ class Card: Hashable, Identifiable {
         print(url)
         return url
     }
+    
+    static func getScryfallImageUrl(id: String, specifiSet: String = "") -> String {
+        let cardResolution = "normal"
+        let url = "https://api.scryfall.com/cards/\(id)?format=img&version=\(cardResolution)"
+
+        print(url)
+        return url
+    }
+    
+    func getUrlCardName() -> String {
+        var cardNameForUrl = self.cardName
+        /*
+        if self.cardType == .token {
+            cardNameForUrl = cardNameForUrl
+                .replacingOccurrences(of: " \(self.specificSet)", with: "")
+        }*/
+        
+        cardNameForUrl = cardNameForUrl
+            .replacingOccurrences(of: " ", with: "-")
+            .replacingOccurrences(of: "\"", with: "")
+            .replacingOccurrences(of: ",", with: "")
+            .replacingOccurrences(of: "'", with: "")
+            
+        
+        return cardNameForUrl
+    }
 }
 
 class CardFromCardSearch: Card {
     let manaCost: String
     
-    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, specificSet: String = "", manaCost: String){
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = "", manaCost: String){
         self.manaCost = manaCost
-        super.init(cardName: cardName, cardType: cardType, cardImageURL: cardImageURL, cardUIImage: cardUIImage, hasFlashback: hasFlashback, specificSet: specificSet)
+        super.init(cardName: cardName, cardType: cardType, cardImageURL: cardImageURL, cardUIImage: cardUIImage, hasFlashback: hasFlashback, specificSet: specificSet, cardOracleId: cardOracleId, cardId: cardId)
     }
     
     // From {3}{R}{W} to ["3", "R", "W"]
