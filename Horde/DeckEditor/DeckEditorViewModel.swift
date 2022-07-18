@@ -450,6 +450,10 @@ extension DeckEditorViewModel {
         let deckSelected = getSelectedDeck(card: cardToShow)
         return deckSelected[deckSelected.firstIndex(of: cardToShow!)!].cardCount == 1
     }
+    
+    func isDeckTooStrongSelected() -> Bool {
+        return selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList
+    }
 }
 
 // MARK: QUERRY

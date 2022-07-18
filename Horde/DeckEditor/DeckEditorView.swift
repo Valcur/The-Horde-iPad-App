@@ -14,37 +14,16 @@ struct DeckEditorView: View {
     
     var body: some View {
         GeometryReader { _ in
-            ZStack {
-                HStack(spacing: 0) {
+            ZStack(alignment: .leading) {
+                RightPanelView()
+                if !deckEditorViewModel.isDeckTooStrongSelected() {
                     LeftPanelView()
-                    if deckEditorViewModel.selectedDeckListNumber != DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList {
-                        RightPanelView()
-                            .frame(width: CardSize.width.normal + 80)
-                            .transition(.move(edge: .trailing))
-                    }
+                        .frame(width: EditorSize.cardSearchPanelWidth)
+                        .transition(.move(edge: .leading))
                 }
                 DeckEditorInfoView().opacity(deckEditorViewModel.showDeckEditorInfoView ? 1 : 0)
             }
         }.ignoresSafeArea()
-    }
-}
-
-struct LeftPanelView: View {
-    
-    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
-    
-    var body: some View {
-        ZStack {
-            GradientView(gradientId: hordeAppViewModel.gradientId)
-            VStack {
-                BottomControlRowView()
-                TopControlRowView()
-                Spacer()
-                DeckListView()
-                Spacer()
-
-            }.ignoresSafeArea()
-        }
     }
 }
 
@@ -55,9 +34,27 @@ struct RightPanelView: View {
     
     var body: some View {
         ZStack {
-            Color.black
             GradientView(gradientId: hordeAppViewModel.gradientId)
-                .opacity(0.8)
+            VStack {
+                BottomControlRowView().padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth)
+                TopControlRowView().padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth)
+                Spacer()
+                DeckListView()
+                Spacer()
+
+            }.ignoresSafeArea()
+        }
+    }
+}
+
+struct LeftPanelView: View {
+    
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    
+    var body: some View {
+        ZStack {
+            VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
             
             if deckEditorViewModel.cardToShow == nil {
                 CardSearchView()//.padding(10)
@@ -206,7 +203,9 @@ struct CardShowView: View {
                                 .cornerRadius(CardSize.cornerRadius.normal)
                                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
                         }
-                    }.clipShape(RoundedRectangle(cornerRadius: 15))
+                    }.onChange(of: deckEditorViewModel.cardToShow) { _ in
+                        index = 0
+                    }
                     
                     // Add or Remove to selected deck
                     HStack {
@@ -491,7 +490,7 @@ struct DeckListView: View {
                             CardOnDeckListView(card: card)
                         }).transition(.scale.combined(with: .opacity))
                     }
-                }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
+                }.padding(.trailing, 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2).padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth + 10)
             }
         }
     }
@@ -516,7 +515,7 @@ struct CardToShowCarouselView<Content>: View where Content: View {
         ZStack(alignment: .bottom) {
             GeometryReader { geometry in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 0) {
+                    LazyHStack(spacing: 10) {
                         self.content()
                             .frame(width: geometry.size.width, height: geometry.size.height)
                             .clipped()
@@ -547,9 +546,9 @@ struct CardToShowCarouselView<Content>: View where Content: View {
 
     func offset(in geometry: GeometryProxy) -> CGFloat {
         if self.dragging {
-            return max(min(self.offset, 0), -CGFloat(self.maxIndex) * geometry.size.width)
+            return max(min(self.offset, 0), -CGFloat(self.maxIndex) * (geometry.size.width + 10))
         } else {
-            return -CGFloat(self.index) * geometry.size.width
+            return -CGFloat(self.index) * (geometry.size.width + 10)
         }
     }
 
@@ -601,10 +600,10 @@ struct DeckListMainDeckView: View {
                                 CardOnDeckListView(card: card)
                             }).transition(.scale.combined(with: .opacity))
                         }
-                    }.padding([.leading, .trailing], 10)
+                    }.padding(.trailing, 10)
                 }
             }
-        }
+        }.padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth + 10)
     }
 }
 
@@ -626,10 +625,10 @@ struct DeckListTooStrongView: View {
                                     .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
                             })
                         }
-                    }.padding([.leading, .trailing], 10)
+                    }.padding(.trailing, 10)
                 }
             }
-        }
+        }.padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth + 10)
     }
 }
 
@@ -678,4 +677,8 @@ struct DeckEditorView_Previews: PreviewProvider {
                 .environmentObject(DeckEditorViewModel())
         }
     }
+}
+
+struct EditorSize {
+    static let cardSearchPanelWidth: CGFloat = CardSize.width.normal + 80
 }
