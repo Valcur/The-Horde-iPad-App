@@ -14,12 +14,14 @@ struct DeckEditorView: View {
     
     var body: some View {
         GeometryReader { _ in
-            ZStack(alignment: .leading) {
-                RightPanelView()
-                if !deckEditorViewModel.isDeckTooStrongSelected() {
-                    LeftPanelView()
-                        .frame(width: EditorSize.cardSearchPanelWidth)
-                        .transition(.move(edge: .leading))
+            ZStack {
+                HStack(spacing: 0){
+                    if !deckEditorViewModel.isDeckTooStrongSelected() {
+                        LeftPanelView()
+                            .frame(width: EditorSize.cardSearchPanelWidth)
+                            .transition(.move(edge: .leading))
+                    }
+                    RightPanelView()
                 }
                 DeckEditorInfoView().opacity(deckEditorViewModel.showDeckEditorInfoView ? 1 : 0)
             }
@@ -36,8 +38,8 @@ struct RightPanelView: View {
         ZStack {
             GradientView(gradientId: hordeAppViewModel.gradientId)
             VStack {
-                BottomControlRowView().padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth)
-                TopControlRowView().padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth)
+                BottomControlRowView()
+                TopControlRowView()
                 Spacer()
                 DeckListView()
                 Spacer()
@@ -54,7 +56,8 @@ struct LeftPanelView: View {
     
     var body: some View {
         ZStack {
-            VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
+            GradientView(gradientId: hordeAppViewModel.gradientId)
+            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
             
             if deckEditorViewModel.cardToShow == nil {
                 CardSearchView()//.padding(10)
@@ -191,21 +194,19 @@ struct CardShowView: View {
                     CardToShowCarouselView(index: $index.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
                         if deckEditorViewModel.cardToShow != nil {
                             CardView(card: deckEditorViewModel.cardToShow!)
-                                //.frame(width: CardSize.width.normal, height: CardSize.height.normal)
                                 .aspectRatio(contentMode: .fit)
-                                .cornerRadius(CardSize.cornerRadius.normal)
+                                .cornerRadius(CardSize.cornerRadius.normal * 1.2)
                                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
                         }
                         ForEach(deckEditorViewModel.cardToShowReprints.indices, id: \.self) { i in
                             CardView(card: deckEditorViewModel.cardToShowReprints[i], downloadDelay: i)
-                                //.frame(width: CardSize.width.normal, height: CardSize.height.normal)
                                 .aspectRatio(contentMode: .fit)
-                                .cornerRadius(CardSize.cornerRadius.normal)
+                                .cornerRadius(CardSize.cornerRadius.normal * 1.2)
                                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
                         }
                     }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                         index = 0
-                    }
+                    }//.allowsHitTesting(false)
                     
                     // Add or Remove to selected deck
                     HStack {
@@ -490,7 +491,7 @@ struct DeckListView: View {
                             CardOnDeckListView(card: card)
                         }).transition(.scale.combined(with: .opacity))
                     }
-                }.padding(.trailing, 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2).padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth + 10)
+                }.padding([.leading, .trailing], 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
             }
         }
     }
@@ -600,10 +601,10 @@ struct DeckListMainDeckView: View {
                                 CardOnDeckListView(card: card)
                             }).transition(.scale.combined(with: .opacity))
                         }
-                    }.padding(.trailing, 10)
+                    }.padding([.leading, .trailing], 10)
                 }
             }
-        }.padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth + 10)
+        }
     }
 }
 
@@ -625,10 +626,10 @@ struct DeckListTooStrongView: View {
                                     .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
                             })
                         }
-                    }.padding(.trailing, 10)
+                    }.padding([.leading, .trailing], 10)
                 }
             }
-        }.padding(.leading, deckEditorViewModel.isDeckTooStrongSelected() ? 0 : EditorSize.cardSearchPanelWidth + 10)
+        }
     }
 }
 
