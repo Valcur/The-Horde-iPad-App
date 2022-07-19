@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class DeckEditorViewModel: ObservableObject {
     
@@ -96,36 +97,37 @@ class DeckEditorViewModel: ObservableObject {
     }
     
     func saveToSelectedDeck(deckSelected: [Card], card: Card? = nil) {
+        let sortedDeckSelected = deckSelected.sorted { $0.cardName < $1.cardName }
         if selectedDeckListNumber == DeckSelectionNumber.deckList
         {
             if card ==  nil {
                 return
             }
             if card!.cardType == .creature {
-                deck.deckList.creatures = deckSelected
+                deck.deckList.creatures = sortedDeckSelected
             } else  if card!.cardType == .token {
-                deck.deckList.tokens = deckSelected
+                deck.deckList.tokens = sortedDeckSelected
             } else if card!.cardType == .instant || card!.cardType == .sorcery {
-                deck.deckList.instantsAndSorceries = deckSelected
+                deck.deckList.instantsAndSorceries = sortedDeckSelected
             } else {
-                deck.deckList.artifactsAndEnchantments = deckSelected
+                deck.deckList.artifactsAndEnchantments = sortedDeckSelected
             }
         }
         else if selectedDeckListNumber == DeckSelectionNumber.tooStrongPermanentsList
         {
-            deck.tooStrongPermanentsList = deckSelected
+            deck.tooStrongPermanentsList = sortedDeckSelected
         }
         else if selectedDeckListNumber == DeckSelectionNumber.availableTokensList
         {
-            deck.availableTokensList = deckSelected
+            deck.availableTokensList = sortedDeckSelected
         }
         else if selectedDeckListNumber == DeckSelectionNumber.weakPermanentsList
         {
-            deck.weakPermanentsList = deckSelected
+            deck.weakPermanentsList = sortedDeckSelected
         }
         else if selectedDeckListNumber == DeckSelectionNumber.powerfullPermanentsList
         {
-            deck.powerfullPermanentsList = deckSelected
+            deck.powerfullPermanentsList = sortedDeckSelected
         }
     }
     
@@ -195,6 +197,35 @@ class DeckEditorViewModel: ObservableObject {
         }
     }
     
+    // If cardToShow is in the selected deck, change the flashback boolean
+    func changeCardFlashbackFromSelectedDeck(card : Card, newFlashbackValue: Bool) {
+        
+        var deckSelected = getSelectedDeck(card: card)
+        
+        if selectedDeckListNumber == DeckSelectionNumber.deckList
+        {
+            if deckSelected.contains(card) {
+                
+                let tmpCard = deckSelected[deckSelected.firstIndex(of: card)!].recreateCard()
+                tmpCard.hasFlashback = newFlashbackValue
+                
+                // Remove
+                deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected, removeCompletely: true)
+                saveToSelectedDeck(deckSelected: deckSelected, card: card)
+                
+                // Add
+                addCardToSelectedDeck(card: tmpCard, onlyAddOne: false)
+                saveToSelectedDeck(deckSelected: getSelectedDeck(card: tmpCard), card: tmpCard)
+                
+                // Changing main deck type change in tooStrong at the same time
+                deck.tooStrongPermanentsList = changeCardFlashbackValueFromSpecificDeck(card: card, newCardFlashbackValue: newFlashbackValue, deck: deck.tooStrongPermanentsList)
+            }
+        } else {
+            deckSelected = changeCardFlashbackValueFromSpecificDeck(card: card, newCardFlashbackValue: newFlashbackValue, deck: deckSelected)
+            saveToSelectedDeck(deckSelected: deckSelected)
+        }
+    }
+    
     func removeCardFromSpecificDeck(card : Card, deck: [Card], removeCompletely: Bool = false) -> [Card] {
         var tmpArray = deck
         for i in 0..<tmpArray.count {
@@ -223,6 +254,18 @@ class DeckEditorViewModel: ObservableObject {
         for i in 0..<tmpArray.count {
             if tmpArray[i] == card {
                 tmpArray[i].cardType = newCardType
+                
+                return tmpArray
+            }
+        }
+        return deck
+    }
+    
+    func changeCardFlashbackValueFromSpecificDeck(card : Card, newCardFlashbackValue: Bool, deck: [Card]) -> [Card] {
+        let tmpArray = deck
+        for i in 0..<tmpArray.count {
+            if tmpArray[i] == card {
+                tmpArray[i].hasFlashback = newCardFlashbackValue
                 
                 return tmpArray
             }
@@ -557,5 +600,21 @@ extension DeckEditorViewModel {
             
             urlSession.resume()
         }
+    }
+}
+
+// MARK: DECKINFO
+extension DeckEditorViewModel {
+    
+    func saveImage(image: UIImage) {
+        guard let data = image.jpegData(compressionQuality: 0.5) else { return }
+        let encoded = try! PropertyListEncoder().encode(data)
+        UserDefaults.standard.set(encoded, forKey: "Deck_\(deckId)_Image")
+    }
+
+    func loadImage() -> UIImage? {
+         guard let data = UserDefaults.standard.data(forKey: "Deck_\(deckId)_Image") else { return nil }
+         let decoded = try! PropertyListDecoder().decode(Data.self, from: data)
+         return UIImage(data: decoded)
     }
 }

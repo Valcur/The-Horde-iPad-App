@@ -177,6 +177,7 @@ struct CardShowView: View {
     @State var card: Card
     @State var cardType: CardType
     @State var index = 0
+    @State var hasCardFlashback: Bool
     
     private let gradient = Gradient(colors: [Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.3), Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.0)])
     
@@ -187,10 +188,11 @@ struct CardShowView: View {
     init(card: Card) {
         self.card = card
         self.cardType = card.cardType
+        self.hasCardFlashback = card.hasFlashback
     }
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             ZStack(alignment: .topLeading) {
                 ZStack(alignment: .bottom) {
                     // Card to show
@@ -266,12 +268,14 @@ struct CardShowView: View {
                 }).padding()
             }
             
-            //Spacer()
-            
             // Select card type
-            MenuTextParagraphView(text: "Change card type").padding(.top, 50)
+            Text("Change card type")
+                .foregroundColor(.white)
+                .font(.title3)
+                .padding(.top, 50)
+                .padding(.leading, 20)
             
-            VStack(spacing: 10) {
+            VStack(spacing: 0) {
                 HStack {
                     CardShowTypeSelectorView(text: "Creature", cardType: .creature, card: selectedCard, cardShowedcardType: $cardType)
                     CardShowTypeSelectorView(text: "Token", cardType: .token, card: selectedCard, cardShowedcardType: $cardType)
@@ -286,8 +290,10 @@ struct CardShowView: View {
                 }
             }.padding().onChange(of: card) { _ in
                 self.cardType = selectedCard.cardType
+                self.hasCardFlashback = selectedCard.hasFlashback
             }.onChange(of: index) { _ in
                 self.cardType = selectedCard.cardType
+                self.hasCardFlashback = selectedCard.hasFlashback
             }.onChange(of: cardType) { _ in
                 self.card.cardType = cardType
             }.onChange(of: deckEditorViewModel.cardToShow) { _ in
@@ -296,13 +302,23 @@ struct CardShowView: View {
                 }
             }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
                 self.cardType = selectedCard.cardType
+                self.hasCardFlashback = selectedCard.hasFlashback
             }
             
             // Enable/Disable flashback
             
-            Toggle("Should this card be cast by the Horde from graveyard ? (like flashback)", isOn: $card.hasFlashback)
-                .foregroundColor(.white)
-                .padding()
+            Toggle(isOn: $hasCardFlashback) {
+                VStack(alignment: .leading) {
+                    Text("Cast from graveyard")
+                        .foregroundColor(.white)
+                        .font(.title3)
+                    Text("like flashback")
+                        .foregroundColor(.white)
+                        .font(.subheadline)
+                }
+            }.onChange(of: hasCardFlashback) { _ in
+                deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
+            }.padding(20)
             
             Spacer()
             
@@ -310,6 +326,9 @@ struct CardShowView: View {
     }
     
     func getSelectedCardFromCarousel() -> Card {
+        if deckEditorViewModel.cardToShow == nil {
+            return Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR")
+        }
         if index == 0 || deckEditorViewModel.cardToShowReprints.count == 0 {
             return deckEditorViewModel.cardToShow!.recreateCard()
         }
@@ -337,7 +356,7 @@ struct CardShowTypeSelectorView: View {
                 .fontWeight(.bold)
                 .font(.title3)
                 .foregroundColor(cardShowedcardType == cardType ? .white : .gray)
-        }).frame(maxWidth: .infinity)
+        }).frame(maxWidth: .infinity).padding(15)
     }
 }
 

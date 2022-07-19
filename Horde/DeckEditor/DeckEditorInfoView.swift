@@ -11,6 +11,9 @@ struct DeckEditorInfoView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State var changingImage: Bool = false
+    @State private var showingImagePicker = false
+    @State private var inputImage: UIImage?
+    @State private var image: Image = Image("Dinosaur")
     @State var deckName: String = "Deck Name"
     @State var deckIntro: String = ""
     @State var deckRules: String = "All creatures controlled by the Horde have haste and abe  ze hz gze hag ag zg gazhr g aghrg ah hage ra gh aeg ahegrh aeghg aher haeg aehr ae rgae hrgae ae rhae g ahgr aegrhagr ef eufg hs hgdsf h"
@@ -21,18 +24,34 @@ struct DeckEditorInfoView: View {
     
     var body: some View {
         ZStack {
-            Image("Dinosaur")
+            
+            image
                 .resizable()
                 .scaledToFill()
                 .frame(height: UIScreen.main.bounds.height)
 
-            Button(action: {
-
-            }, label: {
-                Text("Select picture from your library")
-                    .font(.title)
-                    .foregroundColor(.white)
-            }).opacity(changingImage ? 1 : 0)
+            VStack {
+                Spacer()
+                Button(action: {
+                    showingImagePicker = true
+                }, label: {
+                    ZStack {
+                        VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+                        Text("Select picture from your library")
+                            .font(.title3)
+                            .foregroundColor(.white)
+                    }.frame(width: 320, height: 60).cornerRadius(30).shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                    
+                }).opacity(changingImage ? 1 : 0)
+                    .onChange(of: inputImage) { _ in loadImage() }
+                    .sheet(isPresented: $showingImagePicker) {
+                        ImagePicker(image: $inputImage)
+                    }
+                    .onAppear() {
+                        inputImage = deckEditorViewModel.loadImage()
+                        loadImage()
+                    }
+            }.padding(50)
 
             VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)).opacity(changingImage ? 0 : 1)
             
@@ -40,6 +59,12 @@ struct DeckEditorInfoView: View {
                 
                 // Deck Name
                 HStack {
+                    Image(systemName: "pencil")
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                        .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                        .padding()
+                    
                     TextField("", text: $deckName, onCommit: {
 
                     })
@@ -48,13 +73,7 @@ struct DeckEditorInfoView: View {
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                     .padding(.vertical, 10)
-                        
-                    
-                    Image(systemName: "pencil")
-                        .foregroundColor(.white)
-                        .font(.largeTitle)
-                        .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
-                }.padding(.bottom, 50).frame(width: UIScreen.main.bounds.width / 2)
+                }.padding(.bottom, 30).frame(width: UIScreen.main.bounds.width / 2)
                 
                 HStack(spacing: 50) {
                     // Intro
@@ -62,21 +81,24 @@ struct DeckEditorInfoView: View {
                         Text("Intro")
                             .foregroundColor(.white)
                             .fontWeight(.bold)
+                            .font(.title3)
                         
                         HStack {
-                            TextEditor(text: $deckIntro)
-                                .frame(height: 120)
-                                .padding(.vertical)
-                                .foregroundColor(.white)
-                                .font(.title3)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                                .padding(.horizontal, 10)
-                            
                             Image(systemName: "pencil")
                                 .font(.largeTitle)
                                 .foregroundColor(.white)
                                 .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                                .padding()
+                            
+                            TextEditor(text: $deckIntro)
+                                .frame(height: 120)
+                                .padding(.vertical)
+                                .foregroundColor(.white)
+                                .font(.subheadline)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .padding(.horizontal, 10)
+                                .border(.white, width: 2)
                         }
                     }
                     
@@ -86,21 +108,24 @@ struct DeckEditorInfoView: View {
                         Text("Special Rules")
                             .foregroundColor(.white)
                             .fontWeight(.bold)
+                            .font(.title3)
                         
                         HStack {
-                            TextEditor(text: $deckRules)
-                                .frame(height: 120)
-                                .padding(.vertical)
-                                .foregroundColor(.white)
-                                .font(.title3)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                                .padding(.horizontal, 10)
-                            
                             Image(systemName: "pencil")
                                 .font(.largeTitle)
                                 .foregroundColor(.white)
                                 .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
+                                .padding()
+                            
+                            TextEditor(text: $deckRules)
+                                .frame(height: 120)
+                                .padding(.vertical)
+                                .foregroundColor(.white)
+                                .font(.subheadline)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .padding(.horizontal, 10)
+                                .border(.white, width: 2)
                         }
                     }
                 }
@@ -114,7 +139,7 @@ struct DeckEditorInfoView: View {
                     MenuTextTitleView(text: "To deck editor")
                 })
                 Spacer()
-            }.padding([.top], 80).padding(.horizontal, 30).opacity(changingImage ? 0 : 1)
+            }.padding([.top], 50).padding(.horizontal, 30).opacity(changingImage ? 0 : 1)
             
             // Switch between text/image edit mode
             Button(action: {
@@ -128,6 +153,15 @@ struct DeckEditorInfoView: View {
                     .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
             }).position(x: UIScreen.main.bounds.width - 60, y: 50)
         }.ignoresSafeArea()
+    }
+    
+    func loadImage() {
+        guard let inputImage = inputImage else {
+            image = Image("BlackBackground")
+            return
+        }
+        deckEditorViewModel.saveImage(image: inputImage)
+        image = Image(uiImage: inputImage)
     }
 }
 
