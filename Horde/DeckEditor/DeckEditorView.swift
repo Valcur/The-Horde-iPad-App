@@ -180,6 +180,10 @@ struct CardShowView: View {
     
     private let gradient = Gradient(colors: [Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.3), Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.0)])
     
+    private var selectedCard: Card {
+        return deckEditorViewModel.changeCardToFitCardInSelectedDeck(card: self.getSelectedCardFromCarousel())
+    }
+    
     init(card: Card) {
         self.card = card
         self.cardType = card.cardType
@@ -195,18 +199,20 @@ struct CardShowView: View {
                         if deckEditorViewModel.cardToShow != nil {
                             CardView(card: deckEditorViewModel.cardToShow!)
                                 .aspectRatio(contentMode: .fit)
-                                .cornerRadius(CardSize.cornerRadius.normal * 1.2)
+                                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
+                                .cornerRadius(EditorSize.cardToShowCornerRadius)
                                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
                         }
                         ForEach(deckEditorViewModel.cardToShowReprints.indices, id: \.self) { i in
                             CardView(card: deckEditorViewModel.cardToShowReprints[i], downloadDelay: i)
                                 .aspectRatio(contentMode: .fit)
-                                .cornerRadius(CardSize.cornerRadius.normal * 1.2)
+                                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
+                                .cornerRadius(EditorSize.cardToShowCornerRadius)
                                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
                         }
                     }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                         index = 0
-                    }//.allowsHitTesting(false)
+                    }
                     
                     // Add or Remove to selected deck
                     HStack {
@@ -227,6 +233,7 @@ struct CardShowView: View {
                         }).scaleEffect(1.5).disabled(!deckEditorViewModel.isRemoveOneCardButtonEnable())
                         
                         Spacer()
+                        Spacer()
                         
                         Button(action: {
                             if deckEditorViewModel.addCardShouldBeAnimated() {
@@ -246,7 +253,7 @@ struct CardShowView: View {
                     }.offset(y: 20)
                 }.padding(10)
                 
-                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom).frame(height: 60)
+                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom).frame(height: 160)
                 
                 // Return Button
                 Button(action: {
@@ -266,25 +273,29 @@ struct CardShowView: View {
             
             VStack(spacing: 10) {
                 HStack {
-                    CardShowTypeSelectorView(text: "Creature", cardType: .creature, cardShowedcardType: $cardType)
-                    CardShowTypeSelectorView(text: "Token", cardType: .token, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Creature", cardType: .creature, card: selectedCard, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Token", cardType: .token, card: selectedCard, cardShowedcardType: $cardType)
                 }
                 HStack {
-                    CardShowTypeSelectorView(text: "Instant", cardType: .instant, cardShowedcardType: $cardType)
-                    CardShowTypeSelectorView(text: "Sorcery", cardType: .sorcery, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Instant", cardType: .instant, card: selectedCard, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Sorcery", cardType: .sorcery, card: selectedCard, cardShowedcardType: $cardType)
                 }
                 HStack {
-                    CardShowTypeSelectorView(text: "Artifact", cardType: .artifact, cardShowedcardType: $cardType)
-                    CardShowTypeSelectorView(text: "Enchantment", cardType: .enchantment, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Artifact", cardType: .artifact, card: selectedCard, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Enchantment", cardType: .enchantment, card: selectedCard, cardShowedcardType: $cardType)
                 }
             }.padding().onChange(of: card) { _ in
-                self.cardType = self.card.cardType
+                self.cardType = selectedCard.cardType
+            }.onChange(of: index) { _ in
+                self.cardType = selectedCard.cardType
             }.onChange(of: cardType) { _ in
                 self.card.cardType = cardType
             }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                 if deckEditorViewModel.cardToShow != nil {
                     self.card = deckEditorViewModel.cardToShow!
                 }
+            }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
+                self.cardType = selectedCard.cardType
             }
             
             // Enable/Disable flashback
@@ -299,9 +310,10 @@ struct CardShowView: View {
     }
     
     func getSelectedCardFromCarousel() -> Card {
-        if index == 0 {
+        if index == 0 || deckEditorViewModel.cardToShowReprints.count == 0 {
             return deckEditorViewModel.cardToShow!.recreateCard()
         }
+        
         return deckEditorViewModel.cardToShowReprints[index - 1].recreateCard()
     }
 }
@@ -309,14 +321,15 @@ struct CardShowView: View {
 struct CardShowTypeSelectorView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
-    var text: String
-    var cardType: CardType
+    let text: String
+    let cardType: CardType
+    let card: Card
     @Binding var cardShowedcardType: CardType
     
     var body: some View {
         Button(action: {
             withAnimation(.easeInOut(duration: 0.3)) {
-                deckEditorViewModel.changeCardTypeFromSelectedDeck(card: deckEditorViewModel.cardToShow!, newCardType: cardType)
+                deckEditorViewModel.changeCardTypeFromSelectedDeck(card: card, newCardType: cardType)
                 cardShowedcardType = cardType
             }
         }, label: {
@@ -475,23 +488,27 @@ struct DeckListView: View {
     
     var body: some View {
         // Show the current selected list
-        ScrollView(.horizontal, showsIndicators: false) {
-            if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.deckList {
+        if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.deckList {
+            ScrollView(.horizontal, showsIndicators: false) {
                 DeckListMainDeckView()
-                    .animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
-            } else if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList {
+                    .animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
+            }
+        } else if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList {
+            ScrollView(.horizontal, showsIndicators: false) {
                 DeckListTooStrongView()
-                    .animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
-            } else {
-                LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 5), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+                    .animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
+            }
+        } else {
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 10), count: 2), alignment: .top, spacing: 15) {
                     ForEach(deckListToShow) { card in
                         Button(action: {
                             deckEditorViewModel.showCard(card: card)
                         }, label: {
-                            CardOnDeckListView(card: card)
+                            CardOnDeckListView(card: card, showCardCount: !(deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList))
                         }).transition(.scale.combined(with: .opacity))
                     }
-                }.padding([.leading, .trailing], 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).frame(height: CardSize.height.normal * 2)
+                }.padding([.leading, .trailing], 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).padding(.bottom, 10)
             }
         }
     }
@@ -538,10 +555,11 @@ struct CardToShowCarouselView<Content>: View where Content: View {
                         }
                     }
                 )
-            }
+            }.frame(height: EditorSize.cardToShowHeight)
             .clipped()
 
             PageControl(index: $index, maxIndex: maxIndex)
+                .offset(y: 45)
         }
     }
 
@@ -593,7 +611,7 @@ struct DeckListMainDeckView: View {
         HStack(spacing: 80) {
             ForEach(0..<4, id: \.self) { i in
                 if deckEditorViewModel.getAllDecksInMainDeckList()[i].count > 0 {
-                    LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 10), spacing: 20), count: 2), alignment: .top, spacing: 15) {
+                    LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 10), count: 2), alignment: .top, spacing: 15) {
                         ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
                             Button(action: {
                                 deckEditorViewModel.showCard(card: card)
@@ -601,7 +619,7 @@ struct DeckListMainDeckView: View {
                                 CardOnDeckListView(card: card)
                             }).transition(.scale.combined(with: .opacity))
                         }
-                    }.padding([.leading, .trailing], 10)
+                    }.padding([.leading, .trailing], 10).padding(.bottom, 10)
                 }
             }
         }
@@ -616,7 +634,7 @@ struct DeckListTooStrongView: View {
         HStack(spacing: 80) {
             ForEach(0..<4, id: \.self) { i in
                 if deckEditorViewModel.getAllDecksInMainDeckList()[i].count > 0 {
-                    LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal - 10), spacing: 20), count: 2), alignment: .top, spacing: 15) {
+                    LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 10), count: 2), alignment: .top, spacing: 15) {
                         ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
                             Button(action: {
                                 deckEditorViewModel.addCardToSelectedDeck(card: card)
@@ -626,7 +644,7 @@ struct DeckListTooStrongView: View {
                                     .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
                             })
                         }
-                    }.padding([.leading, .trailing], 10)
+                    }.padding([.leading, .trailing], 10).padding(.bottom, 10)
                 }
             }
         }
@@ -635,14 +653,20 @@ struct DeckListTooStrongView: View {
 
 struct CardOnDeckListView: View {
     
-    var card: Card
+    let card: Card
+    private var showCardCount: Bool
+    
+    init(card: Card, showCardCount: Bool = true) {
+        self.card = card
+        self.showCardCount = showCardCount
+    }
     
     var body: some View {
         ZStack {
             CardView(card: card)
                 .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                 .cornerRadius(CardSize.cornerRadius.normal)
-            if card.cardCount > 1 {
+            if card.cardCount > 1 && showCardCount{
                 Text("x\(card.cardCount)")
                     .fontWeight(.bold)
                     .font(.title)
@@ -682,4 +706,7 @@ struct DeckEditorView_Previews: PreviewProvider {
 
 struct EditorSize {
     static let cardSearchPanelWidth: CGFloat = CardSize.width.normal + 80
+    static let cardToShowWidth: CGFloat = (cardSearchPanelWidth - 20) as CGFloat
+    static let cardToShowHeight: CGFloat = cardToShowWidth * (8.8 / 6.3) as CGFloat
+    static let cardToShowCornerRadius: CGFloat = cardToShowWidth * 0.055 as CGFloat
 }

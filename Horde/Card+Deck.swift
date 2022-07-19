@@ -50,7 +50,7 @@ class Card: Hashable, Identifiable {
     }
     
     static func == (lhs: Card, rhs: Card) -> Bool {
-        return lhs.cardName == rhs.cardName && lhs.cardType == rhs.cardType
+        return lhs.cardId == rhs.cardId
     }
     
     func hash(into hasher: inout Hasher) {

@@ -634,19 +634,19 @@ struct ZoomOnCardView: View {
 struct CardSize {
     
     struct width {
-        static let big = (UIScreen.main.bounds.height / 100) * 6.3 * 5.5 as CGFloat as CGFloat
+        static let big = (UIScreen.main.bounds.height / 100) * 6.3 * 5.5 as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 6.3 * 4.5 as CGFloat
         static let small = 54 as CGFloat
     }
     
     struct height {
-        static let big = (UIScreen.main.bounds.height / 100) * 8.8 * 5.5 as CGFloat as CGFloat
+        static let big = (UIScreen.main.bounds.height / 100) * 8.8 * 5.5 as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 8.8 * 4.5 as CGFloat
         static let small = 75 as CGFloat
     }
     
     struct cornerRadius {
-        static let big = (UIScreen.main.bounds.height / 100) * 0.35 * 5.5 as CGFloat as CGFloat
+        static let big = (UIScreen.main.bounds.height / 100) * 0.35 * 5.5 as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 0.35 * 4.5 as CGFloat
         static let small = 3 as CGFloat
     }

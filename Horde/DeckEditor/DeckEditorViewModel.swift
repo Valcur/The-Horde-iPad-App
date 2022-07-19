@@ -14,7 +14,7 @@ class DeckEditorViewModel: ObservableObject {
     @Published var deckSelectionInfo: String = ""
     @Published var searchProgressInfo: String = "Let's search some cards"
     @Published var searchResult: [CardFromCardSearch] = []
-    @Published var cardToShow: Card? = nil
+    @Published var cardToShow: Card? = Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR")
     @Published var cardToShowReprints: [Card] = []
     @Published var showDeckEditorInfoView: Bool = false
     var deckId: Int = 2
@@ -35,24 +35,11 @@ class DeckEditorViewModel: ObservableObject {
         } else if selectedDeckListNumber == DeckSelectionNumber.tooStrongPermanentsList {
             deckSelectionInfo = "Select cards that are too strong to be drawed during the first turns (like boardwipes)"
         } else if selectedDeckListNumber == DeckSelectionNumber.availableTokensList {
-            deckSelectionInfo = "Tokens that could be spawned by cards drawed by the horde"
+            deckSelectionInfo = "Tokens that could be spawned by cards drawed by the horde. You can make the horde cast non token spells too"
         } else if selectedDeckListNumber == DeckSelectionNumber.weakPermanentsList {
             deckSelectionInfo = "Weak permanents the Horde could start with"
         } else if selectedDeckListNumber == DeckSelectionNumber.powerfullPermanentsList {
             deckSelectionInfo = "Powerfull permanents the Horde can spawn at milestones or between marathon stages"
-        }
-        
-        // If cardShow not empty, change the cardType to match what is on this deck
-        if cardToShow != nil {
-            let cardTypesToCheck: [CardType] = [.creature, .token, .instant, .sorcery, .artifact, .enchantment]
-            for tmpCardType in cardTypesToCheck {
-                let tmpCard = cardToShow?.recreateCard()
-                tmpCard?.cardType = tmpCardType
-                let deckSelected = getSelectedDeck(card: tmpCard)
-                if deckSelected.contains(tmpCard!) {
-                    cardToShow = tmpCard
-                }
-            }
         }
     }
        
@@ -187,12 +174,14 @@ class DeckEditorViewModel: ObservableObject {
         if selectedDeckListNumber == DeckSelectionNumber.deckList
         {
             if deckSelected.contains(card) {
+                
                 let tmpCard = deckSelected[deckSelected.firstIndex(of: card)!].recreateCard()
                 tmpCard.cardType = newCardType
                 
                 // Remove
                 deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected, removeCompletely: true)
                 saveToSelectedDeck(deckSelected: deckSelected, card: card)
+                
                 // Add
                 addCardToSelectedDeck(card: tmpCard, onlyAddOne: false)
                 saveToSelectedDeck(deckSelected: getSelectedDeck(card: tmpCard), card: tmpCard)
@@ -202,7 +191,7 @@ class DeckEditorViewModel: ObservableObject {
             }
         } else {
             deckSelected = changeCardTypeFromSpecificDeck(card: card, newCardType: newCardType, deck: deckSelected)
-            saveToSelectedDeck(deckSelected: deckSelected, card: card)
+            saveToSelectedDeck(deckSelected: deckSelected)
         }
     }
     
@@ -211,10 +200,7 @@ class DeckEditorViewModel: ObservableObject {
         for i in 0..<tmpArray.count {
             if tmpArray[i] == card {
                 
-                let tmpCard = Card(cardName: tmpArray[i].cardName, cardType: tmpArray[i].cardType)
-                tmpCard.cardCount = tmpArray[i].cardCount
-                tmpCard.cardUIImage = tmpArray[i].cardUIImage
-                tmpArray[i] = tmpCard
+                tmpArray[i] = tmpArray[i].recreateCard()
                 
                 if removeCompletely {
                     tmpArray.remove(at: i)
@@ -236,7 +222,7 @@ class DeckEditorViewModel: ObservableObject {
         let tmpArray = deck
         for i in 0..<tmpArray.count {
             if tmpArray[i] == card {
-                card.cardType = newCardType
+                tmpArray[i].cardType = newCardType
                 
                 return tmpArray
             }
@@ -268,6 +254,25 @@ class DeckEditorViewModel: ObservableObject {
     
     func getAllDecksInMainDeckList() -> [[Card]] {
         return [deck.deckList.creatures, deck.deckList.artifactsAndEnchantments, deck.deckList.instantsAndSorceries, deck.deckList.tokens]
+    }
+    
+    // Is this card in the deck ? If yes, change its type if its different in the deck
+    func changeCardToFitCardInSelectedDeck(card: Card) -> Card {
+        var deckToCheck: [Card] = []
+        if selectedDeckListNumber == DeckSelectionNumber.deckList {
+            deckToCheck = deck.deckList.creatures + deck.deckList.instantsAndSorceries + deck.deckList.artifactsAndEnchantments + deck.deckList.tokens
+        } else {
+            deckToCheck = getSelectedDeck()
+        }
+        for c in deckToCheck {
+            if c == card {
+                let tmpCard = card.recreateCard()
+                tmpCard.cardType = c.cardType
+                return tmpCard
+            }
+        }
+        
+        return card
     }
     
     struct DeckSelectionNumber {
