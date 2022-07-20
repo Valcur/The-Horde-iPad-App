@@ -153,13 +153,14 @@ struct DeckEditorInfoView: View {
                     .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
             }).position(x: UIScreen.main.bounds.width - 60, y: 50)
         }.ignoresSafeArea()
-            .onChange(of: deckEditorViewModel.deckId) { _ in
-                deckNametextBindingManager.text = deckEditorViewModel.loadDeckName()
-                deckIntro = deckEditorViewModel.loadIntroText()
-                deckRules = deckEditorViewModel.loadRulesText()
-                inputImage = deckEditorViewModel.loadImage()
-                loadImage()
-                print("GOOOOO")
+            .onChange(of: deckEditorViewModel.deckId) { deckId in
+                if deckId >= 0 {
+                    deckNametextBindingManager.text = deckEditorViewModel.loadDeckName()
+                    deckIntro = deckEditorViewModel.loadIntroText()
+                    deckRules = deckEditorViewModel.loadRulesText()
+                    inputImage = deckEditorViewModel.loadImage()
+                    loadImage()
+                }
             }
     }
     

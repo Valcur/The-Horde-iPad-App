@@ -15,22 +15,21 @@ import SwiftUI
     let card: Card
     let shouldImageBeSaved: Bool
 
-    init(card: Card, shouldImageBeSaved: Bool, downloadDelay: Int) {
+    init(card: Card, shouldImageBeSaved: Bool) {
         self.card = card
         self.shouldImageBeSaved = shouldImageBeSaved
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 * Double(downloadDelay)) {
-            if card.cardImageURL != "" {
-                print(card.cardImageURL)
-                let url = URL(string: card.cardImageURL)!
+        
+        if card.cardImageURL != "" {
+            print(card.cardName + " -> " + card.cardImageURL)
+            let url = URL(string: card.cardImageURL)!
 
-                self.loadData(cardName: card.cardOracleId + card.specificSet, url: url) { (data, error) in
-                    // Handle the loaded file data
-                    if error == nil {
-                        DispatchQueue.main.async {
-                            self.data = data! as Data
-                            self.imageReadyToShow = true
-                            self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
-                        }
+            self.loadData(cardName: card.cardOracleId + card.specificSet, url: url) { (data, error) in
+                // Handle the loaded file data
+                if error == nil {
+                    DispatchQueue.main.async {
+                        self.data = data! as Data
+                        self.imageReadyToShow = true
+                        self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
                     }
                 }
             }

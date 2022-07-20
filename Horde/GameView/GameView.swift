@@ -497,8 +497,8 @@ struct CardView: View {
         return Image("BackgroundTest")
     }
     
-    init(card: Card, shouldImageBeSaved: Bool = true, downloadDelay: Int = 0) {
-        downloadManager = DownloadManager(card: card, shouldImageBeSaved: shouldImageBeSaved, downloadDelay: downloadDelay)
+    init(card: Card, shouldImageBeSaved: Bool = true) {
+        downloadManager = DownloadManager(card: card, shouldImageBeSaved: shouldImageBeSaved)
         self.card = card
         self.shouldImageBeSaved = shouldImageBeSaved
     }

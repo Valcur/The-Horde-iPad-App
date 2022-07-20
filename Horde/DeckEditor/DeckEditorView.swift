@@ -134,6 +134,12 @@ struct CardSearchResultView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let card: CardFromCardSearch
     let cardRank: Int
+    @State var shouldStartDownloadingImage: Bool = false
+    
+    init(card: CardFromCardSearch, cardRank: Int) {
+        self.card = card
+        self.cardRank = cardRank
+    }
     
     var body: some View {
         Button(action: {
@@ -141,10 +147,18 @@ struct CardSearchResultView: View {
         }, label: {
             HStack {
                 ZStack{
-                    CardView(card: card, shouldImageBeSaved: false, downloadDelay: cardRank)
-                        .frame(width: 64, height: 90)
-                        .aspectRatio(contentMode: .fit)
-                        .offset(y: 15)
+                    if shouldStartDownloadingImage {
+                        CardView(card: card, shouldImageBeSaved: false)
+                            .frame(width: 64, height: 90)
+                            .aspectRatio(contentMode: .fit)
+                            .offset(y: 15)
+                    } else {
+                        Image("BlackBackground")
+                            .resizable()
+                            .frame(width: 64, height: 90)
+                            .aspectRatio(contentMode: .fit)
+                            .offset(y: 15)
+                    }
                 }.frame(width: 50, height: 40).clipped()
                 Text(card.cardName)
                     .font(.subheadline)
@@ -152,7 +166,11 @@ struct CardSearchResultView: View {
                 Spacer()
                 CardSearchResultManaCostView(manaCost: card.getManaCostArray())
             }.padding([.top, .bottom, .leading, .trailing], 8)
-        })
+        }).onAppear() {
+            Timer.scheduledTimer(withTimeInterval: 0.5 * Double(cardRank), repeats: false) { timer in
+                self.shouldStartDownloadingImage = true
+            }
+        }
     }
     
     struct CardSearchResultManaCostView: View {
@@ -199,18 +217,10 @@ struct CardShowView: View {
                     
                     CardToShowCarouselView(index: $index.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
                         if deckEditorViewModel.cardToShow != nil {
-                            CardView(card: deckEditorViewModel.cardToShow!)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
-                                .cornerRadius(EditorSize.cardToShowCornerRadius)
-                                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+                            CarouselCardView(card: deckEditorViewModel.cardToShow!, cardRank: 0)
                         }
                         ForEach(deckEditorViewModel.cardToShowReprints.indices, id: \.self) { i in
-                            CardView(card: deckEditorViewModel.cardToShowReprints[i], downloadDelay: i)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
-                                .cornerRadius(EditorSize.cardToShowCornerRadius)
-                                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+                            CarouselCardView(card: deckEditorViewModel.cardToShowReprints[i], cardRank: i)
                         }
                     }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                         index = 0
@@ -547,7 +557,56 @@ struct DeckListView: View {
                             CardOnDeckListView(card: card, showCardCount: !(deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList))
                         }).transition(.scale.combined(with: .opacity))
                     }
-                }.padding([.leading, .trailing], 10).animation(Animation.easeInOut(duration: 0.5), value: deckListToShow).padding(.bottom, 10)
+                }.padding([.leading, .trailing], 10).padding(.bottom, 10)
+            }.animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
+        }
+    }
+}
+
+struct CarouselCardView: View {
+    
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    let card: Card
+    let cardRank: Int
+    @State var shouldStartDownloadingImage: Bool = false
+    
+    init(card: Card, cardRank: Int) {
+        self.card = card
+        self.cardRank = cardRank
+    }
+    
+    var body: some View {
+        if shouldStartDownloadingImage {
+            CardView(card: card)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
+                .cornerRadius(EditorSize.cardToShowCornerRadius)
+                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+        } else {
+            Image("BlackBackground")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
+                .cornerRadius(EditorSize.cardToShowCornerRadius)
+                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4).onAppear() {
+                    Timer.scheduledTimer(withTimeInterval: 0.5 * Double(cardRank), repeats: false) { timer in
+                        self.shouldStartDownloadingImage = true
+                    }
+                }
+        }
+    }
+    
+    struct CardSearchResultManaCostView: View {
+        
+        let manaCost: [String]
+        
+        var body: some View {
+            HStack(spacing: 2) {
+                ForEach(manaCost, id: \.self) {
+                    Image($0)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
             }
         }
     }
@@ -679,9 +738,8 @@ struct DeckListTooStrongView: View {
                                 deckEditorViewModel.addCardToSelectedDeck(card: card)
                             }, label: {
                                 CardOnDeckListView(card: card)
-                                    .transition(.scale.combined(with: .opacity))
                                     .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
-                            })
+                            }).transition(.scale.combined(with: .opacity))
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
                 }
