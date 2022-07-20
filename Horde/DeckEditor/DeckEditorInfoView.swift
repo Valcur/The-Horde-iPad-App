@@ -10,13 +10,14 @@ import SwiftUI
 struct DeckEditorInfoView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @State var changingImage: Bool = false
     @State private var showingImagePicker = false
     @State private var inputImage: UIImage?
     @State private var image: Image = Image("Dinosaur")
-    @State var deckName: String = "Deck Name"
+    @StateObject var deckNametextBindingManager = TextBindingManager(limit: 14)
     @State var deckIntro: String = ""
-    @State var deckRules: String = "All creatures controlled by the Horde have haste and abe  ze hz gze hag ag zg gazhr g aghrg ah hage ra gh aeg ahegrh aeghg aher haeg aehr ae rgae hrgae ae rhae g ahgr aegrhagr ef eufg hs hgdsf h"
+    @State var deckRules: String = ""
     
     init() {
         UITextView.appearance().backgroundColor = .clear
@@ -47,10 +48,6 @@ struct DeckEditorInfoView: View {
                     .sheet(isPresented: $showingImagePicker) {
                         ImagePicker(image: $inputImage)
                     }
-                    .onAppear() {
-                        inputImage = deckEditorViewModel.loadImage()
-                        loadImage()
-                    }
             }.padding(50)
 
             VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)).opacity(changingImage ? 0 : 1)
@@ -65,7 +62,7 @@ struct DeckEditorInfoView: View {
                         .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                         .padding()
                     
-                    TextField("", text: $deckName, onCommit: {
+                    TextField("", text: $deckNametextBindingManager.text, onCommit: {
 
                     })
                     .foregroundColor(.white)
@@ -134,6 +131,9 @@ struct DeckEditorInfoView: View {
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.5)) {
                         deckEditorViewModel.showDeckEditorInfoView.toggle()
+                        deckEditorViewModel.saveDeckName(text: deckNametextBindingManager.text)
+                        deckEditorViewModel.saveIntroText(text: deckIntro)
+                        deckEditorViewModel.saveRulesText(text: deckRules)
                     }
                 }, label: {
                     MenuTextTitleView(text: "To deck editor")
@@ -153,6 +153,14 @@ struct DeckEditorInfoView: View {
                     .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
             }).position(x: UIScreen.main.bounds.width - 60, y: 50)
         }.ignoresSafeArea()
+            .onChange(of: deckEditorViewModel.deckId) { _ in
+                deckNametextBindingManager.text = deckEditorViewModel.loadDeckName()
+                deckIntro = deckEditorViewModel.loadIntroText()
+                deckRules = deckEditorViewModel.loadRulesText()
+                inputImage = deckEditorViewModel.loadImage()
+                loadImage()
+                print("GOOOOO")
+            }
     }
     
     func loadImage() {

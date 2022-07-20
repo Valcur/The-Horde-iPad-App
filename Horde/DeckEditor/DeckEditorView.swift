@@ -289,20 +289,28 @@ struct CardShowView: View {
                     CardShowTypeSelectorView(text: "Enchantment", cardType: .enchantment, card: selectedCard, cardShowedcardType: $cardType)
                 }
             }.padding().onChange(of: card) { _ in
-                self.cardType = selectedCard.cardType
-                self.hasCardFlashback = selectedCard.hasFlashback
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
             }.onChange(of: index) { _ in
-                self.cardType = selectedCard.cardType
-                self.hasCardFlashback = selectedCard.hasFlashback
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
             }.onChange(of: cardType) { _ in
-                self.card.cardType = cardType
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.card.cardType = cardType
+                }
             }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                 if deckEditorViewModel.cardToShow != nil {
                     self.card = deckEditorViewModel.cardToShow!
                 }
             }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
-                self.cardType = selectedCard.cardType
-                self.hasCardFlashback = selectedCard.hasFlashback
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
             }
             
             // Enable/Disable flashback
@@ -356,7 +364,7 @@ struct CardShowTypeSelectorView: View {
                 .fontWeight(.bold)
                 .font(.title3)
                 .foregroundColor(cardShowedcardType == cardType ? .white : .gray)
-        }).frame(maxWidth: .infinity).padding(15)
+        }).frame(maxWidth: .infinity).padding(.vertical, 15)
     }
 }
 
@@ -417,55 +425,11 @@ struct DeckListSelectorView: View {
 struct BottomControlRowView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    @State var deckName: String = ""
     
     var body: some View {
         HStack {
-            // Exit
-            Button(action: {
-
-            }, label: {
-                Image(systemName: "xmark")
-                    .font(.title2)
-                    .foregroundColor(.white)
-            })
-            
-            Spacer()
-            
-            // Edit deck info
-            Button(action: {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    deckEditorViewModel.showDeckEditorInfoView.toggle()
-                }
-            }, label: {
-                HStack {
-                    Text("Deck Name")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                    
-                    Image(systemName: "pencil")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                }
-            })
-
-            
-            // Save
-            Button(action: {
-                deckEditorViewModel.saveDeck()
-            }, label: {
-                HStack {
-                    Text("- Save")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                    
-                    Image(systemName: "arrow.down.doc")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                }
-            })
-            
-            Spacer()
-            
             // Import
             Button(action: {
 
@@ -484,6 +448,62 @@ struct BottomControlRowView: View {
 
             }, label: {
                 Image(systemName: "square.and.arrow.up")
+                    .font(.title2)
+                    .foregroundColor(.white)
+            })
+            
+            Spacer()
+            
+            // Edit deck info
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    deckEditorViewModel.showDeckEditorInfoView.toggle()
+                }
+            }, label: {
+                HStack {
+                    Text(deckName)
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .onChange(of: deckEditorViewModel.showDeckEditorInfoView) { _ in
+                            deckName = deckEditorViewModel.loadDeckName()
+                        }
+                        .onAppear() {
+                            deckName = deckEditorViewModel.loadDeckName()
+                        }
+                        .onChange(of: deckEditorViewModel.deckId) { _ in
+                            deckName = deckEditorViewModel.loadDeckName()
+                        }
+                    Image(systemName: "pencil")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }.padding(.leading, 80) // To make the button bigger
+            })
+
+            
+            // Save
+            Button(action: {
+                deckEditorViewModel.saveDeck()
+            }, label: {
+                HStack {
+                    Text("Save")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                    
+                    Image(systemName: "arrow.down.doc")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }
+            }).padding(.leading, 30).padding(.trailing, 80) // To make the button bigger
+            
+            Spacer()
+            
+            // Exit
+            Button(action: {
+                withAnimation(.easeIn(duration: 0.5)) {
+                    hordeAppViewModel.showDeckEditor = false
+                }
+            }, label: {
+                Image(systemName: "xmark")
                     .font(.title2)
                     .foregroundColor(.white)
             })
@@ -691,7 +711,7 @@ struct CardOnDeckListView: View {
                     .font(.title)
                     .foregroundColor(.white)
             }
-            if card.hasFlashback {
+            if card.hasFlashback && showCardCount{
                 Image(systemName: "arrow.clockwise")
                     .font(.largeTitle)
                     .foregroundColor(.white)

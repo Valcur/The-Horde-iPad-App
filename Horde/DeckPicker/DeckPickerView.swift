@@ -19,12 +19,15 @@ struct DeckPickerView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         DeckPickingIntro().id(-1)
-                        ForEach(deckPickerViewModel.deckPickers, id: \.self) { deck in
-                            DeckPickingView(deckPicker: deck).id(deck.id)
+                        
+                        ForEach(0..<hordeAppViewModel.numberOfDeckSlot, id: \.self) { i in
+                            if deckPickerViewModel.deckForIdExist(id: i) {
+                                DeckPickingView(deckPicker: deckPickerViewModel.getDeck(id: i)).id(i)
+                            } else {
+                                CreateNewDeckView(deckId: i).id(i)
+                            }
                         }
-                        //DeckPickingMore()
-                        CreateNewDeckView()
-                        CreateNewDeckView()
+                        
                         GetMoreDeckSlotView()
                     }.padding(.trailing, 400)
                     .onChange(of: deckPickerViewModel.deckPickedId) { _ in
@@ -54,6 +57,7 @@ struct DeckPickingView: View {
     
     @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    @State var confirmDeckDeletion: Bool = false
     let deckPicker: DeckPicker
     
     let rotationInDegrees: CGFloat = 5
@@ -73,7 +77,7 @@ struct DeckPickingView: View {
                 }
             }) {
                 ZStack {
-                    Image(deckPicker.image)
+                    deckPicker.image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .rotationEffect(Angle.degrees(-rotationInDegrees))
@@ -128,11 +132,73 @@ struct DeckPickingView: View {
                 
             }// .buttonStyle(StaticButtonStyle())
             
-            Text("art by \(deckPicker.imageArtist)")
-                .foregroundColor(.white)
-                .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
-                .offset(x: isDeckSelected ? 0 : -25, y: UIScreen.main.bounds.height / 2.3)
-                .animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
+            HStack {
+                // Delete
+                if confirmDeckDeletion {
+                    HStack {
+                        Text("Are you sure ?")
+                            .font(.subheadline)
+                            .foregroundColor(.white)
+                            .padding(10)
+                        Button(action: {
+                            withAnimation(.easeIn(duration: 0.3)) {
+                                deckPickerViewModel.deleteDeck(id: deckPicker.id)
+                                confirmDeckDeletion = false
+                            }
+                        }) {
+                            Text("Yes")
+                                .font(.title2)
+                                .foregroundColor(.white)
+                                .padding(10)
+                        }
+                        Button(action: {
+                            withAnimation(.easeIn(duration: 0.3)) {
+                                confirmDeckDeletion = false
+                            }
+                        }) {
+                            Text("No")
+                                .font(.title2)
+                                .foregroundColor(.white)
+                                .padding(10)
+                        }
+                    }.transition(.opacity)
+                } else {
+                    Button(action: {
+                        withAnimation(.easeIn(duration: 0.3)) {
+                            confirmDeckDeletion = true
+                        }
+                    }) {
+                        Image(systemName: "trash")
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .transition(.opacity)
+                    }
+                }
+                
+                Spacer()
+                
+                // Edit
+                Button(action: {
+                    deckPickerViewModel.editDeck(id: deckPicker.id)
+                    //withAnimation(.easeIn(duration: 0.5)) {
+                        hordeAppViewModel.showDeckEditor = true
+                    //}
+                }) {
+                    Image(systemName: "pencil")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .padding(10)
+                }
+            }.padding(.horizontal, 30).opacity(isDeckSelected ? 1 : 0).offset(x: 25, y: -UIScreen.main.bounds.height / 2.3)
+            
+            if deckPicker.imageArtist != "" {
+                Text("art by \(deckPicker.imageArtist)")
+                    .foregroundColor(.white)
+                    .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+                    .offset(x: isDeckSelected ? 0 : -25, y: UIScreen.main.bounds.height / 2.3)
+                    .animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
+            }
         }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
     }
     
@@ -150,10 +216,14 @@ struct CreateNewDeckView: View {
     @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let rotationInDegrees: CGFloat = 5
+    let deckId: Int
     
     var body: some View {
         Button(action: {
-
+            deckPickerViewModel.createDeck(id: deckId)
+            //withAnimation(.easeIn(duration: 0.5)) {
+                hordeAppViewModel.showDeckEditor = true
+            //}
         }) {
             ZStack {
                 VStack(alignment: .center, spacing: 40) {
@@ -174,7 +244,7 @@ struct CreateNewDeckView: View {
             }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: PickerSize.width.unpicked, height: UIScreen.main.bounds.height + 150)
                 .border(.white, width: 3)
             .rotationEffect(Angle.degrees(rotationInDegrees))
-        }
+        }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
     }
 }
 

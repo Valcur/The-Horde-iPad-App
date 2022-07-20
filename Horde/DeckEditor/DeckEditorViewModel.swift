@@ -11,22 +11,14 @@ import UIKit
 class DeckEditorViewModel: ObservableObject {
     
     @Published var selectedDeckListNumber: Int = DeckSelectionNumber.deckList
-    @Published var deck: DeckEditorCardList
+    @Published var deck: DeckEditorCardList = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
     @Published var deckSelectionInfo: String = ""
     @Published var searchProgressInfo: String = "Let's search some cards"
     @Published var searchResult: [CardFromCardSearch] = []
-    @Published var cardToShow: Card? = Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR")
+    @Published var cardToShow: Card? = nil
     @Published var cardToShowReprints: [Card] = []
     @Published var showDeckEditorInfoView: Bool = false
-    var deckId: Int = 2
-    
-    init() {
-        deck = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
-        changeSelectedDeckTo(newSelectedDeck: DeckSelectionNumber.deckList)
-        
-        // If user clicked on an existing deck, load the decklist
-        loadExistingDeck()
-    }
+    @Published var deckId: Int = 0
     
     func changeSelectedDeckTo(newSelectedDeck: Int) {
         selectedDeckListNumber = newSelectedDeck
@@ -97,7 +89,7 @@ class DeckEditorViewModel: ObservableObject {
     }
     
     func saveToSelectedDeck(deckSelected: [Card], card: Card? = nil) {
-        let sortedDeckSelected = deckSelected.sorted { $0.cardName < $1.cardName }
+        let sortedDeckSelected = deckSelected.sorted { ($0.cardName + $0.cardId) < ($1.cardName + $1.cardId) }
         if selectedDeckListNumber == DeckSelectionNumber.deckList
         {
             if card ==  nil {
@@ -311,6 +303,7 @@ class DeckEditorViewModel: ObservableObject {
             if c == card {
                 let tmpCard = card.recreateCard()
                 tmpCard.cardType = c.cardType
+                tmpCard.hasFlashback = c.hasFlashback
                 return tmpCard
             }
         }
@@ -339,7 +332,8 @@ class DeckEditorViewModel: ObservableObject {
 
 // MARK: LOAD & SAVE
 extension DeckEditorViewModel {
-    func loadExistingDeck() {
+    func loadExistingDeck(deckId: Int) {
+        self.deckId = deckId
         let deckData: String = UserDefaults.standard.object(forKey: "Deck_\(deckId)") as? String ?? ""
         
         if deckData != "" {
@@ -377,22 +371,7 @@ extension DeckEditorViewModel {
             }
             selectedDeckListNumber = DeckSelectionNumber.deckList
         } else {
-            /*
-            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-            addCardToSelectedDeck(card: Card(cardName: "Death by Dragons", cardType: .sorcery, specificSet: "cma"))
-            addCardToSelectedDeck(card: Card(cardName: "Dragon Appeasement", cardType: .enchantment, specificSet: "ARB"))
-            addCardToSelectedDeck(card: Card(cardName: "Ancient Copper Dragon", cardType: .creature, hasFlashback: true, specificSet: "CLB"))
-            addCardToSelectedDeck(card: Card(cardName: "Cat Dragon", cardType: .token, specificSet: "T2X2"))
-            addCardToSelectedDeck(card: Card(cardName: "Dragon", cardType: .token, specificSet: "TCLB"))
-            
-            selectedDeckListNumber = DeckSelectionNumber.tooStrongPermanentsList
-            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-            
-            selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
-            addCardToSelectedDeck(card: Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR"))
-            
-            selectedDeckListNumber = DeckSelectionNumber.deckList
-            */
+            deck = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
         }
     }
     
@@ -616,5 +595,29 @@ extension DeckEditorViewModel {
          guard let data = UserDefaults.standard.data(forKey: "Deck_\(deckId)_Image") else { return nil }
          let decoded = try! PropertyListDecoder().decode(Data.self, from: data)
          return UIImage(data: decoded)
+    }
+    
+    func saveDeckName(text: String) {
+        UserDefaults.standard.set(text, forKey: "Deck_\(deckId)_DeckName")
+    }
+    
+    func loadDeckName() -> String {
+        return UserDefaults.standard.object(forKey: "Deck_\(deckId)_DeckName") as? String ?? "Deck \(deckId)"
+    }
+    
+    func saveIntroText(text: String) {
+        UserDefaults.standard.set(text, forKey: "Deck_\(deckId)_Intro")
+    }
+    
+    func loadIntroText() -> String {
+        return UserDefaults.standard.object(forKey: "Deck_\(deckId)_Intro") as? String ?? ""
+    }
+    
+    func saveRulesText(text: String) {
+        UserDefaults.standard.set(text, forKey: "Deck_\(deckId)_Rules")
+    }
+    
+    func loadRulesText() -> String {
+        return UserDefaults.standard.object(forKey: "Deck_\(deckId)_Rules") as? String ?? "All creatures controlled by the Horde have haste"
     }
 }

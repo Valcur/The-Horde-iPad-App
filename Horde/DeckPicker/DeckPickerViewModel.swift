@@ -6,35 +6,14 @@
 //
 
 import Foundation
+import SwiftUI
 
 class DeckPickerViewModel: ObservableObject {
     
     @Published var deckPickedId: Int
-    var deckPickers: [DeckPicker]
 
     init() {
         self.deckPickedId = -1
-        self.deckPickers = [
-            DeckPicker(id: DecksId.zombie, title: "Zombie", intro: "The original horde deck by Peter Knudson", specialRules: "All creatures controlled by the Horde have haste", image: "Zombie", imageArtist: "Grzegorz Rutkowski"),
-            
-            DeckPicker(id: DecksId.human, title: "Human", intro: "A modified version of the Armies of Men deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste and are Humans in addition to their other creature types. All tokens controlled by the Horde are white", image: "Human", imageArtist: "Antonio José Manzanedo"),
-            
-            DeckPicker(id: DecksId.phyrexian, title: "Phyrexian", intro: "A modified version of the Phyrexian Perfection deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste. The Survivors share poison counters. They do not lose the game for having 10 or more poison counters. Every time the Survivors gain one or more poison counters, each Survivor exiles 1 card from the top of each of their libraries face down for each poison counter.", image: "Phyrexian", imageArtist: "Igor Kieryluk"),
-            
-            //DeckPicker(id: DecksId.phyrexian, title: "Phyrexian", intro: "A modified version of the Phyrexian Perfection deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste. The Survivors share poison counters. They do not lose the game for having 10 or more poison counters. At the beginning of each upkeep, each Survivor exiles 1 card from the top of each of their libraries face down for each poison counter.", image: "Phyrexian", imageArtist: "Igor Kieryluk"),
-            
-            DeckPicker(id: DecksId.sliver, title: "Sliver", intro: "A modified version of the Sliver Hive deck by TenkayCrit", specialRules: "All creatures controlled by the Horde have haste. All of the artifact slivers in the Horde deck are treated as tokens.", image: "Sliver", imageArtist: "Aleksi Briclot"),
-            
-            DeckPicker(id: DecksId.dinosaur, title: "Dinosaur", intro: "A modified version of the Dinosaur Rage deck by TenkayCrit", specialRules: " All creatures controlled by the Horde have haste.", image: "Dinosaur", imageArtist: "Grzegorz Rutkowski"),
-            
-            DeckPicker(id: DecksId.eldrazi, title: "Eldrazi", intro: "A modified version of the Eldrazi Horror deck by TenkayCrit", specialRules: "All tokens controlled by the Horde have haste. All eldrazi spawn the Horde controls cannot attack or block. If the Horde controls 10 eldrazi spawn at the start of its precombat main phase, they are sacrificed, and the Horde casts the three eldrazi titans from exile.", image: "Eldrazi", imageArtist: "Aleksi Briclot"),
-            
-            DeckPicker(id: DecksId.nature, title: "Nature", intro: "", specialRules: "All tokens controlled by the Horde have haste.", image: "Nature", imageArtist: "Grzegorz Rutkowski")
-        ]
-        
-        deckPickers.sort {
-            $0.id < $1.id
-        }
     }
     
     // MARK: Buttons
@@ -47,14 +26,57 @@ class DeckPickerViewModel: ObservableObject {
     private func savePickedDeckId() {
         UserDefaults.standard.set(deckPickedId, forKey: "DeckPickedId")
     }
+    
+    func deckForIdExist(id: Int) -> Bool {
+        return UserDefaults.standard.object(forKey: "Deck_\(id)_Exist") as? Bool ?? false
+    }
+    
+    func getDeck(id: Int) -> DeckPicker {
+        let deckName = UserDefaults.standard.object(forKey: "Deck_\(id)_DeckName") as? String ?? "Deck \(id)"
+        let deckIntro = UserDefaults.standard.object(forKey: "Deck_\(id)_Intro") as? String ?? ""
+        let deckRules = UserDefaults.standard.object(forKey: "Deck_\(id)_Rules") as? String ?? ""
+        let deckImage = getDeckImage(id: id)
+
+        return DeckPicker(id: id, title: deckName, intro: deckIntro, specialRules: deckRules, image: deckImage, imageArtist: "")
+    }
+    
+    private func getDeckImage(id: Int) -> Image{
+        guard let data = UserDefaults.standard.data(forKey: "Deck_\(id)_Image") else { return Image("BlackBackground") }
+        let decoded = try! PropertyListDecoder().decode(Data.self, from: data)
+        let inputImage = UIImage(data: decoded)
+        
+        guard let inputImage = inputImage else {
+            return Image("BlackBackground")
+        }
+        return Image(uiImage: inputImage)
+    }
+    
+    func createDeck(id: Int) {
+        UserDefaults.standard.set(true, forKey: "Deck_\(id)_Exist")
+        editDeck(id: id)
+    }
+    
+    func editDeck(id: Int) {
+        pickDeck(deckId: id)
+    }
+    
+    func deleteDeck(id: Int) {
+        UserDefaults.standard.removeObject(forKey: "Deck_\(id)_Exist")
+        UserDefaults.standard.removeObject(forKey: "Deck_\(id)_DeckName")
+        UserDefaults.standard.removeObject(forKey: "Deck_\(id)_Intro")
+        UserDefaults.standard.removeObject(forKey: "Deck_\(id)_Rules")
+        UserDefaults.standard.removeObject(forKey: "Deck_\(id)_Image")
+        UserDefaults.standard.removeObject(forKey: "Deck_\(id)")
+        self.deckPickedId = id
+    }
 }
 
-struct DeckPicker: Hashable {
+struct DeckPicker {
     let id: Int
     let title: String
     let intro: String
     let specialRules: String
-    let image: String
+    let image: Image
     let imageArtist: String
 }
 

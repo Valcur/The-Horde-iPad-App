@@ -10,18 +10,22 @@ import Foundation
 class HordeAppViewModel: ObservableObject {
     @Published var readyToPlay: Bool
     @Published var shouldShowMenu: Bool
+    @Published var showDeckEditor: Bool
     @Published var menuToShowId: Int
     @Published var difficulty: Int
     @Published var gradientId: Int
     @Published var oneRowBoardInsteadOfTwo: Bool
+    @Published var numberOfDeckSlot: Int
     
     init() {
         self.readyToPlay = false
         self.shouldShowMenu = false
+        self.showDeckEditor = false
         self.menuToShowId = 1
         self.difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
         self.gradientId = UserDefaults.standard.object(forKey: "GradientId") as? Int ?? 1
         self.oneRowBoardInsteadOfTwo = UserDefaults.standard.object(forKey: "OneRowBoardInsteadOfTwo") as? Bool ?? true
+        self.numberOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
     }
     
     func setDifficulty(newDifficulty: Int) {
