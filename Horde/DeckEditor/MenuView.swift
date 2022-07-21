@@ -288,7 +288,6 @@ struct MenuHowToPlayView: View {
 struct MenuContactView: View {
     
     @State var mailCopied = false
-    let donateButtonUrl = "https://www.paypal.com/donate/?hosted_button_id=PQGAKEXDJLX4L"
     
     var body: some View {
         LazyVStack(alignment: .leading, spacing: 30) {
@@ -306,14 +305,6 @@ struct MenuContactView: View {
                         forPasteboardType: UTType.plainText.identifier)
                     mailCopied = true
                 }
-            
-            MenuTextTitleView(text: "Donation")
-            
-            MenuTextParagraphView(text: "This app is free and doesn't have any in-app purchase. You can help me with a small donation")
-            
-            Link(destination: URL(string: donateButtonUrl)!) {
-                PurpleButtonLabel(text: "Donate")
-            }
             
             MenuTextTitleView(text: "Info")
             

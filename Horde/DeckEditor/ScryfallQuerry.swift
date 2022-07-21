@@ -244,6 +244,7 @@ enum Layout: String, Codable {
     case doubleFacedToken = "double_faced_token"
     case saga = "saga"
     case split = "split"
+    case meld = "meld"
 }
 
 // MARK: - Legalities
@@ -297,6 +298,7 @@ enum Rarity: String, Codable {
     case mythic = "mythic"
     case rare = "rare"
     case uncommon = "uncommon"
+    case special = "special"
 }
 
 // MARK: - RelatedUris

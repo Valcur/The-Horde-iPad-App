@@ -23,9 +23,36 @@ struct DeckEditorView: View {
                     }
                     RightPanelView()
                 }
+                PopUpInfoView()
                 DeckEditorInfoView().opacity(deckEditorViewModel.showDeckEditorInfoView ? 1 : 0)
             }
         }.ignoresSafeArea()
+    }
+}
+
+struct PopUpInfoView: View {
+    
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    @State private var showPopUp = false
+    
+    var body: some View {
+        ZStack {
+            VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)).cornerRadius(40)
+            MenuTextBoldParagraphView(text: deckEditorViewModel.popUpText)
+        }.frame(width: 300, height: 80).position(x: UIScreen.main.bounds.width / 2, y: showPopUp ? 50 : -50).shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+            .animation(.easeInOut(duration: 0.3), value: showPopUp)
+        .onChange(of: deckEditorViewModel.popUpText) { newText in
+            print("Pop \(newText)")
+            if newText != "" {
+                self.showPopUp = true
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { timer in
+                    self.showPopUp = false
+                }
+                Timer.scheduledTimer(withTimeInterval: 2.3, repeats: false) { timer in
+                    deckEditorViewModel.popUpText = ""
+                }
+            }
+        }
     }
 }
 
@@ -59,10 +86,15 @@ struct LeftPanelView: View {
             GradientView(gradientId: hordeAppViewModel.gradientId)
             VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
             
-            if deckEditorViewModel.cardToShow == nil {
-                CardSearchView()//.padding(10)
-            } else {
-                CardShowView(card: deckEditorViewModel.cardToShow!)//.padding(10)
+            ZStack {
+                CardSearchView()
+                ZStack {
+                    if deckEditorViewModel.cardToShow != nil {
+                        GradientView(gradientId: hordeAppViewModel.gradientId).transition(.move(edge: .trailing))
+                        VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).transition(.move(edge: .trailing))
+                        CardShowView(card: deckEditorViewModel.cardToShow!).transition(.move(edge: .trailing))
+                    }
+                }.animation(.easeInOut(duration: 0.3), value: deckEditorViewModel.cardToShow)
             }
         }
     }
@@ -78,6 +110,18 @@ struct CardSearchView: View {
         VStack(spacing: 0) {
             // TextField + Selector token/non-token
             HStack {
+                if cardSearchTextFieldText.count > 0 {
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            cardSearchTextFieldText = ""
+                        }
+                    }, label: {
+                        Image(systemName: "clear")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                            .padding(5)
+                    })
+                }
                 ZStack(alignment: .leading) {
                     if cardSearchTextFieldText == "" {
                         Text("Search...")
@@ -105,7 +149,7 @@ struct CardSearchView: View {
                         .font(.title3)
                         .foregroundColor(isSearchingForTokens ? .white : .gray)
                 })
-            }.ignoresSafeArea(.keyboard).padding(10)
+            }.ignoresSafeArea(.keyboard).padding(10).transition(.move(edge: .leading))
             
             // Search result
             ScrollView {
@@ -149,13 +193,13 @@ struct CardSearchResultView: View {
                 ZStack{
                     if shouldStartDownloadingImage {
                         CardView(card: card, shouldImageBeSaved: false)
-                            .frame(width: 64, height: 90)
+                            .frame(width: 66, height: 94)
                             .aspectRatio(contentMode: .fit)
                             .offset(y: 15)
                     } else {
                         Image("BlackBackground")
                             .resizable()
-                            .frame(width: 64, height: 90)
+                            .frame(width: 66, height: 94)
                             .aspectRatio(contentMode: .fit)
                             .offset(y: 15)
                     }
@@ -312,6 +356,10 @@ struct CardShowView: View {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.card.cardType = cardType
                 }
+            }.onChange(of: hasCardFlashback) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.selectedCard.hasFlashback = self.hasCardFlashback
+                }
             }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                 if deckEditorViewModel.cardToShow != nil {
                     self.card = deckEditorViewModel.cardToShow!
@@ -330,7 +378,7 @@ struct CardShowView: View {
                     Text("Cast from graveyard")
                         .foregroundColor(.white)
                         .font(.title3)
-                    Text("like flashback")
+                    Text("then exile")
                         .foregroundColor(.white)
                         .font(.subheadline)
                 }
@@ -405,6 +453,7 @@ struct TopControlRowView: View {
             HStack() {
                 MenuTextParagraphView(text: deckEditorViewModel.deckSelectionInfo)
                 Spacer()
+                MenuTextParagraphView(text: deckEditorViewModel.cardCountForSelectedDeck)
             }.frame(height: 20)
         }.padding([.leading, .trailing], 15)
     }
@@ -442,7 +491,7 @@ struct BottomControlRowView: View {
         HStack {
             // Import
             Button(action: {
-
+                deckEditorViewModel.importDeckFromClipboard()
             }, label: {
                 Image(systemName: "square.and.arrow.down")
                     .font(.title2)
@@ -455,7 +504,7 @@ struct BottomControlRowView: View {
             
             // Export
             Button(action: {
-
+                deckEditorViewModel.exportDeckToClipboard()
             }, label: {
                 Image(systemName: "square.and.arrow.up")
                     .font(.title2)
@@ -631,7 +680,7 @@ struct CardToShowCarouselView<Content>: View where Content: View {
         ZStack(alignment: .bottom) {
             GeometryReader { geometry in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: 10) {
+                    HStack(spacing: 10) {
                         self.content()
                             .frame(width: geometry.size.width, height: geometry.size.height)
                             .clipped()
@@ -642,11 +691,11 @@ struct CardToShowCarouselView<Content>: View where Content: View {
                 .gesture(
                     DragGesture().onChanged { value in
                         self.dragging = true
-                        self.offset = -CGFloat(self.index) * geometry.size.width + value.translation.width
+                        self.offset = -CGFloat(self.index) * (geometry.size.width + 10) + value.translation.width
                     }
                     .onEnded { value in
-                        let predictedEndOffset = -CGFloat(self.index) * geometry.size.width + value.predictedEndTranslation.width
-                        let predictedIndex = Int(round(predictedEndOffset / -geometry.size.width))
+                        let predictedEndOffset = -CGFloat(self.index) * (geometry.size.width + 10) + value.predictedEndTranslation.width
+                        let predictedIndex = Int(round(predictedEndOffset / -(geometry.size.width + 10)))
                         self.index = self.clampedIndex(from: predictedIndex)
                         withAnimation(.easeOut) {
                             self.dragging = false

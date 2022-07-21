@@ -150,17 +150,6 @@ struct IntroSetupView: View {
                     
                     Toggle("Remove the strongest cards from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
                         .foregroundColor(.white)
-                    
-                    Toggle("Replace board wipes with powefull permanents", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll)
-                        .foregroundColor(.white)
-                    
-                    if !gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll {
-                        Toggle("Remove board wipes from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
-                            .foregroundColor(.white)
-                    } else {
-                        Toggle("Remove powerfull permanents from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
-                            .foregroundColor(.white)
-                    }
                 }
             }.padding([.leading, .trailing], 50)
         }.background(Color(.white).opacity(0.00000001))

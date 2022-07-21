@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import UniformTypeIdentifiers
 
 class DeckEditorViewModel: ObservableObject {
     
@@ -14,11 +15,13 @@ class DeckEditorViewModel: ObservableObject {
     @Published var deck: DeckEditorCardList = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
     @Published var deckSelectionInfo: String = ""
     @Published var searchProgressInfo: String = "Let's search some cards"
+    @Published var popUpText: String = ""
     @Published var searchResult: [CardFromCardSearch] = []
     @Published var cardToShow: Card? = nil
     @Published var cardToShowReprints: [Card] = []
     @Published var showDeckEditorInfoView: Bool = false
     @Published var deckId: Int = 0
+    @Published var cardCountForSelectedDeck: String = ""
     
     func changeSelectedDeckTo(newSelectedDeck: Int) {
         selectedDeckListNumber = newSelectedDeck
@@ -33,6 +36,30 @@ class DeckEditorViewModel: ObservableObject {
             deckSelectionInfo = "Weak permanents the Horde could start with"
         } else if selectedDeckListNumber == DeckSelectionNumber.powerfullPermanentsList {
             deckSelectionInfo = "Powerfull permanents the Horde can spawn at milestones or between marathon stages"
+        }
+        
+        updateCardCountForSelectedDeck()
+    }
+    
+    func updateCardCountForSelectedDeck() {
+        var deckList: [Card] = []
+        var count = 0
+        if selectedDeckListNumber == DeckSelectionNumber.deckList {
+            deckList = deck.deckList.creatures + deck.deckList.instantsAndSorceries + deck.deckList.artifactsAndEnchantments + deck.deckList.tokens
+        } else {
+            deckList = getSelectedDeck()
+        }
+        
+        for card in deckList {
+            count += card.cardCount
+        }
+        
+        if count == 0 {
+            cardCountForSelectedDeck = ""
+        } else if count == 1 {
+            cardCountForSelectedDeck = "\(count) card"
+        } else {
+            cardCountForSelectedDeck = "\(count) cards"
         }
     }
        
@@ -51,6 +78,17 @@ class DeckEditorViewModel: ObservableObject {
             return CardType.instant
         }
         return CardType.enchantment
+    }
+    
+    func cardHasGraveyardKeyword(keywords: [String]) -> Bool {
+        let keywordToSearch: [String] = ["flashback", "aftermath"]
+        
+        for keyword in keywords {
+            if keywordToSearch.contains(keyword.lowercased()) {
+                return true
+            }
+        }
+        return false
     }
     
     func getSelectedDeck(card: Card? = nil) -> [Card] {
@@ -147,6 +185,7 @@ class DeckEditorViewModel: ObservableObject {
             deckSelected = regroupSameCardInArray(cardArray: deckSelected)
             saveToSelectedDeck(deckSelected: deckSelected, card: tmpCard)
         }
+        updateCardCountForSelectedDeck()
     }
     
     func removeCardFromSelectedDeck(card : Card) {
@@ -158,6 +197,7 @@ class DeckEditorViewModel: ObservableObject {
         var deckSelected = getSelectedDeck(card: card)
         deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected)
         saveToSelectedDeck(deckSelected: deckSelected, card: card)
+        updateCardCountForSelectedDeck()
     }
     
     // If cardToShow is in the selected deck, change the type
@@ -318,7 +358,7 @@ class DeckEditorViewModel: ObservableObject {
         static let weakPermanentsList = 4
         static let powerfullPermanentsList = 5
     }
-    
+
     struct DeckDataPattern {
         static let deck = "## Horde Deck ##"
         static let tooStrong = "## Too Strong ##"
@@ -335,6 +375,12 @@ extension DeckEditorViewModel {
     func loadExistingDeck(deckId: Int) {
         self.deckId = deckId
         let deckData: String = UserDefaults.standard.object(forKey: "Deck_\(deckId)") as? String ?? ""
+        
+        createDeckListFromDeckData(deckData: deckData)
+    }
+    
+    func createDeckListFromDeckData(deckData: String) {
+        self.deck = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
         
         if deckData != "" {
             let allLines = deckData.components(separatedBy: "\n")
@@ -369,9 +415,7 @@ extension DeckEditorViewModel {
                     }
                 }
             }
-            selectedDeckListNumber = DeckSelectionNumber.deckList
-        } else {
-            deck = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
+            changeSelectedDeckTo(newSelectedDeck: DeckSelectionNumber.deckList)
         }
     }
     
@@ -481,6 +525,19 @@ extension DeckEditorViewModel {
     func isDeckTooStrongSelected() -> Bool {
         return selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList
     }
+    
+    func importDeckFromClipboard() {
+        if let deckData = UIPasteboard.general.string {
+            popUpText = "Deck list imported from clipboard"
+            createDeckListFromDeckData(deckData: deckData)
+        }
+    }
+    
+    func exportDeckToClipboard() {
+        popUpText = "Deck list copie to clipboard"
+        UIPasteboard.general.setValue(getDeckDataString(),
+            forPasteboardType: UTType.plainText.identifier)
+    }
 }
 
 // MARK: QUERRY
@@ -509,7 +566,7 @@ extension DeckEditorViewModel {
                         DispatchQueue.main.async {
                             if decodedData.data != nil {
                                 decodedData.data!.forEach {
-                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
+                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
                                 }
                             }
                             self.searchProgressInfo = "Nothing found"
@@ -558,7 +615,7 @@ extension DeckEditorViewModel {
                             if decodedData.data != nil {
                                 decodedData.data!.forEach {
                                     if ($0.set ?? "").uppercased() != card.specificSet.uppercased() {
-                                        self.cardToShowReprints.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
+                                        self.cardToShowReprints.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
                                     }
                                 }
                             }

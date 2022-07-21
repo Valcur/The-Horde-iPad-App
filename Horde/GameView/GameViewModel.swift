@@ -22,7 +22,10 @@ class GameViewModel: ObservableObject {
     @Published var gameConfig: GameConfig
     var deckPickedId = 0
     var deckSizeAtStart = 0
-    var tokensAvailable: [Card]
+    var tokensAvailable: [Card] = []
+    var lateGameCards: [Card] = []
+    var weakCards: [Card] = []
+    var powerfullCards: [Card] = []
     var marathonStage = -1
     var strongPermanentsAlreadySpawned: [Bool]
     
@@ -43,17 +46,16 @@ class GameViewModel: ObservableObject {
         cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
         
         deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
-        let deckAndTokens = DeckManager.getDeckForId(deckPickedId: 1)
-        self.deck = deckAndTokens.0
-        self.tokensAvailable = deckAndTokens.1
         print("Game initiating with deck \(deckPickedId)")
         
         turnStep = -1
         marathonStage = -1
         
-        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveBoardWipeInFirstQuarter: true, shouldntHaveStrongCardsInFirstQuarter: true, shouldntHaveBoardWipeAtAll: false, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
+        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
         
         strongPermanentsAlreadySpawned = [false, false, false, false]
+        
+        setupDeck(deckPickedId: 1)
     }
     
     func startGame() {
@@ -61,11 +63,8 @@ class GameViewModel: ObservableObject {
         
         deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
         print("Game initiating with deck \(deckPickedId)")
-
-        let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId)
-        self.deck = deckAndTokens.0
-        self.tokensAvailable = deckAndTokens.1
-        print("Game initiating with deck \(deckPickedId)")
+        
+        setupDeck(deckPickedId: deckPickedId)
         
         cardsOnBoard = []
         cardsOnGraveyard = []
@@ -79,6 +78,20 @@ class GameViewModel: ObservableObject {
         strongPermanentsAlreadySpawned = [false, false, false, false]
         
         print("All good")
+    }
+    
+    func setupDeck(deckPickedId: Int) {
+        setupDeck(deckPickedId: deckPickedId, tokenMultiplicator: UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1)
+    }
+    
+    func setupDeck(deckPickedId: Int, tokenMultiplicator: Int) {
+        let deckList = DeckManager.getDeckForId(deckPickedId: deckPickedId, difficulty: tokenMultiplicator)
+        self.deck = deckList.0
+        self.tokensAvailable = deckList.1
+        self.lateGameCards = deckList.2
+        self.weakCards = deckList.3
+        self.powerfullCards = deckList.4
+        print("Game initiating with deck \(deckPickedId)")
     }
     
     func startNewHordeStep() {
@@ -131,13 +144,9 @@ class GameViewModel: ObservableObject {
         
         // Get deck
         if withDifficulty > -1 {
-            let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId, difficulty: withDifficulty)
-            self.deck = deckAndTokens.0
-            self.tokensAvailable = deckAndTokens.1
+            setupDeck(deckPickedId: deckPickedId, tokenMultiplicator: withDifficulty)
         } else {
-            let deckAndTokens = DeckManager.getDeckForId(deckPickedId: deckPickedId)
-            self.deck = deckAndTokens.0
-            self.tokensAvailable = deckAndTokens.1
+            setupDeck(deckPickedId: deckPickedId)
         }
         
         // Reduce or increase library size
@@ -146,37 +155,17 @@ class GameViewModel: ObservableObject {
             deck.removeSubrange(0..<(deck.count - cardsToKeep))
             deckSizeAtStart = deck.count
         } else {
-            let deck200 = DeckManager.getDeckForId(deckPickedId: deckPickedId).0
-            
-            for card in deck200 {
-                self.deck.append(card)
-            }
-            
-            if gameConfig.shared.deckSize == 300 {
-                let deck300 = DeckManager.getDeckForId(deckPickedId: deckPickedId).0
-                
-                for card in deck300 {
-                    self.deck.append(card)
-                }
+            if gameConfig.shared.deckSize == 200 {
+                self.deck = deck + deck
+            } else if gameConfig.shared.deckSize == 300 {
+                self.deck = deck + deck + deck
             }
             
             self.deck.shuffle()
         }
 
         // No boardwipe in first quarter & no strong cards
-        if (gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter || gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter) && marathonStage <= 0 {
-            var cardsToCheck: [Card] = []
-            
-            if gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter {
-                cardsToCheck = DeckManager.boardWipesCards
-            }
-            
-            if gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter {
-                let moreCardsToCheck = DeckManager.getStrongCardsListForDeck(deckPickedId: deckPickedId)
-                for card in moreCardsToCheck {
-                    cardsToCheck.append(card)
-                }
-            }
+        if (gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter) && marathonStage <= 0 {
             
             let difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
             let sizeAndnbrOfTokens = getSafeZoneCardCountAndAverageTokens(difficulty: difficulty)
@@ -193,14 +182,14 @@ class GameViewModel: ObservableObject {
                 deck.shuffle()
                 for i in 1..<quarter {
                     
-                    if isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: cardsToCheck) {
+                    if isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: powerfullCards) {
                         var cardIdToSwitchWith: Int
                         repeat {
                             cardIdToSwitchWith = Int.random(in: 0..<deck.count - quarter)
                             let cardTmp = deck[deck.count - i]
                             deck[deck.count - i] = deck[cardIdToSwitchWith]
                             deck[cardIdToSwitchWith] = cardTmp
-                        } while isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: cardsToCheck)
+                        } while isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: powerfullCards)
                     }
                     
                     if deck[deck.count - i].cardType == .token {
@@ -211,24 +200,6 @@ class GameViewModel: ObservableObject {
                 n += 1
             } while nbrOfTokens >= averageNumberOfTokens && n < 100
             
-            /*
-            repeat {
-                nbrOfTokens = 0
-                deck.shuffle()
-                for i in 1..<quarter {
-                    if deck[deck.count - i].cardType == .token {
-                        nbrOfTokens += 1
-                    }
-                    for strongCard in cardsToCheck {
-                        if deck[deck.count - i] == strongCard {
-                            hasStrongCardInFirstQuarter = true
-                        }
-                    }
-                }
-                print("loop \(n) + in \(quarter) max \(averageNumberOfTokens)")
-                n += 1
-            } while (hasStrongCardInFirstQuarter || nbrOfTokens >= averageNumberOfTokens) && n < 100
-            */
             // Can't suffle without no strong cards wich means too many strong cards -> wouldn't be fun -> let's get a new deck
             if n >= 100 {
                 setupHorde(withDifficulty: withDifficulty)
@@ -236,14 +207,12 @@ class GameViewModel: ObservableObject {
             }
         }
         
-        // Replace Board Wipes with strong permanents
-        if gameConfig.shared.shouldntHaveBoardWipeAtAll {
-            removeBoardWipeFromDeck()
-        }
-        
-        // Spawn start enchantment
+        // Spawn start enchantment if deck has any
         if gameConfig.shared.shouldStartWithWeakPermanent {
-            addCardToBoard(card: DeckManager.getRandomCardFromStarterPermanents(deckPickedId: deckPickedId))
+            let weakCard: Card? = weakCards.randomElement()
+            if weakCard != nil {
+                addCardToBoard(card: weakCard!)
+            }
         }
     }
     
@@ -352,19 +321,31 @@ class GameViewModel: ObservableObject {
     func spawnStrongPermanentIfNeeded() {
         if gameConfig.classic.shouldSpawnStrongPermanents {
             if gameConfig.classic.spawnStrongPermanentAt25 == true && !strongPermanentsAlreadySpawned[0] && deck.count == deckSizeAtStart - deckSizeAtStart / 4 {
-                addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+                let strongCard: Card? = powerfullCards.randomElement()
+                if strongCard != nil {
+                    addCardToBoard(card: strongCard!)
+                }
                 strongPermanentsAlreadySpawned[0] = true
             }
             if gameConfig.classic.spawnStrongPermanentAt50 == true && !strongPermanentsAlreadySpawned[1] && deck.count == deckSizeAtStart / 2 {
-                addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+                let strongCard: Card? = powerfullCards.randomElement()
+                if strongCard != nil {
+                    addCardToBoard(card: strongCard!)
+                }
                 strongPermanentsAlreadySpawned[1] = true
             }
             if gameConfig.classic.spawnStrongPermanentAt75 == true && !strongPermanentsAlreadySpawned[2] && deck.count == deckSizeAtStart / 4 {
-                addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+                let strongCard: Card? = powerfullCards.randomElement()
+                if strongCard != nil {
+                    addCardToBoard(card: strongCard!)
+                }
                 strongPermanentsAlreadySpawned[2] = true
             }
             if gameConfig.classic.spawnStrongPermanentAt100 == true && !strongPermanentsAlreadySpawned[3] && deck.count == 0 {
-                addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+                let strongCard: Card? = powerfullCards.randomElement()
+                if strongCard != nil {
+                    addCardToBoard(card: strongCard!)
+                }
                 strongPermanentsAlreadySpawned[3] = true
             }
             cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
@@ -386,23 +367,21 @@ class GameViewModel: ObservableObject {
         // Second Stage, 100 cards with twice the amount of tokens
         // Spawn first boss
         else if atStage == 1 {
-            addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
+            let strongCard: Card? = powerfullCards.randomElement()
+            if strongCard != nil {
+                addCardToBoard(card: strongCard!)
+            }
         }
         // Second Stage, 150 cards with tokens x3
         // Spawn second boss
         else if atStage == 2 {
-            addCardToBoard(card: DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId))
-            addCardToBoard(card: DeckManager.getRandomCardFromStarterPermanents(deckPickedId: deckPickedId))
-        }
-    }
-    
-    func removeBoardWipeFromDeck() {
-        for i in 0..<deck.count {
-            for boardWipe in DeckManager.boardWipesCards {
-                if deck[i] == boardWipe {
-                    deck.remove(at: i)
-                    deck.insert(DeckManager.getRandomCardFromMidGamePermanents(deckPickedId: deckPickedId), at: i)
-                }
+            var strongCard: Card? = powerfullCards.randomElement()
+            if strongCard != nil {
+                addCardToBoard(card: strongCard!)
+            }
+            strongCard = powerfullCards.randomElement()
+            if strongCard != nil {
+                addCardToBoard(card: strongCard!)
             }
         }
     }
@@ -567,9 +546,7 @@ struct GameConfig {
 
 struct SharedParameters {
     var shouldStartWithWeakPermanent: Bool
-    var shouldntHaveBoardWipeInFirstQuarter: Bool
     var shouldntHaveStrongCardsInFirstQuarter: Bool
-    var shouldntHaveBoardWipeAtAll: Bool
     var deckSize: Int
 }
 

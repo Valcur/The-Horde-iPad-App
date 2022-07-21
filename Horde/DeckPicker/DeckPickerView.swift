@@ -191,14 +191,6 @@ struct DeckPickingView: View {
                         .padding(10)
                 }
             }.padding(.horizontal, 30).opacity(isDeckSelected ? 1 : 0).offset(x: 25, y: -UIScreen.main.bounds.height / 2.3)
-            
-            if deckPicker.imageArtist != "" {
-                Text("art by \(deckPicker.imageArtist)")
-                    .foregroundColor(.white)
-                    .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
-                    .offset(x: isDeckSelected ? 0 : -25, y: UIScreen.main.bounds.height / 2.3)
-                    .animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
-            }
         }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
     }
     

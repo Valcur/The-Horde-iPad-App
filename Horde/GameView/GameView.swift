@@ -155,7 +155,7 @@ struct HordeBoardView: View {
                                     .cornerRadius(CardSize.cornerRadius.normal)
                                     .frame(width: CardSize.width.normal, height: CardSize.height.normal + deckThickness)
                                 
-                                Image("BackgroundTest")
+                                Image("MTGBackground")
                                     .resizable()
                                     .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                                     .cornerRadius(CardSize.cornerRadius.normal)
@@ -491,10 +491,10 @@ struct CardView: View {
     
     var CardImage: Image {
         if downloadManager.imageReadyToShow {
-            return Image(uiImage: (UIImage(data: downloadManager.data)) ?? UIImage(named: "BackgroundTest")!)
+            return Image(uiImage: (UIImage(data: downloadManager.data)) ?? UIImage(named: "MTGBackground")!)
                 
         }
-        return Image("BackgroundTest")
+        return Image("MTGBackground")
     }
     
     init(card: Card, shouldImageBeSaved: Bool = true) {
@@ -563,7 +563,7 @@ struct FlippingCardView: View {
                 .cornerRadius(CardSize.cornerRadius.normal)
                 .rotation3DEffect(Angle(degrees: frontDegree), axis: (x: 0, y: 1, z: 0))
                 .scaleEffect(cardScale)
-            Image("BackgroundTest")
+            Image("MTGBackground")
                 .resizable()
                 .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                 .cornerRadius(CardSize.cornerRadius.normal)

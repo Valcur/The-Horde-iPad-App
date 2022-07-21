@@ -169,7 +169,7 @@ struct HordeBoardView_iPhone: View {
                                     .cornerRadius(CardSize_iPhone.cornerRadius.normal)
                                     .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal + deckThickness)
                                 
-                                Image("BackgroundTest")
+                                Image("MTGBackground")
                                     .resizable()
                                     .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal)
                                     .cornerRadius(CardSize_iPhone.cornerRadius.normal)
@@ -604,7 +604,7 @@ struct FlippingCardView_iPhone: View {
                 .cornerRadius(CardSize_iPhone.cornerRadius.normal)
                 .rotation3DEffect(Angle(degrees: frontDegree), axis: (x: 0, y: 1, z: 0))
                 .scaleEffect(cardScale)
-            Image("BackgroundTest")
+            Image("MTGBackground")
                 .resizable()
                 .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal)
                 .cornerRadius(CardSize_iPhone.cornerRadius.normal)
@@ -879,17 +879,6 @@ struct IntroSetupView_iPhone: View {
                         
                         Toggle("Remove the strongest cards from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
                             .foregroundColor(.white)
-                        
-                        Toggle("Replace board wipes with powefull permanents", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll)
-                            .foregroundColor(.white)
-                        
-                        if !gameViewModel.gameConfig.shared.shouldntHaveBoardWipeAtAll {
-                            Toggle("Remove board wipes from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
-                                .foregroundColor(.white)
-                        } else {
-                            Toggle("Remove powerfull permanents from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveBoardWipeInFirstQuarter)
-                                .foregroundColor(.white)
-                        }
                     }
                 }.padding([.leading, .trailing], 50)
             }.frame(width: UIScreen.main.bounds.width * 1.6  - ((UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0) * 5), height: UIScreen.main.bounds.height).background(Color(.white).opacity(0.00000001))

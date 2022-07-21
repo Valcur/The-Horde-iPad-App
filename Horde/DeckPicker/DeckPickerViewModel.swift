@@ -37,7 +37,7 @@ class DeckPickerViewModel: ObservableObject {
         let deckRules = UserDefaults.standard.object(forKey: "Deck_\(id)_Rules") as? String ?? ""
         let deckImage = getDeckImage(id: id)
 
-        return DeckPicker(id: id, title: deckName, intro: deckIntro, specialRules: deckRules, image: deckImage, imageArtist: "")
+        return DeckPicker(id: id, title: deckName, intro: deckIntro, specialRules: deckRules, image: deckImage)
     }
     
     private func getDeckImage(id: Int) -> Image{
@@ -77,7 +77,6 @@ struct DeckPicker {
     let intro: String
     let specialRules: String
     let image: Image
-    let imageArtist: String
 }
 
 struct DecksId {

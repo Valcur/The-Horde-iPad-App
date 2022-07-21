@@ -6,608 +6,13 @@
 //
 
 import Foundation
+import SwiftUI
  
 struct DeckManager {
-    
-    static let boardWipesCards: [Card] = [
-        Card(cardName: "Ruinous Ultimatum",cardType: .sorcery),
-        Card(cardName: "All Is Dust", cardType: .sorcery),
-        Card(cardName: "Phyrexian Rebirth",cardType: .sorcery),
-        Card(cardName: "Wakening Sun's Avatar",cardType: .creature),
-        Card(cardName: "Ezuri's Predation", cardType: .sorcery),
-        Card(cardName: "Harsh Mercy",cardType: .sorcery),
-        Card(cardName: "Hour of Reckoning", cardType: .sorcery),
-        Card(cardName: "Wrath of God", cardType: .sorcery),
-        Card(cardName: "Fumigate",cardType: .sorcery),
-        Card(cardName: "Star of Extinction",cardType: .sorcery)
-        ]
-    
-    static private func getNatureDeck(difficulty: Int) -> ([Card], [Card]) {
-        var deck: [Card] = []
-        
-        // 1 Sandwurm Convergence
-
-        
-        // 1 Copperhoof Vorrac
-        // 1 Bellowing Tanglewurm
-        // 1 Yorvo, Lord of Garenbrig
-        // 1 Goreclaw, Terror of Qal Sisma
-        // 1 Rhonas the Indomitable -> cool si j'arrive a remplacer
-        // 1 Craterhoof Behemoth
-        // 1 Nessian Boar
-        // 1 Hornet Queen
-        // 1 End-Raze Forerunners
-        // 1 Grothama, All-Devouring
-        
-        // 1 Steel Leaf Champion
-        // 1 Woodland Champion
-        // 1 Mother Bear
-        
-        // 1 Winds of Qal Sisma
-        // 1 Overrun
-        // 1 Overwhelming Stampede
-        // 1 Heroic Intervention
-        // 1 Scale Up
-        // 1 Ezuri's Predation
-        // 1 Fungal Sprouting
-        // 2 Grizzly Fate
-        // 1 Shadowbeast Sighting
-        // 1 Klothys's Design
-        // 1 Call of the Herd
-        // 1 Crush of Wurms
-        // 1 Beast Attack
-        // 1 Parallel Evolution
-        // 1 Second Harvest
-        // 2 Elephant Ambush
-        // 1 Roar of the Wurm
-        // 1 Predatory Rampage
-        
-        // 1 Unnatural Growth
-        // 1 Sandwurm Convergence
-        // 2 Muraganda Petroglyphs
-        // 2 Gaea's Anthem
-
-        // 1 Copperhoof Vorrac
-        deck.append(Card(cardName: "Copperhoof Vorrac", cardType: .creature))
-        
-        // 1 Bellowing Tanglewurm
-        deck.append(Card(cardName: "Bellowing Tanglewurm", cardType: .creature))
-        
-        // 1 Yorvo, Lord of Garenbrig
-        deck.append(Card(cardName: "Yorvo, Lord of Garenbrig", cardType: .creature))
-        
-        // 1 Goreclaw, Terror of Qal Sisma
-        deck.append(Card(cardName: "Goreclaw, Terror of Qal Sisma", cardType: .creature))
-        
-        // 1 Rhonas the Indomitable
-        deck.append(Card(cardName: "Rhonas the Indomitable", cardType: .creature))
-        
-        // 1 Craterhoof Behemoth
-        deck.append(Card(cardName: "Craterhoof Behemoth", cardType: .creature))
-        
-        // 1 Nessian Boar
-        deck.append(Card(cardName: "Nessian Boar", cardType: .creature))
-        
-        // 1 Hornet Queen
-        deck.append(Card(cardName: "Hornet Queen", cardType: .creature))
-        
-        // 1 End-Raze Forerunners
-        deck.append(Card(cardName: "End-Raze Forerunners", cardType: .creature))
-        
-        // 1 Grothama, All-Devouring
-        deck.append(Card(cardName: "Grothama, All-Devouring", cardType: .creature))
-        
-        // 1 Steel Leaf Champion
-        deck.append(Card(cardName: "Steel Leaf Champion", cardType: .creature))
-        
-        // 1 Woodland Champion
-        deck.append(Card(cardName: "Woodland Champion", cardType: .creature))
-        
-        // 1 Mother Bear
-        deck.append(Card(cardName: "Mother Bear", cardType: .creature, hasFlashback: true))
-        
-        // A CHANGER SORCERY INSTANT
-        
-        // 1 Winds of Qal Sisma
-        deck.append(Card(cardName: "Winds of Qal Sisma", cardType: .sorcery))
-        
-        // 1 Overrun
-        deck.append(Card(cardName: "Overrun", cardType: .sorcery))
-        
-        // 1 Overwhelming Stampede
-        deck.append(Card(cardName: "Overwhelming Stampede", cardType: .sorcery))
-        
-        // 1 Heroic Intervention
-        deck.append(Card(cardName: "Heroic Intervention", cardType: .sorcery))
-        
-        // 1 Scale Up
-        deck.append(Card(cardName: "Scale Up", cardType: .sorcery))
-        
-        // 1 Ezuri's Predation
-        deck.append(Card(cardName: "Ezuri's Predation", cardType: .sorcery))
-        
-        // 1 Fungal Sprouting
-        deck.append(Card(cardName: "Fungal Sprouting", cardType: .sorcery))
-        
-        // 2 Grizzly Fate
-        deck.append(Card(cardName: "Grizzly Fate", cardType: .sorcery, hasFlashback: true))
-        deck.append(Card(cardName: "Grizzly Fate", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Shadowbeast Sighting
-        deck.append(Card(cardName: "Shadowbeast Sighting", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Klothys's Design
-        deck.append(Card(cardName: "Klothys's Design", cardType: .sorcery))
-        
-        // 1 Call of the Herd
-        deck.append(Card(cardName: "Call of the Herd", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Crush of Wurms
-        deck.append(Card(cardName: "Crush of Wurms", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Beast Attack
-        deck.append(Card(cardName: "Beast Attack", cardType: .sorcery, hasFlashback: true))
-        
-        // 2 Elephant Ambush
-        deck.append(Card(cardName: "Elephant Ambush", cardType: .sorcery, hasFlashback: true))
-        deck.append(Card(cardName: "Elephant Ambush", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Roar of the Wurm
-        deck.append(Card(cardName: "Roar of the Wurm", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Parallel Evolution
-        deck.append(Card(cardName: "Parallel Evolution", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Second Harvest
-        deck.append(Card(cardName: "Second Harvest", cardType: .instant))
-        
-        // 1 Predatory Rampage
-        deck.append(Card(cardName: "Predatory Rampage", cardType: .sorcery))
-        
-        // 1 Unnatural Growth
-        deck.append(Card(cardName: "Unnatural Growth", cardType: .enchantment))
-        
-        // 1 Sandwurm Convergence
-        deck.append(Card(cardName: "Sandwurm Convergence", cardType: .enchantment, cardImageURL: DeckManager.getScryfallImageUrl(name: "Sandwurm Convergence", specifiSet: "AKH")))
-        
-        // 2 Muraganda Petroglyphs
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Muraganda Petroglyphs", cardType: .enchantment))
-        }
-        
-        // 3 Gaea's Anthem
-        for _ in 1...3 {
-            deck.append(Card(cardName: "Gaea's Anthem", cardType: .enchantment))
-        }
-        
-        // 20 Bear 2/2
-        for _ in 1...(20 * difficulty) {
-            deck.append(Card(cardName: "Bear", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Bear", specifiSet: "TELD")))
-        }
-        
-        // 6 Elephant 3/3
-        for _ in 1...(12 * difficulty) {
-            deck.append(Card(cardName: "Elephant", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")))
-        }
-        
-        // 10 Beast 4/4
-        for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Beast", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")))
-        }
-        
-        // 5 Wurm 6/6
-        for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Wurm TC19", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TC19")))
-        }
-        
-        // 16 Elemental x/x
-        for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Elemental T2XM", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "T2XM")))
-        }
-         
-        // 3 Elemental 7/7
-        for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "Elemental TKHC", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "TKHC")))
-        }
-
-        let tokens: [Card] = [
-            Card(cardName: "Saproling (TC20)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
-            Card(cardName: "Insect", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TC20")),
-            Card(cardName: "Bear", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Bear", specifiSet: "TELD")),
-            Card(cardName: "Elephant", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elephant", specifiSet: "T2XM")),
-            Card(cardName: "Beast", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TMH2")),
-            Card(cardName: "Wurm TCLB", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TCLB")),
-            Card(cardName: "Wurm TC19", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Wurm", specifiSet: "TC19")),
-            Card(cardName: "Elemental T2XM", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "TKHC")),
-            Card(cardName: "Elemental TKHC", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "T2XM"))
-        ]
-        
-        deck.shuffle()
-        
-        return (deck, tokens)
-    }
-    
-    static private func getZombieDeck(difficulty: Int) -> ([Card], [Card]) {
-        var deck: [Card] = []
-        
-        /* ZOMBIE ORIGINAL
-         
-         1 Call to the Grave
-         2 Bad Moon
-         1 Plague Wind
-         1 Damnation
-         1 Yixlid Jailer
-         1 Forsaken Wastes
-         2 Nested Ghoul
-         2 Infectious Horror
-         2 Delirium Skeins
-         1 Blind Creeper
-         2 Soulless One
-         2 Vengeful Dead
-         1 Fleshbag Marauder
-         1 Carrion Wurm
-         3 Maggot Carrier
-         4 Cackling Fiend
-         1 Death Baron
-         1 Grave Titan
-         2 Severed Legion
-         1 Skulking Knight
-         1 Undead Warchief
-         1 Twilights Call
-         1 Army of the Damned
-         1 Endless Ranks of the Dead
-         2 Rotting Fensnake
-         1 Unbreathing Horde
-         1 Walking Corpse
-         5 Zombie Giant Tokens
-         55 Zombie Tokens
-         */
-        
-        // 1 Call to the Grave
-        deck.append(Card(cardName: "Call to the Grave", cardType: .enchantment))
-        
-        // 2 Bad Moon
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Bad Moon", cardType: .enchantment))
-        }
-        
-        // 1 Plague Wind
-        deck.append(Card(cardName: "Plague Wind", cardType: .sorcery))
-        
-        // 1 Damnation
-        deck.append(Card(cardName: "Damnation", cardType: .sorcery))
-        
-        // 1 Yixlid Jailer
-        deck.append(Card(cardName: "Yixlid Jailer", cardType: .creature))
-        
-        // 1 Forsaken Wastes
-        deck.append(Card(cardName: "Forsaken Wastes", cardType: .enchantment))
-        
-        // 2 Nested Ghoul
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Nested Ghoul", cardType: .creature))
-        }
-        
-        // 2 Infectious Horror
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Infectious Horror", cardType: .creature))
-        }
-        
-        // 2 Delirium Skeins
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Delirium Skeins", cardType: .sorcery))
-        }
-        
-        // 1 Blind Creeper
-        deck.append(Card(cardName: "Blind Creeper", cardType: .creature))
-        
-        // 2 Soulless One
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Soulless One", cardType: .creature))
-        }
-        
-        // 2 Vengeful Dead
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Vengeful Dead", cardType: .creature))
-        }
-        
-        // 1 Fleshbag Marauder
-        deck.append(Card(cardName: "Fleshbag Marauder", cardType: .creature))
-        
-        // 1 Carrion Wurm
-        deck.append(Card(cardName: "Carrion Wurm", cardType: .creature))
-        
-        // 3 Maggot Carrier
-        for _ in 1...3 {
-            deck.append(Card(cardName: "Maggot Carrier", cardType: .creature))
-        }
-        
-        // 4 Cackling Fiend
-        for _ in 1...4 {
-            deck.append(Card(cardName: "Cackling Fiend", cardType: .creature))
-        }
-        
-        // 1 Death Baron
-        deck.append(Card(cardName: "Death Baron", cardType: .creature))
-        
-        // 1 Grave Titan
-        deck.append(Card(cardName: "Grave Titan", cardType: .creature))
-        
-        // 2 Severed Legion
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Severed Legion", cardType: .creature))
-        }
-        
-        // 1 Skulking Knight
-        deck.append(Card(cardName: "Skulking Knight", cardType: .creature))
-        
-        // 1 Undead Warchief
-        deck.append(Card(cardName: "Undead Warchief", cardType: .creature))
-        
-        // 1 Twilights Call
-        deck.append(Card(cardName: "Twilights Call", cardType: .sorcery))
-        
-        // 1 Army of the Damned
-        deck.append(Card(cardName: "Army of the Damned", cardType: .sorcery, cardImageURL: DeckManager.getScryfallImageUrl(name: "Army of the Damned", specifiSet: "ISD"), hasFlashback: true))
-        
-        // 1 Endless Ranks of the Dead
-        deck.append(Card(cardName: "Endless Ranks of the Dead", cardType: .enchantment))
-        
-        // 2 Rotting Fensnake
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Rotting Fensnake", cardType: .creature))
-        }
-        
-        // 1 Unbreathing Horde
-        deck.append(Card(cardName: "Unbreathing Horde", cardType: .creature))
-        
-        // 1 Walking Corpse
-        deck.append(Card(cardName: "Walking Corpse", cardType: .creature))
-        
-        // 5 Zombie Giant Tokens
-        for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Zombie Giant Token", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Zombie Giant", specifiSet: "TBBD")))
-        }
-        
-        // 55 Zombie Tokens
-        for _ in 1...(55 * difficulty) {
-            deck.append(Card(cardName: "Zombie Token", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Zombie", specifiSet: "TISD")))
-        }
-        
-        let tokens: [Card] = [
-            Card(cardName: "Zombie Token", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Zombie", specifiSet: "TISD")),
-            Card(cardName: "Zombie Giant Token", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Zombie Giant", specifiSet: "TBBD"))
-        ]
-        
-        deck.shuffle()
-        
-        return (deck, tokens)
-    }
-    
-    static private func getSliverDeck(difficulty: Int) -> ([Card], [Card]) {
-        var deck: [Card] = []
-        
-        /* SLIVER HIVE
-         
-         1 Battering Sliver
-         1 Brood Sliver
-         2 Cleansing Meditation
-         1 Cleaving Sliver
-         1 Diffusion Sliver
-         1 Essence Sliver
-         1 Frenzy Sliver
-         1 Fungus Sliver -> Changed to Fury Sliver
-         1 Fury Sliver
-         1 Hive Stirrings -> Changed to Might Sliver
-         1 Lancer Sliver
-         1 Lavabelly Sliver
-         1 Leeching Sliver
-         1 Lymph Sliver
-         1 Megantic Sliver
-         1 Might Sliver
-         4 Plague Wind -> Changed to Harsh Mercy
-         1 Root Sliver -> Changed to Sinew Sliver
-         1 Ruinous Ultimatum
-         1 Shifting Sliver
-         1 Sidewinder Sliver
-         1 Sinew Sliver
-         1 Sliver Legion -> leave this one here not as a boss ? -> Changed to Megantic Sliver
-         1 Spined Sliver
-         1 Spitting Sliver
-         1 Synchronous Sliver -> Changed to Lavabelly Sliver
-         1 Tempered Sliver -> Changed to Might Sliver
-         1 Toxin Sliver
-         1 Two-Headed Sliver
-         1 Vampiric Sliver -> Changed to Might Sliver
-         2 Vandalblast
-         
-         10 Venser's Sliver
-         22 Sliver Construct
-         32 Metallic Sliver
-         */
-        
-        
-        // 1 Battering Sliver
-        deck.append(Card(cardName: "Battering Sliver",cardType: .creature))
-        
-        // 1 Brood Sliver
-        deck.append(Card(cardName: "Brood Sliver",cardType: .creature))
-        
-        // 2 Cleansing Meditation
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Cleansing Meditation",cardType: .sorcery))
-        }
-        
-        // 1 Cleaving Sliver
-        deck.append(Card(cardName: "Cleaving Sliver",cardType: .creature))
-        
-        // 1 Diffusion Sliver
-        deck.append(Card(cardName: "Diffusion Sliver",cardType: .creature))
-        
-        // 1 Essence Sliver
-        deck.append(Card(cardName: "Essence Sliver",cardType: .creature))
-        
-        // 1 Frenzy Sliver
-        deck.append(Card(cardName: "Frenzy Sliver",cardType: .creature))
-        
-        // 1 Fungus Sliver
-        deck.append(Card(cardName: "Fury Sliver",cardType: .creature))
-        
-        // 1 Fury Sliver
-        deck.append(Card(cardName: "Fury Sliver",cardType: .creature))
-        
-        // 1 Hive Stirrings
-        deck.append(Card(cardName: "Might Sliver",cardType: .creature))
-        
-        // 1 Lancer Sliver
-        deck.append(Card(cardName: "Lancer Sliver",cardType: .creature))
-        
-        // 1 Lavabelly Sliver
-        deck.append(Card(cardName: "Lavabelly Sliver",cardType: .creature))
-        
-        // 1 Leeching Sliver
-        deck.append(Card(cardName: "Leeching Sliver",cardType: .creature))
-        
-        // 1 Lymph Sliver
-        deck.append(Card(cardName: "Lymph Sliver",cardType: .creature))
-        
-        // 1 Megantic Sliver
-        deck.append(Card(cardName: "Megantic Sliver",cardType: .creature))
-        
-        // 1 Might Sliver
-        deck.append(Card(cardName: "Might Sliver",cardType: .creature))
-        
-        // 4 Harsh Mercy
-        for _ in 1...4 {
-            deck.append(Card(cardName: "Harsh Mercy",cardType: .sorcery))
-        }
-        
-        // 1 Root Sliver
-        deck.append(Card(cardName: "Sinew Sliver",cardType: .creature))
-        
-        // 1 Ruinous Ultimatum
-        deck.append(Card(cardName: "Ruinous Ultimatum",cardType: .sorcery))
-        
-        // 1 Shifting Sliver
-        deck.append(Card(cardName: "Shifting Sliver",cardType: .creature))
-        
-        // 1 Sidewinder Sliver
-        deck.append(Card(cardName: "Sidewinder Sliver",cardType: .creature))
-        
-        // 1 Sinew Sliver
-        deck.append(Card(cardName: "Sinew Sliver",cardType: .creature))
-        
-        // 1 Sliver Legion
-        deck.append(Card(cardName: "Megantic Sliver",cardType: .creature))
-        
-        // 1 Spined Sliver
-        deck.append(Card(cardName: "Spined Sliver",cardType: .creature))
-        
-        // 1 Spitting Sliver
-        deck.append(Card(cardName: "Spitting Sliver",cardType: .creature))
-        
-        // 1 Synchronous Sliver
-        deck.append(Card(cardName: "Lavabelly Sliver",cardType: .creature))
-        
-        // 1 Tempered Sliver
-        deck.append(Card(cardName: "Might Sliver",cardType: .creature))
-        
-        // 1 Toxin Sliver
-        deck.append(Card(cardName: "Toxin Sliver",cardType: .creature))
-        
-        // 1 Two-Headed Sliver
-        deck.append(Card(cardName: "Two-Headed Sliver",cardType: .creature))
-        
-        // 1 Vampiric Sliver
-        deck.append(Card(cardName: "Might Sliver",cardType: .creature))
-        
-        // 2 Vandalblast
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Vandalblast",cardType: .sorcery))
-        }
-        
-        // 10 Venser's Sliver
-        for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Venser's Sliver",cardType: .token))
-        }
-        
-        // 22 Sliver Construct
-        for _ in 1...(22 * difficulty) {
-            deck.append(Card(cardName: "Sliver Construct",cardType: .token))
-        }
-        
-        // 32 Metallic Sliver
-        for _ in 1...(32 * difficulty) {
-            deck.append(Card(cardName: "Metallic Sliver",cardType: .token))
-        }
-        
-        let tokens: [Card] = [
-            Card(cardName: "Metallic Sliver",cardType: .token),
-            Card(cardName: "Sliver Construct",cardType: .token),
-            Card(cardName: "Venser's Sliver",cardType: .token)
-        ]
-        
-        deck.shuffle()
-        
-        return (deck, tokens)
-    }
-    
+    /*
     static private func getEldraziDeck(difficulty: Int) -> ([Card], [Card]) {
         var deck: [Card] = []
-        
-        /* ELDRAZI HORRORS
-         
-         1 All Is Dust
-         1 Awakening Zone
-         1 Bane of Bala Ged
-         1 Benthic Infiltrator
-         1 Blisterpod
-         1 Breaker of Armies
-         1 Brood Monitor
-         1 Chittering Host
-         1 Culling Drone
-         1 Dominator Drone
-         1 Dread Drone
-         1 Eldrazi Aggressor
-         1 Eldrazi Devastator
-         1 Emrakul's Hatcher
-         1 Essence Feed
-         1 Eyeless Watcher
-         1 Flayer Drone
-         1 Hand of Emrakul
-         1 Hanweir, the Writhing Township
-         1 Incubator Drone
-         1 It That Betrays
-         1 Kozilek's Predator
-         1 Kozilek's Sentinel
-         1 Nest Invader
-         1 Pathrazer of Ulamog
-         1 Pawn of Ulamog
-         1 Rapacious One
-         1 Reality Smasher
-         1 Ruination Guide
-         1 Scion Summoner
-         1 Sifter of Skulls
-         1 Skittering Invasion
-         1 Swarm Surge
-         1 Tide Drifter
-         1 Ulamog's Crusher
-         1 Vestige of Emrakul
-         1 Vile Aggregate
-         1 Void Grafter -> CHANGED TO Desolation Twin
-         1 Void Winnower
-         1 Witness the End
-         
-         15 Eldrazi Horror (TEMN) 1
-         25 Eldrazi Scion (DDR) 71
-         5 Eldrazi (TPCA) 1
-         15 Eldrazi Spawn (DDP) 76
-
-         Sideboard:
-         1 Emrakul, the Aeons Torn
-         1 Kozilek, Butcher of Truth
-         1 Ulamog, the Ceaseless Hunger
-         */
+   
         
         // 1 All Is Dust
         deck.append(Card(cardName: "All Is Dust", cardType: .sorcery))
@@ -766,718 +171,245 @@ struct DeckManager {
         return (deck, tokens)
     }
     
-    static private func getHumanDeck(difficulty: Int) -> ([Card], [Card]) {
-        var deck: [Card] = []
-        
-        /* HUMAN ARMY
-         
-        MAYBE ?
-        1 Balefire Liege
-        1 Crescendo of War
-        1 Glory of Warfare
-        1 Nobilis of War
-         
-        1 Adeline, Resplendent Cathar
-        1 Adriana, Captain of the Guard
-        1 Archetype of Courage
-        1 Benalish Marshal
-        1 Blade Historian
-        1 Captain of the Watch
-        1 Cathars' Crusade -> CHANGED TO Collective Blessing
-        1 Cazur, Ruthless Stalker -> CHANGED TO Deploy to the Front
-        2 Cleansing Meditation
-        1 Darien, King of Kjeldor
-        1 Frontier Warmonger
-        1 Frontline Medic
-        1 Goldnight Commander
-        1 Hamlet Captain
-        1 Hanweir Garrison
-        1 Hero of Bladehold
-        1 Hero of Oxid Ridge
-        1 Increasing Devotion
-        1 Inspiring Veteran -> Changed to Balefire Liege
-        1 Knight Exemplar -> Changed to Nobilis of War
-        1 Kyler, Sigardian Emissary
-        4 Plague Wind
-        1 Radiant Destiny -> CHANGED TO Glorious Anthem
-        1 Rally the Ranks -> CHANGED TO Glorious Anthem
-        1 Reverent Hoplite
-        1 Ruinous Ultimatum
-        1 Shared Animosity -> Too strong ? changed to Dictate of Heliod
-        1 Spare from Evil -> Too strong -> Changed to one more Captain of the Watch
-        1 Stalwart Pathlighter
-        1 Syr Alin, the Lion's Claw
-        1 True Conviction
-        2 Vandalblast
-        1 Victory's Envoy -> CHANGED TO Blazing Archon
-        1 Visions of Glory
-        1 Worthy Knight -> Changed to Angel of Glory's Rise
-         
-        10 Soldier (TGRN) 2
-        10 Knight (TMIC) 3
-        10 Human Warrior (TELD) 13
-        10 Knight (TCM2) 4
-        20 Human (TRNA) 1
-        */
-        
-        // 1 Adeline, Resplendent Cathar
-        deck.append(Card(cardName: "Adeline, Resplendent Cathar", cardType: .creature))
-        
-        // 1 Adriana, Captain of the Guard
-        deck.append(Card(cardName: "Adriana, Captain of the Guard", cardType: .creature))
-        
-        // 1 Archetype of Courage
-        deck.append(Card(cardName: "Archetype of Courage", cardType: .creature))
-        
-        // 1 Benalish Marshal
-        deck.append(Card(cardName: "Benalish Marshal", cardType: .creature))
-        
-        // 1 Blade Historian
-        deck.append(Card(cardName: "Blade Historian", cardType: .creature))
-        
-        // 1 Captain of the Watch
-        deck.append(Card(cardName: "Captain of the Watch", cardType: .creature))
-        deck.append(Card(cardName: "Captain of the Watch", cardType: .creature))
-        
-        // 1 Collective Blessing
-        deck.append(Card(cardName: "Collective Blessing", cardType: .enchantment))
-        
-        // 1 Deploy to the Front
-        deck.append(Card(cardName: "Deploy to the Front", cardType: .sorcery))
-        
-        // 2 Cleansing Meditation
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Cleansing Meditation", cardType: .sorcery))
-        }
-        
-        // 1 Darien, King of Kjeldor
-        deck.append(Card(cardName: "Darien, King of Kjeldor", cardType: .creature))
-        
-        // 1 Frontier Warmonger
-        deck.append(Card(cardName: "Frontier Warmonger", cardType: .creature))
-        
-        // 1 Frontline Medic
-        deck.append(Card(cardName: "Frontline Medic", cardType: .creature))
-        
-        // 1 Goldnight Commander
-        deck.append(Card(cardName: "Goldnight Commander", cardType: .creature))
-        
-        // 1 Hamlet Captain
-        deck.append(Card(cardName: "Hamlet Captain", cardType: .creature))
-        
-        // 1 Hanweir Garrison
-        deck.append(Card(cardName: "Hanweir Garrison", cardType: .creature))
-        
-        // 1 Hero of Bladehold
-        deck.append(Card(cardName: "Hero of Bladehold", cardType: .creature))
-        
-        // 1 Hero of Oxid Ridge
-        deck.append(Card(cardName: "Hero of Oxid Ridge", cardType: .creature))
-        
-        // 1 Increasing Devotion
-        deck.append(Card(cardName: "Increasing Devotion", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Inspiring Veteran
-        deck.append(Card(cardName: "Balefire Liege", cardType: .creature))
-        
-        // 1 Knight Exemplar
-        deck.append(Card(cardName: "Nobilis of War", cardType: .creature))
-        
-        // 1 Kyler, Sigardian Emissary
-        deck.append(Card(cardName: "Kyler, Sigardian Emissary", cardType: .creature))
-        
-        // 2 Hour of Reckoning
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Hour of Reckoning", cardType: .sorcery))
-        }
-        
-        // 2 Wrath of God
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Wrath of God", cardType: .sorcery))
-        }
-        
-        // 1 Glorious Anthem
-        deck.append(Card(cardName: "Glorious Anthem", cardType: .enchantment))
-        
-        // 1 Glorious Anthem
-        deck.append(Card(cardName: "Glorious Anthem", cardType: .enchantment))
-        
-        // 1 Reverent Hoplite
-        deck.append(Card(cardName: "Reverent Hoplite", cardType: .creature))
-        
-        // 1 Ruinous Ultimatum
-        deck.append(Card(cardName: "Ruinous Ultimatum", cardType: .sorcery))
-        
-        // 1 Shared Animosity
-        deck.append(Card(cardName: "Dictate of Heliod", cardType: .enchantment))
-        
-        // 1 Spare from Evil
-        //deck.append(Card(cardName: "Spare from Evil", cardType: .instant))
-        
-        // 1 Stalwart Pathlighter
-        deck.append(Card(cardName: "Stalwart Pathlighter", cardType: .creature))
-        
-        // 1 Syr Alin, the Lion's Claw
-        deck.append(Card(cardName: "Syr Alin, the Lion's Claw", cardType: .creature))
-        
-        // 1 True Conviction
-        deck.append(Card(cardName: "True Conviction", cardType: .enchantment))
-        
-        // 2 Vandalblast
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Vandalblast", cardType: .sorcery))
-        }
-        
-        // 1 Blazing Archon
-        deck.append(Card(cardName: "Blazing Archon", cardType: .creature))
-        
-        // 1 Visions of Glory
-        deck.append(Card(cardName: "Visions of Glory", cardType: .sorcery, hasFlashback: true))
-        
-        // 1 Worthy Knight
-        deck.append(Card(cardName: "Angel of Glory's Rise", cardType: .creature))
-        
-        
-        // 10 Soldier (TGRN) 1/1 Lifelink -> Replace to classic 1/1
-        for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Soldier (TCLB)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TCLB")))
-        }
-        
-        // 10 Knight (TMIC) 2/2 Vigilance -> Replace to solider 2/2
-        for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Soldier (TWAR)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TWAR")))
-        }
-        
-        // 10 Human Warrior (TELD) 13
-        for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Human Warrior (TELD)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Human Warrior", specifiSet: "TELD")))
-        }
-        
-        // 10 Knight (TCM2) 2/2 First Striker
-        for _ in 1...(10 * difficulty) {
-            deck.append(Card(cardName: "Knight (TCM2)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Knight", specifiSet: "TCM2")))
-        }
-        
-        // 20 Human (TRNA) 1
-        for _ in 1...(20 * difficulty) {
-            deck.append(Card(cardName: "Human (TRNA)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Human", specifiSet: "TC20")))
-        }
-        
-        
-        let tokens: [Card] = [
-            Card(cardName: "Human (TRNA)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Human", specifiSet: "TC20")),
-            Card(cardName: "Soldier (TCLB)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TCLB")),
-            Card(cardName: "Soldier (TWAR)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Soldier", specifiSet: "TWAR")),
-            Card(cardName: "Knight (TCM2)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Knight", specifiSet: "TCM2")),
-            Card(cardName: "Human Warrior (TELD)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Human Warrior", specifiSet: "TELD"))
-        ]
-        
-        deck.shuffle()
-        
-        return (deck, tokens)
+*/
+    
+    static func getDeckForId(deckPickedId: Int, difficulty: Int) -> ([Card], [Card], [Card], [Card], [Card]) {
+        let deckData: String = UserDefaults.standard.object(forKey: "Deck_\(deckPickedId)") as? String ?? ""
+        return createDeckListFromDeckData(deckData: deckData, tokenMultiplicator: difficulty)
     }
     
-    static private func getPhyrexianDeck(difficulty: Int) -> ([Card], [Card]) {
-        var deck: [Card] = []
+    static func createDeckListFromDeckData(deckData: String, tokenMultiplicator: Int) -> ([Card], [Card], [Card], [Card], [Card]){
+        var deck = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
         
-        /* PHYREXIAN PERFECTION
-         
-         MAYBE ?
-         1 Decimator of the Provinces
-         
-         // Removed because mostly because of +1/+1 counters
-         1 Arcbound Crusher -> CHANGED TO Master Splicer
-         1 Arcbound Overseer -> CHANGED TO Wing Splicer
-         1 Arcbound Shikari -> CHANGED TO Ichor Rats
-         1 Arcbound Slith -> CHANGED TO Phyrexian Juggernaut
-         1 Arcbound Tracker -> CHANGED TO Toxic Nim
-         1 Ich-Tekik, Salvage Splicer -> CHANGED TO Urabrask the Hidden
-         
-         1 Spread the Sickness -> CHANGED TO Skithiryx, the Blight Dragon
-         1 Wake the Past -> CHANGED TO Putrefax
-         
-         1 Blade Splicer
-         1 Blightsteel Colossus
-         1 Bronze Guardian
-         1 Carrion Call
-         2 Cleansing Meditation
-         1 Core Prowler
-         1 Elesh Norn, Grand Cenobite
-         1 Hand of the Praetors
-         1 Inexorable Tide
-         1 Massacre Wurm
-         1 Maul Splicer
-         1 Nest of Scarabs
-         1 Phyrexian Crusader
-         1 Phyrexian Hydra
-         1 Phyrexian Obliterator
-         1 Phyrexian Rebirth
-         1 Phyrexian Swarmlord
-         3 Plague Wind -> Changed to Fumigate
-         1 Priests of Norn
-         1 Reaper of Sheoldred
-         1 Ruinous Ultimatum
-         1 Scuttling Doom Engine
-         1 Sensor Splicer
-         1 Spinebiter
-         1 Triumph of the Hordes
-         2 Vandalblast
-         1 Vedalken Humiliator
-         1 Vorinclex, Monstrous Raider
-         1 Wurmcoil Engine
-         
-         20 Golem (TNPH) 3
-         5 Assembly-Worker (TTSR) 14
-         5 Construct (TMH2) 16
-         5 Construct (TC18) 21
-         5 Golem (TC21) 27 -> moved to Golem TPNH
-         4 Construct (TZNR) 10
-         3 Beast (TKLD) 1
-         3 Golem (TRIX) 4
-         3 Golem (TMBS) 3
-         3 Wurm (TSOM) 8
-         3 Wurm (TSOM) 9
-         */
-        
-        // 1 Master Splicer
-        deck.append(Card(cardName: "Master Splicer",cardType: .creature))
-        
-        // 1 Wing Splicer
-        deck.append(Card(cardName: "Wing Splicer",cardType: .creature))
-        
-        // 1 Ichor Rats
-        deck.append(Card(cardName: "Ichor Rats",cardType: .creature))
-        
-        // 1 Phyrexian Juggernaut
-        deck.append(Card(cardName: "Phyrexian Juggernaut",cardType: .creature))
-        
-        // 1 Toxic Nim
-        deck.append(Card(cardName: "Toxic Nim",cardType: .creature))
-        
-        // 1 Blade Splicer
-        deck.append(Card(cardName: "Blade Splicer",cardType: .creature))
-        
-        // 1 Blightsteel Colossus
-        deck.append(Card(cardName: "Blightsteel Colossus",cardType: .creature))
-        
-        // 1 Bronze Guardian
-        deck.append(Card(cardName: "Bronze Guardian",cardType: .creature))
-        
-        // 1 Carrion Call
-        deck.append(Card(cardName: "Carrion Call",cardType: .instant))
-        
-        // 2 Cleansing Meditation
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Cleansing Meditation",cardType: .sorcery))
+        if deckData != "" {
+            let allLines = deckData.components(separatedBy: "\n")
+            var selectedDeckListNumber = DeckEditorViewModel.DeckSelectionNumber.deckList
+            
+            for line in allLines {
+                if line != "" {
+                    // Change current decklist to add cards to
+                    if line == DeckEditorViewModel.DeckDataPattern.deck {
+                        selectedDeckListNumber = DeckEditorViewModel.DeckSelectionNumber.deckList
+                    } else if line == DeckEditorViewModel.DeckDataPattern.tooStrong {
+                        selectedDeckListNumber = DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList
+                    } else if line == DeckEditorViewModel.DeckDataPattern.availableTokens {
+                        selectedDeckListNumber = DeckEditorViewModel.DeckSelectionNumber.availableTokensList
+                    } else if line == DeckEditorViewModel.DeckDataPattern.weakPermanents {
+                        selectedDeckListNumber = DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList
+                    } else if line == DeckEditorViewModel.DeckDataPattern.powerfullPermanents {
+                        selectedDeckListNumber = DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList
+                    } else
+                    {
+                        // Or add card if its a card
+                        let cardDataArray = line.components(separatedBy: " ")
+                        
+                        let cardCount = Int(cardDataArray[0]) ?? 0
+                        var cardName = cardDataArray[4]
+                        for i in 5..<cardDataArray.count - 2 {
+                            cardName += " " + cardDataArray[i]
+                        }
+                        
+                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardDataArray[3] == DeckEditorViewModel.DeckDataPattern.cardHaveFlashback, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
+                        card.cardCount = cardCount
+                        deck = addCardToSelectedDeck(card: card, selectedDeckListNumber: selectedDeckListNumber, deckList: deck)
+                    }
+                }
+            }
         }
         
-        // 1 Core Prowler
-        deck.append(Card(cardName: "Core Prowler",cardType: .creature))
-        
-        // 1 Elesh Norn, Grand Cenobite
-        deck.append(Card(cardName: "Elesh Norn, Grand Cenobite",cardType: .creature))
-        
-        // 1 Hand of the Praetors
-        deck.append(Card(cardName: "Hand of the Praetors",cardType: .creature))
-        
-        // 1 Urabrask the Hidden
-        deck.append(Card(cardName: "Urabrask the Hidden",cardType: .creature))
-        
-        // 1 Inexorable Tide
-        deck.append(Card(cardName: "Inexorable Tide",cardType: .enchantment))
-        
-        // 1 Massacre Wurm
-        deck.append(Card(cardName: "Massacre Wurm",cardType: .creature))
-        
-        // 1 Maul Splicer
-        deck.append(Card(cardName: "Maul Splicer",cardType: .creature))
-        
-        // 1 Nest of Scarabs
-        deck.append(Card(cardName: "Nest of Scarabs",cardType: .enchantment))
-        
-        // 1 Phyrexian Crusader
-        deck.append(Card(cardName: "Phyrexian Crusader",cardType: .creature))
-        
-        // 1 Phyrexian Hydra
-        deck.append(Card(cardName: "Phyrexian Hydra",cardType: .creature))
-        
-        // 1 Phyrexian Obliterator
-        deck.append(Card(cardName: "Phyrexian Obliterator",cardType: .creature))
-        
-        // 1 Phyrexian Rebirth
-        deck.append(Card(cardName: "Phyrexian Rebirth",cardType: .sorcery))
-        
-        // 1 Phyrexian Swarmlord
-        deck.append(Card(cardName: "Phyrexian Swarmlord",cardType: .creature))
-        
-        // 3 Fumigate
-        for _ in 1...3 {
-            deck.append(Card(cardName: "Fumigate",cardType: .sorcery))
+        var hordeDeck = deck.deckList.creatures + deck.deckList.instantsAndSorceries + deck.deckList.artifactsAndEnchantments
+        for _ in 0..<tokenMultiplicator {
+            hordeDeck += deck.deckList.tokens
         }
+        hordeDeck = hordeDeck.shuffled()
         
-        // 1 Priests of Norn
-        deck.append(Card(cardName: "Priests of Norn",cardType: .creature))
+        let availableTokens = deck.availableTokensList
+        let lateGameCards = deck.tooStrongPermanentsList
+        let weakPermanents = deck.weakPermanentsList
+        let powerfullPermanents = deck.powerfullPermanentsList
         
-        // 1 Reaper of Sheoldred
-        deck.append(Card(cardName: "Reaper of Sheoldred",cardType: .creature))
-        
-        // 1 Ruinous Ultimatum
-        deck.append(Card(cardName: "Ruinous Ultimatum",cardType: .sorcery))
-        
-        // 1 Scuttling Doom Engine
-        deck.append(Card(cardName: "Scuttling Doom Engine",cardType: .creature))
-        
-        // 1 Sensor Splicer
-        deck.append(Card(cardName: "Sensor Splicer",cardType: .creature))
-        
-        // 1 Spinebiter
-        deck.append(Card(cardName: "Spinebiter",cardType: .creature))
-        
-        // 1 Skithiryx, the Blight Dragon
-        deck.append(Card(cardName: "Skithiryx, the Blight Dragon",cardType: .creature))
-        
-        // 1 Triumph of the Hordes
-        deck.append(Card(cardName: "Triumph of the Hordes",cardType: .sorcery))
-        
-        // 2 Vandalblast
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Vandalblast",cardType: .sorcery))
-        }
-        
-        // 1 Vedalken Humiliator
-        deck.append(Card(cardName: "Vedalken Humiliator",cardType: .creature))
-        
-        // 1 Vorinclex, Monstrous Raider
-        deck.append(Card(cardName: "Vorinclex, Monstrous Raider",cardType: .creature))
-        
-        // 1 Putrefax
-        deck.append(Card(cardName: "Putrefax",cardType: .creature))
-        
-        // 1 Wurmcoil Engine
-        deck.append(Card(cardName: "Wurmcoil Engine",cardType: .creature))
-        
-        // 25 Golem (TNPH) 3
-        for _ in 1...25 {
-            deck.append(Card(cardName: "Golem TNPH", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TCMR")))
-        }
-        
-        // 5+4 Assembly-Worker (TTSR) 14
-        for _ in 1...(9 * difficulty) {
-            deck.append(Card(cardName: "Assembly-Worker TTSR", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Assembly-Worker", specifiSet: "TTSR")))
-        }
-        
-        // 5 Construct (TMH2) X/X
-        for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Construct TMH2", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TMH2")))
-        }
-        
-        // 5 Construct (TC18) 4/4 -> Changed to Golem 4/4
-        /*for _ in 1...(5 * difficulty) {
-            deck.append(Card(cardName: "Construct (TC18)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TC18")))
-        }*/
-        
-        // 4 Construct (TZNR) 1/1 -> Changed to Assembly-Worker 2/2
-        /*for _ in 1...(4 * difficulty) {
-            deck.append(Card(cardName: "Construct (TZNR)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Construct", specifiSet: "TZNR")))
-        }*/
-        
-        // 3 Beast (TKLD) 1
-        for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "Beast (TKLD)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Beast", specifiSet: "TKLD")))
-        }
-        
-        // 3+5 Golem (TRIX) 4/4
-        for _ in 1...(8 * difficulty) {
-            deck.append(Card(cardName: "Golem (TRIX)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TRIX")))
-        }
-        
-        // 3 Golem (TMBS) 9/9
-        for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "Golem (TMBS)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TMBS")))
-        }
-        
-        // 3 Wurm (TSOM) 8
-        for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImageURL: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"))
-        }
-        
-        // 3 Wurm (TSOM) 9
-        for _ in 1...(3 * difficulty) {
-            deck.append(Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImageURL: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477"))
-        }
-        
-        let tokens: [Card] = [
-            Card(cardName: "Insect TAKH", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TAKH")),
-            Card(cardName: "Insect TSOM", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Insect", specifiSet: "TSOM")),
-            Card(cardName: "Assembly-Worker TTSR", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Assembly-Worker", specifiSet: "TTSR")),
-            Card(cardName: "Golem TNPH", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TCMR")),
-            Card(cardName: "WURM (TSOM) 8", cardType: .token, cardImageURL: "https://c1.scryfall.com/file/scryfall-cards/large/front/b/6/b68e816f-f9ac-435b-ad0b-ceedbe72447a.jpg?1598312203"),
-            Card(cardName: "WURM (TSOM) 9", cardType: .token, cardImageURL: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/6/a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd.jpg?1598312477"),
-            Card(cardName: "Golem (TRIX)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TRIX")),
-            Card(cardName: "Golem (TMBS)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TMBS"))
-        ]
-        
-        deck.shuffle()
-        
-        return (deck, tokens)
+        return (hordeDeck, availableTokens, lateGameCards, weakPermanents, powerfullPermanents)
     }
     
-    static private func getDinosaurDeck(difficulty: Int) -> ([Card], [Card]) {
-        var deck: [Card] = []
-        
-        /* DINAUSOR RAGE
-         
-         1 Bellowing Aegisaur -> CHANGED TO Collective Blessing
-         1 Burning Sun's Avatar
-         1 Carnage Tyrant
-         1 Charging Tuskodon
-         2 Cleansing Meditation
-         1 Dinosaur Stampede
-         1 Frilled Deathspitter
-         1 Ghalta, Primal Hunger
-         1 Gigantosaurus
-         1 Goring Ceratops
-         1 Imposing Vantasaur
-         1 Marauding Raptor
-         1 Momentum Rumbler -> CHANGED TO Kinjalli's Sunwing
-         1 Needletooth Raptor
-         1 Ornery Dilophosaur
-         1 Overgrown Armasaur
-         3 Plague Wind -> changed to Star of Extinction
-         1 Polyraptor
-         1 Quartzwood Crasher -> CHANGED TO Verdant Sun's Avatar
-         1 Raging Swordtooth
-         1 Rampaging Ferocidon
-         1 Raptor Hatchling
-         1 Regisaur Alpha
-         1 Ridgetop Raptor
-         1 Ripscale Predator
-         1 Ruinous Ultimatum
-         1 Siegehorn Ceratops
-         1 Silverclad Ferocidons
-         1 Snapping Sailback
-         1 Sun-Crowned Hunters
-         1 Temple Altisaur
-         1 The Tarrasque
-         1 Thrash of Raptors
-         1 Thrasta, Tempest's Roar
-         2 Vandalblast
-         1 Wakening Sun's Avatar
-         */
-        
-        // 1 Collective Blessing
-        deck.append(Card(cardName: "Collective Blessing", cardType: .enchantment))
-        
-        // 1 Burning Sun's Avatar
-        deck.append(Card(cardName: "Burning Sun's Avatar", cardType: .creature))
-        
-        // 1 Carnage Tyrant
-        deck.append(Card(cardName: "Carnage Tyrant", cardType: .creature))
-        
-        // 1 Charging Tuskodon
-        deck.append(Card(cardName: "Charging Tuskodon", cardType: .creature))
-        
-        // 2 Cleansing Meditation
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Cleansing Meditation", cardType: .sorcery))
+    private static func addCardToSelectedDeck(card: Card, selectedDeckListNumber: Int, deckList: DeckEditorCardList) -> DeckEditorCardList {
+        var deck = deckList
+        if selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.deckList
+        {
+            if card.cardType == .creature {
+                deck.deckList.creatures = addCardToDeck(card: card, deck: deck.deckList.creatures)
+            } else  if card.cardType == .token {
+                deck.deckList.tokens = addCardToDeck(card: card, deck: deck.deckList.tokens)
+                if deck.availableTokensList.contains(card) == false {
+                    deck.availableTokensList = addCardToDeck(card: card, deck: deck.availableTokensList, onlyAddOne: true)
+                }
+            } else if card.cardType == .instant || card.cardType == .sorcery {
+                deck.deckList.instantsAndSorceries = addCardToDeck(card: card, deck: deck.deckList.instantsAndSorceries)
+            } else {
+                deck.deckList.artifactsAndEnchantments = addCardToDeck(card: card, deck: deck.deckList.artifactsAndEnchantments)
+            }
+        }
+        else if selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList
+        {
+            deck.tooStrongPermanentsList = addCardToDeck(card: card, deck: deck.tooStrongPermanentsList)
+        }
+        else if selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList
+        {
+            deck.availableTokensList = addCardToDeck(card: card, deck: deck.availableTokensList)
+        }
+        else if selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList
+        {
+            deck.weakPermanentsList = addCardToDeck(card: card, deck: deck.weakPermanentsList)
+        }
+        else if selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList
+        {
+            deck.powerfullPermanentsList = addCardToDeck(card: card, deck: deck.powerfullPermanentsList)
         }
         
-        // 1 Dinosaur Stampede
-        deck.append(Card(cardName: "Dinosaur Stampede", cardType: .instant))
-        
-        // 1 Frilled Deathspitter
-        deck.append(Card(cardName: "Frilled Deathspitter", cardType: .creature))
-        
-        // 1 Ghalta, Primal Hunger
-        deck.append(Card(cardName: "Ghalta, Primal Hunger", cardType: .creature))
-        
-        // 1 Gigantosaurus
-        deck.append(Card(cardName: "Gigantosaurus", cardType: .creature))
-        
-        // 1 Goring Ceratops
-        deck.append(Card(cardName: "Goring Ceratops", cardType: .creature))
-        
-        // 1 Imposing Vantasaur
-        deck.append(Card(cardName: "Imposing Vantasaur", cardType: .creature))
-        
-        // 1 Marauding Raptor
-        deck.append(Card(cardName: "Marauding Raptor", cardType: .creature))
-        
-        // 1 Kinjalli's Sunwing
-        deck.append(Card(cardName: "Kinjalli's Sunwing", cardType: .creature))
-        
-        // 1 Needletooth Raptor
-        deck.append(Card(cardName: "Needletooth Raptor", cardType: .creature))
-        
-        // 1 Ornery Dilophosaur
-        deck.append(Card(cardName: "Ornery Dilophosaur", cardType: .creature))
-        
-        // 1 Overgrown Armasaur
-        deck.append(Card(cardName: "Overgrown Armasaur", cardType: .creature))
-        
-        // 3 Star of Extinction
-        for _ in 1...3 {
-            deck.append(Card(cardName: "Star of Extinction",cardType: .sorcery))
+        return deck
+    }
+    
+    static func getCardTypeFromTypeLine(typeLine: String) -> CardType {
+        if typeLine.contains("oken") {
+            return CardType.token
+        } else if typeLine.contains("reature") {
+            return CardType.creature
+        } else if typeLine.contains("nchantment") {
+            return CardType.enchantment
+        } else if typeLine.contains("rtifact") {
+            return CardType.artifact
+        } else if typeLine.contains("orcery") {
+            return CardType.sorcery
+        } else if typeLine.contains("nstant") {
+            return CardType.instant
         }
-        
-        // 1 Polyraptor
-        deck.append(Card(cardName: "Polyraptor", cardType: .creature))
-        
-        // 1 Verdant Sun's Avatar
-        deck.append(Card(cardName: "Verdant Sun's Avatar", cardType: .creature))
-        
-        // 1 Raging Swordtooth
-        deck.append(Card(cardName: "Raging Swordtooth", cardType: .creature))
-        
-        // 1 Rampaging Ferocidon
-        deck.append(Card(cardName: "Rampaging Ferocidon", cardType: .creature))
-        
-        // 1 Raptor Hatchling
-        deck.append(Card(cardName: "Raptor Hatchling", cardType: .creature))
-        
-        // 1 Regisaur Alpha
-        deck.append(Card(cardName: "Regisaur Alpha", cardType: .creature))
-        
-        // 1 Ridgetop Raptor
-        deck.append(Card(cardName: "Ridgetop Raptor", cardType: .creature))
-        
-        // 1 Ripscale Predator
-        deck.append(Card(cardName: "Ripscale Predator", cardType: .creature))
-        
-        // 1 Ruinous Ultimatum
-        deck.append(Card(cardName: "Ruinous Ultimatum", cardType: .sorcery))
-        
-        // 1 Siegehorn Ceratops
-        deck.append(Card(cardName: "Siegehorn Ceratops", cardType: .creature))
-        
-        // 1 Silverclad Ferocidons
-        deck.append(Card(cardName: "Silverclad Ferocidons", cardType: .creature))
-        
-        // 1 Snapping Sailback
-        deck.append(Card(cardName: "Snapping Sailback", cardType: .creature))
-        
-        // 1 Sun-Crowned Hunters
-        deck.append(Card(cardName: "Sun-Crowned Hunters", cardType: .creature))
-        
-        // 1 Temple Altisaur
-        deck.append(Card(cardName: "Temple Altisaur", cardType: .creature))
-        
-        // 1 The Tarrasque
-        deck.append(Card(cardName: "The Tarrasque", cardType: .creature))
-        
-        // 1 Thrash of Raptors
-        deck.append(Card(cardName: "Thrash of Raptors", cardType: .creature))
-        
-        // 1 Thrasta, Tempest's Roar
-        deck.append(Card(cardName: "Thrasta, Tempest's Roar", cardType: .creature))
-        
-        // 2 Vandalblast
-        for _ in 1...2 {
-            deck.append(Card(cardName: "Vandalblast", cardType: .sorcery))
+        return CardType.enchantment
+    }
+    
+    private static func addCardToDeck(card: Card, deck: [Card], onlyAddOne: Bool = false) -> [Card] {
+        let tmpCard = card.recreateCard()
+        tmpCard.cardCount = 1
+        var tmpDeck = deck
+        if onlyAddOne {
+            tmpDeck.append(tmpCard)
+        } else {
+            for _ in 0..<card.cardCount {
+                tmpDeck.append(tmpCard)
+            }
         }
+        return tmpDeck
+    }
+    
+    static func createStarterDeckForId(deckId: Int) {
+        createZombieDeck(deckId: DecksId.zombie)
+        createHumanDeck(deckId: DecksId.human)
+        createDinosaurDeck(deckId: DecksId.dinosaur)
+        createNatureDeck(deckId: DecksId.nature)
+        createSliverDeck(deckId: DecksId.sliver)
+        createPhyrexianDeck(deckId: DecksId.phyrexian)
+        //createEldraziDeck(deckId: DecksId.eldrazi)
+    }
+    
+    static func createHumanDeck(deckId: Int) {
+        let deckName = ""
+        let deckIntro = ""
+        let deckRules = ""
         
-        // 1 Wakening Sun's Avatar
-        deck.append(Card(cardName: "Wakening Sun's Avatar", cardType: .creature))
+        let deckData = ""
 
-        // 40 Dinosaur (TIKO)
-        for _ in 1...(40 * difficulty) {
-            deck.append(Card(cardName: "Dinosaur (TIKO)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TIKO")))
-        }
+        let deckImage = UIImage(named: "Human")
         
-        // 20 Dinosaur (TGN2)
-        for _ in 1...(20 * difficulty) {
-            deck.append(Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")))
-        }
-        
-        let tokens: [Card] = [
-            Card(cardName: "Saproling (TC20)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Saproling", specifiSet: "TC20")),
-            Card(cardName: "Dinosaur (TIKO)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TIKO")),
-            Card(cardName: "Dinosaur (TGN2)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Dinosaur", specifiSet: "TGN2")),
-            Card(cardName: "Polyraptor", cardType: .token)
-        ]
-        
-        deck.shuffle()
-        
-        return (deck, tokens)
+        createDeck(deckId: deckId, deckName: deckName, deckData: deckData, deckIntro: deckIntro, deckRules: deckRules, deckImage: deckImage!)
     }
     
-    static func getScryfallImageUrl(name: String, specifiSet: String = "") -> String {
-        let cardResolution = "normal"
-        let cardNameForUrl = name.replacingOccurrences(of: " ", with: "+")
-        var url = "https://api.scryfall.com/cards/named?exact=\(cardNameForUrl)&format=img&version=\(cardResolution)"
-        // Example https://api.scryfall.com/cards/named?exact=Zombie+Giant&format=img&version=normal
+    static func createZombieDeck(deckId: Int) {
+        let deckName = ""
+        let deckIntro = ""
+        let deckRules = ""
         
-        if specifiSet != "" {
-            url.append("&set=\(specifiSet)")
-        }
+        let deckData = ""
+
+        let deckImage = UIImage(named: "Zombie")
         
-        return url
+        createDeck(deckId: deckId, deckName: deckName, deckData: deckData, deckIntro: deckIntro, deckRules: deckRules, deckImage: deckImage!)
     }
     
-    static func getDeckForId(deckPickedId: Int) -> ([Card], [Card]) {
-        let difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
-        return getDeckForId(deckPickedId: deckPickedId, difficulty: difficulty)
+    static func createDinosaurDeck(deckId: Int) {
+        let deckName = ""
+        let deckIntro = ""
+        let deckRules = ""
+        
+        let deckData = ""
+
+        let deckImage = UIImage(named: "Dinosaur")
+        
+        createDeck(deckId: deckId, deckName: deckName, deckData: deckData, deckIntro: deckIntro, deckRules: deckRules, deckImage: deckImage!)
     }
     
-    static func getDeckForId(deckPickedId: Int, difficulty: Int) -> ([Card], [Card]) {
-        switch deckPickedId {
-        case DecksId.human:
-            return getHumanDeck(difficulty: difficulty)
-        case DecksId.phyrexian:
-            return getPhyrexianDeck(difficulty: difficulty)
-        case DecksId.sliver:
-            return getSliverDeck(difficulty: difficulty)
-        case DecksId.dinosaur:
-            return getDinosaurDeck(difficulty: difficulty)
-        case DecksId.eldrazi:
-            return getEldraziDeck(difficulty: difficulty)
-        case DecksId.nature:
-            return getNatureDeck(difficulty: difficulty)
-        default:
-            return getZombieDeck(difficulty: difficulty)
-        }
+    static func createPhyrexianDeck(deckId: Int) {
+        let deckName = ""
+        let deckIntro = ""
+        let deckRules = ""
+        
+        let deckData = ""
+
+        let deckImage = UIImage(named: "Phyrexian")
+        
+        createDeck(deckId: deckId, deckName: deckName, deckData: deckData, deckIntro: deckIntro, deckRules: deckRules, deckImage: deckImage!)
     }
     
+    static func createSliverDeck(deckId: Int) {
+        let deckName = ""
+        let deckIntro = ""
+        let deckRules = ""
+        
+        let deckData = ""
+
+        let deckImage = UIImage(named: "Sliver")
+        
+        createDeck(deckId: deckId, deckName: deckName, deckData: deckData, deckIntro: deckIntro, deckRules: deckRules, deckImage: deckImage!)
+    }
+    
+    static func createNatureDeck(deckId: Int) {
+        let deckName = ""
+        let deckIntro = ""
+        let deckRules = ""
+        
+        let deckData = ""
+
+        let deckImage = UIImage(named: "Nature")
+        
+        createDeck(deckId: deckId, deckName: deckName, deckData: deckData, deckIntro: deckIntro, deckRules: deckRules, deckImage: deckImage!)
+    }
+    
+    static func createEldraziDeck(deckId: Int) {
+        let deckName = ""
+        let deckIntro = ""
+        let deckRules = ""
+        
+        let deckData = ""
+
+        let deckImage = UIImage(named: "Eldrazi")
+        
+        createDeck(deckId: deckId, deckName: deckName, deckData: deckData, deckIntro: deckIntro, deckRules: deckRules, deckImage: deckImage!)
+    }
+    
+    static func createDeck(deckId: Int, deckName: String, deckData: String, deckIntro: String, deckRules: String, deckImage: UIImage) {
+        UserDefaults.standard.set(true, forKey: "Deck_\(deckId)_Exist")
+        UserDefaults.standard.set(deckName, forKey: "Deck_\(deckId)_DeckName")
+        UserDefaults.standard.set(deckIntro, forKey: "Deck_\(deckId)_Intro")
+        UserDefaults.standard.set(deckRules, forKey: "Deck_\(deckId)_Rules")
+        UserDefaults.standard.set(deckData, forKey: "Deck_\(deckId)")
+        
+        guard let data = deckImage.jpegData(compressionQuality: 0.5) else { return }
+        let encoded = try! PropertyListEncoder().encode(data)
+        UserDefaults.standard.set(encoded, forKey: "Deck_\(deckId)_Image")
+    }
+    
+    /*
     static func getRandomCardFromStarterPermanents(deckPickedId: Int) -> Card {
         
-        /* WEAK PERMANENTS THE HORDE CAN START WITH
-         
-         1 Ghostly Prison
-         1 Hissing Miasma
-         1 Authority of the Consuls
-         1 Glorious Anthem
-         
-         ONLY ZOMBIE -> NO COMMONS
-         
-         1 Liliana's Mastery
-         1 Open the Graves
-         1 Graf Harvest
-         1 Hissing Miasma
-         1 Headless Rider
-         
-         ONLY HUMAN
-         
-         1 Prava of the Steel Legion
-         1 Odric, Lunarch Marshal
-         1 Assemble the Legion
-         
-         ONLY PHYREXIAN
-         
-         1 Propaganda
-         
-         ONLY SLIVER
-         
-         1 Propaganda
-         
-         ONLY DINOSAUR
-         
-         1 Gruul War Chant
-         
-         ONLY ELDRAZI
-         
-         1 Forsaken Monument
-         
-         */
+
+   
         
         var commonCards = [
             Card(cardName: "Ghostly Prison", cardType: .enchantment),
@@ -1487,19 +419,9 @@ struct DeckManager {
         ]
         
         switch deckPickedId {
-        case DecksId.human:
-            commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
-            commonCards.append(Card(cardName: "Odric, Lunarch Marshal", cardType: .creature))
-        case DecksId.phyrexian:
-            commonCards.append(Card(cardName: "Propaganda", cardType: .enchantment))
-        case DecksId.sliver:
-            commonCards.append(Card(cardName: "Propaganda", cardType: .enchantment))
-        case DecksId.dinosaur:
-            commonCards.append(Card(cardName: "Gruul War Chant", cardType: .enchantment))
+
         case DecksId.eldrazi:
             commonCards.append(Card(cardName: "Forsaken Monument", cardType: .artifact))
-        case DecksId.nature:
-            commonCards.append(Card(cardName: "Primal Rage", cardType: .enchantment))
         default:
             commonCards = [
                 Card(cardName: "Liliana's Mastery", cardType: .enchantment),
@@ -1515,48 +437,7 @@ struct DeckManager {
     
     static func getRandomCardFromMidGamePermanents(deckPickedId: Int) -> Card {
         
-        /* POWERFULL PERMANENTS THE HORDE CAN SPAWN MID GAME
-         
-         1 Unnatural Growth
-         1 Collective Blessing
-         1 Levitation
-         1 Ethereal Absolution
-         
-         ONLY ZOMBIE -> NO COMMONS
-         
-         1 Zombie Master
-         1 Josu Vess, Lich Knight
-         
-         ONLY HUMAN
-         
-         1 Oketra the True
-         1 Emmara Tandris
-         1 Resolute Archangel
-         1 Akroma, Angel of Wrath
-         1 Angelic Arbiter
-         1 Gisela, Blade of Goldnight
-         
-         ONLY PHYREXIAN
-         
-         1 Poison-Tip Archer
-         1 Atraxa, Praetors' Voice
-         1 Lord of Extinction
-         
-         ONLY SLIVER
-         
-         1 Sliver Hiverlord
-         1 Sliver Legion
-         
-         ONLY DINOSAUR
-         
-         1 Zetalpa, Primal Dawn
-         1 End-Raze Forerunners
-         
-         ONLY ELDRAZI
-         
-         1 Brisela, Voice of Nightmares
-         
-         */
+       
         
         var commonCards = [
             Card(cardName: "Unnatural Growth", cardType: .enchantment),
@@ -1566,145 +447,22 @@ struct DeckManager {
         ]
         
         switch deckPickedId {
-        case DecksId.human:
-            commonCards.append(Card(cardName: "Prava of the Steel Legion", cardType: .creature))
-            commonCards.append(Card(cardName: "Assemble the Legion", cardType: .enchantment))
-            commonCards.append(Card(cardName: "Akroma, Angel of Wrath", cardType: .creature))
-            commonCards.append(Card(cardName: "Angelic Arbiter", cardType: .creature))
-            commonCards.append(Card(cardName: "Gisela, Blade of Goldnight", cardType: .creature))
-        case DecksId.phyrexian:
-            commonCards.append(Card(cardName: "Poison-Tip Archer", cardType: .creature))
-            commonCards.append(Card(cardName: "Atraxa, Praetors' Voice", cardType: .creature))
-            commonCards.append(Card(cardName: "Lord of Extinction", cardType: .creature))
-        case DecksId.sliver:
-            commonCards.append(Card(cardName: "Sliver Hiverlord", cardType: .creature))
-            commonCards.append(Card(cardName: "Sliver Legion", cardType: .creature))
-        case DecksId.dinosaur:
-            commonCards.append(Card(cardName: "Zetalpa, Primal Dawn", cardType: .creature))
-            commonCards.append(Card(cardName: "End-Raze Forerunners", cardType: .creature))
-        case DecksId.eldrazi:
-            commonCards.append(Card(cardName: "Brisela, Voice of Nightmares", cardType: .creature))
-        case DecksId.nature:
-            commonCards.append(Card(cardName: "Worldspine Wurm", cardType: .creature))
-            commonCards.append(Card(cardName: "Impervious Greatwurm", cardType: .creature))
-            commonCards.append(Card(cardName: "Beastmaster Ascension", cardType: .enchantment, cardImageURL: DeckManager.getScryfallImageUrl(name: "Beastmaster Ascension", specifiSet: "ZEN")))
+
         default:
-            commonCards = [
-                Card(cardName: "Zombie Master", cardType: .creature),
-                Card(cardName: "Josu Vess, Lich Knight", cardType: .creature)
-            ]
+            commonCards.append(Card(cardName: "Brisela, Voice of Nightmares", cardType: .creature))
         }
         
         return commonCards.randomElement()!
     }
     
     static func getStrongCardsListForDeck(deckPickedId: Int) -> [Card] {
-        
-        /* TOO STRONG TO DRAW EARLY
-         
-         ZOMBIE
-         
-         Grave Titan
-         Army of the Damned
-         
-         HUMAN
-         
-         True Conviction
-         Collective Blessing
-         Kyler, Sigardian Emissary
-         Blade Historian
-         Frontline Medic
-         
-         PHYREXIAN
-         
-         Vorinclex, Monstruous Raider
-         Massacre Wurm
-         Bronze Guardian
-         Triumph of the Hordes
-         Elesh Norn, Grand Cenobite
-         Skithiryx, the Blight Dragon
-         Blightsteel Colossus
-         Phyrexian Hydra
-         Urabrask the Hidden
-         Phyrexian Obliterator
-         
-         SLIVER
-         
-         Shifting Sliver
-         Megantic Sliver
-         Fury Sliver
-         
-         DINOSAUR
-         
-         Gigantosaurus
-         Ghalta, Primal Hunger
-         Goring Ceratops
-         The Tarrasque
-         Silverclad Ferocidons
-         Collective Blessing
-         
-         ELDRAZI
-         
-         Desolation Twin
-         Breaker of Armies
-         Ulamog's Crusher
-         Bane of Bala Ged
-         Void Winnower
-         Pathrazer of Ulamog
-         Hand of Emrakul
-         
-         NATURE
-         
-         Craterhoof Behemoth
-         Nessian Boar
-         End-Raze Forerunners
-         Grothama, All-Devouring
-         Crush of Wurms
-         Parallel Evolution
-         Second Harvest
-         Predatory Rampage
-         Unnatural Growth
-         Sandwurm Convergence
-         
-         */
+
         
         var cardArray: [Card] = []
         
         switch deckPickedId {
-        case DecksId.human:
-            cardArray.append(Card(cardName: "True Conviction", cardType: .enchantment))
-            cardArray.append(Card(cardName: "Collective Blessing", cardType: .enchantment))
-            cardArray.append(Card(cardName: "Dictate of Heliod", cardType: .enchantment))
-            cardArray.append(Card(cardName: "Kyler, Sigardian Emissary", cardType: .creature))
-            cardArray.append(Card(cardName: "Blade Historian", cardType: .creature))
-            cardArray.append(Card(cardName: "Frontline Medic", cardType: .creature))
-            cardArray.append(Card(cardName: "Increasing Devotion", cardType: .sorcery))
-            cardArray.append(Card(cardName: "Adriana, Captain of the Guard", cardType: .creature))
-        case DecksId.phyrexian:
-            cardArray.append(Card(cardName: "Vorinclex, Monstrous Raider",cardType: .creature))
-            cardArray.append(Card(cardName: "Massacre Wurm",cardType: .creature))
-            cardArray.append(Card(cardName: "Bronze Guardian",cardType: .creature))
-            cardArray.append(Card(cardName: "Triumph of the Hordes",cardType: .sorcery))
-            cardArray.append(Card(cardName: "Elesh Norn, Grand Cenobite",cardType: .creature))
-            cardArray.append(Card(cardName: "Skithiryx, the Blight Dragon",cardType: .creature))
-            cardArray.append(Card(cardName: "Blightsteel Colossus",cardType: .creature))
-            cardArray.append(Card(cardName: "Phyrexian Hydra",cardType: .creature))
-            cardArray.append(Card(cardName: "Urabrask the Hidden",cardType: .creature))
-            cardArray.append(Card(cardName: "Phyrexian Obliterator",cardType: .creature))
-            cardArray.append(Card(cardName: "Golem (TMBS)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Golem", specifiSet: "TMBS")))
-        case DecksId.sliver:
-            cardArray.append(Card(cardName: "Shifting Sliver",cardType: .creature))
-            cardArray.append(Card(cardName: "Megantic Sliver",cardType: .creature))
-            cardArray.append(Card(cardName: "Fury Sliver",cardType: .creature))
-        case DecksId.dinosaur:
-            cardArray.append(Card(cardName: "Gigantosaurus", cardType: .creature))
-            cardArray.append(Card(cardName: "Ghalta, Primal Hunger", cardType: .creature))
-            cardArray.append(Card(cardName: "Goring Ceratops", cardType: .creature))
-            cardArray.append(Card(cardName: "The Tarrasque", cardType: .creature))
-            cardArray.append(Card(cardName: "Burning Sun's Avatar", cardType: .creature))
-            cardArray.append(Card(cardName: "Silverclad Ferocidons", cardType: .creature))
-            cardArray.append(Card(cardName: "Collective Blessing", cardType: .enchantment))
-        case DecksId.eldrazi:
+
+        default:
             cardArray.append(Card(cardName: "Desolation Twin", cardType: .creature))
             cardArray.append(Card(cardName: "Breaker of Armies", cardType: .creature))
             cardArray.append(Card(cardName: "Ulamog's Crusher", cardType: .creature))
@@ -1714,29 +472,18 @@ struct DeckManager {
             cardArray.append(Card(cardName: "Pathrazer of Ulamog", cardType: .creature))
             cardArray.append(Card(cardName: "Hand of Emrakul", cardType: .creature))
             cardArray.append(Card(cardName: "Eldrazi (TPCA)", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Eldrazi", specifiSet: "TPCA")))
-        case DecksId.nature:
-            cardArray.append(Card(cardName: "Craterhoof Behemoth", cardType: .creature))
-            cardArray.append(Card(cardName: "Nessian Boar", cardType: .creature))
-            cardArray.append(Card(cardName: "End-Raze Forerunners", cardType: .creature))
-            cardArray.append(Card(cardName: "Grothama, All-Devouring", cardType: .creature))
-            cardArray.append(Card(cardName: "Crush of Wurms", cardType: .sorcery, hasFlashback: true))
-            cardArray.append(Card(cardName: "Parallel Evolution", cardType: .sorcery, hasFlashback: true))
-            cardArray.append(Card(cardName: "Second Harvest", cardType: .instant))
-            cardArray.append(Card(cardName: "Predatory Rampage", cardType: .sorcery))
-            cardArray.append(Card(cardName: "Unnatural Growth", cardType: .enchantment))
-            cardArray.append(Card(cardName: "Sandwurm Convergence", cardType: .enchantment, cardImageURL: DeckManager.getScryfallImageUrl(name: "Sandwurm Convergence", specifiSet: "AKH")))
-            cardArray.append(Card(cardName: "Elemental TKHC", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "TKHC")))
-            cardArray.append(Card(cardName: "Elemental T2XM", cardType: .token, cardImageURL: DeckManager.getScryfallImageUrl(name: "Elemental", specifiSet: "T2XM")))
-        default:
-            cardArray.append(Card(cardName: "Grave Titan", cardType: .creature))
-            cardArray.append(Card(cardName: "Army of the Damned", cardType: .sorcery, cardImageURL: DeckManager.getScryfallImageUrl(name: "Army of the Damned", specifiSet: "ISD"), hasFlashback: true))
         }
-        
         return cardArray
-    }
+    }*/
 }
 
+
+
+
+
 /*
+ ZOMBIE
+ 
  ## Horde Deck ##
  1 5DN creature NO Blind Creeper 02d4c3a8-c733-45c1-bca5-51eed47c9230 86d5440a-7460-4b4f-a167-a6c4fb2d855e
  4 USG creature NO Cackling Fiend 2029954b-6fa7-40d7-bb19-d7534c62be5d ae410ae8-1e72-4727-96df-c7c195063fb5
@@ -1759,7 +506,7 @@ struct DeckManager {
 
  2 GVL enchantment NO Bad Moon fc5d3341-cbce-49e5-93cc-8add92479dca 8f8a75da-ea3c-43e7-9d32-1c92f8ec0fd2
  1 M12 enchantment NO Call to the Grave db5a4c25-5ae5-4a04-be79-bdee39b9152c 5e1324b6-dba0-4aff-a403-a45d2b405f5b
- 2 ISD enchantment NO Endless Ranks of the Dead 69d4ecac-4735-4667-bfc1-c8800b436d08 5db15c5f-80b7-4f7f-985a-9bbec3199ad9
+ 1 ISD enchantment NO Endless Ranks of the Dead 69d4ecac-4735-4667-bfc1-c8800b436d08 5db15c5f-80b7-4f7f-985a-9bbec3199ad9
  1 MIR enchantment NO Forsaken Wastes b9e61e68-9dc8-4295-95dc-dd66a0907c8c c9dbfc7c-164d-47b8-8f05-987864fca89b
 
  1 ISD sorcery NO Army of the Damned 75d667ec-86f4-4850-a3b6-e7a9fc7053b0 260a4544-a1eb-4d07-943f-0401ae288e13
@@ -1789,4 +536,391 @@ struct DeckManager {
  ## Powerfull Permanents ##
  1 DOM creature NO Josu Vess, Lich Knight 974a46f9-aa84-4b34-bee5-c635166e5841 6ed6d088-db82-4648-a109-0e3fa1421847
  1 ME4 creature NO Zombie Master 5446c92f-ff22-4e9b-a2f6-e64c8560c1e0 c25eb8c9-4209-4fe4-8b02-be16d7d7bdf5
+ */
+
+/*
+ NATURE
+ 
+ ## Horde Deck ##
+ 1 SOM creature NO Bellowing Tanglewurm a1091651-4e3e-4840-87e2-b80084770137 44eb3e3a-60ee-4293-a321-daa452d4c70d
+ 1 MRD creature NO Copperhoof Vorrac a5fed574-6ac3-4318-b0a6-27082e07f3bd 81fff4cc-b2ab-4a41-bede-0d807552ba46
+ 1 JMP creature NO Craterhoof Behemoth 8c52bd39-0586-48ca-b263-17210cf9feb6 44afd414-cc69-4888-ba12-7ea87e60b1f7
+ 1 RNA creature NO End-Raze Forerunners 69b52907-8aff-4f2a-a391-7d1ab2669b5c a50d79fe-6d37-42f3-b7b0-0c3018282fa2
+ 1 M19 creature NO Goreclaw, Terror of Qal Sisma befb211f-37ca-4083-98d4-9ff1f28be3f2 36d4574a-3266-4497-b145-fb25820d8a7f
+ 1 BBD creature NO Grothama, All-Devouring 34fd52c1-3d81-4005-b826-eeefbd7fd874 ab8935b1-ec87-4330-9952-9ef8cd344531
+ 1 C21 creature NO Hornet Queen 3b1f8108-6911-49e9-8f78-f950bb58cb6c d245cb84-56aa-47a1-aa3a-17ffded57e15
+ 1 MH1 creature YES Mother Bear fe742976-ef13-4c25-972f-254b1ed436de efae4d84-8134-461a-a352-a5bdff7259a7
+ 1 THB creature NO Nessian Boar 139a5f0b-6f76-4918-96e6-cdcf27253230 aaf91fc2-7317-47e4-9e6c-d7d74cdf0153
+ 1 AKH creature NO Rhonas the Indomitable 5d2acd3e-4782-42e3-bcd5-80f8b439cc28 50f23c47-278c-4188-8fb4-ae20a0c423c5
+ 1 DOM creature NO Steel Leaf Champion 666af637-9282-4121-962a-048e528f9221 24d8a688-79d4-49b9-ab0c-c7f5c9b551f4
+ 1 2XM creature NO Woodland Champion 675321d7-2cf0-4e0b-9517-d711b22865ab 021bc8f5-3992-4d6a-9806-ed43c89e99f2
+ 1 ELD creature NO Yorvo, Lord of Garenbrig 00a15abc-bdac-4977-90a0-f08d41941d01 ae2998a1-1713-467e-a08e-0efd8720aa5b
+
+ 3 TSR enchantment NO Gaea's Anthem 3754dce0-3e97-406f-8807-a4942a222c41 43febc63-597d-4392-b8ea-a00841148c45
+ 2 TSR enchantment NO Muraganda Petroglyphs e6eff050-f1f6-49ce-a92e-1d1e13e51084 b103cb22-93b2-4206-9f80-5f966155e07e
+ 1 AKH enchantment NO Sandwurm Convergence 429eff2b-635b-43f6-b20f-82e25992c0b9 e47bd2c5-e3db-4fde-a695-9e67a7e937be
+ 1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+
+ 1 DDS instant YES Beast Attack 3f5acd90-199c-4ed3-9c8a-eeac4670d876 011f805f-3ebb-4748-a5de-8a10b5f47dcd
+ 1 DDS sorcery YES Call of the Herd ee243f81-f51c-4d9a-a396-f7cef84b46c1 7ff0c182-f9ec-41d1-beb6-97d0eb1be592
+ 1 JUD sorcery YES Crush of Wurms 6c12cd05-b673-453c-9f6b-f3aa022467c1 32a924b3-3bd6-43ad-acbd-1303dd670db4
+ 2 ODY instant YES Elephant Ambush 09386931-59bd-481f-bccc-32e8a8abc0f9 b4abdf1c-a0a9-4e1d-b448-58742830f767
+ 1 C21 sorcery NO Ezuri's Predation d0dd425b-fdba-41b4-b9e6-f5161610bd7e 3103505c-b071-4ae9-bf82-978e582d030c
+ 1 M13 sorcery NO Fungal Sprouting 303d4533-0c6b-4f93-80e8-b1f5926f4cd4 97413ae3-037e-4786-85a3-e92604acd771
+ 2 VMA sorcery YES Grizzly Fate f3073e4f-ca7e-4fde-88a4-bd7b6ebfbc8c 004e1457-d951-4029-8bb6-17a290793e79
+ 1 AFC instant NO Heroic Intervention 24882fa2-3fe9-4c1b-aa3d-0e6488b9db27 c5e72882-dbf8-42d2-9a98-31f2f71e2ed9
+ 1 THB sorcery NO Klothys's Design 85c20c39-7b9c-4661-9372-e659b321773f b1b6b7a7-0ac8-470a-949b-4779ded95359
+ 1 CMA sorcery NO Overrun 204f9afe-c20b-4933-b5cd-aa572784762a 64033221-447f-4f8a-8fa0-c3ef30172602
+ 1 C19 sorcery NO Overwhelming Stampede e1e96802-fd0c-41f1-aa21-3287d75a0e88 50846a7b-d174-439e-9ffb-31b50bb3a84f
+ 1 TOR sorcery YES Parallel Evolution 963cfdbe-775c-4267-a617-66f10e9d7f4f 73cce010-a8e7-477b-9179-bbad38aa6438
+ 1 M13 sorcery NO Predatory Rampage ee6d271c-0728-4080-85bb-a6af05f8b213 3e054ea5-3657-4198-9715-6acc0e362da3
+ 1 DDS sorcery YES Roar of the Wurm b8b9e6fd-b3ed-4fbc-8753-74018fa33caa 51a0c80e-4ace-4a2a-8b96-4472d1be6872
+ 1 MH1 sorcery NO Scale Up 2fd025ef-14f5-4621-831d-dd12b7c604dd 3f2d9bae-2753-486c-be79-2438208ac353
+ 1 C19 instant NO Second Harvest 61a6341e-0d36-44b6-8026-9c87c8ef61cb 22b01c98-c24b-4255-921f-4820f3d395ea
+ 1 MID sorcery YES Shadowbeast Sighting f05d5632-0a82-45bf-b66e-22cf4080ed5e 1b12e978-4deb-4ccc-8ae6-462bc4598c90
+ 1 FRF instant NO Winds of Qal Sisma e7871b4d-a408-4377-beee-6b1d3c7dd57d 0c45d98d-b8bd-409d-bce9-d7d73be735a9
+
+ 20 TELD token NO Bear a62a374d-ccdd-418d-9bcd-5ca8bf9b05e8 b0f09f9e-e0f9-4ed8-bfc0-5f1a3046106e
+ 10 TMH2 token NO Beast 695b14a0-920a-47bd-bd4a-7989862cdd0a a1eff7f8-b645-41cb-bcd9-3dc1ab10200e
+ 10 TUST token NO Elemental 3387629a-f3c6-4dea-8bad-d938b611ced8 70f1f745-9fc2-41a6-9d39-fb4964595cf5
+ 3 TKHC token NO Elemental ab19c684-94c6-4491-8a6b-7f31dddadae6 7737cbbf-659e-4a8d-9918-50652d6c0863
+ 12 TCMR token NO Elephant 079c46cc-feb0-4998-8593-c8b739afdb82 8c4d495a-b4b7-4119-ae2d-5b602a0b309f
+ 5 TC19 token NO Wurm 46a55586-cc9a-443c-b458-e628afc3c587 52df7443-9af7-4cab-a69a-2ffd04b48815
+
+ ## Too Strong ##
+ 1 JMP creature NO Craterhoof Behemoth 8c52bd39-0586-48ca-b263-17210cf9feb6 44afd414-cc69-4888-ba12-7ea87e60b1f7
+ 1 THB creature NO Nessian Boar 139a5f0b-6f76-4918-96e6-cdcf27253230 aaf91fc2-7317-47e4-9e6c-d7d74cdf0153
+ 1 RNA creature NO End-Raze Forerunners 69b52907-8aff-4f2a-a391-7d1ab2669b5c a50d79fe-6d37-42f3-b7b0-0c3018282fa2
+ 1 BBD creature NO Grothama, All-Devouring 34fd52c1-3d81-4005-b826-eeefbd7fd874 ab8935b1-ec87-4330-9952-9ef8cd344531
+ 1 AKH enchantment NO Sandwurm Convergence 429eff2b-635b-43f6-b20f-82e25992c0b9 e47bd2c5-e3db-4fde-a695-9e67a7e937be
+ 1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+ 1 JUD sorcery YES Crush of Wurms 6c12cd05-b673-453c-9f6b-f3aa022467c1 32a924b3-3bd6-43ad-acbd-1303dd670db4
+ 1 C21 sorcery NO Ezuri's Predation d0dd425b-fdba-41b4-b9e6-f5161610bd7e 3103505c-b071-4ae9-bf82-978e582d030c
+ 1 TOR sorcery YES Parallel Evolution 963cfdbe-775c-4267-a617-66f10e9d7f4f 73cce010-a8e7-477b-9179-bbad38aa6438
+ 1 C19 instant NO Second Harvest 61a6341e-0d36-44b6-8026-9c87c8ef61cb 22b01c98-c24b-4255-921f-4820f3d395ea
+ 1 M13 sorcery NO Predatory Rampage ee6d271c-0728-4080-85bb-a6af05f8b213 3e054ea5-3657-4198-9715-6acc0e362da3
+ 1 TKHC token NO Elemental ab19c684-94c6-4491-8a6b-7f31dddadae6 7737cbbf-659e-4a8d-9918-50652d6c0863
+ 1 TUST token NO Elemental 3387629a-f3c6-4dea-8bad-d938b611ced8 70f1f745-9fc2-41a6-9d39-fb4964595cf5
+
+ ## Available Tokens ##
+ 1 TC21 token NO Insect b4f3e7ab-68fd-4613-ae6d-79ca43343d37 14da0d99-9717-47b3-990b-bed6fde78373
+ 1 TM21 token NO Saproling 2b7dba01-b08c-4218-9fc1-da55559d9155 d71a5aa4-a960-4c42-b8ac-7003f6e83e95
+ 1 TNCC token NO Wurm 1adf3c28-58c0-4239-ba4a-c53d345709b4 2ca9dbff-d7c7-4769-adab-e09163a29f9e
+
+ ## Weak Permanents ##
+ 1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
+ 1 VOC enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 8169d44d-b15a-47e0-b417-24f2f4945d0f
+ 1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+ 1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
+ 1 10E enchantment NO Primal Rage d6464ee4-23fc-4d68-bbda-3b53772015d1 ebe3b738-703d-465c-bc76-2b66f1e0aff2
+
+ ## Powerfull Permanents ##
+ 1 MB1 enchantment NO Beastmaster Ascension 11b5308d-5bc0-4782-875f-a28be36e665d 3ac51aa4-710e-4171-9fb8-9f28525e3e26
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+ 1 RNA enchantment NO Ethereal Absolution e6f95e3a-61a6-40a9-8070-ffd2767764ad 0872d0ff-1060-44cc-9ed0-a6aa496440c8
+ 1 2X2 creature NO Impervious Greatwurm 65c0ab05-e740-4380-b39c-8bae9662f885 a1aa77ae-f685-48ee-85dc-ba6084cd30ba
+ 1 M12 enchantment NO Levitation 94b703c4-5584-4913-8365-7e9f2f535c2d 63e5124a-67c0-44ed-8085-28bf37816423
+ 1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+ 1 RTR token NO Worldspine Wurm 254f87cc-e0c2-484d-b5e8-1ea8c366990c 543d55cb-3a6b-4620-af25-10ae74ed32c4
+ */
+
+/*
+ SLIVER
+ 
+ ## Horde Deck ##
+ 1 TSR creature NO Battering Sliver 4adf959b-2e09-47ff-a1b1-b889348735b8 7f65a72b-d24c-4016-befc-91018a1b62e1
+ 1 H09 creature NO Brood Sliver 6b1d178f-9713-4dcf-920b-ddf2c94cc427 fa861228-5ceb-41f8-8ec0-9b96f1360271
+ 1 MH1 creature NO Cleaving Sliver 9b33059c-c862-4452-8609-14a0e2551fb3 51b657f0-6636-4d8a-9176-81027816e0ec
+ 1 M15 creature NO Diffusion Sliver 458ca9f4-4622-48e1-9ca1-6a8117188973 fb110a55-c8f9-4627-82c2-edb10db4f380
+ 1 LGN creature NO Essence Sliver 1f35f5e3-ddd1-4293-96f8-1181bbda77eb 1346fa14-1d9f-4c6a-887d-d3a93de00743
+ 1 H09 creature NO Frenzy Sliver d512d4ae-5db3-4fe5-8017-6a942004712d 8ae7319e-a12f-4e37-b184-0d15921ae72c
+ 2 TSR creature NO Fury Sliver 44623693-51d6-49ad-8cd7-140505caf02f a8a64329-09fc-4e0d-b7d1-378635f2801a
+ 1 MH1 creature NO Lancer Sliver 8ca33b31-4707-40d0-b4ed-cbe625793122 9a4f8d9a-3760-449e-b8a6-72b2a641ff23
+ 2 MH1 creature NO Lavabelly Sliver 334f673e-7cfa-432c-93aa-41adfbb99113 f6f0c9d6-cffc-4d8c-b455-e9feb8748aa7
+ 1 M15 creature NO Leeching Sliver f104b361-8000-4eda-b530-1502528e09f9 888ca52b-1270-4587-804d-1d08b07d7c5d
+ 1 TSR creature NO Lymph Sliver c3469de8-4bdb-42d4-9fc0-75fe31c3f6e5 48b8b4d4-4400-46cc-bd3c-e8a781cfc6f2
+ 2 M14 creature NO Megantic Sliver 52e8ec03-23ed-43a0-bce2-ad0cd5c4d737 7745f6a9-400c-4200-9732-86c54247de46
+ 4 TSR creature NO Might Sliver 92f5f80c-de1a-44e8-93f1-e405241c1e82 97c72fc3-72ac-4727-9872-33dc71049894
+ 1 LGN creature NO Shifting Sliver 6a262f53-2eea-45d0-8189-9222d66f1b52 1f68c4c2-91b5-4ffe-9dff-a6834038aa94
+ 1 TSR creature NO Sidewinder Sliver de8ccd32-f537-4a11-8dc4-e48836a0b139 5616e0c7-1f1d-4716-95e5-773a8e3ae5e3
+ 2 TSR creature NO Sinew Sliver ffff90c3-63c4-4dee-a21d-6b2b113f4f80 000edc61-b3ae-49e3-87f4-0250fa6a4501
+ 1 TPR creature NO Spined Sliver eed9c168-1c78-43c6-a814-9b80054d1373 5bb97644-be16-4d14-bebd-51894772b77b
+ 1 PLC creature NO Spitting Sliver 8415a482-3957-4c00-9015-99defc049877 cd07649e-c7fc-44f7-ab23-0fb935aff8c7
+ 1 LGN creature NO Toxin Sliver 96ccad44-7912-4fdb-bb2d-9d16cc3cd68a c04ab6b6-27ee-4c93-a87c-cbc3743f4faf
+ 1 TSR creature NO Two-Headed Sliver be857d6e-5bf2-491b-ab46-963b4d45adee 260cf43a-f3a4-48f7-9c51-5884d106ff56
+
+
+ 2 TOR sorcery NO Cleansing Meditation 658bccf8-fe73-4d6a-b37b-7a58034e5e5d fd6609ef-71af-4775-affc-34153700c556
+ 4 ONS sorcery NO Harsh Mercy dcd65c9b-4aaa-42af-869f-de179ae57c9f b6473b4d-1f59-4216-ace9-f3e5306266fb
+ 1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+ 2 VOC sorcery NO Vandalblast 3567c3c8-b3c7-45b7-935b-b1fdbc973720 4ce9072b-58e9-422a-9331-31886c111cfa
+
+ 32 TPR token NO Metallic Sliver 2dfafd63-83fb-4783-8e12-30018680a905 0f302984-9bf6-4583-865a-5545711e7a27
+ 22 M14 token NO Sliver Construct 7d592d5b-95cf-4416-9ade-1c23a8ba01d1 3129645a-221c-4eb5-88fd-12cc742a1dfe
+ 10 TSP token NO Venser's Sliver 54d65915-3833-4e4d-a066-37ae9507846f 1e3c5a64-453b-4477-853a-9514ba326f16
+
+ ## Too Strong ##
+ 1 M14 creature NO Megantic Sliver 52e8ec03-23ed-43a0-bce2-ad0cd5c4d737 7745f6a9-400c-4200-9732-86c54247de46
+ 1 LGN creature NO Shifting Sliver 6a262f53-2eea-45d0-8189-9222d66f1b52 1f68c4c2-91b5-4ffe-9dff-a6834038aa94
+ 1 TSR creature NO Fury Sliver 44623693-51d6-49ad-8cd7-140505caf02f a8a64329-09fc-4e0d-b7d1-378635f2801a
+ 1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+ 1 ONS sorcery NO Harsh Mercy dcd65c9b-4aaa-42af-869f-de179ae57c9f b6473b4d-1f59-4216-ace9-f3e5306266fb
+
+ ## Available Tokens ##
+
+ ## Weak Permanents ##
+ 1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
+ 1 VOC enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 8169d44d-b15a-47e0-b417-24f2f4945d0f
+ 1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+ 1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
+ 1 CLB enchantment NO Propaganda ea9709b6-4c37-4d5a-b04d-cd4c42e4f9dd e5f293d7-9c2b-41cb-8e3c-dfc1daa6635f
+
+ ## Powerfull Permanents ##
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+ 1 RNA enchantment NO Ethereal Absolution e6f95e3a-61a6-40a9-8070-ffd2767764ad 0872d0ff-1060-44cc-9ed0-a6aa496440c8
+ 1 M12 enchantment NO Levitation 94b703c4-5584-4913-8365-7e9f2f535c2d 63e5124a-67c0-44ed-8085-28bf37816423
+ 1 M15 creature NO Sliver Hivelord e4fe33e7-b952-4152-8c83-81d948756d2f ba4106de-20c7-48cf-8a36-8c6913b46c89
+ 1 J19 creature NO Sliver Legion 47657df2-0e58-46c8-87e2-cc752708a612 3511ae86-9c49-4628-b61b-f25466b1b1d2
+ 1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+ */
+
+/*
+ PHYREXIAN
+ 
+ ## Horde Deck ##
+ 1 NPH creature NO Blade Splicer 194166ad-0179-42a3-86b9-ba7f322ec576 b8e56a28-713b-4a13-a601-1128cf117539
+ 1 MBS creature NO Blightsteel Colossus e80772e2-8623-4094-81a2-70828b2b151c 7928bb14-7631-4830-a756-26d1ea832ba2
+ 1 C21 creature NO Bronze Guardian 922a030c-857b-4c61-93df-b70ebb32abd3 8cd5cc66-2ade-4142-9269-7d9905b029e5
+ 1 MBS creature NO Core Prowler 0ad44727-41c3-471c-b038-1bf43c5f296a 05414ba7-0f59-4c73-931c-e599d149d3ba
+ 1 NPH creature NO Elesh Norn, Grand Cenobite 958d71ff-c9f7-46f0-96ca-79e7f4d65a16 b66390d6-1649-4bfa-92d3-77664650d552
+ 1 SOM creature NO Hand of the Praetors f595c7f6-783f-4825-9c1a-e7f8edd380fd 94ca493e-f09b-4b11-bb47-0562dfc203ca
+ 1 SOM creature NO Ichor Rats f8148664-49c0-421f-93a5-cd59e4e9ea36 2013aed6-7415-4bf0-a3bb-46d6beecbaff
+ 1 MBS creature NO Massacre Wurm 93cf50cf-0ecc-4d3e-abea-778c1ebacec4 cdd32ec2-02a8-41fc-bf45-c9585bb2b3ee
+ 1 NPH creature NO Master Splicer 9e0c5919-aed6-4d98-85c8-2658be78bdf0 859d2b91-63af-4700-8ca5-b1756aa6639b
+ 1 NPH creature NO Maul Splicer b0d0c534-8bd2-4801-aadd-dcc9c92d6ec3 2d2c6a6d-5b59-47d7-b290-df3640d9555f
+ 1 MBS creature NO Phyrexian Crusader 91760bdf-a82a-4f3d-b925-3bc81ffbd41f 32aaa8b9-987b-4809-8a54-aa29bdc18805
+ 1 MBS creature NO Phyrexian Hydra b16085d5-6d00-4d47-ab8b-d18d55c72141 cb135aa1-9f46-4d60-a1a4-97aa0e852ced
+ 1 MBS creature NO Phyrexian Juggernaut 009fcd1e-5c5f-435b-afc1-099f1622e45c a9f6ed6c-8095-4a81-b428-36b2916eec88
+ 1 NPH creature NO Phyrexian Obliterator 41820f91-27cf-41c0-bb5e-9adf6845a6a4 44c4476d-58f9-420d-9545-f5d580c589de
+ 1 NPH creature NO Phyrexian Swarmlord 4fc2755c-ae7b-4147-a573-b33679a461e8 8a91dea7-9792-4714-82b0-ba2c06cef304
+ 1 MBS creature NO Priests of Norn 793fe31a-2b11-49f8-9851-719469ad1726 a978c49d-483a-42fe-971c-858288d07e40
+ 1 SOM creature NO Putrefax 3a336b30-335a-49d0-b192-c20f3670452b b2b2c3f9-a831-4fd2-80e8-b67b0df3e98b
+ 1 NPH creature NO Reaper of Sheoldred 251cee41-30f5-4bba-93cd-31493a5ea051 a300a645-aec6-4cda-8c11-1e8a6af056ff
+ 1 C18 creature NO Scuttling Doom Engine 72ccdcef-5c84-45ba-bda3-3dc014e1585c 7ad0dfdd-2075-4a42-976b-e493246bc61c
+ 1 NPH creature NO Sensor Splicer 9676da93-1e17-4f6c-b610-a242b78c71ab 79076264-d71c-4b30-aac9-702a4d229933
+ 1 SOM creature NO Skithiryx, the Blight Dragon daf6c421-e7f7-4fc6-967c-65f4ab96fcfd c930c9cc-1b64-4f36-afe2-6bf120a74ce2
+ 1 NPH creature NO Spinebiter 9b844a0c-590f-46c7-b53e-c99398e0d8c0 cfc79ac6-ffc6-4506-9dea-e20176f960ea
+ 1 NPH creature NO Toxic Nim afc2a3a7-eb69-4fcb-b3a3-444dccb735d7 5823990c-8d40-4352-8d34-74332934adb2
+ 1 NPH creature NO Urabrask the Hidden 5b2ffb53-86b7-4665-a5c7-b85b035b6c81 b06fcab2-891e-4fa3-8583-068ba56c2e27
+ 1 C18 creature NO Vedalken Humiliator 17c3a888-84d2-4c21-8fa3-d2d825dd7601 039dff9a-881f-4a3d-8680-7f560ef0ea7e
+ 1 KHM creature NO Vorinclex, Monstrous Raider 5a3fdf5a-bff8-4896-b288-3f43f9a72d9b 92613468-205e-488b-930d-11908477e9f8
+ 1 NPH creature NO Wing Splicer 7fbf6afc-8a16-447b-bdef-b7d0b640f76c e2dbfb1b-092c-44a3-932d-a8b27be0a72b
+ 1 SOM creature NO Wurmcoil Engine d1a60f44-7696-49ee-91fb-cab5b3102962 33672990-4860-4aa6-ac1b-f9da66f5da59
+
+ 1 SOM enchantment NO Inexorable Tide 40ec0a47-badf-4074-b0a8-749bb7c17b95 8f41e281-fcbb-450b-8a67-7b072c55c6f0
+ 1 AKH enchantment NO Nest of Scarabs 1f21cf59-6390-44b4-ab2e-ef290dfd8c85 97aa6b45-055a-411e-b2db-b373a4d3826d
+
+ 1 SOM instant NO Carrion Call 8f1e8f25-ee23-40a6-a3f2-369bb960267f bc3c1a8e-3bdb-42cf-9442-5de7e4670d66
+ 2 TOR sorcery NO Cleansing Meditation 658bccf8-fe73-4d6a-b37b-7a58034e5e5d fd6609ef-71af-4775-affc-34153700c556
+ 4 MBS sorcery NO Phyrexian Rebirth 6ef3c75d-6af2-4ea0-b98d-96c5d7d3af58 36b7536d-6b0b-4906-ba88-7fcfe9b854ee
+ 1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+ 1 NPH sorcery NO Triumph of the Hordes 3ded0c0c-40ce-4d14-a9a6-b023bc19ee0e c16b90ff-d256-4ac6-b687-3430b8c80dd7
+ 2 VOC sorcery NO Vandalblast 3567c3c8-b3c7-45b7-935b-b1fdbc973720 4ce9072b-58e9-422a-9331-31886c111cfa
+
+ 9 TTSR token NO Assembly-Worker 02e1a471-36b2-4d28-a323-f4ec3d095cb9 e72daa68-0680-431c-a616-b3693fd58813
+ 3 TKLD token NO Beast 347a9b41-8545-405d-9b4b-3691890201d7 4de1d095-459f-42fd-9d9f-8f71d002a5b2
+ 5 TMH2 token NO Construct ee740c48-59cd-4fcc-b4a5-fe3dde1361d5 a7caaf39-8f16-4f1d-bee6-a45674306319
+ 3 TMBS token NO Golem 80fe0a7b-a310-41a1-8417-c734402e9c4f 2d84926d-5892-4c62-a943-fac9f0ddc569
+ 8 TRIX token NO Golem ee924697-f02c-412c-82cf-145b943aec06 a7820eb9-6d7f-4bc4-b421-4e4420642fb7
+ 25 TNPH token NO Golem 9859c54d-695b-4bb1-940e-cfd1c3301e89 fe9e8d3b-ebc0-448b-bd14-a9f418e196e7
+ 3 T2XM token NO Wurm 1b9ccdd7-4935-45e2-bb16-b09870dd965d a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd
+ 3 T2XM token NO Wurm 5e3f41f7-9b42-437a-a9f9-f09250b083db b68e816f-f9ac-435b-ad0b-ceedbe72447a
+
+ ## Too Strong ##
+ 1 MBS creature NO Blightsteel Colossus e80772e2-8623-4094-81a2-70828b2b151c 7928bb14-7631-4830-a756-26d1ea832ba2
+ 1 NPH creature NO Elesh Norn, Grand Cenobite 958d71ff-c9f7-46f0-96ca-79e7f4d65a16 b66390d6-1649-4bfa-92d3-77664650d552
+ 1 MBS sorcery NO Phyrexian Rebirth 6ef3c75d-6af2-4ea0-b98d-96c5d7d3af58 36b7536d-6b0b-4906-ba88-7fcfe9b854ee
+ 1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+ 1 NPH sorcery NO Triumph of the Hordes 3ded0c0c-40ce-4d14-a9a6-b023bc19ee0e c16b90ff-d256-4ac6-b687-3430b8c80dd7
+ 1 MBS creature NO Massacre Wurm 93cf50cf-0ecc-4d3e-abea-778c1ebacec4 cdd32ec2-02a8-41fc-bf45-c9585bb2b3ee
+ 1 NPH creature NO Phyrexian Obliterator 41820f91-27cf-41c0-bb5e-9adf6845a6a4 44c4476d-58f9-420d-9545-f5d580c589de
+ 1 SOM creature NO Skithiryx, the Blight Dragon daf6c421-e7f7-4fc6-967c-65f4ab96fcfd c930c9cc-1b64-4f36-afe2-6bf120a74ce2
+ 1 NPH creature NO Urabrask the Hidden 5b2ffb53-86b7-4665-a5c7-b85b035b6c81 b06fcab2-891e-4fa3-8583-068ba56c2e27
+ 1 MBS creature NO Phyrexian Hydra b16085d5-6d00-4d47-ab8b-d18d55c72141 cb135aa1-9f46-4d60-a1a4-97aa0e852ced
+ 1 KHM creature NO Vorinclex, Monstrous Raider 5a3fdf5a-bff8-4896-b288-3f43f9a72d9b 92613468-205e-488b-930d-11908477e9f8
+ 1 C21 creature NO Bronze Guardian 922a030c-857b-4c61-93df-b70ebb32abd3 8cd5cc66-2ade-4142-9269-7d9905b029e5
+ 1 TMBS token NO Golem 80fe0a7b-a310-41a1-8417-c734402e9c4f 2d84926d-5892-4c62-a943-fac9f0ddc569
+
+ ## Available Tokens ##
+ 1 TAKH token NO Insect 805e96af-349b-4d59-a5ce-bc6d2be7f260 242c381e-df58-4365-a68c-add1127a83cc
+ 1 TSOM token NO Insect 5769718d-6781-4919-bc9b-245e9e0cb507 85f9e977-f718-41b2-b30b-77a9a17e9733
+
+ ## Weak Permanents ##
+ 1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
+ 1 VOC enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 8169d44d-b15a-47e0-b417-24f2f4945d0f
+ 1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+ 1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
+ 1 CLB enchantment NO Propaganda ea9709b6-4c37-4d5a-b04d-cd4c42e4f9dd e5f293d7-9c2b-41cb-8e3c-dfc1daa6635f
+
+ ## Powerfull Permanents ##
+ 1 SLD creature NO Atraxa, Praetors' Voice 7e6b9b59-cd68-4e3c-827b-38833c92d6eb 7cc19f85-7ef6-4fd2-83e5-0dbae1d80f2b
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+ 1 RNA enchantment NO Ethereal Absolution e6f95e3a-61a6-40a9-8070-ffd2767764ad 0872d0ff-1060-44cc-9ed0-a6aa496440c8
+ 1 M12 enchantment NO Levitation 94b703c4-5584-4913-8365-7e9f2f535c2d 63e5124a-67c0-44ed-8085-28bf37816423
+ 1 2X2 creature NO Lord of Extinction ea5e3401-bd6c-47bb-a52a-8eec5f09455d 696cb81d-bc00-4603-b340-c0b2e55c0959
+ 1 M19 creature NO Poison-Tip Archer d0e810bb-5f38-4045-a718-30d423c05659 5e058ff8-043c-498b-8310-0ca45466ac27
+ 1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+ */
+
+/*
+ HUMAN
+ 
+ ## Horde Deck ##
+ 1 MID creature NO Adeline, Resplendent Cathar 38515f89-348b-4cf3-b7bd-1f6fe4ce2fba 18092f68-b96e-4084-9eba-b240d2195d81
+ 1 C20 creature NO Adriana, Captain of the Guard de23275e-e9c1-4151-aed8-f79ead03d5d4 d29569dd-6d79-412d-bc14-674cd1705260
+ 1 AVR creature NO Angel of Glory's Rise c6a606af-ea08-4cd9-bfd9-60d76e232e85 7a8be765-0949-491c-875c-0385fb83e4b9
+ 1 BNG creature NO Archetype of Courage 79b48704-480d-4905-b87a-40b127894670 8e6c4afb-6a94-4519-91c6-9824fed2892c
+ 1 2X2 creature NO Balefire Liege ee35ed62-d5a2-4e65-a7eb-fcdcb3665532 3ed13445-c9a0-4f17-aa69-af353679e6a7
+ 1 DOM creature NO Benalish Marshal 2cc439e8-d112-44e6-bc5a-6e99333c519a 6dd1a7fc-5dbd-4ed2-9b02-9fd5c55bb629
+ 1 STX creature NO Blade Historian 314f0a96-5e91-42a3-9d75-3f641f22a9ee a46d64ec-aca4-428e-bce6-66cd755c8cc3
+ 1 RAV creature NO Blazing Archon 82a70e4c-01ed-4280-80e4-86cb2bf6e63d cd0bc05b-ec48-41fd-a97a-ffb0d5a2dee0
+ 2 DDO creature NO Captain of the Watch 9f2af06d-8fb7-4276-bb92-3559a6d1fa18 6e201980-e220-44dc-beab-ad13c20332bd
+ 1 CSP creature NO Darien, King of Kjeldor d05336cb-6157-47e7-942f-43becd67a5bf 5ea571ae-b9bd-4bd2-9357-52915f0d2f15
+ 1 C20 creature NO Frontier Warmonger 9cb741ae-14d6-4a8d-bfad-703abfe3682c 233e1a27-c8d6-46de-a128-89791e7f2e9b
+ 1 C20 creature NO Frontline Medic 36a3c910-95b8-45a2-9f84-5681336d868c 984f0514-e9a9-4f22-9f7d-96fd62338db2
+ 1 KHC creature NO Goldnight Commander 3dc51dfc-7a60-41bf-b944-6afad6b06c22 80be2fea-3fe6-477e-bcb8-63f441d6cfc1
+ 1 EMN creature NO Hamlet Captain 1a60dc0f-e387-4d28-8ff0-c3f1883d0c5d 43435939-20cf-49c9-8e37-63681740399b
+ 1 EMN creature NO Hanweir Garrison 7cb29569-48e1-4782-9906-fad155ebfafe 0900e494-962d-48c6-8e78-66a489be4bb2
+ 1 MBS creature NO Hero of Bladehold 454a8902-8120-4373-96ee-bbf352b04e8d 8a3853ec-e307-46e0-96d7-0706b5c45c5e
+ 1 MBS creature NO Hero of Oxid Ridge f18799c4-ec54-4435-be51-03ea25809289 1a516bce-3d2d-4e0f-afc7-27be3d88848c
+ 1 MIC creature NO Kyler, Sigardian Emissary 726cd041-5d0b-436c-bced-9335f56c0b0d 62a78aae-598e-4f2b-a7bc-c3afc1d0d191
+ 1 EVE creature NO Nobilis of War 4789ac35-ca91-4046-8262-24c34e751cea 6d54ab6e-dd56-40fe-abab-a1e67b024744
+ 1 THB creature NO Reverent Hoplite 8cb6dbb5-9ea2-4c19-8173-148080fb898e 54153b9c-483e-4e5c-a1ab-b1c8a7a657d4
+ 1 MIC creature NO Stalwart Pathlighter 88ba283d-2d03-4455-a4a3-a2a5622209bd a5bf9336-80d6-4751-9630-1d28e24cc0cf
+ 1 ELD creature NO Syr Alin, the Lion's Claw 5d9a4905-4a26-410e-936c-56de849e9ca3 4cddb2d2-d813-4b83-a592-380ba4edf54f
+
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+ 1 C15 enchantment NO Dictate of Heliod b989279c-665d-4f15-afc1-adf3872a4851 f964c561-96ac-4558-b46e-ba2c472d5807
+ 2 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+ 1 C14 enchantment NO True Conviction fc299c1c-50f3-492a-b6b8-a3664bb72ab7 9e5dc58b-f486-4b9f-9138-33efa31a05e4
+
+ 2 TOR sorcery NO Cleansing Meditation 658bccf8-fe73-4d6a-b37b-7a58034e5e5d fd6609ef-71af-4775-affc-34153700c556
+ 1 C14 sorcery NO Deploy to the Front 135cb4af-f4b6-455b-8fea-84fcef78ee03 10744088-b028-43aa-8a77-cd2a430fbfb6
+ 2 MIC sorcery NO Hour of Reckoning 3bc13640-03f8-4b19-b0a4-7e7cb5271c0c 0a14b17e-bfff-4859-92cb-a82d2e90580b
+ 1 C20 sorcery YES Increasing Devotion 7a5ff4d4-27b7-47d4-ba88-970c63c4e3fb 0c786c28-1085-4b3e-9164-5fa3adfa5010
+ 1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+ 2 VOC sorcery NO Vandalblast 3567c3c8-b3c7-45b7-935b-b1fdbc973720 4ce9072b-58e9-422a-9331-31886c111cfa
+ 1 MIC sorcery YES Visions of Glory ef47c447-bd7f-43c6-b4db-4a848c39820c 11675d8a-cd81-4055-bdbd-2e709e12ba66
+ 2 2XM sorcery NO Wrath of God 34515b16-c9a4-4f98-8c77-416a7a523407 664e6656-36a3-4635-9f33-9f8901afd397
+
+ 10 TELD token NO Human Warrior 07f49348-e3bd-47dc-b68d-6b38b9b54f70 c994ea90-71f4-403f-9418-2b72cc2de14d
+ 20 TC20 token NO Human 30272edf-097c-4918-84d2-9fa6c42dbe0a 0dffd473-2b89-4f74-8bff-39b8eb408b26
+ 10 TCM2 token NO Knight 100435fe-ae77-4644-8b4a-4c941bb2067f a0c79cdb-969b-4c3b-8ad0-cbbd359a966b
+ 10 TM20 token NO Soldier eac25f12-6459-438c-a09e-93e23d2cf80d a491d9da-a58d-4423-b565-c5a99ef63132
+ 10 TWAR token NO Soldier 01e023e5-38bc-4203-aecb-6b2de54b03ea ca11c711-93fe-45ca-b393-3851148defc4
+
+ ## Too Strong ##
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+ 1 MIC sorcery NO Hour of Reckoning 3bc13640-03f8-4b19-b0a4-7e7cb5271c0c 0a14b17e-bfff-4859-92cb-a82d2e90580b
+ 1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+ 1 2XM sorcery NO Wrath of God 34515b16-c9a4-4f98-8c77-416a7a523407 664e6656-36a3-4635-9f33-9f8901afd397
+ 1 C14 enchantment NO True Conviction fc299c1c-50f3-492a-b6b8-a3664bb72ab7 9e5dc58b-f486-4b9f-9138-33efa31a05e4
+ 1 C15 enchantment NO Dictate of Heliod b989279c-665d-4f15-afc1-adf3872a4851 f964c561-96ac-4558-b46e-ba2c472d5807
+ 1 MIC creature NO Kyler, Sigardian Emissary 726cd041-5d0b-436c-bced-9335f56c0b0d 62a78aae-598e-4f2b-a7bc-c3afc1d0d191
+ 1 STX creature NO Blade Historian 314f0a96-5e91-42a3-9d75-3f641f22a9ee a46d64ec-aca4-428e-bce6-66cd755c8cc3
+ 1 C20 creature NO Frontline Medic 36a3c910-95b8-45a2-9f84-5681336d868c 984f0514-e9a9-4f22-9f7d-96fd62338db2
+ 1 C20 sorcery YES Increasing Devotion 7a5ff4d4-27b7-47d4-ba88-970c63c4e3fb 0c786c28-1085-4b3e-9164-5fa3adfa5010
+ 1 C20 creature NO Adriana, Captain of the Guard de23275e-e9c1-4151-aed8-f79ead03d5d4 d29569dd-6d79-412d-bc14-674cd1705260
+
+ ## Available Tokens ##
+
+ ## Weak Permanents ##
+ 1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
+ 1 SLD enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 1a43d9e8-3320-4873-b322-b323c792ce5e
+ 1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+ 1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
+ 1 CMR creature NO Odric, Lunarch Marshal bad76170-c773-4be5-9457-20dc9f745cb4 17b429bd-d7da-45f5-988b-7eed0d3efeaa
+
+ ## Powerfull Permanents ##
+ 1 SLD creature NO Akroma, Angel of Wrath 107f204c-9fd3-490d-8887-be63d14fc6a4 cf75f895-3481-4c21-a85f-c819613bccc3
+ 1 CMD creature NO Angelic Arbiter 34dd789c-4d80-4ccc-a4f7-2e5388a9689d 602a5e00-7e7f-4aec-bf8a-550b00f0864c
+ 1 GTC enchantment NO Assemble the Legion 6f81bef3-6ca0-4cf4-aa99-7b2813eeef04 43675ed7-ece1-4414-965e-9ebadcbf3dfb
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+ 1 CM2 creature NO Gisela, Blade of Goldnight 66f9f325-5e8e-4ebf-b5b3-c6410d80f2c5 365c43c2-1a65-4f6a-860d-39dcb15255c3
+ 1 CMR creature NO Prava of the Steel Legion 4daa7b7d-e410-4bcf-b3e2-2751774bef47 e9e40e2a-e447-4754-a98b-5521e546781f
+ 1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+ */
+
+/*
+ DINOSAUR
+ 
+ ## Horde Deck ##
+ 1 XLN creature NO Burning Sun's Avatar 248d7759-aa73-4430-aa86-d45dc607944b 146c0cab-5f6b-425d-9f50-33d8da266235
+ 1 XLN creature NO Carnage Tyrant 8c411f4e-a091-447c-9450-d895b10b4985 3bd78731-949c-464a-826a-92f86d784911
+ 1 RIX creature NO Charging Tuskodon 1198d47a-4235-4678-bd2e-20f2a97b5924 8e49960d-4b45-4d3b-9c6e-e7b717b4feaa
+ 1 RIX creature NO Frilled Deathspitter a65c1fcc-61d1-43d9-a62c-65f156f98bce e3825798-f673-4d8a-9997-ccb73681cbf2
+ 1 PRIX creature NO Ghalta, Primal Hunger b0b6be0c-41cf-4757-9f0e-87227b6ba6b3 c11a7c2e-75e8-432e-84c4-df63e0df0981
+ 1 M19 creature NO Gigantosaurus e666bae7-dd51-4921-8b89-7e8d423caba0 c1db84d8-d426-4c0d-b44e-5be7b0f5f5bf
+ 1 XLN creature NO Goring Ceratops 34f5383b-21fe-45f5-9598-7382ee4c5b12 8309f684-5912-4191-9f64-d573f1cc84c9
+ 1 IKO creature NO Imposing Vantasaur a0d5fce0-a439-496a-9fcf-9271503f3ce8 b6fa5feb-f5e9-4079-acc9-84e458044769
+ 1 XLN creature NO Kinjalli's Sunwing b9243163-b726-432e-830f-86132aa7f34a 2b9e0b0f-651a-44e6-8fb0-e46bfda0ada9
+ 1 M20 creature NO Marauding Raptor b3fe2f61-c58e-4ebc-a5e3-99d6b6f62caf 64e4d2ee-e5e5-48e6-a7b8-9045dc8b10a7
+ 1 RIX creature NO Needletooth Raptor 2c431df9-095a-44f1-993e-74eb215d75fe e9a90b68-d5f4-4f3c-bd4b-af59dd868919
+ 1 M21 creature NO Ornery Dilophosaur 8291bc2e-ef58-4bd4-b261-b587142bbb1c c2c4a0e7-9ca4-4291-94de-165cc2ded822
+ 1 RIX creature NO Overgrown Armasaur 9e104718-1f74-4414-977a-82def93b5a8e fb6558db-6332-42ac-8a61-4524c200b62f
+ 1 RIX creature NO Polyraptor e47e3a40-f51f-41ed-8e7c-06200a2abc22 f8965a3a-93fe-4021-a665-b6013bdc86f7
+ 1 XLN creature NO Raging Swordtooth 626709bc-6c29-434f-9e3f-b84bb8a5c431 15a79137-9589-4c24-9bea-31041fd3c9ae
+ 1 XLN creature NO Rampaging Ferocidon 3e5ca524-8dd1-4f7f-a467-5210d768b8a1 39d3c658-1927-4af3-9077-88c4a669c730
+ 1 XLN creature NO Raptor Hatchling 91638137-06ba-4b21-b088-28d2b4d1d8da 8093e88d-fd3c-43d3-a025-9ebb9f02a84f
+ 1 XLN creature NO Regisaur Alpha 0673f4e0-66ff-458c-b4ba-eb067e560cce d6a322c5-aa4c-4a99-a3ca-48c1353104f0
+ 1 LGN creature NO Ridgetop Raptor 600a8c9e-e158-4fff-8c4d-c3a1bfd006e8 1013cbc4-09f4-484f-b328-9f7403225149
+ 1 CMR creature NO Ripscale Predator 4c297085-5ec1-4d29-9a8e-1785c016ce09 00924a16-fb85-41a4-bd7a-88f51f728333
+ 1 RIX creature NO Siegehorn Ceratops f7730e2e-aa62-40e7-836d-e6ddb6893816 0a9c4c63-402e-489e-ab0d-1c98309b010a
+ 1 RIX creature NO Silverclad Ferocidons b3aa5889-0d98-4a8c-a8b1-ada1e9b169e1 5f0d0c8d-c057-4a44-bd1e-38e1dd175778
+ 1 XLN creature NO Snapping Sailback 6f7b9ff4-fe79-4d21-9262-47bcd2411259 0af1eadf-f7ea-40be-a0cc-b79e4161db34
+ 1 XLN creature NO Sun-Crowned Hunters 9e6e6458-9e0e-404c-af07-225c4665eaec 3cab793e-0e17-4940-9cab-a30d62df5c20
+ 1 RIX creature NO Temple Altisaur 1f499d39-b963-45c0-9604-d3cab98c9e05 fa8f8d61-51d6-479b-a812-6cbacc7ea1fc
+ 1 AFR creature NO The Tarrasque bfd66214-e576-4a7e-8559-4e4e51d56b98 8a26fa15-d81f-4152-ae33-e91aa276b3fc
+ 1 XLN creature NO Thrash of Raptors 5f554df8-c70f-4212-aec7-597fe8a88553 2a03b859-811c-45ff-8d8a-9e87e4bbf113
+ 1 MH2 creature NO Thrasta, Tempest's Roar 19d258fb-4cda-4cbb-b07a-8b4670488867 6172da14-9a87-4cf9-aff5-aca3470a67ef
+ 1 C21 creature NO Verdant Sun's Avatar 6ee71432-a44d-495e-86ea-d495d891c331 f8fd0e28-2bb4-4529-bbfb-1d70a419a91b
+ 1 XLN creature NO Wakening Sun's Avatar 3c2aec69-ffd9-4a34-888c-58adbbb99bb5 7434abe4-87eb-4709-a26d-4e23154b4d31
+
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+
+ 2 TOR sorcery NO Cleansing Meditation 658bccf8-fe73-4d6a-b37b-7a58034e5e5d fd6609ef-71af-4775-affc-34153700c556
+ 1 XLN instant NO Dinosaur Stampede 3d6af1ee-16d2-4b82-8d9f-6d956603a746 a31bda74-8455-45ab-8142-65fbde2f39c3
+ 1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+ 3 XLN sorcery NO Star of Extinction 48220e6c-5752-46e0-9b7f-f0eef274d929 021f57dc-80f3-4ede-99d5-4a44aade44e2
+ 2 VOC sorcery NO Vandalblast 3567c3c8-b3c7-45b7-935b-b1fdbc973720 4ce9072b-58e9-422a-9331-31886c111cfa
+
+ 20 TGN2 token NO Dinosaur 240300bd-5088-43c5-a873-290507515843 b1ade1a5-74bf-41cd-b3b4-3bf33cf6d016
+ 40 TIKO token NO Dinosaur 29b74e83-90eb-4ced-87fc-10cea5822a62 f918b740-1984-4090-8886-9e290a698b95
+
+ ## Too Strong ##
+ 1 M19 creature NO Gigantosaurus e666bae7-dd51-4921-8b89-7e8d423caba0 c1db84d8-d426-4c0d-b44e-5be7b0f5f5bf
+ 1 PRIX creature NO Ghalta, Primal Hunger b0b6be0c-41cf-4757-9f0e-87227b6ba6b3 c11a7c2e-75e8-432e-84c4-df63e0df0981
+ 1 XLN creature NO Goring Ceratops 34f5383b-21fe-45f5-9598-7382ee4c5b12 8309f684-5912-4191-9f64-d573f1cc84c9
+ 1 AFR creature NO The Tarrasque bfd66214-e576-4a7e-8559-4e4e51d56b98 8a26fa15-d81f-4152-ae33-e91aa276b3fc
+ 1 XLN creature NO Wakening Sun's Avatar 3c2aec69-ffd9-4a34-888c-58adbbb99bb5 7434abe4-87eb-4709-a26d-4e23154b4d31
+ 1 XLN creature NO Burning Sun's Avatar 248d7759-aa73-4430-aa86-d45dc607944b 146c0cab-5f6b-425d-9f50-33d8da266235
+ 1 RIX creature NO Silverclad Ferocidons b3aa5889-0d98-4a8c-a8b1-ada1e9b169e1 5f0d0c8d-c057-4a44-bd1e-38e1dd175778
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+ 1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+ 1 XLN sorcery NO Star of Extinction 48220e6c-5752-46e0-9b7f-f0eef274d929 021f57dc-80f3-4ede-99d5-4a44aade44e2
+
+ ## Available Tokens ##
+ 1 RIX token NO Polyraptor e47e3a40-f51f-41ed-8e7c-06200a2abc22 f8965a3a-93fe-4021-a665-b6013bdc86f7
+ 1 TC21 token NO Saproling 2b7dba01-b08c-4218-9fc1-da55559d9155 113dbefc-14da-4826-87c1-543b53827c24
+
+ ## Weak Permanents ##
+ 1 C19 enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 daeca212-3a70-470e-a934-9cd7e0ebf7eb
+ 1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+ 1 CN2 enchantment NO Gruul War Chant a9edb891-1a38-4b8a-8539-c459e8a52315 00cbf1b0-5aa5-4420-84ea-7ea777ae34a7
+
+ ## Powerfull Permanents ##
+ 1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+ 1 RNA creature NO End-Raze Forerunners 69b52907-8aff-4f2a-a391-7d1ab2669b5c a50d79fe-6d37-42f3-b7b0-0c3018282fa2
+ 1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+ 1 C20 creature NO Zetalpa, Primal Dawn 7da0e5de-3e4c-420a-8685-991206100b9d 8d5b29be-2b1a-4ba5-8958-60eee4e3bac1
  */
