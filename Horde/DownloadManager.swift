@@ -27,9 +27,11 @@ import SwiftUI
                 // Handle the loaded file data
                 if error == nil {
                     DispatchQueue.main.async {
-                        self.data = data! as Data
-                        self.imageReadyToShow = true
-                        self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
+                        if data != nil {
+                            self.data = data! as Data
+                            self.imageReadyToShow = true
+                            self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
+                        }
                     }
                 }
             }

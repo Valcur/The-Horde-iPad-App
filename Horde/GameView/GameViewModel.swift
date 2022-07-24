@@ -297,7 +297,7 @@ class GameViewModel: ObservableObject {
     
     func sendToGraveyard(card: Card) {
         if card.cardType != .token {
-            let tmpCard = newCardCopy(copyOfCard: card)
+            let tmpCard = card.recreateCard()
             tmpCard.cardCount = 1
             cardsOnGraveyard.append(tmpCard)
         }
@@ -310,12 +310,6 @@ class GameViewModel: ObservableObject {
         } else {
             cardsOnBoard.append(card)
         }
-    }
-    
-    func newCardCopy(copyOfCard: Card) -> Card {
-        let tmpCard = Card(cardName: copyOfCard.cardName, cardType: copyOfCard.cardType, cardImageURL: copyOfCard.cardImageURL, hasFlashback: copyOfCard.hasFlashback)
-        tmpCard.cardCount = copyOfCard.cardCount
-        return copyOfCard
     }
     
     func spawnStrongPermanentIfNeeded() {
@@ -440,7 +434,7 @@ class GameViewModel: ObservableObject {
     }
     
     func createToken(token: Card) {
-        cardsOnBoard.append(Card(cardName: token.cardName, cardType: .token, cardImageURL: token.cardImageURL))
+        cardsOnBoard.append(token.recreateCard())
         cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
     }
     

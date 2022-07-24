@@ -1,0 +1,55 @@
+## Horde Deck ##
+1 TSR creature NO Battering Sliver 4adf959b-2e09-47ff-a1b1-b889348735b8 7f65a72b-d24c-4016-befc-91018a1b62e1
+1 H09 creature NO Brood Sliver 6b1d178f-9713-4dcf-920b-ddf2c94cc427 fa861228-5ceb-41f8-8ec0-9b96f1360271
+1 MH1 creature NO Cleaving Sliver 9b33059c-c862-4452-8609-14a0e2551fb3 51b657f0-6636-4d8a-9176-81027816e0ec
+1 M15 creature NO Diffusion Sliver 458ca9f4-4622-48e1-9ca1-6a8117188973 fb110a55-c8f9-4627-82c2-edb10db4f380
+1 LGN creature NO Essence Sliver 1f35f5e3-ddd1-4293-96f8-1181bbda77eb 1346fa14-1d9f-4c6a-887d-d3a93de00743
+1 H09 creature NO Frenzy Sliver d512d4ae-5db3-4fe5-8017-6a942004712d 8ae7319e-a12f-4e37-b184-0d15921ae72c
+2 TSR creature NO Fury Sliver 44623693-51d6-49ad-8cd7-140505caf02f a8a64329-09fc-4e0d-b7d1-378635f2801a
+1 MH1 creature NO Lancer Sliver 8ca33b31-4707-40d0-b4ed-cbe625793122 9a4f8d9a-3760-449e-b8a6-72b2a641ff23
+2 MH1 creature NO Lavabelly Sliver 334f673e-7cfa-432c-93aa-41adfbb99113 f6f0c9d6-cffc-4d8c-b455-e9feb8748aa7
+1 M15 creature NO Leeching Sliver f104b361-8000-4eda-b530-1502528e09f9 888ca52b-1270-4587-804d-1d08b07d7c5d
+1 TSR creature NO Lymph Sliver c3469de8-4bdb-42d4-9fc0-75fe31c3f6e5 48b8b4d4-4400-46cc-bd3c-e8a781cfc6f2
+2 M14 creature NO Megantic Sliver 52e8ec03-23ed-43a0-bce2-ad0cd5c4d737 7745f6a9-400c-4200-9732-86c54247de46
+4 TSR creature NO Might Sliver 92f5f80c-de1a-44e8-93f1-e405241c1e82 97c72fc3-72ac-4727-9872-33dc71049894
+1 LGN creature NO Shifting Sliver 6a262f53-2eea-45d0-8189-9222d66f1b52 1f68c4c2-91b5-4ffe-9dff-a6834038aa94
+1 TSR creature NO Sidewinder Sliver de8ccd32-f537-4a11-8dc4-e48836a0b139 5616e0c7-1f1d-4716-95e5-773a8e3ae5e3
+2 TSR creature NO Sinew Sliver ffff90c3-63c4-4dee-a21d-6b2b113f4f80 000edc61-b3ae-49e3-87f4-0250fa6a4501
+1 TPR creature NO Spined Sliver eed9c168-1c78-43c6-a814-9b80054d1373 5bb97644-be16-4d14-bebd-51894772b77b
+1 PLC creature NO Spitting Sliver 8415a482-3957-4c00-9015-99defc049877 cd07649e-c7fc-44f7-ab23-0fb935aff8c7
+1 LGN creature NO Toxin Sliver 96ccad44-7912-4fdb-bb2d-9d16cc3cd68a c04ab6b6-27ee-4c93-a87c-cbc3743f4faf
+1 TSR creature NO Two-Headed Sliver be857d6e-5bf2-491b-ab46-963b4d45adee 260cf43a-f3a4-48f7-9c51-5884d106ff56
+
+
+2 TOR sorcery NO Cleansing Meditation 658bccf8-fe73-4d6a-b37b-7a58034e5e5d fd6609ef-71af-4775-affc-34153700c556
+4 ONS sorcery NO Harsh Mercy dcd65c9b-4aaa-42af-869f-de179ae57c9f b6473b4d-1f59-4216-ace9-f3e5306266fb
+1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+2 VOC sorcery NO Vandalblast 3567c3c8-b3c7-45b7-935b-b1fdbc973720 4ce9072b-58e9-422a-9331-31886c111cfa
+
+32 TPR token NO Metallic Sliver 2dfafd63-83fb-4783-8e12-30018680a905 0f302984-9bf6-4583-865a-5545711e7a27
+22 M14 token NO Sliver Construct 7d592d5b-95cf-4416-9ade-1c23a8ba01d1 3129645a-221c-4eb5-88fd-12cc742a1dfe
+10 TSP token NO Venser's Sliver 54d65915-3833-4e4d-a066-37ae9507846f 1e3c5a64-453b-4477-853a-9514ba326f16
+
+## Too Strong ##
+1 M14 creature NO Megantic Sliver 52e8ec03-23ed-43a0-bce2-ad0cd5c4d737 7745f6a9-400c-4200-9732-86c54247de46
+1 LGN creature NO Shifting Sliver 6a262f53-2eea-45d0-8189-9222d66f1b52 1f68c4c2-91b5-4ffe-9dff-a6834038aa94
+1 TSR creature NO Fury Sliver 44623693-51d6-49ad-8cd7-140505caf02f a8a64329-09fc-4e0d-b7d1-378635f2801a
+1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+1 ONS sorcery NO Harsh Mercy dcd65c9b-4aaa-42af-869f-de179ae57c9f b6473b4d-1f59-4216-ace9-f3e5306266fb
+
+## Available Tokens ##
+
+## Weak Permanents ##
+1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
+1 VOC enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 8169d44d-b15a-47e0-b417-24f2f4945d0f
+1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
+1 CLB enchantment NO Propaganda ea9709b6-4c37-4d5a-b04d-cd4c42e4f9dd e5f293d7-9c2b-41cb-8e3c-dfc1daa6635f
+
+## Powerfull Permanents ##
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+1 RNA enchantment NO Ethereal Absolution e6f95e3a-61a6-40a9-8070-ffd2767764ad 0872d0ff-1060-44cc-9ed0-a6aa496440c8
+1 M12 enchantment NO Levitation 94b703c4-5584-4913-8365-7e9f2f535c2d 63e5124a-67c0-44ed-8085-28bf37816423
+1 M15 creature NO Sliver Hivelord e4fe33e7-b952-4152-8c83-81d948756d2f ba4106de-20c7-48cf-8a36-8c6913b46c89
+1 J19 creature NO Sliver Legion 47657df2-0e58-46c8-87e2-cc752708a612 3511ae86-9c49-4628-b61b-f25466b1b1d2
+1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae

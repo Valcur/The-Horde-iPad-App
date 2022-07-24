@@ -131,6 +131,8 @@ struct ImagePicker: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
         config.filter = .images
+        config.preferredAssetRepresentationMode = .current
+        config.selectionLimit = 1
         let picker = PHPickerViewController(configuration: config)
         picker.delegate = context.coordinator
         return picker
@@ -153,14 +155,21 @@ struct ImagePicker: UIViewControllerRepresentable {
 
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
+            
+            guard !results.isEmpty else { return }
 
             guard let provider = results.first?.itemProvider else { return }
 
             if provider.canLoadObject(ofClass: UIImage.self) {
-                provider.loadObject(ofClass: UIImage.self) { image, _ in
-                    self.parent.image = image as? UIImage
-                }
-            }
+                provider.loadObject(ofClass: UIImage.self, completionHandler: {image, error in
+                       DispatchQueue.main.async {
+                           guard let image = image as? UIImage else {
+                               debugPrint("Error: UIImage is nil")
+                               return }
+                           self.parent.image = image
+                       }
+                   })
+             }
         }
     }
 }

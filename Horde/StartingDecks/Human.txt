@@ -1,0 +1,74 @@
+## Horde Deck ##
+1 MID creature NO Adeline, Resplendent Cathar 38515f89-348b-4cf3-b7bd-1f6fe4ce2fba 18092f68-b96e-4084-9eba-b240d2195d81
+1 C20 creature NO Adriana, Captain of the Guard de23275e-e9c1-4151-aed8-f79ead03d5d4 d29569dd-6d79-412d-bc14-674cd1705260
+1 AVR creature NO Angel of Glory's Rise c6a606af-ea08-4cd9-bfd9-60d76e232e85 7a8be765-0949-491c-875c-0385fb83e4b9
+1 BNG creature NO Archetype of Courage 79b48704-480d-4905-b87a-40b127894670 8e6c4afb-6a94-4519-91c6-9824fed2892c
+1 2X2 creature NO Balefire Liege ee35ed62-d5a2-4e65-a7eb-fcdcb3665532 3ed13445-c9a0-4f17-aa69-af353679e6a7
+1 DOM creature NO Benalish Marshal 2cc439e8-d112-44e6-bc5a-6e99333c519a 6dd1a7fc-5dbd-4ed2-9b02-9fd5c55bb629
+1 STX creature NO Blade Historian 314f0a96-5e91-42a3-9d75-3f641f22a9ee a46d64ec-aca4-428e-bce6-66cd755c8cc3
+1 RAV creature NO Blazing Archon 82a70e4c-01ed-4280-80e4-86cb2bf6e63d cd0bc05b-ec48-41fd-a97a-ffb0d5a2dee0
+2 DDO creature NO Captain of the Watch 9f2af06d-8fb7-4276-bb92-3559a6d1fa18 6e201980-e220-44dc-beab-ad13c20332bd
+1 CSP creature NO Darien, King of Kjeldor d05336cb-6157-47e7-942f-43becd67a5bf 5ea571ae-b9bd-4bd2-9357-52915f0d2f15
+1 C20 creature NO Frontier Warmonger 9cb741ae-14d6-4a8d-bfad-703abfe3682c 233e1a27-c8d6-46de-a128-89791e7f2e9b
+1 C20 creature NO Frontline Medic 36a3c910-95b8-45a2-9f84-5681336d868c 984f0514-e9a9-4f22-9f7d-96fd62338db2
+1 KHC creature NO Goldnight Commander 3dc51dfc-7a60-41bf-b944-6afad6b06c22 80be2fea-3fe6-477e-bcb8-63f441d6cfc1
+1 EMN creature NO Hamlet Captain 1a60dc0f-e387-4d28-8ff0-c3f1883d0c5d 43435939-20cf-49c9-8e37-63681740399b
+1 EMN creature NO Hanweir Garrison 7cb29569-48e1-4782-9906-fad155ebfafe 0900e494-962d-48c6-8e78-66a489be4bb2
+1 MBS creature NO Hero of Bladehold 454a8902-8120-4373-96ee-bbf352b04e8d 8a3853ec-e307-46e0-96d7-0706b5c45c5e
+1 MBS creature NO Hero of Oxid Ridge f18799c4-ec54-4435-be51-03ea25809289 1a516bce-3d2d-4e0f-afc7-27be3d88848c
+1 MIC creature NO Kyler, Sigardian Emissary 726cd041-5d0b-436c-bced-9335f56c0b0d 62a78aae-598e-4f2b-a7bc-c3afc1d0d191
+1 EVE creature NO Nobilis of War 4789ac35-ca91-4046-8262-24c34e751cea 6d54ab6e-dd56-40fe-abab-a1e67b024744
+1 THB creature NO Reverent Hoplite 8cb6dbb5-9ea2-4c19-8173-148080fb898e 54153b9c-483e-4e5c-a1ab-b1c8a7a657d4
+1 MIC creature NO Stalwart Pathlighter 88ba283d-2d03-4455-a4a3-a2a5622209bd a5bf9336-80d6-4751-9630-1d28e24cc0cf
+1 ELD creature NO Syr Alin, the Lion's Claw 5d9a4905-4a26-410e-936c-56de849e9ca3 4cddb2d2-d813-4b83-a592-380ba4edf54f
+
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+1 C15 enchantment NO Dictate of Heliod b989279c-665d-4f15-afc1-adf3872a4851 f964c561-96ac-4558-b46e-ba2c472d5807
+2 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+1 C14 enchantment NO True Conviction fc299c1c-50f3-492a-b6b8-a3664bb72ab7 9e5dc58b-f486-4b9f-9138-33efa31a05e4
+
+2 TOR sorcery NO Cleansing Meditation 658bccf8-fe73-4d6a-b37b-7a58034e5e5d fd6609ef-71af-4775-affc-34153700c556
+1 C14 sorcery NO Deploy to the Front 135cb4af-f4b6-455b-8fea-84fcef78ee03 10744088-b028-43aa-8a77-cd2a430fbfb6
+2 MIC sorcery NO Hour of Reckoning 3bc13640-03f8-4b19-b0a4-7e7cb5271c0c 0a14b17e-bfff-4859-92cb-a82d2e90580b
+1 C20 sorcery YES Increasing Devotion 7a5ff4d4-27b7-47d4-ba88-970c63c4e3fb 0c786c28-1085-4b3e-9164-5fa3adfa5010
+1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+2 VOC sorcery NO Vandalblast 3567c3c8-b3c7-45b7-935b-b1fdbc973720 4ce9072b-58e9-422a-9331-31886c111cfa
+1 MIC sorcery YES Visions of Glory ef47c447-bd7f-43c6-b4db-4a848c39820c 11675d8a-cd81-4055-bdbd-2e709e12ba66
+2 2XM sorcery NO Wrath of God 34515b16-c9a4-4f98-8c77-416a7a523407 664e6656-36a3-4635-9f33-9f8901afd397
+
+10 TELD token NO Human Warrior 07f49348-e3bd-47dc-b68d-6b38b9b54f70 c994ea90-71f4-403f-9418-2b72cc2de14d
+20 TC20 token NO Human 30272edf-097c-4918-84d2-9fa6c42dbe0a 0dffd473-2b89-4f74-8bff-39b8eb408b26
+10 TCM2 token NO Knight 100435fe-ae77-4644-8b4a-4c941bb2067f a0c79cdb-969b-4c3b-8ad0-cbbd359a966b
+10 TM20 token NO Soldier eac25f12-6459-438c-a09e-93e23d2cf80d a491d9da-a58d-4423-b565-c5a99ef63132
+10 TWAR token NO Soldier 01e023e5-38bc-4203-aecb-6b2de54b03ea ca11c711-93fe-45ca-b393-3851148defc4
+
+## Too Strong ##
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+1 MIC sorcery NO Hour of Reckoning 3bc13640-03f8-4b19-b0a4-7e7cb5271c0c 0a14b17e-bfff-4859-92cb-a82d2e90580b
+1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+1 2XM sorcery NO Wrath of God 34515b16-c9a4-4f98-8c77-416a7a523407 664e6656-36a3-4635-9f33-9f8901afd397
+1 C14 enchantment NO True Conviction fc299c1c-50f3-492a-b6b8-a3664bb72ab7 9e5dc58b-f486-4b9f-9138-33efa31a05e4
+1 C15 enchantment NO Dictate of Heliod b989279c-665d-4f15-afc1-adf3872a4851 f964c561-96ac-4558-b46e-ba2c472d5807
+1 MIC creature NO Kyler, Sigardian Emissary 726cd041-5d0b-436c-bced-9335f56c0b0d 62a78aae-598e-4f2b-a7bc-c3afc1d0d191
+1 STX creature NO Blade Historian 314f0a96-5e91-42a3-9d75-3f641f22a9ee a46d64ec-aca4-428e-bce6-66cd755c8cc3
+1 C20 creature NO Frontline Medic 36a3c910-95b8-45a2-9f84-5681336d868c 984f0514-e9a9-4f22-9f7d-96fd62338db2
+1 C20 sorcery YES Increasing Devotion 7a5ff4d4-27b7-47d4-ba88-970c63c4e3fb 0c786c28-1085-4b3e-9164-5fa3adfa5010
+1 C20 creature NO Adriana, Captain of the Guard de23275e-e9c1-4151-aed8-f79ead03d5d4 d29569dd-6d79-412d-bc14-674cd1705260
+
+## Available Tokens ##
+
+## Weak Permanents ##
+1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
+1 SLD enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 1a43d9e8-3320-4873-b322-b323c792ce5e
+1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
+1 CMR creature NO Odric, Lunarch Marshal bad76170-c773-4be5-9457-20dc9f745cb4 17b429bd-d7da-45f5-988b-7eed0d3efeaa
+
+## Powerfull Permanents ##
+1 SLD creature NO Akroma, Angel of Wrath 107f204c-9fd3-490d-8887-be63d14fc6a4 cf75f895-3481-4c21-a85f-c819613bccc3
+1 CMD creature NO Angelic Arbiter 34dd789c-4d80-4ccc-a4f7-2e5388a9689d 602a5e00-7e7f-4aec-bf8a-550b00f0864c
+1 GTC enchantment NO Assemble the Legion 6f81bef3-6ca0-4cf4-aa99-7b2813eeef04 43675ed7-ece1-4414-965e-9ebadcbf3dfb
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+1 CM2 creature NO Gisela, Blade of Goldnight 66f9f325-5e8e-4ebf-b5b3-c6410d80f2c5 365c43c2-1a65-4f6a-860d-39dcb15255c3
+1 CMR creature NO Prava of the Steel Legion 4daa7b7d-e410-4bcf-b3e2-2751774bef47 e9e40e2a-e447-4754-a98b-5521e546781f
+1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae

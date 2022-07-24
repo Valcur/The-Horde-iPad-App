@@ -54,7 +54,7 @@ class Card: Hashable, Identifiable {
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(cardImageURL)
+        hasher.combine(cardId)
     }
     
     func recreateCard() -> Card {
@@ -71,7 +71,7 @@ class Card: Hashable, Identifiable {
         let cardNameForUrl = name
             .replacingOccurrences(of: " ", with: "-")
             .replacingOccurrences(of: "\"", with: "")
-            .replacingOccurrences(of: ",", with: "")
+            .replacingOccurrences(of: ",", with: "") // Maybe "-" instead of "" ?????
             .replacingOccurrences(of: "'", with: "")
         var url = "https://api.scryfall.com/cards/named?exact=\(cardNameForUrl)&format=img&version=\(cardResolution)"
         // Example https://api.scryfall.com/cards/named?exact=Zombie+Giant&format=img&version=normal

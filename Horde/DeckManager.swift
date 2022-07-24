@@ -186,7 +186,7 @@ struct DeckManager {
             var selectedDeckListNumber = DeckEditorViewModel.DeckSelectionNumber.deckList
             
             for line in allLines {
-                if line != "" {
+                if line.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
                     // Change current decklist to add cards to
                     if line == DeckEditorViewModel.DeckDataPattern.deck {
                         selectedDeckListNumber = DeckEditorViewModel.DeckSelectionNumber.deckList
@@ -299,22 +299,37 @@ struct DeckManager {
         return tmpDeck
     }
     
-    static func createStarterDeckForId(deckId: Int) {
-        createZombieDeck(deckId: DecksId.zombie)
-        createHumanDeck(deckId: DecksId.human)
-        createDinosaurDeck(deckId: DecksId.dinosaur)
-        createNatureDeck(deckId: DecksId.nature)
-        createSliverDeck(deckId: DecksId.sliver)
-        createPhyrexianDeck(deckId: DecksId.phyrexian)
-        //createEldraziDeck(deckId: DecksId.eldrazi)
+    static func createStarterDecks() {
+        if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.zombie)_Exist") as? Bool ?? false) {
+            createZombieDeck(deckId: DecksId.zombie)
+        }
+        if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.human)_Exist") as? Bool ?? false) {
+            createHumanDeck(deckId: DecksId.human)
+        }
+        if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.dinosaur)_Exist") as? Bool ?? false) {
+            createDinosaurDeck(deckId: DecksId.dinosaur)
+        }
+        if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.nature)_Exist") as? Bool ?? false) {
+            createNatureDeck(deckId: DecksId.nature)
+        }
+        if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.sliver)_Exist") as? Bool ?? false) {
+            createSliverDeck(deckId: DecksId.sliver)
+        }
+        if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.phyrexian)_Exist") as? Bool ?? false) {
+            createPhyrexianDeck(deckId: DecksId.phyrexian)
+        }
+        /*
+        if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.eldrazi)_Exist") as? Bool ?? false) {
+            createEldraziDeck(deckId: DecksId.eldrazi)
+        }*/
     }
     
     static func createHumanDeck(deckId: Int) {
-        let deckName = ""
-        let deckIntro = ""
-        let deckRules = ""
+        let deckName = "Human"
+        let deckIntro = "A modified version of the Armies of Men deck by TenkayCrit.\nArt by Antonio José Manzanedo"
+        let deckRules = "All creatures controlled by the Horde have haste and are Humans in addition to their other creature types. All tokens controlled by the Horde are white"
         
-        let deckData = ""
+        let deckData = readDeckDataFromFile(fileName: deckName)
 
         let deckImage = UIImage(named: "Human")
         
@@ -322,11 +337,11 @@ struct DeckManager {
     }
     
     static func createZombieDeck(deckId: Int) {
-        let deckName = ""
-        let deckIntro = ""
-        let deckRules = ""
+        let deckName = "Zombie"
+        let deckIntro = "The original horde deck by Peter Knudson\nArt by Grzegorz Rutkowski"
+        let deckRules = "All creatures controlled by the Horde have haste"
         
-        let deckData = ""
+        let deckData = readDeckDataFromFile(fileName: deckName)
 
         let deckImage = UIImage(named: "Zombie")
         
@@ -334,11 +349,11 @@ struct DeckManager {
     }
     
     static func createDinosaurDeck(deckId: Int) {
-        let deckName = ""
-        let deckIntro = ""
-        let deckRules = ""
+        let deckName = "Dinosaur"
+        let deckIntro = "A modified version of the Dinosaur Rage deck by TenkayCrit\nArt by Grzegorz Rutkowski"
+        let deckRules = "All creatures controlled by the Horde have haste."
         
-        let deckData = ""
+        let deckData = readDeckDataFromFile(fileName: deckName)
 
         let deckImage = UIImage(named: "Dinosaur")
         
@@ -346,11 +361,11 @@ struct DeckManager {
     }
     
     static func createPhyrexianDeck(deckId: Int) {
-        let deckName = ""
-        let deckIntro = ""
-        let deckRules = ""
+        let deckName = "Phyrexian"
+        let deckIntro = "A modified version of the Phyrexian Perfection deck by TenkayCrit\nArt by Igor Kieryluk"
+        let deckRules = "All creatures controlled by the Horde have haste. The Survivors share poison counters. They do not lose the game for having 10 or more poison counters. Every time the Survivors gain one or more poison counters, each Survivor exiles 1 card from the top of each of their libraries face down for each poison counter."
         
-        let deckData = ""
+        let deckData = readDeckDataFromFile(fileName: deckName)
 
         let deckImage = UIImage(named: "Phyrexian")
         
@@ -358,11 +373,11 @@ struct DeckManager {
     }
     
     static func createSliverDeck(deckId: Int) {
-        let deckName = ""
-        let deckIntro = ""
-        let deckRules = ""
+        let deckName = "Sliver"
+        let deckIntro = "A modified version of the Sliver Hive deck by TenkayCrit\nArt by Aleksi Briclot"
+        let deckRules = "All creatures controlled by the Horde have haste. All of the artifact slivers in the Horde deck are treated as tokens."
         
-        let deckData = ""
+        let deckData = readDeckDataFromFile(fileName: deckName)
 
         let deckImage = UIImage(named: "Sliver")
         
@@ -370,11 +385,11 @@ struct DeckManager {
     }
     
     static func createNatureDeck(deckId: Int) {
-        let deckName = ""
-        let deckIntro = ""
-        let deckRules = ""
+        let deckName = "Nature"
+        let deckIntro = "Art by Grzegorz Rutkowski"
+        let deckRules = "All tokens controlled by the Horde have haste."
         
-        let deckData = ""
+        let deckData = readDeckDataFromFile(fileName: deckName)
 
         let deckImage = UIImage(named: "Nature")
         
@@ -382,11 +397,11 @@ struct DeckManager {
     }
     
     static func createEldraziDeck(deckId: Int) {
-        let deckName = ""
-        let deckIntro = ""
-        let deckRules = ""
+        let deckName = "Eldrazi"
+        let deckIntro = "A modified version of the Eldrazi Horror deck by TenkayCrit\nArt by Aleksi Briclot"
+        let deckRules = "All tokens controlled by the Horde have haste. All eldrazi spawn the Horde controls cannot attack or block. If the Horde controls 10 eldrazi spawn at the start of its precombat main phase, they are sacrificed, and the Horde casts the three eldrazi titans from exile."
         
-        let deckData = ""
+        let deckData = readDeckDataFromFile(fileName: deckName)
 
         let deckImage = UIImage(named: "Eldrazi")
         
@@ -403,6 +418,21 @@ struct DeckManager {
         guard let data = deckImage.jpegData(compressionQuality: 0.5) else { return }
         let encoded = try! PropertyListEncoder().encode(data)
         UserDefaults.standard.set(encoded, forKey: "Deck_\(deckId)_Image")
+    }
+    
+    private static func readDeckDataFromFile(fileName: String) -> String {
+
+        if let path = Bundle.main.path(forResource: fileName, ofType: "txt")
+        {
+            let fm = FileManager()
+            let exists = fm.fileExists(atPath: path)
+            if(exists){
+                let content = fm.contents(atPath: path)
+                let contentAsString = String(data: content!, encoding: String.Encoding.utf8)
+                return contentAsString!
+            }
+        }
+        return ""
     }
     
     /*

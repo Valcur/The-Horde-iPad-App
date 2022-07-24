@@ -238,7 +238,6 @@ struct CardShowView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State var card: Card
     @State var cardType: CardType
-    @State var index = 0
     @State var hasCardFlashback: Bool
     
     private let gradient = Gradient(colors: [Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.3), Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.0)])
@@ -259,22 +258,20 @@ struct CardShowView: View {
                 ZStack(alignment: .bottom) {
                     // Card to show
                     
-                    CardToShowCarouselView(index: $index.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
+                    CardToShowCarouselView(index: $deckEditorViewModel.carouselIndex.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
                         if deckEditorViewModel.cardToShow != nil {
                             CarouselCardView(card: deckEditorViewModel.cardToShow!, cardRank: 0)
                         }
                         ForEach(deckEditorViewModel.cardToShowReprints.indices, id: \.self) { i in
                             CarouselCardView(card: deckEditorViewModel.cardToShowReprints[i], cardRank: i)
                         }
-                    }.onChange(of: deckEditorViewModel.cardToShow) { _ in
-                        index = 0
                     }
                     
                     // Add or Remove to selected deck
                     HStack {
                         Spacer()
                         Button(action: {
-                            if deckEditorViewModel.removeCardShouldBeAnimated() {
+                            if deckEditorViewModel.removeCardShouldBeAnimated(card: getSelectedCardFromCarousel()) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     deckEditorViewModel.removeCardFromSelectedDeck(card: getSelectedCardFromCarousel())
                                 }
@@ -292,7 +289,7 @@ struct CardShowView: View {
                         Spacer()
                         
                         Button(action: {
-                            if deckEditorViewModel.addCardShouldBeAnimated() {
+                            if deckEditorViewModel.addCardShouldBeAnimated(card: getSelectedCardFromCarousel()) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     deckEditorViewModel.addCardToSelectedDeck(card: getSelectedCardFromCarousel())
                                 }
@@ -347,7 +344,7 @@ struct CardShowView: View {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
                 }
-            }.onChange(of: index) { _ in
+            }.onChange(of: deckEditorViewModel.carouselIndex) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
@@ -395,11 +392,11 @@ struct CardShowView: View {
         if deckEditorViewModel.cardToShow == nil {
             return Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR")
         }
-        if index == 0 || deckEditorViewModel.cardToShowReprints.count == 0 {
+        if deckEditorViewModel.carouselIndex == 0 || deckEditorViewModel.cardToShowReprints.count == 0 {
             return deckEditorViewModel.cardToShow!.recreateCard()
         }
         
-        return deckEditorViewModel.cardToShowReprints[index - 1].recreateCard()
+        return deckEditorViewModel.cardToShowReprints[deckEditorViewModel.carouselIndex - 1].recreateCard()
     }
 }
 
@@ -489,29 +486,6 @@ struct BottomControlRowView: View {
     
     var body: some View {
         HStack {
-            // Import
-            Button(action: {
-                deckEditorViewModel.importDeckFromClipboard()
-            }, label: {
-                Image(systemName: "square.and.arrow.down")
-                    .font(.title2)
-                    .foregroundColor(.white)
-            })
-            
-            Text("/")
-                .font(.title2)
-                .foregroundColor(.white)
-            
-            // Export
-            Button(action: {
-                deckEditorViewModel.exportDeckToClipboard()
-            }, label: {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.title2)
-                    .foregroundColor(.white)
-            })
-            
-            Spacer()
             
             // Edit deck info
             Button(action: {
@@ -535,7 +509,7 @@ struct BottomControlRowView: View {
                     Image(systemName: "pencil")
                         .font(.title2)
                         .foregroundColor(.white)
-                }.padding(.leading, 80) // To make the button bigger
+                }.padding(.leading, 30).padding(.trailing, 80) // To make the button bigger
             })
 
             
@@ -553,6 +527,30 @@ struct BottomControlRowView: View {
                         .foregroundColor(.white)
                 }
             }).padding(.leading, 30).padding(.trailing, 80) // To make the button bigger
+            
+            Spacer()
+            
+            // Import
+            Button(action: {
+                deckEditorViewModel.importDeckFromClipboard()
+            }, label: {
+                Image(systemName: "square.and.arrow.down")
+                    .font(.title2)
+                    .foregroundColor(.white)
+            })
+            
+            Text("/")
+                .font(.title2)
+                .foregroundColor(.white)
+            
+            // Export
+            Button(action: {
+                deckEditorViewModel.exportDeckToClipboard()
+            }, label: {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.title2)
+                    .foregroundColor(.white)
+            })
             
             Spacer()
             
@@ -630,14 +628,13 @@ struct CarouselCardView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
                 .cornerRadius(EditorSize.cardToShowCornerRadius)
-                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
         } else {
             Image("BlackBackground")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
                 .cornerRadius(EditorSize.cardToShowCornerRadius)
-                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4).onAppear() {
+                .onAppear() {
                     Timer.scheduledTimer(withTimeInterval: 0.5 * Double(cardRank), repeats: false) { timer in
                         self.shouldStartDownloadingImage = true
                     }

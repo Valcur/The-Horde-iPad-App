@@ -1,0 +1,83 @@
+## Horde Deck ##
+1 NPH creature NO Blade Splicer 194166ad-0179-42a3-86b9-ba7f322ec576 b8e56a28-713b-4a13-a601-1128cf117539
+1 MBS creature NO Blightsteel Colossus e80772e2-8623-4094-81a2-70828b2b151c 7928bb14-7631-4830-a756-26d1ea832ba2
+1 C21 creature NO Bronze Guardian 922a030c-857b-4c61-93df-b70ebb32abd3 8cd5cc66-2ade-4142-9269-7d9905b029e5
+1 MBS creature NO Core Prowler 0ad44727-41c3-471c-b038-1bf43c5f296a 05414ba7-0f59-4c73-931c-e599d149d3ba
+1 NPH creature NO Elesh Norn, Grand Cenobite 958d71ff-c9f7-46f0-96ca-79e7f4d65a16 b66390d6-1649-4bfa-92d3-77664650d552
+1 SOM creature NO Hand of the Praetors f595c7f6-783f-4825-9c1a-e7f8edd380fd 94ca493e-f09b-4b11-bb47-0562dfc203ca
+1 SOM creature NO Ichor Rats f8148664-49c0-421f-93a5-cd59e4e9ea36 2013aed6-7415-4bf0-a3bb-46d6beecbaff
+1 MBS creature NO Massacre Wurm 93cf50cf-0ecc-4d3e-abea-778c1ebacec4 cdd32ec2-02a8-41fc-bf45-c9585bb2b3ee
+1 NPH creature NO Master Splicer 9e0c5919-aed6-4d98-85c8-2658be78bdf0 859d2b91-63af-4700-8ca5-b1756aa6639b
+1 NPH creature NO Maul Splicer b0d0c534-8bd2-4801-aadd-dcc9c92d6ec3 2d2c6a6d-5b59-47d7-b290-df3640d9555f
+1 MBS creature NO Phyrexian Crusader 91760bdf-a82a-4f3d-b925-3bc81ffbd41f 32aaa8b9-987b-4809-8a54-aa29bdc18805
+1 MBS creature NO Phyrexian Hydra b16085d5-6d00-4d47-ab8b-d18d55c72141 cb135aa1-9f46-4d60-a1a4-97aa0e852ced
+1 MBS creature NO Phyrexian Juggernaut 009fcd1e-5c5f-435b-afc1-099f1622e45c a9f6ed6c-8095-4a81-b428-36b2916eec88
+1 NPH creature NO Phyrexian Obliterator 41820f91-27cf-41c0-bb5e-9adf6845a6a4 44c4476d-58f9-420d-9545-f5d580c589de
+1 NPH creature NO Phyrexian Swarmlord 4fc2755c-ae7b-4147-a573-b33679a461e8 8a91dea7-9792-4714-82b0-ba2c06cef304
+1 MBS creature NO Priests of Norn 793fe31a-2b11-49f8-9851-719469ad1726 a978c49d-483a-42fe-971c-858288d07e40
+1 SOM creature NO Putrefax 3a336b30-335a-49d0-b192-c20f3670452b b2b2c3f9-a831-4fd2-80e8-b67b0df3e98b
+1 NPH creature NO Reaper of Sheoldred 251cee41-30f5-4bba-93cd-31493a5ea051 a300a645-aec6-4cda-8c11-1e8a6af056ff
+1 C18 creature NO Scuttling Doom Engine 72ccdcef-5c84-45ba-bda3-3dc014e1585c 7ad0dfdd-2075-4a42-976b-e493246bc61c
+1 NPH creature NO Sensor Splicer 9676da93-1e17-4f6c-b610-a242b78c71ab 79076264-d71c-4b30-aac9-702a4d229933
+1 SOM creature NO Skithiryx, the Blight Dragon daf6c421-e7f7-4fc6-967c-65f4ab96fcfd c930c9cc-1b64-4f36-afe2-6bf120a74ce2
+1 NPH creature NO Spinebiter 9b844a0c-590f-46c7-b53e-c99398e0d8c0 cfc79ac6-ffc6-4506-9dea-e20176f960ea
+1 NPH creature NO Toxic Nim afc2a3a7-eb69-4fcb-b3a3-444dccb735d7 5823990c-8d40-4352-8d34-74332934adb2
+1 NPH creature NO Urabrask the Hidden 5b2ffb53-86b7-4665-a5c7-b85b035b6c81 b06fcab2-891e-4fa3-8583-068ba56c2e27
+1 C18 creature NO Vedalken Humiliator 17c3a888-84d2-4c21-8fa3-d2d825dd7601 039dff9a-881f-4a3d-8680-7f560ef0ea7e
+1 KHM creature NO Vorinclex, Monstrous Raider 5a3fdf5a-bff8-4896-b288-3f43f9a72d9b 92613468-205e-488b-930d-11908477e9f8
+1 NPH creature NO Wing Splicer 7fbf6afc-8a16-447b-bdef-b7d0b640f76c e2dbfb1b-092c-44a3-932d-a8b27be0a72b
+1 SOM creature NO Wurmcoil Engine d1a60f44-7696-49ee-91fb-cab5b3102962 33672990-4860-4aa6-ac1b-f9da66f5da59
+
+1 SOM enchantment NO Inexorable Tide 40ec0a47-badf-4074-b0a8-749bb7c17b95 8f41e281-fcbb-450b-8a67-7b072c55c6f0
+1 AKH enchantment NO Nest of Scarabs 1f21cf59-6390-44b4-ab2e-ef290dfd8c85 97aa6b45-055a-411e-b2db-b373a4d3826d
+
+1 SOM instant NO Carrion Call 8f1e8f25-ee23-40a6-a3f2-369bb960267f bc3c1a8e-3bdb-42cf-9442-5de7e4670d66
+2 TOR sorcery NO Cleansing Meditation 658bccf8-fe73-4d6a-b37b-7a58034e5e5d fd6609ef-71af-4775-affc-34153700c556
+4 MBS sorcery NO Phyrexian Rebirth 6ef3c75d-6af2-4ea0-b98d-96c5d7d3af58 36b7536d-6b0b-4906-ba88-7fcfe9b854ee
+1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+1 NPH sorcery NO Triumph of the Hordes 3ded0c0c-40ce-4d14-a9a6-b023bc19ee0e c16b90ff-d256-4ac6-b687-3430b8c80dd7
+2 VOC sorcery NO Vandalblast 3567c3c8-b3c7-45b7-935b-b1fdbc973720 4ce9072b-58e9-422a-9331-31886c111cfa
+
+9 TTSR token NO Assembly-Worker 02e1a471-36b2-4d28-a323-f4ec3d095cb9 e72daa68-0680-431c-a616-b3693fd58813
+3 TKLD token NO Beast 347a9b41-8545-405d-9b4b-3691890201d7 4de1d095-459f-42fd-9d9f-8f71d002a5b2
+5 TMH2 token NO Construct ee740c48-59cd-4fcc-b4a5-fe3dde1361d5 a7caaf39-8f16-4f1d-bee6-a45674306319
+3 TMBS token NO Golem 80fe0a7b-a310-41a1-8417-c734402e9c4f 2d84926d-5892-4c62-a943-fac9f0ddc569
+8 TRIX token NO Golem ee924697-f02c-412c-82cf-145b943aec06 a7820eb9-6d7f-4bc4-b421-4e4420642fb7
+25 TNPH token NO Golem 9859c54d-695b-4bb1-940e-cfd1c3301e89 fe9e8d3b-ebc0-448b-bd14-a9f418e196e7
+3 T2XM token NO Wurm 1b9ccdd7-4935-45e2-bb16-b09870dd965d a6ee0db9-ac89-4ab6-ac2e-8a7527d9ecbd
+3 T2XM token NO Wurm 5e3f41f7-9b42-437a-a9f9-f09250b083db b68e816f-f9ac-435b-ad0b-ceedbe72447a
+
+## Too Strong ##
+1 MBS creature NO Blightsteel Colossus e80772e2-8623-4094-81a2-70828b2b151c 7928bb14-7631-4830-a756-26d1ea832ba2
+1 NPH creature NO Elesh Norn, Grand Cenobite 958d71ff-c9f7-46f0-96ca-79e7f4d65a16 b66390d6-1649-4bfa-92d3-77664650d552
+1 MBS sorcery NO Phyrexian Rebirth 6ef3c75d-6af2-4ea0-b98d-96c5d7d3af58 36b7536d-6b0b-4906-ba88-7fcfe9b854ee
+1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+1 NPH sorcery NO Triumph of the Hordes 3ded0c0c-40ce-4d14-a9a6-b023bc19ee0e c16b90ff-d256-4ac6-b687-3430b8c80dd7
+1 MBS creature NO Massacre Wurm 93cf50cf-0ecc-4d3e-abea-778c1ebacec4 cdd32ec2-02a8-41fc-bf45-c9585bb2b3ee
+1 NPH creature NO Phyrexian Obliterator 41820f91-27cf-41c0-bb5e-9adf6845a6a4 44c4476d-58f9-420d-9545-f5d580c589de
+1 SOM creature NO Skithiryx, the Blight Dragon daf6c421-e7f7-4fc6-967c-65f4ab96fcfd c930c9cc-1b64-4f36-afe2-6bf120a74ce2
+1 NPH creature NO Urabrask the Hidden 5b2ffb53-86b7-4665-a5c7-b85b035b6c81 b06fcab2-891e-4fa3-8583-068ba56c2e27
+1 MBS creature NO Phyrexian Hydra b16085d5-6d00-4d47-ab8b-d18d55c72141 cb135aa1-9f46-4d60-a1a4-97aa0e852ced
+1 KHM creature NO Vorinclex, Monstrous Raider 5a3fdf5a-bff8-4896-b288-3f43f9a72d9b 92613468-205e-488b-930d-11908477e9f8
+1 C21 creature NO Bronze Guardian 922a030c-857b-4c61-93df-b70ebb32abd3 8cd5cc66-2ade-4142-9269-7d9905b029e5
+1 TMBS token NO Golem 80fe0a7b-a310-41a1-8417-c734402e9c4f 2d84926d-5892-4c62-a943-fac9f0ddc569
+
+## Available Tokens ##
+1 TAKH token NO Insect 805e96af-349b-4d59-a5ce-bc6d2be7f260 242c381e-df58-4365-a68c-add1127a83cc
+1 TSOM token NO Insect 5769718d-6781-4919-bc9b-245e9e0cb507 85f9e977-f718-41b2-b30b-77a9a17e9733
+
+## Weak Permanents ##
+1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
+1 VOC enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 8169d44d-b15a-47e0-b417-24f2f4945d0f
+1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
+1 CLB enchantment NO Propaganda ea9709b6-4c37-4d5a-b04d-cd4c42e4f9dd e5f293d7-9c2b-41cb-8e3c-dfc1daa6635f
+
+## Powerfull Permanents ##
+1 SLD creature NO Atraxa, Praetors' Voice 7e6b9b59-cd68-4e3c-827b-38833c92d6eb 7cc19f85-7ef6-4fd2-83e5-0dbae1d80f2b
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+1 RNA enchantment NO Ethereal Absolution e6f95e3a-61a6-40a9-8070-ffd2767764ad 0872d0ff-1060-44cc-9ed0-a6aa496440c8
+1 M12 enchantment NO Levitation 94b703c4-5584-4913-8365-7e9f2f535c2d 63e5124a-67c0-44ed-8085-28bf37816423
+1 2X2 creature NO Lord of Extinction ea5e3401-bd6c-47bb-a52a-8eec5f09455d 696cb81d-bc00-4603-b340-c0b2e55c0959
+1 M19 creature NO Poison-Tip Archer d0e810bb-5f38-4045-a718-30d423c05659 5e058ff8-043c-498b-8310-0ca45466ac27
+1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae

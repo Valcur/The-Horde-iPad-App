@@ -1,0 +1,69 @@
+## Horde Deck ##
+1 XLN creature NO Burning Sun's Avatar 248d7759-aa73-4430-aa86-d45dc607944b 146c0cab-5f6b-425d-9f50-33d8da266235
+1 XLN creature NO Carnage Tyrant 8c411f4e-a091-447c-9450-d895b10b4985 3bd78731-949c-464a-826a-92f86d784911
+1 RIX creature NO Charging Tuskodon 1198d47a-4235-4678-bd2e-20f2a97b5924 8e49960d-4b45-4d3b-9c6e-e7b717b4feaa
+1 RIX creature NO Frilled Deathspitter a65c1fcc-61d1-43d9-a62c-65f156f98bce e3825798-f673-4d8a-9997-ccb73681cbf2
+1 PRIX creature NO Ghalta, Primal Hunger b0b6be0c-41cf-4757-9f0e-87227b6ba6b3 c11a7c2e-75e8-432e-84c4-df63e0df0981
+1 M19 creature NO Gigantosaurus e666bae7-dd51-4921-8b89-7e8d423caba0 c1db84d8-d426-4c0d-b44e-5be7b0f5f5bf
+1 XLN creature NO Goring Ceratops 34f5383b-21fe-45f5-9598-7382ee4c5b12 8309f684-5912-4191-9f64-d573f1cc84c9
+1 IKO creature NO Imposing Vantasaur a0d5fce0-a439-496a-9fcf-9271503f3ce8 b6fa5feb-f5e9-4079-acc9-84e458044769
+1 XLN creature NO Kinjalli's Sunwing b9243163-b726-432e-830f-86132aa7f34a 2b9e0b0f-651a-44e6-8fb0-e46bfda0ada9
+1 M20 creature NO Marauding Raptor b3fe2f61-c58e-4ebc-a5e3-99d6b6f62caf 64e4d2ee-e5e5-48e6-a7b8-9045dc8b10a7
+1 RIX creature NO Needletooth Raptor 2c431df9-095a-44f1-993e-74eb215d75fe e9a90b68-d5f4-4f3c-bd4b-af59dd868919
+1 M21 creature NO Ornery Dilophosaur 8291bc2e-ef58-4bd4-b261-b587142bbb1c c2c4a0e7-9ca4-4291-94de-165cc2ded822
+1 RIX creature NO Overgrown Armasaur 9e104718-1f74-4414-977a-82def93b5a8e fb6558db-6332-42ac-8a61-4524c200b62f
+1 RIX creature NO Polyraptor e47e3a40-f51f-41ed-8e7c-06200a2abc22 f8965a3a-93fe-4021-a665-b6013bdc86f7
+1 XLN creature NO Raging Swordtooth 626709bc-6c29-434f-9e3f-b84bb8a5c431 15a79137-9589-4c24-9bea-31041fd3c9ae
+1 XLN creature NO Rampaging Ferocidon 3e5ca524-8dd1-4f7f-a467-5210d768b8a1 39d3c658-1927-4af3-9077-88c4a669c730
+1 XLN creature NO Raptor Hatchling 91638137-06ba-4b21-b088-28d2b4d1d8da 8093e88d-fd3c-43d3-a025-9ebb9f02a84f
+1 XLN creature NO Regisaur Alpha 0673f4e0-66ff-458c-b4ba-eb067e560cce d6a322c5-aa4c-4a99-a3ca-48c1353104f0
+1 LGN creature NO Ridgetop Raptor 600a8c9e-e158-4fff-8c4d-c3a1bfd006e8 1013cbc4-09f4-484f-b328-9f7403225149
+1 CMR creature NO Ripscale Predator 4c297085-5ec1-4d29-9a8e-1785c016ce09 00924a16-fb85-41a4-bd7a-88f51f728333
+1 RIX creature NO Siegehorn Ceratops f7730e2e-aa62-40e7-836d-e6ddb6893816 0a9c4c63-402e-489e-ab0d-1c98309b010a
+1 RIX creature NO Silverclad Ferocidons b3aa5889-0d98-4a8c-a8b1-ada1e9b169e1 5f0d0c8d-c057-4a44-bd1e-38e1dd175778
+1 XLN creature NO Snapping Sailback 6f7b9ff4-fe79-4d21-9262-47bcd2411259 0af1eadf-f7ea-40be-a0cc-b79e4161db34
+1 XLN creature NO Sun-Crowned Hunters 9e6e6458-9e0e-404c-af07-225c4665eaec 3cab793e-0e17-4940-9cab-a30d62df5c20
+1 RIX creature NO Temple Altisaur 1f499d39-b963-45c0-9604-d3cab98c9e05 fa8f8d61-51d6-479b-a812-6cbacc7ea1fc
+1 AFR creature NO The Tarrasque bfd66214-e576-4a7e-8559-4e4e51d56b98 8a26fa15-d81f-4152-ae33-e91aa276b3fc
+1 XLN creature NO Thrash of Raptors 5f554df8-c70f-4212-aec7-597fe8a88553 2a03b859-811c-45ff-8d8a-9e87e4bbf113
+1 MH2 creature NO Thrasta, Tempest's Roar 19d258fb-4cda-4cbb-b07a-8b4670488867 6172da14-9a87-4cf9-aff5-aca3470a67ef
+1 C21 creature NO Verdant Sun's Avatar 6ee71432-a44d-495e-86ea-d495d891c331 f8fd0e28-2bb4-4529-bbfb-1d70a419a91b
+1 XLN creature NO Wakening Sun's Avatar 3c2aec69-ffd9-4a34-888c-58adbbb99bb5 7434abe4-87eb-4709-a26d-4e23154b4d31
+
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+
+2 TOR sorcery NO Cleansing Meditation 658bccf8-fe73-4d6a-b37b-7a58034e5e5d fd6609ef-71af-4775-affc-34153700c556
+1 XLN instant NO Dinosaur Stampede 3d6af1ee-16d2-4b82-8d9f-6d956603a746 a31bda74-8455-45ab-8142-65fbde2f39c3
+1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+3 XLN sorcery NO Star of Extinction 48220e6c-5752-46e0-9b7f-f0eef274d929 021f57dc-80f3-4ede-99d5-4a44aade44e2
+2 VOC sorcery NO Vandalblast 3567c3c8-b3c7-45b7-935b-b1fdbc973720 4ce9072b-58e9-422a-9331-31886c111cfa
+
+20 TGN2 token NO Dinosaur 240300bd-5088-43c5-a873-290507515843 b1ade1a5-74bf-41cd-b3b4-3bf33cf6d016
+40 TIKO token NO Dinosaur 29b74e83-90eb-4ced-87fc-10cea5822a62 f918b740-1984-4090-8886-9e290a698b95
+
+## Too Strong ##
+1 M19 creature NO Gigantosaurus e666bae7-dd51-4921-8b89-7e8d423caba0 c1db84d8-d426-4c0d-b44e-5be7b0f5f5bf
+1 PRIX creature NO Ghalta, Primal Hunger b0b6be0c-41cf-4757-9f0e-87227b6ba6b3 c11a7c2e-75e8-432e-84c4-df63e0df0981
+1 XLN creature NO Goring Ceratops 34f5383b-21fe-45f5-9598-7382ee4c5b12 8309f684-5912-4191-9f64-d573f1cc84c9
+1 AFR creature NO The Tarrasque bfd66214-e576-4a7e-8559-4e4e51d56b98 8a26fa15-d81f-4152-ae33-e91aa276b3fc
+1 XLN creature NO Wakening Sun's Avatar 3c2aec69-ffd9-4a34-888c-58adbbb99bb5 7434abe4-87eb-4709-a26d-4e23154b4d31
+1 XLN creature NO Burning Sun's Avatar 248d7759-aa73-4430-aa86-d45dc607944b 146c0cab-5f6b-425d-9f50-33d8da266235
+1 RIX creature NO Silverclad Ferocidons b3aa5889-0d98-4a8c-a8b1-ada1e9b169e1 5f0d0c8d-c057-4a44-bd1e-38e1dd175778
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+1 IKO sorcery NO Ruinous Ultimatum a6f38908-aa4f-4f99-a28e-85d11dab52e4 50c1d6ca-7789-46b5-bc89-85cc3915cb85
+1 XLN sorcery NO Star of Extinction 48220e6c-5752-46e0-9b7f-f0eef274d929 021f57dc-80f3-4ede-99d5-4a44aade44e2
+
+## Available Tokens ##
+1 RIX token NO Polyraptor e47e3a40-f51f-41ed-8e7c-06200a2abc22 f8965a3a-93fe-4021-a665-b6013bdc86f7
+1 TC21 token NO Saproling 2b7dba01-b08c-4218-9fc1-da55559d9155 113dbefc-14da-4826-87c1-543b53827c24
+
+## Weak Permanents ##
+1 C19 enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 daeca212-3a70-470e-a934-9cd7e0ebf7eb
+1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+1 CN2 enchantment NO Gruul War Chant a9edb891-1a38-4b8a-8539-c459e8a52315 00cbf1b0-5aa5-4420-84ea-7ea777ae34a7
+
+## Powerfull Permanents ##
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+1 RNA creature NO End-Raze Forerunners 69b52907-8aff-4f2a-a391-7d1ab2669b5c a50d79fe-6d37-42f3-b7b0-0c3018282fa2
+1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+1 C20 creature NO Zetalpa, Primal Dawn 7da0e5de-3e4c-420a-8685-991206100b9d 8d5b29be-2b1a-4ba5-8958-60eee4e3bac1

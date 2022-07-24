@@ -14,6 +14,7 @@ class DeckPickerViewModel: ObservableObject {
 
     init() {
         self.deckPickedId = -1
+        DeckManager.createStarterDecks()
     }
     
     // MARK: Buttons

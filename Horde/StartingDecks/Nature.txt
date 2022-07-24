@@ -1,0 +1,81 @@
+## Horde Deck ##
+1 SOM creature NO Bellowing Tanglewurm a1091651-4e3e-4840-87e2-b80084770137 44eb3e3a-60ee-4293-a321-daa452d4c70d
+1 MRD creature NO Copperhoof Vorrac a5fed574-6ac3-4318-b0a6-27082e07f3bd 81fff4cc-b2ab-4a41-bede-0d807552ba46
+1 JMP creature NO Craterhoof Behemoth 8c52bd39-0586-48ca-b263-17210cf9feb6 44afd414-cc69-4888-ba12-7ea87e60b1f7
+1 RNA creature NO End-Raze Forerunners 69b52907-8aff-4f2a-a391-7d1ab2669b5c a50d79fe-6d37-42f3-b7b0-0c3018282fa2
+1 M19 creature NO Goreclaw, Terror of Qal Sisma befb211f-37ca-4083-98d4-9ff1f28be3f2 36d4574a-3266-4497-b145-fb25820d8a7f
+1 BBD creature NO Grothama, All-Devouring 34fd52c1-3d81-4005-b826-eeefbd7fd874 ab8935b1-ec87-4330-9952-9ef8cd344531
+1 C21 creature NO Hornet Queen 3b1f8108-6911-49e9-8f78-f950bb58cb6c d245cb84-56aa-47a1-aa3a-17ffded57e15
+1 MH1 creature YES Mother Bear fe742976-ef13-4c25-972f-254b1ed436de efae4d84-8134-461a-a352-a5bdff7259a7
+1 THB creature NO Nessian Boar 139a5f0b-6f76-4918-96e6-cdcf27253230 aaf91fc2-7317-47e4-9e6c-d7d74cdf0153
+1 AKH creature NO Rhonas the Indomitable 5d2acd3e-4782-42e3-bcd5-80f8b439cc28 50f23c47-278c-4188-8fb4-ae20a0c423c5
+1 DOM creature NO Steel Leaf Champion 666af637-9282-4121-962a-048e528f9221 24d8a688-79d4-49b9-ab0c-c7f5c9b551f4
+1 2XM creature NO Woodland Champion 675321d7-2cf0-4e0b-9517-d711b22865ab 021bc8f5-3992-4d6a-9806-ed43c89e99f2
+1 ELD creature NO Yorvo, Lord of Garenbrig 00a15abc-bdac-4977-90a0-f08d41941d01 ae2998a1-1713-467e-a08e-0efd8720aa5b
+
+3 TSR enchantment NO Gaea's Anthem 3754dce0-3e97-406f-8807-a4942a222c41 43febc63-597d-4392-b8ea-a00841148c45
+2 TSR enchantment NO Muraganda Petroglyphs e6eff050-f1f6-49ce-a92e-1d1e13e51084 b103cb22-93b2-4206-9f80-5f966155e07e
+1 AKH enchantment NO Sandwurm Convergence 429eff2b-635b-43f6-b20f-82e25992c0b9 e47bd2c5-e3db-4fde-a695-9e67a7e937be
+1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+
+1 DDS instant YES Beast Attack 3f5acd90-199c-4ed3-9c8a-eeac4670d876 011f805f-3ebb-4748-a5de-8a10b5f47dcd
+1 DDS sorcery YES Call of the Herd ee243f81-f51c-4d9a-a396-f7cef84b46c1 7ff0c182-f9ec-41d1-beb6-97d0eb1be592
+1 JUD sorcery YES Crush of Wurms 6c12cd05-b673-453c-9f6b-f3aa022467c1 32a924b3-3bd6-43ad-acbd-1303dd670db4
+2 ODY instant YES Elephant Ambush 09386931-59bd-481f-bccc-32e8a8abc0f9 b4abdf1c-a0a9-4e1d-b448-58742830f767
+1 C21 sorcery NO Ezuri's Predation d0dd425b-fdba-41b4-b9e6-f5161610bd7e 3103505c-b071-4ae9-bf82-978e582d030c
+1 M13 sorcery NO Fungal Sprouting 303d4533-0c6b-4f93-80e8-b1f5926f4cd4 97413ae3-037e-4786-85a3-e92604acd771
+2 VMA sorcery YES Grizzly Fate f3073e4f-ca7e-4fde-88a4-bd7b6ebfbc8c 004e1457-d951-4029-8bb6-17a290793e79
+1 AFC instant NO Heroic Intervention 24882fa2-3fe9-4c1b-aa3d-0e6488b9db27 c5e72882-dbf8-42d2-9a98-31f2f71e2ed9
+1 THB sorcery NO Klothys's Design 85c20c39-7b9c-4661-9372-e659b321773f b1b6b7a7-0ac8-470a-949b-4779ded95359
+1 CMA sorcery NO Overrun 204f9afe-c20b-4933-b5cd-aa572784762a 64033221-447f-4f8a-8fa0-c3ef30172602
+1 C19 sorcery NO Overwhelming Stampede e1e96802-fd0c-41f1-aa21-3287d75a0e88 50846a7b-d174-439e-9ffb-31b50bb3a84f
+1 TOR sorcery YES Parallel Evolution 963cfdbe-775c-4267-a617-66f10e9d7f4f 73cce010-a8e7-477b-9179-bbad38aa6438
+1 M13 sorcery NO Predatory Rampage ee6d271c-0728-4080-85bb-a6af05f8b213 3e054ea5-3657-4198-9715-6acc0e362da3
+1 DDS sorcery YES Roar of the Wurm b8b9e6fd-b3ed-4fbc-8753-74018fa33caa 51a0c80e-4ace-4a2a-8b96-4472d1be6872
+1 MH1 sorcery NO Scale Up 2fd025ef-14f5-4621-831d-dd12b7c604dd 3f2d9bae-2753-486c-be79-2438208ac353
+1 C19 instant NO Second Harvest 61a6341e-0d36-44b6-8026-9c87c8ef61cb 22b01c98-c24b-4255-921f-4820f3d395ea
+1 MID sorcery YES Shadowbeast Sighting f05d5632-0a82-45bf-b66e-22cf4080ed5e 1b12e978-4deb-4ccc-8ae6-462bc4598c90
+1 FRF instant NO Winds of Qal Sisma e7871b4d-a408-4377-beee-6b1d3c7dd57d 0c45d98d-b8bd-409d-bce9-d7d73be735a9
+
+20 TELD token NO Bear a62a374d-ccdd-418d-9bcd-5ca8bf9b05e8 b0f09f9e-e0f9-4ed8-bfc0-5f1a3046106e
+10 TMH2 token NO Beast 695b14a0-920a-47bd-bd4a-7989862cdd0a a1eff7f8-b645-41cb-bcd9-3dc1ab10200e
+10 TUST token NO Elemental 3387629a-f3c6-4dea-8bad-d938b611ced8 70f1f745-9fc2-41a6-9d39-fb4964595cf5
+3 TKHC token NO Elemental ab19c684-94c6-4491-8a6b-7f31dddadae6 7737cbbf-659e-4a8d-9918-50652d6c0863
+12 TCMR token NO Elephant 079c46cc-feb0-4998-8593-c8b739afdb82 8c4d495a-b4b7-4119-ae2d-5b602a0b309f
+5 TC19 token NO Wurm 46a55586-cc9a-443c-b458-e628afc3c587 52df7443-9af7-4cab-a69a-2ffd04b48815
+
+## Too Strong ##
+1 JMP creature NO Craterhoof Behemoth 8c52bd39-0586-48ca-b263-17210cf9feb6 44afd414-cc69-4888-ba12-7ea87e60b1f7
+1 THB creature NO Nessian Boar 139a5f0b-6f76-4918-96e6-cdcf27253230 aaf91fc2-7317-47e4-9e6c-d7d74cdf0153
+1 RNA creature NO End-Raze Forerunners 69b52907-8aff-4f2a-a391-7d1ab2669b5c a50d79fe-6d37-42f3-b7b0-0c3018282fa2
+1 BBD creature NO Grothama, All-Devouring 34fd52c1-3d81-4005-b826-eeefbd7fd874 ab8935b1-ec87-4330-9952-9ef8cd344531
+1 AKH enchantment NO Sandwurm Convergence 429eff2b-635b-43f6-b20f-82e25992c0b9 e47bd2c5-e3db-4fde-a695-9e67a7e937be
+1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+1 JUD sorcery YES Crush of Wurms 6c12cd05-b673-453c-9f6b-f3aa022467c1 32a924b3-3bd6-43ad-acbd-1303dd670db4
+1 C21 sorcery NO Ezuri's Predation d0dd425b-fdba-41b4-b9e6-f5161610bd7e 3103505c-b071-4ae9-bf82-978e582d030c
+1 TOR sorcery YES Parallel Evolution 963cfdbe-775c-4267-a617-66f10e9d7f4f 73cce010-a8e7-477b-9179-bbad38aa6438
+1 C19 instant NO Second Harvest 61a6341e-0d36-44b6-8026-9c87c8ef61cb 22b01c98-c24b-4255-921f-4820f3d395ea
+1 M13 sorcery NO Predatory Rampage ee6d271c-0728-4080-85bb-a6af05f8b213 3e054ea5-3657-4198-9715-6acc0e362da3
+1 TKHC token NO Elemental ab19c684-94c6-4491-8a6b-7f31dddadae6 7737cbbf-659e-4a8d-9918-50652d6c0863
+1 TUST token NO Elemental 3387629a-f3c6-4dea-8bad-d938b611ced8 70f1f745-9fc2-41a6-9d39-fb4964595cf5
+
+## Available Tokens ##
+1 TC21 token NO Insect b4f3e7ab-68fd-4613-ae6d-79ca43343d37 14da0d99-9717-47b3-990b-bed6fde78373
+1 TM21 token NO Saproling 2b7dba01-b08c-4218-9fc1-da55559d9155 d71a5aa4-a960-4c42-b8ac-7003f6e83e95
+1 TNCC token NO Wurm 1adf3c28-58c0-4239-ba4a-c53d345709b4 2ca9dbff-d7c7-4769-adab-e09163a29f9e
+
+## Weak Permanents ##
+1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
+1 VOC enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 8169d44d-b15a-47e0-b417-24f2f4945d0f
+1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
+1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
+1 10E enchantment NO Primal Rage d6464ee4-23fc-4d68-bbda-3b53772015d1 ebe3b738-703d-465c-bc76-2b66f1e0aff2
+
+## Powerfull Permanents ##
+1 MB1 enchantment NO Beastmaster Ascension 11b5308d-5bc0-4782-875f-a28be36e665d 3ac51aa4-710e-4171-9fb8-9f28525e3e26
+1 RTR enchantment NO Collective Blessing 7f7049e8-49ed-46da-89f7-1e40aefb3b0c 53c84c4d-e6d6-4eac-9d14-5b6cba914c3d
+1 RNA enchantment NO Ethereal Absolution e6f95e3a-61a6-40a9-8070-ffd2767764ad 0872d0ff-1060-44cc-9ed0-a6aa496440c8
+1 2X2 creature NO Impervious Greatwurm 65c0ab05-e740-4380-b39c-8bae9662f885 a1aa77ae-f685-48ee-85dc-ba6084cd30ba
+1 M12 enchantment NO Levitation 94b703c4-5584-4913-8365-7e9f2f535c2d 63e5124a-67c0-44ed-8085-28bf37816423
+1 MID enchantment NO Unnatural Growth 7324abaa-48da-439d-9339-b0ea5eea612e 6748a844-e185-4e3b-ac1d-8a735666d8ae
+1 RTR token NO Worldspine Wurm 254f87cc-e0c2-484d-b5e8-1ea8c366990c 543d55cb-3a6b-4620-af25-10ae74ed32c4

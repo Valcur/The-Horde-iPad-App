@@ -11,6 +11,13 @@
 		DB28BF98282FB13000A3BFBD /* DeckPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF97282FB13000A3BFBD /* DeckPickerView.swift */; };
 		DB28BF9A282FCEE300A3BFBD /* DeckPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF99282FCEE300A3BFBD /* DeckPickerViewModel.swift */; };
 		DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */; };
+		DB46EC86288ADB2600781CB1 /* Zombie.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC85288ADB2600781CB1 /* Zombie.txt */; };
+		DB46EC8C288ADCCD00781CB1 /* Sliver.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8B288ADCCD00781CB1 /* Sliver.txt */; };
+		DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8D288ADCD700781CB1 /* Nature.txt */; };
+		DB46EC90288ADCE400781CB1 /* Dinosaur.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8F288ADCE400781CB1 /* Dinosaur.txt */; };
+		DB46EC92288ADCF000781CB1 /* Phyrexian.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC91288ADCF000781CB1 /* Phyrexian.txt */; };
+		DB46EC94288AE23B00781CB1 /* Human.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC93288AE23B00781CB1 /* Human.txt */; };
+		DB46EC96288C1C1900781CB1 /* LifePointsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB46EC95288C1C1900781CB1 /* LifePointsView.swift */; };
 		DB491D0B287C3E04001826E1 /* DeckEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0A287C3E04001826E1 /* DeckEditorView.swift */; };
 		DB491D0D287C4415001826E1 /* DeckEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */; };
 		DB491D0F287C8350001826E1 /* ScryfallQuerry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */; };
@@ -33,6 +40,13 @@
 		DB28BF97282FB13000A3BFBD /* DeckPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckPickerView.swift; sourceTree = "<group>"; };
 		DB28BF99282FCEE300A3BFBD /* DeckPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckPickerViewModel.swift; sourceTree = "<group>"; };
 		DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HordeAppViewModel.swift; sourceTree = "<group>"; };
+		DB46EC85288ADB2600781CB1 /* Zombie.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Zombie.txt; sourceTree = "<group>"; };
+		DB46EC8B288ADCCD00781CB1 /* Sliver.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Sliver.txt; sourceTree = "<group>"; };
+		DB46EC8D288ADCD700781CB1 /* Nature.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Nature.txt; sourceTree = "<group>"; };
+		DB46EC8F288ADCE400781CB1 /* Dinosaur.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Dinosaur.txt; sourceTree = "<group>"; };
+		DB46EC91288ADCF000781CB1 /* Phyrexian.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Phyrexian.txt; sourceTree = "<group>"; };
+		DB46EC93288AE23B00781CB1 /* Human.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Human.txt; sourceTree = "<group>"; };
+		DB46EC95288C1C1900781CB1 /* LifePointsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifePointsView.swift; sourceTree = "<group>"; };
 		DB491D0A287C3E04001826E1 /* DeckEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckEditorView.swift; sourceTree = "<group>"; };
 		DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckEditorViewModel.swift; sourceTree = "<group>"; };
 		DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScryfallQuerry.swift; sourceTree = "<group>"; };
@@ -72,6 +86,19 @@
 			path = DeckPicker;
 			sourceTree = "<group>";
 		};
+		DB46EC84288ADAF400781CB1 /* StartingDecks */ = {
+			isa = PBXGroup;
+			children = (
+				DB46EC85288ADB2600781CB1 /* Zombie.txt */,
+				DB46EC8B288ADCCD00781CB1 /* Sliver.txt */,
+				DB46EC8D288ADCD700781CB1 /* Nature.txt */,
+				DB46EC8F288ADCE400781CB1 /* Dinosaur.txt */,
+				DB46EC91288ADCF000781CB1 /* Phyrexian.txt */,
+				DB46EC93288AE23B00781CB1 /* Human.txt */,
+			);
+			path = StartingDecks;
+			sourceTree = "<group>";
+		};
 		DB491D09287C3DEF001826E1 /* DeckEditor */ = {
 			isa = PBXGroup;
 			children = (
@@ -103,6 +130,7 @@
 		DB8C829528280289003DDED1 /* Horde */ = {
 			isa = PBXGroup;
 			children = (
+				DB46EC84288ADAF400781CB1 /* StartingDecks */,
 				DB8C829628280289003DDED1 /* HordeApp.swift */,
 				DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */,
 				DB28BF96282FB10F00A3BFBD /* DeckPicker */,
@@ -134,6 +162,7 @@
 				DB261E77286C4D150086D9B9 /* GameView_iPhone.swift */,
 				DB8C82A6282804EB003DDED1 /* GameViewModel.swift */,
 				DBAEBC7A2844C56300E9137F /* GameIntroView.swift */,
+				DB46EC95288C1C1900781CB1 /* LifePointsView.swift */,
 			);
 			path = GameView;
 			sourceTree = "<group>";
@@ -196,8 +225,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB46EC94288AE23B00781CB1 /* Human.txt in Resources */,
+				DB46EC8C288ADCCD00781CB1 /* Sliver.txt in Resources */,
+				DB46EC92288ADCF000781CB1 /* Phyrexian.txt in Resources */,
+				DB46EC86288ADB2600781CB1 /* Zombie.txt in Resources */,
 				DB8C829E2828028B003DDED1 /* Preview Assets.xcassets in Resources */,
 				DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */,
+				DB46EC90288ADCE400781CB1 /* Dinosaur.txt in Resources */,
+				DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,6 +258,7 @@
 				DBAEBC792833D1BB00E9137F /* MenuView.swift in Sources */,
 				DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */,
 				DB28BF98282FB13000A3BFBD /* DeckPickerView.swift in Sources */,
+				DB46EC96288C1C1900781CB1 /* LifePointsView.swift in Sources */,
 				DB28BF9A282FCEE300A3BFBD /* DeckPickerViewModel.swift in Sources */,
 				DBA48CB228846CC3002F18A1 /* DeckEditorInfoView.swift in Sources */,
 			);

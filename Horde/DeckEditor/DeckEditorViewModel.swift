@@ -20,8 +20,9 @@ class DeckEditorViewModel: ObservableObject {
     @Published var cardToShow: Card? = nil
     @Published var cardToShowReprints: [Card] = []
     @Published var showDeckEditorInfoView: Bool = false
-    @Published var deckId: Int = 0
+    @Published var deckId: Int = -1
     @Published var cardCountForSelectedDeck: String = ""
+    @Published var carouselIndex = 0
     
     func changeSelectedDeckTo(newSelectedDeck: Int) {
         selectedDeckListNumber = newSelectedDeck
@@ -386,7 +387,7 @@ extension DeckEditorViewModel {
             let allLines = deckData.components(separatedBy: "\n")
             
             for line in allLines {
-                if line != "" {
+                if line.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
                     // Change current decklist to add cards to
                     if line == DeckDataPattern.deck {
                         selectedDeckListNumber = DeckSelectionNumber.deckList
@@ -400,6 +401,7 @@ extension DeckEditorViewModel {
                         selectedDeckListNumber = DeckSelectionNumber.powerfullPermanentsList
                     } else
                     {
+                        print(line)
                         // Or add card if its a card
                         let cardDataArray = line.components(separatedBy: " ")
                         
@@ -493,6 +495,7 @@ extension DeckEditorViewModel {
         let tmpCard = card.recreateCard()
         tmpCard.cardCount = 1
         cardToShow = tmpCard
+        carouselIndex = 0
         
         // Start searching for card reprint
         searchForCardReprints(card: card)
@@ -506,20 +509,14 @@ extension DeckEditorViewModel {
     }
     
     // Need those 2 func, if not card animate like spawn when increasing count
-    func addCardShouldBeAnimated() -> Bool {
-        if cardToShow == nil {
-            return false
-        }
-        let deckSelected = getSelectedDeck(card: cardToShow)
-        return !deckSelected.contains(cardToShow!)
+    func addCardShouldBeAnimated(card: Card) -> Bool {
+        let deckSelected = getSelectedDeck(card: card)
+        return !deckSelected.contains(card)
     }
     
-    func removeCardShouldBeAnimated() -> Bool {
-        if cardToShow == nil {
-            return false
-        }
-        let deckSelected = getSelectedDeck(card: cardToShow)
-        return deckSelected[deckSelected.firstIndex(of: cardToShow!)!].cardCount == 1
+    func removeCardShouldBeAnimated(card: Card) -> Bool {
+        let deckSelected = getSelectedDeck(card: card)
+        return deckSelected[deckSelected.firstIndex(of: card)!].cardCount == 1
     }
     
     func isDeckTooStrongSelected() -> Bool {
@@ -566,6 +563,7 @@ extension DeckEditorViewModel {
                         DispatchQueue.main.async {
                             if decodedData.data != nil {
                                 decodedData.data!.forEach {
+                                    self.searchResult = []
                                     self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
                                 }
                             }
@@ -596,7 +594,7 @@ extension DeckEditorViewModel {
             return
         }
         
-        cardToShowReprints = []
+        self.cardToShowReprints = []
         
         let scryfallSearchUrl = "https://api.scryfall.com/cards/search?order=released&q=oracleid%3A\(card.cardOracleId)&unique=prints"
         print(scryfallSearchUrl)
@@ -613,6 +611,7 @@ extension DeckEditorViewModel {
                                                                    from: data)
                         DispatchQueue.main.async {
                             if decodedData.data != nil {
+                                self.cardToShowReprints = []
                                 decodedData.data!.forEach {
                                     if ($0.set ?? "").uppercased() != card.specificSet.uppercased() {
                                         self.cardToShowReprints.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
@@ -649,9 +648,9 @@ extension DeckEditorViewModel {
     }
 
     func loadImage() -> UIImage? {
-         guard let data = UserDefaults.standard.data(forKey: "Deck_\(deckId)_Image") else { return nil }
-         let decoded = try! PropertyListDecoder().decode(Data.self, from: data)
-         return UIImage(data: decoded)
+        guard let data = UserDefaults.standard.data(forKey: "Deck_\(deckId)_Image") else { return nil }
+        let decoded = try! PropertyListDecoder().decode(Data.self, from: data)
+        return UIImage(data: decoded)
     }
     
     func saveDeckName(text: String) {
@@ -675,6 +674,6 @@ extension DeckEditorViewModel {
     }
     
     func loadRulesText() -> String {
-        return UserDefaults.standard.object(forKey: "Deck_\(deckId)_Rules") as? String ?? "All creatures controlled by the Horde have haste"
+        return UserDefaults.standard.object(forKey: "Deck_\(deckId)_Rules") as? String ?? "All creatures controlled by the Horde have haste."
     }
 }
