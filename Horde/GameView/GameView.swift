@@ -28,6 +28,18 @@ struct GameView: View {
                 ControlBarView()
             }.ignoresSafeArea()
             
+            if hordeAppViewModel.useLifepointsCounter {
+                HStack {
+                    Spacer()
+                    LifePointsView()
+                        .environmentObject(LifePointsViewModel())
+                        .frame(width: UIScreen.main.bounds.width / 6, height: UIScreen.main.bounds.height / 2)
+                        .cornerRadius(15)
+                        .padding(.trailing, 10)
+                        .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+                }
+            }
+            
             ZStack {
                 if gameViewModel.damageTakenThisTurn > 0 {
                     Button(action: {
@@ -107,6 +119,7 @@ struct GameView: View {
 struct HordeBoardView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let cardThickness: CGFloat = 0.4
     
     var deckThickness: CGFloat {
@@ -224,7 +237,7 @@ struct HordeBoardView: View {
                         CardOnBoardView(card: card)
                             .transition(.scale.combined(with: .opacity))
                     }
-                }.padding(.leading, 10).animation(Animation.easeInOut(duration: 0.5), value: gameViewModel.cardsOnBoard)
+                }.padding(.leading, 10).padding(.trailing, hordeAppViewModel.useLifepointsCounter ? UIScreen.main.bounds.width / 6 + 20 : 10).animation(Animation.easeInOut(duration: 0.5), value: gameViewModel.cardsOnBoard)
             }.frame(height: CardSize.height.normal * 2 + 50)
         }.frame(maxWidth: .infinity).padding(.leading, 10).padding(.top, 10)
     }
@@ -659,6 +672,7 @@ struct ContentView_Previews: PreviewProvider {
                 .environmentObject(GameViewModel())
                 .environmentObject(HordeAppViewModel())
                 .previewInterfaceOrientation(.landscapeLeft)
+                .previewDevice(PreviewDevice(rawValue: "iPad Air (5th generation)"))
         } else {
             GameView()
                 .environmentObject(GameViewModel())

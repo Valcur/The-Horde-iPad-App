@@ -241,9 +241,9 @@ struct MenuHowToPlayView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "How to keep track of survivors and horde's lifepoints ?")
+                    MenuTextBoldParagraphView(text: "How to use the lifepoints counter ?")
                     
-                    MenuTextParagraphView(text: "Use another app, sorry :'(")
+                    MenuTextParagraphView(text: "Drag an go up or down to change a big amount of life. If you want to make a small change, press the upper part to increase, or the bottom part to decrease lifepoints.")
                 }
                 
                 VStack(alignment: .leading, spacing: 20) {
@@ -258,11 +258,6 @@ struct MenuHowToPlayView: View {
                     MenuTextParagraphView(text: "Press the draw button until the horde have drawn enough cards and create tokens if a card told you to. All the creatures controlled by the horde are now attacking, : block them, lose life and remove the creatures you destroyed during the combat. The turn is now over")
                 }
                 
-                VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "I want to replace Plague Wind with Damnation")
-                    
-                    MenuTextParagraphView(text: "Threre is no way to edit the decklist for now. This is a casual format, just pretend Plague Wind are Damnation. Same if you don't like another card")
-                }
             }
             
             LazyHStack(spacing: 30) {
@@ -334,6 +329,20 @@ struct MenuCustomView: View {
                     MenuCustomBackgroundColorChoiceView(gradientId: 7)
                 }
             }
+            
+            MenuTextSubtitleView(text: "Lifepoints")
+            
+            Toggle("Show lifepoints counter", isOn: $hordeAppViewModel.useLifepointsCounter)
+                .foregroundColor(.white)
+                .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
+                    hordeAppViewModel.saveBattlefieldRowStylePreference()
+                }
+            
+            Toggle("The Horde heal when survivors loose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
+                .foregroundColor(.white)
+                .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
+                    hordeAppViewModel.saveBattlefieldRowStylePreference()
+                }
             
             if UIDevice.current.userInterfaceIdiom == .phone {
                 MenuTextSubtitleView(text: "Battlefield")

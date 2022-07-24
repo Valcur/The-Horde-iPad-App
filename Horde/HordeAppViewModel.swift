@@ -15,6 +15,8 @@ class HordeAppViewModel: ObservableObject {
     @Published var difficulty: Int
     @Published var gradientId: Int
     @Published var oneRowBoardInsteadOfTwo: Bool
+    @Published var useLifepointsCounter: Bool
+    @Published var hordeGainLifeLostBySurvivor: Bool
     @Published var numberOfDeckSlot: Int
     
     init() {
@@ -25,6 +27,8 @@ class HordeAppViewModel: ObservableObject {
         self.difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
         self.gradientId = UserDefaults.standard.object(forKey: "GradientId") as? Int ?? 1
         self.oneRowBoardInsteadOfTwo = UserDefaults.standard.object(forKey: "OneRowBoardInsteadOfTwo") as? Bool ?? true
+        self.useLifepointsCounter = UserDefaults.standard.object(forKey: "UseLifePointsCounter") as? Bool ?? true
+        self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
         self.numberOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
     }
     
@@ -49,4 +53,10 @@ class HordeAppViewModel: ObservableObject {
     func saveBattlefieldRowStylePreference() {
         UserDefaults.standard.set(self.oneRowBoardInsteadOfTwo, forKey: "OneRowBoardInsteadOfTwo")
     }
+    
+    func saveUseLifepointsCounterPreference() {
+        UserDefaults.standard.set(self.useLifepointsCounter, forKey: "UseLifePointsCounter")
+        UserDefaults.standard.set(self.hordeGainLifeLostBySurvivor, forKey: "HordeGainLifeLostBySurvivor")
+    }
 }
+

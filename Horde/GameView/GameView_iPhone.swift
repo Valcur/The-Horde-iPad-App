@@ -243,7 +243,7 @@ struct HordeBoardView_iPhone: View {
                                     .transition(.scale.combined(with: .opacity))
                                     .frame(width: CardSize_iPhone.width.normal * 1.5, height: CardSize_iPhone.height.normal * 1.5)
                             }
-                        }.padding(.leading, 10).padding().animation(Animation.easeInOut(duration: 0.5), value: gameViewModel.cardsOnBoard)
+                        }.padding(.leading, 10).padding(.trailing, hordeAppViewModel.useLifepointsCounter ? UIScreen.main.bounds.width / 6 + 20 : 10).padding().animation(Animation.easeInOut(duration: 0.5), value: gameViewModel.cardsOnBoard)
                         Spacer()
                     }
                 } else {
@@ -252,7 +252,7 @@ struct HordeBoardView_iPhone: View {
                             CardOnBoardView_iPhone(card: card)
                                 .transition(.scale.combined(with: .opacity))
                         }
-                    }.padding(.leading, 10).padding().animation(Animation.easeInOut(duration: 0.5), value: gameViewModel.cardsOnBoard)
+                    }.padding(.leading, 10).padding(.trailing, hordeAppViewModel.useLifepointsCounter ? UIScreen.main.bounds.width / 6 + 20 : 10).padding().animation(Animation.easeInOut(duration: 0.5), value: gameViewModel.cardsOnBoard)
                 }
             }.frame(height: CardSize_iPhone.height.normal * 2 + 10).padding(.top, 20)
         }.frame(maxWidth: .infinity).padding(.leading, 2).padding(.top, 2)
