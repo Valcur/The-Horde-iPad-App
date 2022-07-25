@@ -29,6 +29,19 @@ struct GameView_iPhone: View {
                 ControlBarView_iPhone().frame(height: 50)
             }
             
+            if hordeAppViewModel.useLifepointsCounter {
+                HStack {
+                    Spacer()
+                    LifePointsView()
+                        .environmentObject(LifePointsViewModel())
+                        .frame(width: UIScreen.main.bounds.width / 5)
+                        .cornerRadius(15)
+                        .padding(.trailing, 25)
+                        .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
+                        .scaleEffect(0.7, anchor: .center)
+                }
+            }
+            
             ZStack {
                 if gameViewModel.damageTakenThisTurn > 0 {
                     Button(action: {

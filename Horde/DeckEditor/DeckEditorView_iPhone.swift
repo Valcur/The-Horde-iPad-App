@@ -461,7 +461,7 @@ struct CardSearchView_iPhone: View {
                         .font(.body)
                         .foregroundColor(isSearchingForTokens ? .white : .gray)
                 })
-            }.ignoresSafeArea(.keyboard).padding(5).transition(.move(edge: .leading))
+            }.ignoresSafeArea(.keyboard).padding(5).padding(.leading, 10).transition(.move(edge: .leading))
             
             // Search result
             ScrollView {

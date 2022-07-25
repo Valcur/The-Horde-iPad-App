@@ -169,25 +169,34 @@ struct LifePointsPanelView: View {
         ZStack {
             VisualEffectView(effect: UIBlurEffect(style: blurEffect))
             
-            VStack(spacing: 80) {
+            VStack {
+                Spacer()
+                
                 Text(playerName)
                     .font(.title3)
                     .foregroundColor(.white)
+                
+                Spacer()
                 
                 Text("\(lifepoints)")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
+                
+                Spacer()
             }
             
             
             if totalChange != 0 {
-                HStack {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Text(totalChange > 0  ? "+\(totalChange)" : "\(totalChange)")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                            .padding(.trailing, 20).padding(.top, 20)
+                    }
                     Spacer()
-                    Text(totalChange > 0  ? "+\(totalChange)" : "\(totalChange)")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .padding(.trailing, 30).padding(.top, 95)
                 }
             }
         }

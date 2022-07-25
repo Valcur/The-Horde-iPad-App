@@ -18,6 +18,7 @@ class HordeAppViewModel: ObservableObject {
     @Published var useLifepointsCounter: Bool
     @Published var hordeGainLifeLostBySurvivor: Bool
     @Published var numberOfDeckSlot: Int
+    let isPremium = true
     
     init() {
         self.readyToPlay = false
@@ -30,6 +31,35 @@ class HordeAppViewModel: ObservableObject {
         self.useLifepointsCounter = UserDefaults.standard.object(forKey: "UseLifePointsCounter") as? Bool ?? true
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
         self.numberOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+    }
+    
+    func getNumberOfDeckSolts() -> Int {
+        
+        if isPremium {
+            
+        }
+        return 8
+    }
+    
+    func createDeck(deckId: Int) {
+        if isPremium {
+            if deckId + 1 == self.numberOfDeckSlot {
+                self.numberOfDeckSlot += 1
+                UserDefaults.standard.set(self.numberOfDeckSlot, forKey: "NumberOfDeckSlot")
+            }
+        }
+    }
+    
+    func deleteDeck() {
+        if isPremium {
+            var deckId = (UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8) - 2
+            
+            while !(UserDefaults.standard.object(forKey: "Deck_\(deckId)_Exist") as? Bool ?? false) {
+                self.numberOfDeckSlot -= 1
+                UserDefaults.standard.set(self.numberOfDeckSlot, forKey: "NumberOfDeckSlot")
+                deckId -= 1
+            }
+        }
     }
     
     func setDifficulty(newDifficulty: Int) {
