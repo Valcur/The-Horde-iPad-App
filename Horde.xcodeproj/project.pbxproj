@@ -18,6 +18,7 @@
 		DB46EC92288ADCF000781CB1 /* Phyrexian.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC91288ADCF000781CB1 /* Phyrexian.txt */; };
 		DB46EC94288AE23B00781CB1 /* Human.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC93288AE23B00781CB1 /* Human.txt */; };
 		DB46EC96288C1C1900781CB1 /* LifePointsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB46EC95288C1C1900781CB1 /* LifePointsView.swift */; };
+		DB46EC98288DDF6F00781CB1 /* DeckEditorView_iPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB46EC97288DDF6F00781CB1 /* DeckEditorView_iPhone.swift */; };
 		DB491D0B287C3E04001826E1 /* DeckEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0A287C3E04001826E1 /* DeckEditorView.swift */; };
 		DB491D0D287C4415001826E1 /* DeckEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */; };
 		DB491D0F287C8350001826E1 /* ScryfallQuerry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */; };
@@ -47,6 +48,7 @@
 		DB46EC91288ADCF000781CB1 /* Phyrexian.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Phyrexian.txt; sourceTree = "<group>"; };
 		DB46EC93288AE23B00781CB1 /* Human.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Human.txt; sourceTree = "<group>"; };
 		DB46EC95288C1C1900781CB1 /* LifePointsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifePointsView.swift; sourceTree = "<group>"; };
+		DB46EC97288DDF6F00781CB1 /* DeckEditorView_iPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckEditorView_iPhone.swift; sourceTree = "<group>"; };
 		DB491D0A287C3E04001826E1 /* DeckEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckEditorView.swift; sourceTree = "<group>"; };
 		DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckEditorViewModel.swift; sourceTree = "<group>"; };
 		DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScryfallQuerry.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */,
 				DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */,
 				DBA48CB128846CC3002F18A1 /* DeckEditorInfoView.swift */,
+				DB46EC97288DDF6F00781CB1 /* DeckEditorView_iPhone.swift */,
 			);
 			path = DeckEditor;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				DB97BC1A282A6783001A216C /* DownloadManager.swift in Sources */,
 				DB8C829928280289003DDED1 /* GameView.swift in Sources */,
 				DBAEBC7B2844C56300E9137F /* GameIntroView.swift in Sources */,
+				DB46EC98288DDF6F00781CB1 /* DeckEditorView_iPhone.swift in Sources */,
 				DB8C829728280289003DDED1 /* HordeApp.swift in Sources */,
 				DB491D0F287C8350001826E1 /* ScryfallQuerry.swift in Sources */,
 				DB491D0B287C3E04001826E1 /* DeckEditorView.swift in Sources */,

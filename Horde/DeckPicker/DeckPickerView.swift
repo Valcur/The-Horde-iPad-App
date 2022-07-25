@@ -161,7 +161,7 @@ struct DeckPickingView: View {
                                 .foregroundColor(.white)
                                 .padding(10)
                         }
-                    }.transition(.opacity)
+                    }.transition(.opacity).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
                 } else {
                     Button(action: {
                         withAnimation(.easeIn(duration: 0.3)) {
@@ -173,7 +173,7 @@ struct DeckPickingView: View {
                             .foregroundColor(.white)
                             .padding(10)
                             .transition(.opacity)
-                    }
+                    }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
                 }
                 
                 Spacer()
@@ -189,7 +189,7 @@ struct DeckPickingView: View {
                         .font(.title)
                         .foregroundColor(.white)
                         .padding(10)
-                }
+                }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
             }.padding(.horizontal, 30).opacity(isDeckSelected ? 1 : 0).offset(x: 25, y: -UIScreen.main.bounds.height / 2.3)
         }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
     }

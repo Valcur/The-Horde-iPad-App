@@ -17,7 +17,7 @@ class DeckEditorViewModel: ObservableObject {
     @Published var searchProgressInfo: String = "Let's search some cards"
     @Published var popUpText: String = ""
     @Published var searchResult: [CardFromCardSearch] = []
-    @Published var cardToShow: Card? = nil
+    @Published var cardToShow: Card? = Card(cardName: "AAAA", cardType: .token)
     @Published var cardToShowReprints: [Card] = []
     @Published var showDeckEditorInfoView: Bool = false
     @Published var deckId: Int = -1

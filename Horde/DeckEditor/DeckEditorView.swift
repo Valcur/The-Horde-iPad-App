@@ -65,7 +65,7 @@ struct RightPanelView: View {
         ZStack {
             GradientView(gradientId: hordeAppViewModel.gradientId)
             VStack {
-                BottomControlRowView()
+                TopTopControlRowView()
                 TopControlRowView()
                 Spacer()
                 DeckListView()
@@ -306,7 +306,7 @@ struct CardShowView: View {
                     }.offset(y: 20)
                 }.padding(10)
                 
-                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom).frame(height: 160)
+                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom).frame(height: 60)
                 
                 // Return Button
                 Button(action: {
@@ -317,55 +317,6 @@ struct CardShowView: View {
                         .foregroundColor(.white)
                         .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                 }).padding()
-            }
-            
-            // Select card type
-            Text("Change card type")
-                .foregroundColor(.white)
-                .font(.title3)
-                .padding(.top, 50)
-                .padding(.leading, 20)
-            
-            VStack(spacing: 0) {
-                HStack {
-                    CardShowTypeSelectorView(text: "Creature", cardType: .creature, card: selectedCard, cardShowedcardType: $cardType)
-                    CardShowTypeSelectorView(text: "Token", cardType: .token, card: selectedCard, cardShowedcardType: $cardType)
-                }
-                HStack {
-                    CardShowTypeSelectorView(text: "Instant", cardType: .instant, card: selectedCard, cardShowedcardType: $cardType)
-                    CardShowTypeSelectorView(text: "Sorcery", cardType: .sorcery, card: selectedCard, cardShowedcardType: $cardType)
-                }
-                HStack {
-                    CardShowTypeSelectorView(text: "Artifact", cardType: .artifact, card: selectedCard, cardShowedcardType: $cardType)
-                    CardShowTypeSelectorView(text: "Enchantment", cardType: .enchantment, card: selectedCard, cardShowedcardType: $cardType)
-                }
-            }.padding().onChange(of: card) { _ in
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.cardType = selectedCard.cardType
-                    self.hasCardFlashback = selectedCard.hasFlashback
-                }
-            }.onChange(of: deckEditorViewModel.carouselIndex) { _ in
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.cardType = selectedCard.cardType
-                    self.hasCardFlashback = selectedCard.hasFlashback
-                }
-            }.onChange(of: cardType) { _ in
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.card.cardType = cardType
-                }
-            }.onChange(of: hasCardFlashback) { _ in
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.selectedCard.hasFlashback = self.hasCardFlashback
-                }
-            }.onChange(of: deckEditorViewModel.cardToShow) { _ in
-                if deckEditorViewModel.cardToShow != nil {
-                    self.card = deckEditorViewModel.cardToShow!
-                }
-            }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.cardType = selectedCard.cardType
-                    self.hasCardFlashback = selectedCard.hasFlashback
-                }
             }
             
             // Enable/Disable flashback
@@ -382,6 +333,47 @@ struct CardShowView: View {
             }.onChange(of: hasCardFlashback) { _ in
                 deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
             }.padding(20)
+            
+            if selectedCard.cardType == .creature || selectedCard.cardType == .token {
+                // Select card type
+                Text("Change card type")
+                    .foregroundColor(.white)
+                    .font(.title3)
+                    .padding(.top, 50)
+                    .padding(.leading, 20)
+                
+                HStack {
+                    CardShowTypeSelectorView(text: "Creature", cardType: .creature, card: selectedCard, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Token", cardType: .token, card: selectedCard, cardShowedcardType: $cardType)
+                }.padding().onChange(of: card) { _ in
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        self.cardType = selectedCard.cardType
+                        self.hasCardFlashback = selectedCard.hasFlashback
+                    }
+                }.onChange(of: deckEditorViewModel.carouselIndex) { _ in
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        self.cardType = selectedCard.cardType
+                        self.hasCardFlashback = selectedCard.hasFlashback
+                    }
+                }.onChange(of: cardType) { _ in
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        self.card.cardType = cardType
+                    }
+                }.onChange(of: hasCardFlashback) { _ in
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        self.selectedCard.hasFlashback = self.hasCardFlashback
+                    }
+                }.onChange(of: deckEditorViewModel.cardToShow) { _ in
+                    if deckEditorViewModel.cardToShow != nil {
+                        self.card = deckEditorViewModel.cardToShow!
+                    }
+                }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        self.cardType = selectedCard.cardType
+                        self.hasCardFlashback = selectedCard.hasFlashback
+                    }
+                }
+            }
             
             Spacer()
             
@@ -478,7 +470,7 @@ struct DeckListSelectorView: View {
     }
 }
 
-struct BottomControlRowView: View {
+struct TopTopControlRowView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
@@ -703,7 +695,7 @@ struct CardToShowCarouselView<Content>: View where Content: View {
             .clipped()
 
             PageControl(index: $index, maxIndex: maxIndex)
-                .offset(y: 45)
+                .offset(y: UIDevice.current.userInterfaceIdiom == .pad ? 45 : 40)
         }
     }
 
@@ -741,6 +733,7 @@ struct PageControl: View {
                 Text("\(index + 1)/\(maxIndex + 1)")
                     .foregroundColor(.white)
                     .font(.title3)
+                    .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
             }
         }
         .padding(15)
@@ -851,5 +844,5 @@ struct EditorSize {
     static let cardSearchPanelWidth: CGFloat = CardSize.width.normal + 80
     static let cardToShowWidth: CGFloat = (cardSearchPanelWidth - 20) as CGFloat
     static let cardToShowHeight: CGFloat = cardToShowWidth * (8.8 / 6.3) as CGFloat
-    static let cardToShowCornerRadius: CGFloat = cardToShowWidth * 0.055 as CGFloat
+    static let cardToShowCornerRadius: CGFloat = cardToShowWidth * 0.058 as CGFloat
 }
