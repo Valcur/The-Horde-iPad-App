@@ -219,6 +219,7 @@ struct ImageUris: Codable {
 enum Finish: String, Codable {
     case foil = "foil"
     case nonfoil = "nonfoil"
+    case etched = "etched"
 }
 
 enum Game: String, Codable {

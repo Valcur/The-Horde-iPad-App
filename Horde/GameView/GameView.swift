@@ -501,24 +501,40 @@ struct CardView: View {
     @State var image:UIImage = UIImage()
     let card: Card
     let shouldImageBeSaved: Bool
-    
-    var CardImage: Image {
-        if downloadManager.imageReadyToShow {
-            return Image(uiImage: (UIImage(data: downloadManager.data)) ?? UIImage(named: "MTGBackground")!)
-                
-        }
-        return Image("MTGBackground")
-    }
+    @State var shouldStartDownloadingImage: Bool = false
     
     init(card: Card, shouldImageBeSaved: Bool = true) {
-        downloadManager = DownloadManager(card: card, shouldImageBeSaved: shouldImageBeSaved)
+        self.downloadManager = DownloadManager(card: card, shouldImageBeSaved: shouldImageBeSaved)
         self.card = card
         self.shouldImageBeSaved = shouldImageBeSaved
     }
     
     var body: some View {
-        card.cardUIImage
-            .resizable()
+        if card.cardUIImage != Image("BlackBackground") {
+            card.cardUIImage
+                .resizable()
+        } else if shouldStartDownloadingImage {
+            card.cardUIImage
+                .resizable()
+                .onAppear() {
+                    self.downloadManager.startDownloading()
+                }
+        }else {
+            Image("BlackBackground")
+                .resizable()
+                .onAppear() {
+                    
+                    let interval = DownloadQueue.queue.getDelayBeforeDownload(card: card)
+
+                    if interval > 0 {
+                        Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { timer in
+                            self.shouldStartDownloadingImage = true
+                        }
+                    } else {
+                        self.shouldStartDownloadingImage = true
+                    }
+                }
+        }
     }
 }
 

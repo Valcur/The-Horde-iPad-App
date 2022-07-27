@@ -108,6 +108,13 @@ struct GradientView: View {
     }
     
     var body: some View {
+        /*
+        ZStack {
+            Color.black
+            LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
+                .opacity(0.5)
+        }.ignoresSafeArea()*/
+        
         LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
             .ignoresSafeArea()
     }

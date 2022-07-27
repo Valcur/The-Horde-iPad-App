@@ -190,11 +190,11 @@ struct LifePointsPanelView: View {
             if totalChange != 0 {
                 VStack {
                     HStack {
-                        Spacer()
                         Text(totalChange > 0  ? "+\(totalChange)" : "\(totalChange)")
                             .font(.title2)
                             .foregroundColor(.white)
-                            .padding(.trailing, 20).padding(.top, 20)
+                            .padding(.leading, 20).padding(.top, 20)
+                        Spacer()
                     }
                     Spacer()
                 }

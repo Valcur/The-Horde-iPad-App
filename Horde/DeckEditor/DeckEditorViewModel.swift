@@ -17,7 +17,7 @@ class DeckEditorViewModel: ObservableObject {
     @Published var searchProgressInfo: String = "Let's search some cards"
     @Published var popUpText: String = ""
     @Published var searchResult: [CardFromCardSearch] = []
-    @Published var cardToShow: Card? = Card(cardName: "AAAA", cardType: .token)
+    @Published var cardToShow: Card? //= Card(cardName: "AAAA", cardType: .token)
     @Published var cardToShowReprints: [Card] = []
     @Published var showDeckEditorInfoView: Bool = false
     @Published var deckId: Int = -1
@@ -497,6 +497,9 @@ extension DeckEditorViewModel {
         cardToShow = tmpCard
         carouselIndex = 0
         
+        // Reset download queue
+        DownloadQueue.queue.resetQueue()
+        
         // Start searching for card reprint
         searchForCardReprints(card: card)
     }
@@ -548,7 +551,7 @@ extension DeckEditorViewModel {
         self.searchProgressInfo = "Searching ..."
         
         let scryfallSearchApi = "https://api.scryfall.com/cards/search?q=\(text.replacingOccurrences(of: " ", with: "+"))\(searchingForTokens ? "+type%3Atoken" : "")"
-        //print(scryfallSearchApi)
+        print(scryfallSearchApi)
         
         if let url = URL(string: scryfallSearchApi) {
             let urlSession = URLSession(configuration: .default).dataTask(with: url) { (data, response, error) in
@@ -562,8 +565,8 @@ extension DeckEditorViewModel {
                                                                    from: data)
                         DispatchQueue.main.async {
                             if decodedData.data != nil {
+                                self.searchResult = []
                                 decodedData.data!.forEach {
-                                    self.searchResult = []
                                     self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
                                 }
                             }
@@ -613,8 +616,8 @@ extension DeckEditorViewModel {
                             if decodedData.data != nil {
                                 self.cardToShowReprints = []
                                 decodedData.data!.forEach {
-                                    if ($0.set ?? "").uppercased() != card.specificSet.uppercased() {
-                                        self.cardToShowReprints.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
+                                    if ($0.id ?? "") != card.cardId {
+                                        self.cardToShowReprints.append(Card(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? ""))
                                     }
                                 }
                             }

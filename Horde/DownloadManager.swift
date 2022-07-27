@@ -18,12 +18,14 @@ import SwiftUI
     init(card: Card, shouldImageBeSaved: Bool) {
         self.card = card
         self.shouldImageBeSaved = shouldImageBeSaved
-        
+    }
+    
+    func startDownloading() {
         if card.cardImageURL != "" {
-            print(card.cardName + " -> " + card.cardImageURL)
+            //print(card.cardName + " -> " + card.cardImageURL + " -> " + card.cardOracleId + card.specificSet)
             let url = URL(string: card.cardImageURL)!
 
-            self.loadData(cardName: card.cardOracleId + card.specificSet, url: url) { (data, error) in
+            self.loadData(cardName: card.cardId + card.specificSet, url: url) { (data, error) in
                 // Handle the loaded file data
                 if error == nil {
                     DispatchQueue.main.async {
@@ -60,6 +62,8 @@ import SwiftUI
                     to: file
                 )
 
+                //try FileManager.default.moveItem(at: tempURL, to: file)
+                
                 completion(nil)
             }
 
@@ -75,12 +79,15 @@ import SwiftUI
     
     func loadData(cardName: String, url: URL, completion: @escaping (Data?, Error?) -> Void) {
         // Compute a path to the URL in the cache
+        /*
         let fileCachePath = FileManager.default.temporaryDirectory
             .appendingPathComponent(
                 cardName,
                 isDirectory: false
             )
-        
+         */
+        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileCachePath = documents.appendingPathComponent(cardName, isDirectory: false)
         // If the image exists in the cache,
         // load the image from the cache and exit
         if let data = try? Data(contentsOf: fileCachePath) {
@@ -102,5 +109,46 @@ import SwiftUI
                 }
             }
         }
+    }
+}
+
+class DownloadQueue: NSObject {
+    
+    @objc static let queue = DownloadQueue()
+    private override init(){
+        self.timeToStartDownload = Date()
+    }
+    private var timeToStartDownload: Date
+    private var delayBetweenDownloads: CGFloat = 0.5
+    
+    func getDelayBeforeDownload(card: Card) -> TimeInterval {
+        if imageAlreadyDownloaded(card: card) { return 0 }
+        let timeInterval = timeToStartDownload.timeIntervalSinceNow
+        
+        // Last download is old -> the queue is empty -> start downloading now
+        if timeInterval < 0 {
+            timeToStartDownload = Date() + delayBetweenDownloads
+            return 0
+        }
+        
+        // If the queue is not empty
+        timeToStartDownload += delayBetweenDownloads
+        return timeInterval
+    }
+    
+    private func imageAlreadyDownloaded(card: Card) -> Bool {
+        // If the image exists in the cache,
+        // load the image from the cache and exit
+        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let cardFileCachePath = documents.appendingPathComponent(card.cardId + card.specificSet, isDirectory: false)
+        //if (try? Data(contentsOf: cardFileCachePath)) != nil {
+        if FileManager.default.fileExists(atPath: cardFileCachePath.path) {
+            return true
+        }
+        return false
+    }
+    
+    func resetQueue() {
+        self.timeToStartDownload = Date()
     }
 }

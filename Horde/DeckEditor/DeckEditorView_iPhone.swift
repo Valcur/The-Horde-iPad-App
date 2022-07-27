@@ -253,10 +253,10 @@ struct CardShowView_iPhone: View {
                     
                     CardToShowCarouselView(index: $deckEditorViewModel.carouselIndex.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
                         if deckEditorViewModel.cardToShow != nil {
-                            CarouselCardView(card: deckEditorViewModel.cardToShow!, cardRank: 0)
+                            CarouselCardView(card: deckEditorViewModel.cardToShow!)
                         }
                         ForEach(deckEditorViewModel.cardToShowReprints.indices, id: \.self) { i in
-                            CarouselCardView(card: deckEditorViewModel.cardToShowReprints[i], cardRank: i)
+                            CarouselCardView(card: deckEditorViewModel.cardToShowReprints[i])
                         }
                     }
                     
@@ -468,7 +468,7 @@ struct CardSearchView_iPhone: View {
                 VStack(spacing: 0) {
                     if deckEditorViewModel.searchResult.count > 0 {
                         ForEach(deckEditorViewModel.searchResult.indices, id: \.self) { i in
-                            CardSearchResultView_iPhone(card: deckEditorViewModel.searchResult[i], cardRank: i)
+                            CardSearchResultView_iPhone(card: deckEditorViewModel.searchResult[i])
                         }
                     } else {
                         MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo)
@@ -491,13 +491,6 @@ struct CardSearchResultView_iPhone: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let card: CardFromCardSearch
-    let cardRank: Int
-    @State var shouldStartDownloadingImage: Bool = false
-    
-    init(card: CardFromCardSearch, cardRank: Int) {
-        self.card = card
-        self.cardRank = cardRank
-    }
     
     var body: some View {
         Button(action: {
@@ -505,18 +498,10 @@ struct CardSearchResultView_iPhone: View {
         }, label: {
             HStack {
                 ZStack{
-                    if shouldStartDownloadingImage {
-                        CardView(card: card, shouldImageBeSaved: false)
-                            .frame(width: 46, height: 65)
-                            .aspectRatio(contentMode: .fit)
-                            .offset(y: 15)
-                    } else {
-                        Image("BlackBackground")
-                            .resizable()
-                            .frame(width: 46, height: 65)
-                            .aspectRatio(contentMode: .fit)
-                            .offset(y: 15)
-                    }
+                    CardView(card: card, shouldImageBeSaved: false)
+                        .frame(width: 46, height: 65)
+                        .aspectRatio(contentMode: .fit)
+                        .offset(y: 15)
                 }.frame(width: 35, height: 28).clipped()
                 Text(card.cardName)
                     .font(.subheadline)
@@ -524,11 +509,7 @@ struct CardSearchResultView_iPhone: View {
                 Spacer()
                 CardSearchResultManaCostView(manaCost: card.getManaCostArray())
             }.padding([.top, .bottom, .leading, .trailing], 5)
-        }).onAppear() {
-            Timer.scheduledTimer(withTimeInterval: 0.5 * Double(cardRank), repeats: false) { timer in
-                self.shouldStartDownloadingImage = true
-            }
-        }
+        })
     }
     
     struct CardSearchResultManaCostView: View {

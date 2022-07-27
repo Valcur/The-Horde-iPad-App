@@ -33,7 +33,7 @@ class DeckPickerViewModel: ObservableObject {
     }
     
     func getDeck(id: Int) -> DeckPicker {
-        let deckName = UserDefaults.standard.object(forKey: "Deck_\(id)_DeckName") as? String ?? "Deck \(id)"
+        let deckName = UserDefaults.standard.object(forKey: "Deck_\(id)_DeckName") as? String ?? "Deck \(id + 1)"
         let deckIntro = UserDefaults.standard.object(forKey: "Deck_\(id)_Intro") as? String ?? ""
         let deckRules = UserDefaults.standard.object(forKey: "Deck_\(id)_Rules") as? String ?? ""
         let deckImage = getDeckImage(id: id)

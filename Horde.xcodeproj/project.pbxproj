@@ -22,6 +22,8 @@
 		DB491D0B287C3E04001826E1 /* DeckEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0A287C3E04001826E1 /* DeckEditorView.swift */; };
 		DB491D0D287C4415001826E1 /* DeckEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */; };
 		DB491D0F287C8350001826E1 /* ScryfallQuerry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */; };
+		DB532721288EE1A70039DFEA /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB532720288EE1A70039DFEA /* IAPManager.swift */; };
+		DB532724288EE5430039DFEA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB532723288EE5430039DFEA /* StoreKit.framework */; };
 		DB8C829728280289003DDED1 /* HordeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829628280289003DDED1 /* HordeApp.swift */; };
 		DB8C829928280289003DDED1 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829828280289003DDED1 /* GameView.swift */; };
 		DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB8C829A2828028B003DDED1 /* Assets.xcassets */; };
@@ -52,6 +54,8 @@
 		DB491D0A287C3E04001826E1 /* DeckEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckEditorView.swift; sourceTree = "<group>"; };
 		DB491D0C287C4415001826E1 /* DeckEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckEditorViewModel.swift; sourceTree = "<group>"; };
 		DB491D0E287C8350001826E1 /* ScryfallQuerry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScryfallQuerry.swift; sourceTree = "<group>"; };
+		DB532720288EE1A70039DFEA /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
+		DB532723288EE5430039DFEA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		DB8C829328280289003DDED1 /* Horde.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Horde.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB8C829628280289003DDED1 /* HordeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HordeApp.swift; sourceTree = "<group>"; };
 		DB8C829828280289003DDED1 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -73,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB532724288EE5430039DFEA /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,11 +119,20 @@
 			path = DeckEditor;
 			sourceTree = "<group>";
 		};
+		DB532722288EE5430039DFEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DB532723288EE5430039DFEA /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DB8C828A28280289003DDED1 = {
 			isa = PBXGroup;
 			children = (
 				DB8C829528280289003DDED1 /* Horde */,
 				DB8C829428280289003DDED1 /* Products */,
+				DB532722288EE5430039DFEA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -146,6 +160,7 @@
 				DB97BC1B282A8318001A216C /* DeckManager.swift */,
 				DB97BC1D282AEA5C001A216C /* Extensions.swift */,
 				DB8C829A2828028B003DDED1 /* Assets.xcassets */,
+				DB532720288EE1A70039DFEA /* IAPManager.swift */,
 			);
 			path = Horde;
 			sourceTree = "<group>";
@@ -260,6 +275,7 @@
 				DB8C82A528280349003DDED1 /* Card+Deck.swift in Sources */,
 				DB97BC1E282AEA5C001A216C /* Extensions.swift in Sources */,
 				DBAEBC792833D1BB00E9137F /* MenuView.swift in Sources */,
+				DB532721288EE1A70039DFEA /* IAPManager.swift in Sources */,
 				DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */,
 				DB28BF98282FB13000A3BFBD /* DeckPickerView.swift in Sources */,
 				DB46EC96288C1C1900781CB1 /* LifePointsView.swift in Sources */,

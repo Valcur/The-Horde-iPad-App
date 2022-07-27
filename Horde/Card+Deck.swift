@@ -14,14 +14,14 @@ class Card: Hashable, Identifiable {
     let cardName: String
     var cardType: CardType // Can be changed in deckeditor
     let cardImageURL: String
-    var cardUIImage: Image = Image("BackgroundTest")
+    var cardUIImage: Image = Image("BlackBackground")
     var hasFlashback: Bool
     let specificSet: String
     let cardOracleId: String    // Unique id of a card but same for each reprints
     let cardId: String          // Unique id of card and unique between reprints
     @Published var cardCount: Int = 1
     
-    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("MTGBackground"), hasFlashback: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = ""){
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = ""){
         self.cardType = cardType
         self.hasFlashback = hasFlashback
         self.cardUIImage = cardUIImage

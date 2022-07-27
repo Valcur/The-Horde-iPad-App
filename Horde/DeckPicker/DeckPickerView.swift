@@ -28,7 +28,9 @@ struct DeckPickerView: View {
                             }
                         }
                         
-                        GetMoreDeckSlotView()
+                        if !hordeAppViewModel.isPremium {
+                            GetMoreDeckSlotView()
+                        }
                     }.padding(.trailing, 400)
                     .onChange(of: deckPickerViewModel.deckPickedId) { _ in
                         withAnimation {
@@ -101,7 +103,7 @@ struct DeckPickingView: View {
                             // Intro
                             Text(deckPicker.intro)
                                 .foregroundColor(.white)
-                                .multilineTextAlignment(.leading)
+                                .multilineTextAlignment(.center)
                             
                             // Special Rules
                             
@@ -145,6 +147,9 @@ struct DeckPickingView: View {
                                 deckPickerViewModel.deleteDeck(id: deckPicker.id)
                                 hordeAppViewModel.deleteDeck()
                                 confirmDeckDeletion = false
+                                if !((deckPicker.id < 7 && hordeAppViewModel.isPremium) || deckPicker.id >= 7) {
+                                    DeckManager.createStarterDecks()
+                                }
                             }
                         }) {
                             Text("Yes")
@@ -169,11 +174,19 @@ struct DeckPickingView: View {
                             confirmDeckDeletion = true
                         }
                     }) {
-                        Image(systemName: "trash")
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .padding(10)
-                            .transition(.opacity)
+                        if (deckPicker.id < 7 && hordeAppViewModel.isPremium) || deckPicker.id >= 7 {
+                            Image(systemName: "trash")
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .padding(10)
+                                .transition(.opacity)
+                        } else {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .padding(10)
+                                .transition(.opacity)
+                        }
                     }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
                 }
                 
@@ -191,7 +204,7 @@ struct DeckPickingView: View {
                         .foregroundColor(.white)
                         .padding(10)
                 }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
-            }.padding(.horizontal, 30).opacity(isDeckSelected ? 1 : 0).offset(x: 25, y: -UIScreen.main.bounds.height / 2.3)
+            }.background(Rectangle().opacity(0.00001)).padding(.horizontal, 30).opacity(isDeckSelected ? 1 : 0).offset(x: 25, y: -UIScreen.main.bounds.height / 2.3)
         }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
     }
     
@@ -252,22 +265,21 @@ struct GetMoreDeckSlotView: View {
         ZStack {
             VStack(alignment: .center, spacing: 40) {
                 
-                Text("Get more deck slot")
+                Text("Get more deck slots")
                     .foregroundColor(.white)
                     .fontWeight(.bold)
                     .font(.title)
                 
-                Text(" - As many deckslot as you want \n  - Full control on the start decks and the ability to delete them")
+                Text(" - As many deck slots as you want \n - Full control on the start decks and the ability to delete them")
                     .foregroundColor(.white)
                     .fontWeight(.bold)
                     .font(.subheadline)
                 
                 Button(action: {
-
+                    hordeAppViewModel.buy()
                 }) {
-
                     HStack(spacing: 0) {
-                        Text("$1.99")
+                        Text(IAPManager.shared.price() ?? "Unknow")
                             .foregroundColor(.white)
                             .fontWeight(.bold)
                             .font(.title)
@@ -275,7 +287,7 @@ struct GetMoreDeckSlotView: View {
                         Text(" / Month")
                             .foregroundColor(.white)
                             .font(.title)
-                    }.padding(10)
+                    }.padding(15)
                     .background(VisualEffectView(effect: UIBlurEffect(style: .systemThickMaterialDark)).cornerRadius(10))
                 }
                 
@@ -286,7 +298,7 @@ struct GetMoreDeckSlotView: View {
             }.rotationEffect(Angle.degrees(-rotationInDegrees))
                 .frame(width: 500, height: UIScreen.main
                     .bounds.height)
-        }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: PickerSize.width.unpicked, height: UIScreen.main.bounds.height + 150)
+        }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: 500, height: UIScreen.main.bounds.height + 150)
             .border(.white, width: 3)
         .rotationEffect(Angle.degrees(rotationInDegrees))
     }

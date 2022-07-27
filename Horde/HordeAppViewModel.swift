@@ -18,7 +18,7 @@ class HordeAppViewModel: ObservableObject {
     @Published var useLifepointsCounter: Bool
     @Published var hordeGainLifeLostBySurvivor: Bool
     @Published var numberOfDeckSlot: Int
-    let isPremium = true
+    @Published var isPremium = false
     
     init() {
         self.readyToPlay = false
@@ -30,15 +30,40 @@ class HordeAppViewModel: ObservableObject {
         self.oneRowBoardInsteadOfTwo = UserDefaults.standard.object(forKey: "OneRowBoardInsteadOfTwo") as? Bool ?? true
         self.useLifepointsCounter = UserDefaults.standard.object(forKey: "UseLifePointsCounter") as? Bool ?? true
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
-        self.numberOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+        self.numberOfDeckSlot = 8
+        IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
+        IAPManager.shared.refreshSubscriptionsStatus(callback: {
+            let date = UserDefaults.standard.object(forKey: IAPManager.getSubscriptionId()) as? Date ?? Date()
+            if date > Date() {
+                print("IS PREMIUM UNTIL \(date)")
+                self.isPremium = true
+                self.numberOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+            } else {
+                print("IS NOT PREMIUM SINCE \(date)")
+                self.isPremium = false
+                UserDefaults.standard.set(false, forKey: "IsPremium")
+                self.lostPremiumSubscription()
+            }
+        }, failure: { error in
+            print("Error \(String(describing: error))")
+        })
     }
     
-    func getNumberOfDeckSolts() -> Int {
-        
-        if isPremium {
-            
+    func lostPremiumSubscription() {
+        self.numberOfDeckSlot = 8
+        // Delete starting deck
+        var backUpDeckList: [String] = []
+        for i in 0..<7 {
+            backUpDeckList.append(UserDefaults.standard.object(forKey: "Deck_\(i)") as? String ?? "")
+            UserDefaults.standard.set(false, forKey: "Deck_\(i)_Exist")
         }
-        return 8
+        // Recreate them
+        DeckManager.createStarterDecks()
+        
+        // Restore changes made by the user to the decklist
+        for i in 0..<7 {
+            UserDefaults.standard.set(backUpDeckList[i], forKey: "Deck_\(i)")
+        }
     }
     
     func createDeck(deckId: Int) {
@@ -87,6 +112,20 @@ class HordeAppViewModel: ObservableObject {
     func saveUseLifepointsCounterPreference() {
         UserDefaults.standard.set(self.useLifepointsCounter, forKey: "UseLifePointsCounter")
         UserDefaults.standard.set(self.hordeGainLifeLostBySurvivor, forKey: "HordeGainLifeLostBySurvivor")
+    }
+    
+    func buy() {
+        IAPManager.shared.purchaseProduct(product: IAPManager.shared.products!.first!, success: {
+            if UserDefaults.standard.object(forKey: "IsPremium") as? Bool ?? false {
+                self.isPremium = true
+                if (UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8) <= 8 {
+                    self.numberOfDeckSlot = 9
+                    UserDefaults.standard.set(self.numberOfDeckSlot, forKey: "NumberOfDeckSlot")
+                }
+            }
+        }, failure: { error in
+            print("Buy Fail \(String(describing: error))")
+        })
     }
 }
 

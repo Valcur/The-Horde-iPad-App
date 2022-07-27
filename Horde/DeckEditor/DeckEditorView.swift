@@ -37,9 +37,9 @@ struct PopUpInfoView: View {
     
     var body: some View {
         ZStack {
-            VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)).cornerRadius(40)
+            VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)).cornerRadius(40).shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
             MenuTextBoldParagraphView(text: deckEditorViewModel.popUpText)
-        }.frame(width: 300, height: 80).position(x: UIScreen.main.bounds.width / 2, y: showPopUp ? 50 : -50).shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+        }.frame(width: 300, height: 80).position(x: UIScreen.main.bounds.width / 2, y: showPopUp ? 50 : -50)
             .animation(.easeInOut(duration: 0.3), value: showPopUp)
         .onChange(of: deckEditorViewModel.popUpText) { newText in
             print("Pop \(newText)")
@@ -110,18 +110,6 @@ struct CardSearchView: View {
         VStack(spacing: 0) {
             // TextField + Selector token/non-token
             HStack {
-                if cardSearchTextFieldText.count > 0 {
-                    Button(action: {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            cardSearchTextFieldText = ""
-                        }
-                    }, label: {
-                        Image(systemName: "clear")
-                            .font(.title2)
-                            .foregroundColor(.white)
-                            .padding(5)
-                    })
-                }
                 ZStack(alignment: .leading) {
                     if cardSearchTextFieldText == "" {
                         Text("Search...")
@@ -140,6 +128,18 @@ struct CardSearchView: View {
                         .overlay(Rectangle().frame(height: 2).padding(.top, 35))
                         .foregroundColor(.gray)
                 }
+                if cardSearchTextFieldText.count > 0 {
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            cardSearchTextFieldText = ""
+                        }
+                    }, label: {
+                        Image(systemName: "clear")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                            .padding(5)
+                    })
+                }
 
                 Button(action: {
                     isSearchingForTokens.toggle()
@@ -149,14 +149,14 @@ struct CardSearchView: View {
                         .font(.title3)
                         .foregroundColor(isSearchingForTokens ? .white : .gray)
                 })
-            }.ignoresSafeArea(.keyboard).padding(10).transition(.move(edge: .leading))
+            }.ignoresSafeArea(.keyboard).padding(10).transition(.opacity)
             
             // Search result
             ScrollView {
                 VStack(spacing: 0) {
                     if deckEditorViewModel.searchResult.count > 0 {
-                        ForEach(deckEditorViewModel.searchResult.indices, id: \.self) { i in
-                            CardSearchResultView(card: deckEditorViewModel.searchResult[i], cardRank: i)
+                        ForEach(deckEditorViewModel.searchResult) { card in
+                            CardSearchResultView(card: card)
                         }
                     } else {
                         MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo)
@@ -177,13 +177,6 @@ struct CardSearchResultView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let card: CardFromCardSearch
-    let cardRank: Int
-    @State var shouldStartDownloadingImage: Bool = false
-    
-    init(card: CardFromCardSearch, cardRank: Int) {
-        self.card = card
-        self.cardRank = cardRank
-    }
     
     var body: some View {
         Button(action: {
@@ -191,18 +184,10 @@ struct CardSearchResultView: View {
         }, label: {
             HStack {
                 ZStack{
-                    if shouldStartDownloadingImage {
-                        CardView(card: card, shouldImageBeSaved: false)
-                            .frame(width: 66, height: 94)
-                            .aspectRatio(contentMode: .fit)
-                            .offset(y: 15)
-                    } else {
-                        Image("BlackBackground")
-                            .resizable()
-                            .frame(width: 66, height: 94)
-                            .aspectRatio(contentMode: .fit)
-                            .offset(y: 15)
-                    }
+                    CardView(card: card, shouldImageBeSaved: false)
+                        .frame(width: 66, height: 94)
+                        .aspectRatio(contentMode: .fit)
+                        .offset(y: 15)
                 }.frame(width: 50, height: 40).clipped()
                 Text(card.cardName)
                     .font(.subheadline)
@@ -210,11 +195,7 @@ struct CardSearchResultView: View {
                 Spacer()
                 CardSearchResultManaCostView(manaCost: card.getManaCostArray())
             }.padding([.top, .bottom, .leading, .trailing], 8)
-        }).onAppear() {
-            Timer.scheduledTimer(withTimeInterval: 0.5 * Double(cardRank), repeats: false) { timer in
-                self.shouldStartDownloadingImage = true
-            }
-        }
+        })
     }
     
     struct CardSearchResultManaCostView: View {
@@ -260,10 +241,10 @@ struct CardShowView: View {
                     
                     CardToShowCarouselView(index: $deckEditorViewModel.carouselIndex.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
                         if deckEditorViewModel.cardToShow != nil {
-                            CarouselCardView(card: deckEditorViewModel.cardToShow!, cardRank: 0)
+                            CarouselCardView(card: deckEditorViewModel.cardToShow!)
                         }
-                        ForEach(deckEditorViewModel.cardToShowReprints.indices, id: \.self) { i in
-                            CarouselCardView(card: deckEditorViewModel.cardToShowReprints[i], cardRank: i)
+                        ForEach(deckEditorViewModel.cardToShowReprints) { cardReprint in
+                            CarouselCardView(card: cardReprint)
                         }
                     }
                     
@@ -606,47 +587,12 @@ struct CarouselCardView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let card: Card
-    let cardRank: Int
-    @State var shouldStartDownloadingImage: Bool = false
-    
-    init(card: Card, cardRank: Int) {
-        self.card = card
-        self.cardRank = cardRank
-    }
     
     var body: some View {
-        if shouldStartDownloadingImage {
-            CardView(card: card)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
-                .cornerRadius(EditorSize.cardToShowCornerRadius)
-        } else {
-            Image("BlackBackground")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
-                .cornerRadius(EditorSize.cardToShowCornerRadius)
-                .onAppear() {
-                    Timer.scheduledTimer(withTimeInterval: 0.5 * Double(cardRank), repeats: false) { timer in
-                        self.shouldStartDownloadingImage = true
-                    }
-                }
-        }
-    }
-    
-    struct CardSearchResultManaCostView: View {
-        
-        let manaCost: [String]
-        
-        var body: some View {
-            HStack(spacing: 2) {
-                ForEach(manaCost, id: \.self) {
-                    Image($0)
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                }
-            }
-        }
+        CardView(card: card)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
+            .cornerRadius(EditorSize.cardToShowCornerRadius)
     }
 }
 
