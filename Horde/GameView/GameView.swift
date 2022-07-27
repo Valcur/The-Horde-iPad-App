@@ -32,7 +32,7 @@ struct GameView: View {
                 HStack {
                     Spacer()
                     LifePointsView()
-                        .environmentObject(LifePointsViewModel())
+                        .environmentObject(LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife))
                         .frame(width: UIScreen.main.bounds.width / 6, height: UIScreen.main.bounds.height / 2)
                         .cornerRadius(15)
                         .padding(.trailing, 10)
@@ -523,7 +523,6 @@ struct CardView: View {
             Image("BlackBackground")
                 .resizable()
                 .onAppear() {
-                    
                     let interval = DownloadQueue.queue.getDelayBeforeDownload(card: card)
 
                     if interval > 0 {

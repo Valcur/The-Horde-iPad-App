@@ -330,6 +330,12 @@ struct MenuCustomView: View {
                 }
             }
             
+            Toggle("Use less colorfull background color", isOn: $hordeAppViewModel.useLessColorFullBackground)
+                .foregroundColor(.white)
+                .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
+                    hordeAppViewModel.saveBattlefieldRowStylePreference()
+                }
+            
             MenuTextSubtitleView(text: "Lifepoints")
             
             Toggle("Show lifepoints counter", isOn: $hordeAppViewModel.useLifepointsCounter)
@@ -343,6 +349,54 @@ struct MenuCustomView: View {
                 .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
                     hordeAppViewModel.saveBattlefieldRowStylePreference()
                 }
+            
+            HStack(spacing: 20) {
+                Text("Survivors starting life")
+                Spacer()
+                // Start with 20
+                Button(action: {
+                    hordeAppViewModel.survivorStartingLife = 20
+                    hordeAppViewModel.saveUseLifepointsCounterPreference()
+                }, label: {
+                    Text("20")
+                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 20 ? .white : .gray)
+                        .fontWeight(.bold)
+                        .font(.title2)
+                })
+                
+                // Start with 40
+                Button(action: {
+                    hordeAppViewModel.survivorStartingLife = 40
+                    hordeAppViewModel.saveUseLifepointsCounterPreference()
+                }, label: {
+                    Text("40")
+                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 40 ? .white : .gray)
+                        .fontWeight(.bold)
+                        .font(.title2)
+                })
+                
+                // Start with 60
+                Button(action: {
+                    hordeAppViewModel.survivorStartingLife = 60
+                    hordeAppViewModel.saveUseLifepointsCounterPreference()
+                }, label: {
+                    Text("60")
+                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 60 ? .white : .gray)
+                        .fontWeight(.bold)
+                        .font(.title2)
+                })
+                
+                // Start with 80
+                Button(action: {
+                    hordeAppViewModel.survivorStartingLife = 80
+                    hordeAppViewModel.saveUseLifepointsCounterPreference()
+                }, label: {
+                    Text("80")
+                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 80 ? .white : .gray)
+                        .fontWeight(.bold)
+                        .font(.title2)
+                })
+            }
             
             if UIDevice.current.userInterfaceIdiom == .phone {
                 MenuTextSubtitleView(text: "Battlefield")

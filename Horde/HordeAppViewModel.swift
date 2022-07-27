@@ -14,9 +14,11 @@ class HordeAppViewModel: ObservableObject {
     @Published var menuToShowId: Int
     @Published var difficulty: Int
     @Published var gradientId: Int
+    @Published var useLessColorFullBackground: Bool
     @Published var oneRowBoardInsteadOfTwo: Bool
     @Published var useLifepointsCounter: Bool
     @Published var hordeGainLifeLostBySurvivor: Bool
+    @Published var survivorStartingLife: Int
     @Published var numberOfDeckSlot: Int
     @Published var isPremium = false
     
@@ -27,9 +29,11 @@ class HordeAppViewModel: ObservableObject {
         self.menuToShowId = 1
         self.difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
         self.gradientId = UserDefaults.standard.object(forKey: "GradientId") as? Int ?? 1
+        self.useLessColorFullBackground = UserDefaults.standard.object(forKey: "UseLessColorFullBackground") as? Bool ?? false
         self.oneRowBoardInsteadOfTwo = UserDefaults.standard.object(forKey: "OneRowBoardInsteadOfTwo") as? Bool ?? true
         self.useLifepointsCounter = UserDefaults.standard.object(forKey: "UseLifePointsCounter") as? Bool ?? true
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
+        self.survivorStartingLife = UserDefaults.standard.object(forKey: "SurvivorStartingLife") as? Int ?? 60
         self.numberOfDeckSlot = 8
         IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
         IAPManager.shared.refreshSubscriptionsStatus(callback: {
@@ -105,6 +109,10 @@ class HordeAppViewModel: ObservableObject {
         UserDefaults.standard.set(gradientId, forKey: "GradientId")
     }
     
+    func setBackgroundColorPreference() {
+        UserDefaults.standard.set(self.useLessColorFullBackground, forKey: "UseLessColorFullBackground")
+    }
+    
     func saveBattlefieldRowStylePreference() {
         UserDefaults.standard.set(self.oneRowBoardInsteadOfTwo, forKey: "OneRowBoardInsteadOfTwo")
     }
@@ -112,6 +120,7 @@ class HordeAppViewModel: ObservableObject {
     func saveUseLifepointsCounterPreference() {
         UserDefaults.standard.set(self.useLifepointsCounter, forKey: "UseLifePointsCounter")
         UserDefaults.standard.set(self.hordeGainLifeLostBySurvivor, forKey: "HordeGainLifeLostBySurvivor")
+        UserDefaults.standard.set(self.survivorStartingLife, forKey: "SurvivorStartingLife")
     }
     
     func buy() {

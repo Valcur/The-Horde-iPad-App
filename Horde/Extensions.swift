@@ -79,6 +79,7 @@ class HostingController: UIHostingController<HordeAppNoHomeIndicatorView> {
 
 struct GradientView: View {
     
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let gradient: Gradient
     
     init(gradientId: Int) {
@@ -108,14 +109,8 @@ struct GradientView: View {
     }
     
     var body: some View {
-        /*
-        ZStack {
-            Color.black
-            LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
-                .opacity(0.5)
-        }.ignoresSafeArea()*/
-        
         LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
+            .saturation(hordeAppViewModel.useLessColorFullBackground ? 0.6 : 1)
             .ignoresSafeArea()
     }
 }

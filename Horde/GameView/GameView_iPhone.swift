@@ -33,7 +33,7 @@ struct GameView_iPhone: View {
                 HStack {
                     Spacer()
                     LifePointsView()
-                        .environmentObject(LifePointsViewModel())
+                        .environmentObject(LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife))
                         .frame(width: UIScreen.main.bounds.width / 5)
                         .cornerRadius(15)
                         .padding(.trailing, 25)

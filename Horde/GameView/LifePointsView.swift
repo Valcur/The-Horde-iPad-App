@@ -206,11 +206,16 @@ struct LifePointsPanelView: View {
 struct LifePointsView_Previews: PreviewProvider {
     static var previews: some View {
         LifePointsView()
-            .environmentObject(LifePointsViewModel())
+            .environmentObject(LifePointsViewModel(startingLife: 60))
     }
 }
 
 class LifePointsViewModel: ObservableObject {
-    @Published var hordeLifepoints = 30
-    @Published var survivorLifepoints = 60
+    @Published var hordeLifepoints: Int
+    @Published var survivorLifepoints: Int
+    
+    init(startingLife: Int) {
+        self.hordeLifepoints = 30
+        self.survivorLifepoints = startingLife
+    }
 }
