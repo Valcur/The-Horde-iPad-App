@@ -293,7 +293,7 @@ struct DeckManager {
             tmpDeck.append(tmpCard)
         } else {
             for _ in 0..<card.cardCount {
-                tmpDeck.append(tmpCard)
+                tmpDeck.append(tmpCard.recreateCard())
             }
         }
         return tmpDeck

@@ -434,8 +434,12 @@ class GameViewModel: ObservableObject {
     }
     
     func createToken(token: Card) {
-        cardsOnBoard.append(token.recreateCard())
-        cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+        if token.cardType != .instant && token.cardType != .sorcery {
+            cardsOnBoard.append(token.recreateCard())
+            cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+        } else {
+            sendToGraveyard(card: token)
+        }
     }
     
     func castCardFromGraveyard(card: Card) {

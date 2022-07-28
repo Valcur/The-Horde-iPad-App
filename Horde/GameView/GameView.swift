@@ -46,7 +46,7 @@ struct GameView: View {
                         gameViewModel.damageTakenThisTurn = 0
                     }, label: {
                         VStack(spacing: 5) {
-                            Text("Damage taken : \(gameViewModel.damageTakenThisTurn)")
+                            Text("Card milled : \(gameViewModel.damageTakenThisTurn)")
                                 .fontWeight(.bold)
                                 .font(.title2)
                             
@@ -80,7 +80,7 @@ struct GameView: View {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             castedCardViewOpacity = 0
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
+                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
                             }
                         }
                     }
@@ -347,6 +347,7 @@ struct ControlBarView: View {
 struct CastedCardView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @State var cardToCastFromLibrary: Card = Card(cardName: "Polyraptor", cardType: .token)
     
     var body: some View {
         // The button to leave the menu is the background
@@ -389,8 +390,8 @@ struct CastedCardView: View {
                             .foregroundColor(.white)
                             .frame(height: 50)
                         HStack(spacing: 36) {
-                            if gameViewModel.cardsToCast.cardFromLibrary.cardType != .token {
-                                CardToCastView(card: gameViewModel.cardsToCast.cardFromLibrary)
+                            if cardToCastFromLibrary.cardType != .token {
+                                CardToCastView(card: cardToCastFromLibrary)
                             }
                             ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
                                 CardToCastView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
@@ -401,6 +402,8 @@ struct CastedCardView: View {
             }.onTapGesture {
                 print("Next button pressed")
                 gameViewModel.nextButtonPressed()
+            }.onChange(of: gameViewModel.cardsToCast.cardFromLibrary) { newCard in
+                cardToCastFromLibrary = newCard
             }
         }
     }
@@ -510,29 +513,30 @@ struct CardView: View {
     }
     
     var body: some View {
-        if card.cardUIImage != Image("BlackBackground") {
-            card.cardUIImage
-                .resizable()
-        } else if shouldStartDownloadingImage {
-            card.cardUIImage
-                .resizable()
-                .onAppear() {
-                    self.downloadManager.startDownloading()
-                }
-        }else {
-            Image("BlackBackground")
-                .resizable()
-                .onAppear() {
-                    let interval = DownloadQueue.queue.getDelayBeforeDownload(card: card)
-
-                    if interval > 0 {
-                        Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { timer in
+        ZStack {
+            if card.cardUIImage != Image("BlackBackground") {
+                card.cardUIImage
+                    .resizable()
+            } else if shouldStartDownloadingImage {
+                card.cardUIImage
+                    .resizable()
+                    .onAppear() {
+                        self.downloadManager.startDownloading()
+                    }
+            } else {
+                Image("BlackBackground")
+                    .resizable()
+                    .onAppear() {
+                        let interval = DownloadQueue.queue.getDelayBeforeDownload(card: card)
+                        if interval > 0 {
+                            Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { timer in
+                                self.shouldStartDownloadingImage = true
+                            }
+                        } else {
                             self.shouldStartDownloadingImage = true
                         }
-                    } else {
-                        self.shouldStartDownloadingImage = true
                     }
-                }
+            }
         }
     }
 }

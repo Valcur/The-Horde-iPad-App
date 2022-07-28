@@ -48,7 +48,7 @@ struct GameView_iPhone: View {
                         gameViewModel.damageTakenThisTurn = 0
                     }, label: {
                         VStack(spacing: 5) {
-                            Text("Damage taken : \(gameViewModel.damageTakenThisTurn)")
+                            Text("Card milled : \(gameViewModel.damageTakenThisTurn)")
                                 .fontWeight(.bold)
                                 .font(.title2)
                             
@@ -82,7 +82,7 @@ struct GameView_iPhone: View {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             castedCardViewOpacity = 0
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
+                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
                             }
                         }
                     }
@@ -393,6 +393,7 @@ struct ControlBarView_iPhone: View {
 struct CastedCardView_iPhone: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @State var cardToCastFromLibrary: Card = Card(cardName: "Polyraptor", cardType: .token)
     
     var body: some View {
         ZStack {
@@ -436,8 +437,8 @@ struct CastedCardView_iPhone: View {
                                 .foregroundColor(.white)
                                 .scaleEffect(0.7)
                             HStack(spacing: 36) {
-                                if gameViewModel.cardsToCast.cardFromLibrary.cardType != .token {
-                                    CardToCastView_iPhone(card: gameViewModel.cardsToCast.cardFromLibrary)
+                                if cardToCastFromLibrary.cardType != .token {
+                                    CardToCastView_iPhone(card: cardToCastFromLibrary)
                                 }
                                 ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
                                     CardToCastView_iPhone(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
@@ -448,6 +449,8 @@ struct CastedCardView_iPhone: View {
                 }.onTapGesture {
                     print("Next button pressed")
                     gameViewModel.nextButtonPressed()
+                }.onChange(of: gameViewModel.cardsToCast.cardFromLibrary) { newCard in
+                    cardToCastFromLibrary = newCard
                 }
             }
         }

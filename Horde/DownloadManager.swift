@@ -110,6 +110,10 @@ import SwiftUI
             }
         }
     }
+    
+    static func removeAllSavedImages() {
+        
+    }
 }
 
 class DownloadQueue: NSObject {

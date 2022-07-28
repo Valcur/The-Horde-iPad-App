@@ -407,6 +407,16 @@ struct MenuCustomView: View {
                         hordeAppViewModel.saveBattlefieldRowStylePreference()
                     }
             }
+            
+            MenuTextSubtitleView(text: "Delete images")
+            
+            HStack {
+                MenuTextParagraphView(text: "If the app takes too much storage space, use this button to delete all saved card images")
+                
+                Spacer()
+                
+                PurpleButtonLabel(text: "Delete")
+            }
         }.padding(.trailing, 30)
     }
 }
