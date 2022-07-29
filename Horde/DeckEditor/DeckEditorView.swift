@@ -155,19 +155,13 @@ struct CardSearchView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     if deckEditorViewModel.searchResult.count > 0 {
-                        ForEach(deckEditorViewModel.searchResult) { card in
-                            CardSearchResultView(card: card)
+                        ForEach(deckEditorViewModel.searchResult.reversed()) { card in
+                            CardSearchResultView(card: card).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                         }
                     } else {
-                        MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo)
+                        MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                     }
-                    
-
-                    /*
-                    CardSearchResultView(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"))
-                    CardSearchResultView(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"))
-                    CardSearchResultView(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"))*/
-                }
+                }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
             }.ignoresSafeArea(.keyboard)
         }
     }
@@ -241,10 +235,10 @@ struct CardShowView: View {
                     
                     CardToShowCarouselView(index: $deckEditorViewModel.carouselIndex.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
                         if deckEditorViewModel.cardToShow != nil {
-                            CarouselCardView(card: deckEditorViewModel.cardToShow!)
+                            CarouselCardView(card: deckEditorViewModel.cardToShow!, delay: 0)
                         }
-                        ForEach(deckEditorViewModel.cardToShowReprints) { cardReprint in
-                            CarouselCardView(card: cardReprint)
+                        ForEach(0..<deckEditorViewModel.cardToShowReprints.count, id: \.self) {
+                            CarouselCardView(card: deckEditorViewModel.cardToShowReprints[$0], delay: $0)
                         }
                     }
                     
@@ -587,12 +581,23 @@ struct CarouselCardView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let card: Card
+    let delay: Int
+    @State var showCard: Bool = false
     
     var body: some View {
-        CardView(card: card)
-            .aspectRatio(contentMode: .fit)
-            .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
-            .cornerRadius(EditorSize.cardToShowCornerRadius)
+        if showCard {
+            CardView(card: card, shouldImageBeSaved: false)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
+                .cornerRadius(EditorSize.cardToShowCornerRadius)
+        } else {
+            Rectangle().opacity(0.000001)
+                .onAppear() {
+                    Timer.scheduledTimer(withTimeInterval: Double(delay) * 0.1, repeats: false) { timer in
+                        self.showCard = true
+                    }
+                }
+        }
     }
 }
 

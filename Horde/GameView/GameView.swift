@@ -14,6 +14,7 @@ struct GameView: View {
     @State var castedCardViewOpacity: CGFloat = 0
     @State var graveyardViewOpacity: CGFloat = 0
     @State var gameIntroViewOpacity: CGFloat = 1
+    @State var strongPermanentsViewOpacity: CGFloat = 0
     
     var body: some View {
         ZStack {
@@ -66,6 +67,22 @@ struct GameView: View {
                 }
             }.transition(.move(edge: .top))
 
+            StrongPermanentView()
+                .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
+                .onChange(of: gameViewModel.shouldShowStrongPermanent) { show in
+                    if show {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            strongPermanentsViewOpacity = 1
+                        }
+                    } else {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            strongPermanentsViewOpacity = 0
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            gameViewModel.strongPermanentsToSpawn = []
+                        }
+                    }
+                }
 
             CastedCardView()
                 .opacity(castedCardViewOpacity)
@@ -405,6 +422,53 @@ struct CastedCardView: View {
             }.onChange(of: gameViewModel.cardsToCast.cardFromLibrary) { newCard in
                 cardToCastFromLibrary = newCard
             }
+        }
+    }
+}
+
+struct StrongPermanentView: View {
+    
+    @EnvironmentObject var gameViewModel: GameViewModel
+    //@State var milestoneReached: Int
+    var infoText: String {
+        if gameViewModel.gameConfig.isClassicMode {
+            return "Milestone reached"
+        } else {
+            return "Stage \(gameViewModel.marathonStage) completed"
+        }
+    }
+    
+    var body: some View {
+        // The button to leave the menu is the background
+        Button(action: {
+            gameViewModel.shouldShowStrongPermanent = false
+        }, label: {
+            VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+        }).buttonStyle(StaticButtonStyle())
+        
+        VStack {
+            ScrollView(.horizontal, showsIndicators: false) {
+                VStack(spacing: 30) {
+                    Text(infoText)
+                        .fontWeight(.bold)
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .frame(height: 50)
+
+                    HStack(spacing: 36) {
+                        ForEach(0..<gameViewModel.strongPermanentsToSpawn.count, id: \.self) { i in
+                            CardView(card: gameViewModel.strongPermanentsToSpawn[i])
+                                .frame(width: CardSize.width.big, height: CardSize.height.big)
+                                .cornerRadius(CardSize.cornerRadius.big)
+                                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+                        }
+                    }
+                }
+                .frame(minWidth: UIScreen.main.bounds.width, minHeight: CardSize.height.big + 160).padding([.leading, .trailing], 30)
+            }
+        }
+        .onTapGesture {
+            gameViewModel.shouldShowStrongPermanent = false
         }
     }
 }

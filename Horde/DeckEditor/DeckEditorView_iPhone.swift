@@ -253,10 +253,10 @@ struct CardShowView_iPhone: View {
                     
                     CardToShowCarouselView(index: $deckEditorViewModel.carouselIndex.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
                         if deckEditorViewModel.cardToShow != nil {
-                            CarouselCardView(card: deckEditorViewModel.cardToShow!)
+                            CarouselCardView(card: deckEditorViewModel.cardToShow!, delay: 0)
                         }
                         ForEach(deckEditorViewModel.cardToShowReprints.indices, id: \.self) { i in
-                            CarouselCardView(card: deckEditorViewModel.cardToShowReprints[i])
+                            CarouselCardView(card: deckEditorViewModel.cardToShowReprints[i], delay: i)
                         }
                     }
                     
@@ -467,21 +467,15 @@ struct CardSearchView_iPhone: View {
             ScrollView {
                 VStack(spacing: 0) {
                     if deckEditorViewModel.searchResult.count > 0 {
-                        ForEach(deckEditorViewModel.searchResult.indices, id: \.self) { i in
-                            CardSearchResultView_iPhone(card: deckEditorViewModel.searchResult[i])
+                        ForEach(deckEditorViewModel.searchResult.reversed()) { card in
+                            CardSearchResultView_iPhone(card: card).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                         }
                     } else {
-                        MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo)
+                        MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                             .scaleEffect(0.9)
                             .padding(.top, 20)
                     }
-                    
-/*
-                    
-                    CardSearchResultView_iPhone(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"), cardRank: 0)
-                    CardSearchResultView_iPhone(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"), cardRank: 0)
-                    CardSearchResultView_iPhone(card: CardFromCardSearch(cardName: "Polyraptor", cardType: .creature, specificSet: "RIX", manaCost: "{6}{G}{G}"), cardRank: 0)*/
-                }
+                }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
             }.ignoresSafeArea(.keyboard)
         }
     }

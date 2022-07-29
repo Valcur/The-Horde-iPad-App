@@ -28,6 +28,8 @@ class GameViewModel: ObservableObject {
     var powerfullCards: [Card] = []
     var marathonStage = -1
     var strongPermanentsAlreadySpawned: [Bool]
+    @Published var strongPermanentsToSpawn: [Card] = []
+    @Published var shouldShowStrongPermanent: Bool = false
     
     @Published var cardToZoomIn = Card(cardName: "Polyraptor", cardType: .token)
     @Published var shouldZoomOnCard: Bool = false
@@ -318,6 +320,8 @@ class GameViewModel: ObservableObject {
                 let strongCard: Card? = powerfullCards.randomElement()
                 if strongCard != nil {
                     addCardToBoard(card: strongCard!)
+                    shouldShowStrongPermanent = true
+                    strongPermanentsToSpawn.append(strongCard!)
                 }
                 strongPermanentsAlreadySpawned[0] = true
             }
@@ -325,6 +329,8 @@ class GameViewModel: ObservableObject {
                 let strongCard: Card? = powerfullCards.randomElement()
                 if strongCard != nil {
                     addCardToBoard(card: strongCard!)
+                    shouldShowStrongPermanent = true
+                    strongPermanentsToSpawn.append(strongCard!)
                 }
                 strongPermanentsAlreadySpawned[1] = true
             }
@@ -332,6 +338,8 @@ class GameViewModel: ObservableObject {
                 let strongCard: Card? = powerfullCards.randomElement()
                 if strongCard != nil {
                     addCardToBoard(card: strongCard!)
+                    shouldShowStrongPermanent = true
+                    strongPermanentsToSpawn.append(strongCard!)
                 }
                 strongPermanentsAlreadySpawned[2] = true
             }
@@ -339,6 +347,8 @@ class GameViewModel: ObservableObject {
                 let strongCard: Card? = powerfullCards.randomElement()
                 if strongCard != nil {
                     addCardToBoard(card: strongCard!)
+                    shouldShowStrongPermanent = true
+                    strongPermanentsToSpawn.append(strongCard!)
                 }
                 strongPermanentsAlreadySpawned[3] = true
             }
@@ -364,6 +374,8 @@ class GameViewModel: ObservableObject {
             let strongCard: Card? = powerfullCards.randomElement()
             if strongCard != nil {
                 addCardToBoard(card: strongCard!)
+                shouldShowStrongPermanent = true
+                strongPermanentsToSpawn.append(strongCard!)
             }
         }
         // Second Stage, 150 cards with tokens x3
@@ -372,10 +384,14 @@ class GameViewModel: ObservableObject {
             var strongCard: Card? = powerfullCards.randomElement()
             if strongCard != nil {
                 addCardToBoard(card: strongCard!)
+                shouldShowStrongPermanent = true
+                strongPermanentsToSpawn.append(strongCard!)
             }
             strongCard = powerfullCards.randomElement()
             if strongCard != nil {
                 addCardToBoard(card: strongCard!)
+                shouldShowStrongPermanent = true
+                strongPermanentsToSpawn.append(strongCard!)
             }
         }
     }
