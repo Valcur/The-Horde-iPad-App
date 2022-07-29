@@ -15,6 +15,7 @@ struct GameView_iPhone: View {
     @State var graveyardViewOpacity: CGFloat = 0
     @State var gameIntroViewOpacity: CGFloat = 1
     @State var zoomViewOpacity: CGFloat = 0
+    @State var strongPermanentsViewOpacity: CGFloat = 0
     
     var body: some View {
         ZStack {
@@ -63,13 +64,29 @@ struct GameView_iPhone: View {
                     .foregroundColor(.white)
                     .padding(10)
                     .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
-                    .position(x: UIScreen.main.bounds.width / 2, y: 0)
+                    .position(x: UIScreen.main.bounds.width / 2, y: -30)
                     .animation(.easeInOut(duration: 0.3), value: gameViewModel.damageTakenThisTurn)
                     .scaleEffect(0.7)
                 }
             }.transition(.move(edge: .top))
 
-
+            StrongPermanentView()
+                .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
+                .onChange(of: gameViewModel.shouldShowStrongPermanent) { show in
+                    if show {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            strongPermanentsViewOpacity = 1
+                        }
+                    } else {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            strongPermanentsViewOpacity = 0
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            gameViewModel.strongPermanentsToSpawn = []
+                        }
+                    }
+                }
+            
             CastedCardView_iPhone()
                 .opacity(castedCardViewOpacity)
                 .onChange(of: gameViewModel.turnStep) { _ in
@@ -135,6 +152,7 @@ struct HordeBoardView_iPhone: View {
     @EnvironmentObject var gameViewModel: GameViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let cardThickness: CGFloat = 0.2
+    @State var toggler: Bool = false
     
     var deckThickness: CGFloat {
         return gameViewModel.deck.count < 250 ? CGFloat(gameViewModel.deck.count) * cardThickness : 250 * cardThickness
@@ -152,9 +170,21 @@ struct HordeBoardView_iPhone: View {
                             print("Show Graveyard")
                             gameViewModel.showGraveyard = true
                         }, label: {
-                            CardView(card: gameViewModel.cardsOnGraveyard.last!)
-                                .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal)
-                                .cornerRadius(CardSize_iPhone.cornerRadius.normal)
+                            ZStack {
+                                ForEach( gameViewModel.cardsOnGraveyard) { card in
+                                    if card == gameViewModel.cardsOnGraveyard.last! {
+                                        CardView(card: card)
+                                            .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal)
+                                            .cornerRadius(CardSize_iPhone.cornerRadius.normal)
+                                            .opacity(toggler ? 1 : 1)
+                                    }
+                                }
+                            }
+                            .onAppear() {
+                                Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                                    toggler.toggle()
+                                }
+                            }
                         })
                     } else {
                         RoundedRectangle(cornerRadius: CardSize_iPhone.cornerRadius.normal)
@@ -338,8 +368,6 @@ struct ControlBarView_iPhone: View {
                     HStack(spacing: 10) {
                         ForEach(gameViewModel.tokensAvailable) { token in
                             Button(action: {
-                                //print("Create token button pressed")
-                                //gameViewModel.createToken(token: token)
                             }, label: {
                                 CardView(card: token)
                                     .frame(width: CardSize_iPhone.width.small, height: CardSize_iPhone.height.small)

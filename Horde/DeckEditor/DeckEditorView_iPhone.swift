@@ -94,6 +94,7 @@ struct TopTopControlRowView_iPhone: View {
                 HStack {
                     Text("Save")
                         .font(.title2)
+                        .fontWeight(.bold)
                         .foregroundColor(.white)
                         .scaleEffect(0.7)
                     
@@ -102,6 +103,7 @@ struct TopTopControlRowView_iPhone: View {
                         .foregroundColor(.white)
                 }.scaleEffect(0.7)
             }).padding(.leading, 0).padding(.trailing, 40) // To make the button bigger
+                .opacity(deckEditorViewModel.showSaveButton ? 1 : 0)
                 
             
             Spacer()
@@ -473,7 +475,7 @@ struct CardSearchView_iPhone: View {
                     } else {
                         MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                             .scaleEffect(0.9)
-                            .padding(.top, 20)
+                            .padding(.top, 40)
                     }
                 }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
             }.ignoresSafeArea(.keyboard)

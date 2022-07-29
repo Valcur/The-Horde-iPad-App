@@ -122,6 +122,7 @@ struct DeckPickingView: View {
                                 .fontWeight(.bold)
                                 .font(.title)
                                 .padding(.bottom, PickerSize.titlePaddingTop)
+                                .padding(.top, 50)
                         }
                         
                     }.rotationEffect(Angle.degrees(-rotationInDegrees))

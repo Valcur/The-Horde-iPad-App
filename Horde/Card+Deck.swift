@@ -14,7 +14,7 @@ class Card: Hashable, Identifiable {
     let cardName: String
     var cardType: CardType // Can be changed in deckeditor
     let cardImageURL: String
-    var cardUIImage: Image = Image("BlackBackground")
+    @Published var cardUIImage: Image = Image("BlackBackground")
     var hasFlashback: Bool
     let specificSet: String
     let cardOracleId: String    // Unique id of a card but same for each reprints
@@ -89,6 +89,10 @@ class Card: Hashable, Identifiable {
 
         print(url)
         return url
+    }
+    
+    static func emptyCard() -> Card {
+        return Card(cardName: "Polyraptor", cardType: .token)
     }
     
     func getUrlCardName() -> String {

@@ -23,6 +23,7 @@ class DeckEditorViewModel: ObservableObject {
     @Published var deckId: Int = -1
     @Published var cardCountForSelectedDeck: String = ""
     @Published var carouselIndex = 0
+    @Published var showSaveButton = false
     
     func changeSelectedDeckTo(newSelectedDeck: Int) {
         selectedDeckListNumber = newSelectedDeck
@@ -187,6 +188,7 @@ class DeckEditorViewModel: ObservableObject {
             saveToSelectedDeck(deckSelected: deckSelected, card: tmpCard)
         }
         updateCardCountForSelectedDeck()
+        showSaveButton = true
     }
     
     func removeCardFromSelectedDeck(card : Card) {
@@ -199,6 +201,7 @@ class DeckEditorViewModel: ObservableObject {
         deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected)
         saveToSelectedDeck(deckSelected: deckSelected, card: card)
         updateCardCountForSelectedDeck()
+        showSaveButton = true
     }
     
     // If cardToShow is in the selected deck, change the type
@@ -228,6 +231,7 @@ class DeckEditorViewModel: ObservableObject {
             deckSelected = changeCardTypeFromSpecificDeck(card: card, newCardType: newCardType, deck: deckSelected)
             saveToSelectedDeck(deckSelected: deckSelected)
         }
+        showSaveButton = true
     }
     
     // If cardToShow is in the selected deck, change the flashback boolean
@@ -257,6 +261,7 @@ class DeckEditorViewModel: ObservableObject {
             deckSelected = changeCardFlashbackValueFromSpecificDeck(card: card, newCardFlashbackValue: newFlashbackValue, deck: deckSelected)
             saveToSelectedDeck(deckSelected: deckSelected)
         }
+        showSaveButton = true
     }
     
     func removeCardFromSpecificDeck(card : Card, deck: [Card], removeCompletely: Bool = false) -> [Card] {
@@ -378,6 +383,7 @@ extension DeckEditorViewModel {
         let deckData: String = UserDefaults.standard.object(forKey: "Deck_\(deckId)") as? String ?? ""
         
         createDeckListFromDeckData(deckData: deckData)
+        showSaveButton = false
     }
     
     func createDeckListFromDeckData(deckData: String) {
@@ -427,6 +433,7 @@ extension DeckEditorViewModel {
         print(deckData)
         
         UserDefaults.standard.set(deckData, forKey: "Deck_\(deckId)")
+        showSaveButton = false
     }
     
     func getDeckDataString() -> String {
@@ -530,6 +537,7 @@ extension DeckEditorViewModel {
         if let deckData = UIPasteboard.general.string {
             popUpText = "Deck list imported from clipboard"
             createDeckListFromDeckData(deckData: deckData)
+            showSaveButton = true
         }
     }
     

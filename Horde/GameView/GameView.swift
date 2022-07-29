@@ -14,6 +14,7 @@ struct GameView: View {
     @State var castedCardViewOpacity: CGFloat = 0
     @State var graveyardViewOpacity: CGFloat = 0
     @State var gameIntroViewOpacity: CGFloat = 1
+    @State var zoomViewOpacity: CGFloat = 0
     @State var strongPermanentsViewOpacity: CGFloat = 0
     
     var body: some View {
@@ -118,6 +119,21 @@ struct GameView: View {
                     }
                 }
             
+            ZoomOnCardView()
+                .opacity(zoomViewOpacity)
+                .scaleEffect(1.4)
+                .onChange(of: gameViewModel.shouldZoomOnCard) { _ in
+                    if gameViewModel.shouldZoomOnCard {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            zoomViewOpacity = 1
+                        }
+                    } else {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            zoomViewOpacity = 0
+                        }
+                    }
+                }
+            
             GameIntroView()
                 .opacity(gameIntroViewOpacity)
                 .ignoresSafeArea()
@@ -138,6 +154,7 @@ struct HordeBoardView: View {
     @EnvironmentObject var gameViewModel: GameViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let cardThickness: CGFloat = 0.4
+    @State var toggler: Bool = false
     
     var deckThickness: CGFloat {
         return gameViewModel.deck.count < 250 ? CGFloat(gameViewModel.deck.count) * cardThickness : 250 * cardThickness
@@ -155,9 +172,21 @@ struct HordeBoardView: View {
                             print("Show Graveyard")
                             gameViewModel.showGraveyard = true
                         }, label: {
-                            CardView(card: gameViewModel.cardsOnGraveyard.last!)
-                                .frame(width: CardSize.width.normal, height: CardSize.height.normal)
-                                .cornerRadius(15)
+                            ZStack {
+                                ForEach( gameViewModel.cardsOnGraveyard) { card in
+                                    if card == gameViewModel.cardsOnGraveyard.last! {
+                                        CardView(card: card)
+                                            .frame(width: CardSize.width.normal, height: CardSize.height.normal)
+                                            .cornerRadius(CardSize.cornerRadius.normal)
+                                            .opacity(toggler ? 1 : 1)
+                                    }
+                                }
+                            }
+                            .onAppear() {
+                                Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                                    toggler.toggle()
+                                }
+                            }
                         })
                     } else {
                         RoundedRectangle(cornerRadius: CardSize.cornerRadius.normal)
@@ -265,6 +294,7 @@ struct ControlBarView: View {
     @EnvironmentObject var gameViewModel: GameViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @State var nexButtonDisable = false
+    @GestureState var isDetectingLongPress = false
     
     var body: some View {
         HStack {
@@ -324,13 +354,26 @@ struct ControlBarView: View {
                     HStack(spacing: 10) {
                         ForEach(gameViewModel.tokensAvailable) { token in
                             Button(action: {
-                                print("Create token button pressed")
-                                gameViewModel.createToken(token: token)
                             }, label: {
                                 CardView(card: token)
                                     .frame(width: CardSize.width.small, height: CardSize.height.small)
                                     .cornerRadius(CardSize.cornerRadius.small)
-                            })
+                                    .onTapGesture(count: 1) {
+                                        print("Create token button pressed")
+                                        gameViewModel.createToken(token: token)
+                                    }
+                                    .gesture(LongPressGesture(minimumDuration: 0.1)
+                                        .sequenced(before: LongPressGesture(minimumDuration: .infinity))
+                                        .updating($isDetectingLongPress) { value, state, transaction in
+                                            switch value {
+                                                case .second(true, nil): //This means the first Gesture completed
+                                                    state = true //Update the GestureState
+                                                gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
+                                                gameViewModel.cardToZoomIn = token
+                                                default: break
+                                            }
+                                        })
+                                })
                         }
                     }
                 }.frame(maxWidth: UIScreen.main.bounds.width / 2)
@@ -364,7 +407,7 @@ struct ControlBarView: View {
 struct CastedCardView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
-    @State var cardToCastFromLibrary: Card = Card(cardName: "Polyraptor", cardType: .token)
+    @State var cardToCastFromLibrary: Card = Card.emptyCard()
     
     var body: some View {
         // The button to leave the menu is the background
@@ -449,22 +492,39 @@ struct StrongPermanentView: View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 VStack(spacing: 30) {
-                    Text(infoText)
-                        .fontWeight(.bold)
-                        .font(.title)
-                        .foregroundColor(.white)
-                        .frame(height: 50)
+                    if UIDevice.current.userInterfaceIdiom == .pad {
+                        Text(infoText)
+                            .fontWeight(.bold)
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .frame(height: 50)
+                    } else {
+                        Text(infoText)
+                            .fontWeight(.bold)
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .scaleEffect(0.7)
+                    }
 
                     HStack(spacing: 36) {
-                        ForEach(0..<gameViewModel.strongPermanentsToSpawn.count, id: \.self) { i in
-                            CardView(card: gameViewModel.strongPermanentsToSpawn[i])
-                                .frame(width: CardSize.width.big, height: CardSize.height.big)
-                                .cornerRadius(CardSize.cornerRadius.big)
-                                .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+                        if UIDevice.current.userInterfaceIdiom == .pad {
+                            ForEach(0..<gameViewModel.strongPermanentsToSpawn.count, id: \.self) { i in
+                                CardView(card: gameViewModel.strongPermanentsToSpawn[i])
+                                    .frame(width: CardSize.width.big, height: CardSize.height.big)
+                                    .cornerRadius(CardSize.cornerRadius.big)
+                                    .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+                            }
+                        } else {
+                            ForEach(0..<gameViewModel.strongPermanentsToSpawn.count, id: \.self) { i in
+                                CardView(card: gameViewModel.strongPermanentsToSpawn[i])
+                                    .frame(width: CardSize_iPhone.width.big_cast, height: CardSize_iPhone.height.big_cast)
+                                    .cornerRadius(CardSize_iPhone.cornerRadius.big_cast)
+                                    .shadow(color: Color("ShadowColor"), radius: 2, x: 0, y: 2)
+                            }
                         }
                     }
                 }
-                .frame(minWidth: UIScreen.main.bounds.width, minHeight: CardSize.height.big + 160).padding([.leading, .trailing], 30)
+                .frame(minWidth: UIScreen.main.bounds.width, minHeight: UIDevice.current.userInterfaceIdiom == .pad ? CardSize.height.big + 160 : CardSize_iPhone.height.big_cast + 50).padding([.leading, .trailing], 30)
             }
         }
         .onTapGesture {
@@ -682,12 +742,10 @@ struct CardOnBoardView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
     var card: Card
+    @GestureState var isDetectingLongPress = false
     
     var body: some View {
-        Button(action: {
-            print("Remove card")
-            gameViewModel.removeOneCardOnBoard(card: card)
-        }, label: {
+        Button(action: {}, label: {
             ZStack {
                 CardView(card: card)
                     .frame(width: CardSize.width.normal, height: CardSize.height.normal)
@@ -695,11 +753,26 @@ struct CardOnBoardView: View {
                 if card.cardCount > 1 {
                     Text("x\(card.cardCount)")
                         .fontWeight(.bold)
-                        .font(.title)
+                        .font(.title2)
                         .foregroundColor(.white)
                 }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
+            .onTapGesture(count: 1) {
+                print("Remove card")
+                gameViewModel.removeOneCardOnBoard(card: card)
+            }
+            .gesture(LongPressGesture(minimumDuration: 0.1)
+                .sequenced(before: LongPressGesture(minimumDuration: .infinity))
+                .updating($isDetectingLongPress) { value, state, transaction in
+                    switch value {
+                        case .second(true, nil): //This means the first Gesture completed
+                            state = true //Update the GestureState
+                        gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
+                        gameViewModel.cardToZoomIn = self.card
+                        default: break
+                    }
+                })
         })
     }
 }

@@ -31,7 +31,7 @@ class GameViewModel: ObservableObject {
     @Published var strongPermanentsToSpawn: [Card] = []
     @Published var shouldShowStrongPermanent: Bool = false
     
-    @Published var cardToZoomIn = Card(cardName: "Polyraptor", cardType: .token)
+    @Published var cardToZoomIn = Card.emptyCard()
     @Published var shouldZoomOnCard: Bool = false
     
     /** Turn order

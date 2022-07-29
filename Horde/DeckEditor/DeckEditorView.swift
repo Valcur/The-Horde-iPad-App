@@ -160,6 +160,7 @@ struct CardSearchView: View {
                         }
                     } else {
                         MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
+                            .padding(.top, 40)
                     }
                 }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
             }.ignoresSafeArea(.keyboard)
@@ -487,6 +488,7 @@ struct TopTopControlRowView: View {
                 HStack {
                     Text("Save")
                         .font(.title2)
+                        .fontWeight(.bold)
                         .foregroundColor(.white)
                     
                     Image(systemName: "arrow.down.doc")
@@ -494,6 +496,7 @@ struct TopTopControlRowView: View {
                         .foregroundColor(.white)
                 }
             }).padding(.leading, 30).padding(.trailing, 80) // To make the button bigger
+                .opacity(deckEditorViewModel.showSaveButton ? 1 : 0)
             
             Spacer()
             

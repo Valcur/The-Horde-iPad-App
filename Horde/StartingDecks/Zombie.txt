@@ -23,7 +23,7 @@
 1 ISD enchantment NO Endless Ranks of the Dead 69d4ecac-4735-4667-bfc1-c8800b436d08 5db15c5f-80b7-4f7f-985a-9bbec3199ad9
 1 MIR enchantment NO Forsaken Wastes b9e61e68-9dc8-4295-95dc-dd66a0907c8c c9dbfc7c-164d-47b8-8f05-987864fca89b
 
-1 ISD sorcery NO Army of the Damned 75d667ec-86f4-4850-a3b6-e7a9fc7053b0 260a4544-a1eb-4d07-943f-0401ae288e13
+1 ISD sorcery YES Army of the Damned 75d667ec-86f4-4850-a3b6-e7a9fc7053b0 260a4544-a1eb-4d07-943f-0401ae288e13
 1 2X2 sorcery NO Damnation d57a8f0b-7989-4db5-8756-6f2690097252 d3c0aac5-b9f1-4446-bfea-3e1dd1cf1f2f
 2 MM3 sorcery NO Delirium Skeins 7397036f-8114-47cc-b52f-c532a6845d16 64b0d9e7-4a0f-4f07-99ae-31c3c9f0037a
 1 A25 sorcery NO Plague Wind 18ec721f-c1ac-4581-a61d-2f0b09d6bf92 72d21d0d-7de7-4f03-8663-002c9290512f

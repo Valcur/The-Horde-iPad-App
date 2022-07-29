@@ -352,6 +352,7 @@ struct MenuCustomView: View {
             
             HStack(spacing: 20) {
                 Text("Survivors starting life")
+                    .foregroundColor(.white)
                 Spacer()
                 // Start with 20
                 Button(action: {
@@ -415,7 +416,11 @@ struct MenuCustomView: View {
                 
                 Spacer()
                 
-                PurpleButtonLabel(text: "Delete")
+                Button(action: {
+                    DownloadManager.removeAllSavedImages()
+                }, label: {
+                    PurpleButtonLabel(text: "Delete")
+                })
             }
         }.padding(.trailing, 30)
     }
