@@ -49,7 +49,7 @@ struct GameView_iPhone: View {
                         gameViewModel.damageTakenThisTurn = 0
                     }, label: {
                         VStack(spacing: 5) {
-                            Text("Card milled : \(gameViewModel.damageTakenThisTurn)")
+                            Text("Milled cards : \(gameViewModel.damageTakenThisTurn)")
                                 .fontWeight(.bold)
                                 .font(.title2)
                             

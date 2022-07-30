@@ -67,12 +67,18 @@ struct DeckPickingView: View {
         return deckPickerViewModel.deckPickedId == deckPicker.id
     }
     
+    var isDeckBigEnough: Bool {
+        return DeckManager.getDeckForId(deckPickedId: deckPicker.id, difficulty: 1).0.count >= 50
+    }
+    
     var body: some View {
         ZStack {
             Button(action: {
                 if isDeckSelected {
-                    print("Start game with deck \(deckPicker.id)")
-                    hordeAppViewModel.readyToPlay = true
+                    if isDeckBigEnough {
+                        print("Start game with deck \(deckPicker.id)")
+                        hordeAppViewModel.readyToPlay = true
+                    }
                 } else {
                     print("Deck \(deckPicker.id) picked")
                     deckPickerViewModel.pickDeck(deckId: deckPicker.id)
@@ -117,7 +123,7 @@ struct DeckPickingView: View {
                             
                             // Play
                             
-                            Text("Press again to start")
+                            Text(isDeckBigEnough ? "Press again to start" : "Deck need at least 50 cards")
                                 .foregroundColor(.white)
                                 .fontWeight(.bold)
                                 .font(.title)
@@ -271,7 +277,7 @@ struct GetMoreDeckSlotView: View {
                     .fontWeight(.bold)
                     .font(.title)
                 
-                Text(" - As many deck slots as you want \n - Full control on the start decks and the ability to delete them")
+                Text(" - As many deck slots as you want \n - Full control on the starting decks and the ability to delete them")
                     .foregroundColor(.white)
                     .fontWeight(.bold)
                     .font(.subheadline)
@@ -289,7 +295,7 @@ struct GetMoreDeckSlotView: View {
                             .foregroundColor(.white)
                             .font(.title)
                     }.padding(15)
-                    .background(VisualEffectView(effect: UIBlurEffect(style: .systemThickMaterialDark)).cornerRadius(10))
+                    .background(VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).cornerRadius(10))
                 }
                 
                 Image(systemName: "cart")
@@ -297,9 +303,9 @@ struct GetMoreDeckSlotView: View {
                     .foregroundColor(.white)
                 
             }.rotationEffect(Angle.degrees(-rotationInDegrees))
-                .frame(width: 500, height: UIScreen.main
+                .frame(width: 520, height: UIScreen.main
                     .bounds.height)
-        }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: 500, height: UIScreen.main.bounds.height + 150)
+        }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: 520, height: UIScreen.main.bounds.height + 150)
             .border(.white, width: 3)
         .rotationEffect(Angle.degrees(rotationInDegrees))
     }
@@ -309,7 +315,7 @@ struct DeckPickingIntro: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
-            MenuTextTitleView(text: "Intro")
+            MenuTextTitleView(text: "Introduction")
             
             MenuTextBoldParagraphView(text: "Never played the horde format ?")
             

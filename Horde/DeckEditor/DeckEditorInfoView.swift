@@ -136,7 +136,7 @@ struct DeckEditorInfoView: View {
                         deckEditorViewModel.saveRulesText(text: deckRules)
                     }
                 }, label: {
-                    MenuTextTitleView(text: "To deck editor")
+                    MenuTextTitleView(text: "Back to deck editor")
                 })
                 Spacer()
             }.padding([.top], 50).padding(.horizontal, 30).opacity(changingImage ? 0 : 1)

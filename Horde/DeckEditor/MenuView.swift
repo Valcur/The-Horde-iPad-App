@@ -220,60 +220,107 @@ struct MenuHowToPlayView: View {
             Group {
                 MenuTextSubtitleView(text: "FAQ")
                 
-                VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "Is an internet connection required to use this app ?")
+                Group {
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "Is an internet connection required to use this app ?")
+                        
+                        MenuTextParagraphView(text: "Card images are downloaded the first time you draw them then saved wich means you will need an internet connection (dark color is shown while the image is downloading)")
+                    }
                     
-                    MenuTextParagraphView(text: "Card images are downloaded the first time you draw them then saved wich means you will need an internet connection (MTG back is shown while the image is downloading). After some time you'll have all of them already download and won't need an internet connection anymore")
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "Difference between Classic and Marathon ?")
+                        
+                        MenuTextParagraphView(text: "Classic : One deck to beat")
+                        
+                        MenuTextParagraphView(text: "Marathon : Three deck to beat. Token mulitplicator increase and strong permanents enters the battlefield between each new deck")
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "How to use the life counter ?")
+                        
+                        MenuTextParagraphView(text: "Swipe up/down to increase/decrease. If you want to make a small change, press the upper part to increase, or the bottom part to decrease")
+                        
+                        MenuTextParagraphView(text: "By default, the Horde heal when survivors lose life. If you don't want to play with this rules you can disable it in the 'Custom' menu")
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "How to mill the horde ?")
+                        
+                        MenuTextParagraphView(text: "Press the horde's library to mill his deck")
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "How to destroy a permenent ?")
+                        
+                        MenuTextParagraphView(text: "Touch a card on the board to destroy it")
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "How to play a horde turn ?")
+                        
+                        MenuTextParagraphView(text: "Press the draw button until the horde have drawn enough cards and create tokens if a card told you to. All the creatures controlled by the horde are now attacking, : block them, lose life and remove the creatures you destroyed during the combat. The turn is now over")
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "How to zoom on a card ?")
+                        
+                        MenuTextParagraphView(text: "Long press a card on the board or in the token creation row to zoom")
+                    }
                 }
                 
-                VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "Difference between Classic and Marathon ?")
+                LazyHStack(spacing: 30) {
+                    Image("TutoLibraryReveal")
                     
-                    MenuTextParagraphView(text: "Classic : One deck to beat")
-                    
-                    MenuTextParagraphView(text: "Marathon : Three deck to beat. Token mulitplicator increase and strong permanents enters the battlefield between each new deck")
+                    LazyVStack(alignment: .leading, spacing: 30) {
+                        
+                        MenuTextSubtitleView(text: "Reveal library top card")
+                        
+                        MenuTextParagraphView(text: "You can reveal the horde's library top card any time by pressing the Reveal Top button. You'll have access to 3 buttons to interact with this card. the button actions are described below in order from left to right")
+                        
+                        MenuTextBoldParagraphView(text: "Put it at the bottom of the horde's library")
+                        
+                        MenuTextBoldParagraphView(text: "Shuffle it in the horde's library")
+                        
+                        MenuTextBoldParagraphView(text: "Cast it")
+                    }
                 }
                 
-                VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "How to Deal damage to the horde ?")
+                Group {
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "In the 7 starting decks, I can change the decklist but not the deck info and speical rules")
+                        
+                        MenuTextParagraphView(text: "Everyone can change the deck list of those decks but only premium users can change their name, image, rules or delete them")
+                    }
                     
-                    MenuTextParagraphView(text: "Press the horde's library to mill its deck")
-                }
-                
-                VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "How to use the lifepoints counter ?")
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "I have deleted one of the 7 starting decks but I want it back")
+                        
+                        MenuTextParagraphView(text: "Everytime you launch the app, if one of the 7 first deck slot is empty, the corresponding starting deck will be recreated")
+                    }
                     
-                    MenuTextParagraphView(text: "Drag an go up or down to change a big amount of life. If you want to make a small change, press the upper part to increase, or the bottom part to decrease lifepoints.")
-                }
-                
-                VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "How to destroy a permenent ?")
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "If I stop being a premium user, is the app deleting the deck I created on the extra deck slots ?")
+                        
+                        MenuTextParagraphView(text: "No they won't be deleted, you won't be able to access them but going premium again will show them back in the deck selection")
+                    }
                     
-                    MenuTextParagraphView(text: "Touch a card on the board to destroy it")
-                }
-                
-                VStack(alignment: .leading, spacing: 20) {
-                    MenuTextBoldParagraphView(text: "How to play a horde turn ?")
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "If I export my deck to share it, what will be included ?")
+                        
+                        MenuTextParagraphView(text: "Only the cards in the 5 groups (main deck, lategame cards, tokens, weak permanents and strong permanents). Deck name, image, intro and rules are not shared when exporting")
+                    }
                     
-                    MenuTextParagraphView(text: "Press the draw button until the horde have drawn enough cards and create tokens if a card told you to. All the creatures controlled by the horde are now attacking, : block them, lose life and remove the creatures you destroyed during the combat. The turn is now over")
-                }
-                
-            }
-            
-            LazyHStack(spacing: 30) {
-                Image("TutoLibraryReveal")
-                
-                LazyVStack(alignment: .leading, spacing: 30) {
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "I want a deck with 96.45% of tokens and 99.97814% of lategame cards, is it possible ?")
+                        
+                        MenuTextParagraphView(text: "You can make crazy decks but if your deck is far from a classic horde deck the option 'Remove the strongest cards from the beginning of the deck' might fail to generate the deck and get stuck. Just disable it and enjoy your crazy deck !")
+                    }
                     
-                    MenuTextSubtitleView(text: "Reveal library top card")
-                    
-                    MenuTextParagraphView(text: "You can reveal the horde's library top card any time by pressing the Reveal Top button. You'll have access to 3 buttons to interact with this card. the button actions are described below in order from left to right")
-                    
-                    MenuTextBoldParagraphView(text: "Put it at the bottom of the horde's library")
-                    
-                    MenuTextBoldParagraphView(text: "Shuffle it in the horde's library")
-                    
-                    MenuTextBoldParagraphView(text: "Cast it")
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "Why can I change the type of a creature card to token ?")
+                        
+                        MenuTextParagraphView(text: "Use this if you want some creatures to be treated as tokens (see the sliver deck list)")
+                    }
                 }
             }
         }.padding(.trailing, 30)
@@ -330,21 +377,21 @@ struct MenuCustomView: View {
                 }
             }
             
-            Toggle("Use less colorfull background color", isOn: $hordeAppViewModel.useLessColorFullBackground)
+            Toggle("Use less colorful background", isOn: $hordeAppViewModel.useLessColorFullBackground)
                 .foregroundColor(.white)
                 .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
                     hordeAppViewModel.saveBattlefieldRowStylePreference()
                 }
             
-            MenuTextSubtitleView(text: "Lifepoints")
+            MenuTextSubtitleView(text: "Life counter")
             
-            Toggle("Show lifepoints counter", isOn: $hordeAppViewModel.useLifepointsCounter)
+            Toggle("Show life counter", isOn: $hordeAppViewModel.useLifepointsCounter)
                 .foregroundColor(.white)
                 .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
                     hordeAppViewModel.saveBattlefieldRowStylePreference()
                 }
             
-            Toggle("The Horde heal when survivors loose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
+            Toggle("The Horde heals when survivors loose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
                 .foregroundColor(.white)
                 .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
                     hordeAppViewModel.saveBattlefieldRowStylePreference()

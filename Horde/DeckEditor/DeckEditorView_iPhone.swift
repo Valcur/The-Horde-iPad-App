@@ -56,13 +56,21 @@ struct TopTopControlRowView_iPhone: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @State var deckName: String = ""
     
+    var isUserAllowedToModifyDeckInfo: Bool {
+        return (deckEditorViewModel.deckId < 7 && hordeAppViewModel.isPremium) || deckEditorViewModel.deckId >= 7
+    }
+    
     var body: some View {
         HStack {
             
             // Edit deck info
             Button(action: {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    deckEditorViewModel.showDeckEditorInfoView.toggle()
+                if isUserAllowedToModifyDeckInfo {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        deckEditorViewModel.showDeckEditorInfoView.toggle()
+                    }
+                } else {
+                    deckEditorViewModel.popUpText = "Premium required"
                 }
             }, label: {
                 HStack {
@@ -82,6 +90,7 @@ struct TopTopControlRowView_iPhone: View {
                     Image(systemName: "pencil")
                         .font(.title2)
                         .foregroundColor(.white)
+                        .opacity(isUserAllowedToModifyDeckInfo ? 1 : 0)
                         .scaleEffect(0.7, anchor: .leading)
                 }.padding(.leading, 0).padding(.trailing, 40) // To make the button bigger
             })
@@ -94,7 +103,6 @@ struct TopTopControlRowView_iPhone: View {
                 HStack {
                     Text("Save")
                         .font(.title2)
-                        .fontWeight(.bold)
                         .foregroundColor(.white)
                         .scaleEffect(0.7)
                     
@@ -652,7 +660,7 @@ struct DeckEditorInfoView_iPhone: View {
                         deckEditorViewModel.saveRulesText(text: deckRules)
                     }
                 }, label: {
-                    MenuTextTitleView(text: "To deck editor")
+                    MenuTextTitleView(text: "Back to deck editor")
                         .scaleEffect(0.7)
                 })
                 Spacer()

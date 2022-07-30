@@ -166,7 +166,7 @@ class GameViewModel: ObservableObject {
             self.deck.shuffle()
         }
 
-        // No boardwipe in first quarter & no strong cards
+        // No strong cards inf irst quarter
         if (gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter) && marathonStage <= 0 {
             
             let difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
@@ -184,14 +184,14 @@ class GameViewModel: ObservableObject {
                 deck.shuffle()
                 for i in 1..<quarter {
                     
-                    if isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: powerfullCards) {
+                    if isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: lateGameCards) {
                         var cardIdToSwitchWith: Int
                         repeat {
                             cardIdToSwitchWith = Int.random(in: 0..<deck.count - quarter)
                             let cardTmp = deck[deck.count - i]
                             deck[deck.count - i] = deck[cardIdToSwitchWith]
                             deck[cardIdToSwitchWith] = cardTmp
-                        } while isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: powerfullCards)
+                        } while isCardAStrongCard(card: deck[deck.count - i], cardsToCheck: lateGameCards)
                     }
                     
                     if deck[deck.count - i].cardType == .token {
@@ -229,18 +229,25 @@ class GameViewModel: ObservableObject {
     
     // Number of cards at the begining that shouldn't have strong cards in it
     func getSafeZoneCardCountAndAverageTokens(difficulty: Int) -> (Int, Int) {
-        var n = 6 // Number of real cards you wan to draw on average before storng cards come
+        let safeZoneSize: Int = Int((25.0 * Double(deck.count) / 100.0).rounded(.up))
         
-        if gameConfig.shared.deckSize == 75 {
-            n = 5
-        } else if gameConfig.shared.deckSize == 50 {
-            n = 4
-        } else if gameConfig.shared.deckSize == 25 {
-            n = 3
+        // We count the number of tokens and spells
+        var nbrOfSpells = 0
+        var nbrOfTokens = 0
+        for card in deck {
+            if card.cardType == .token {
+                nbrOfTokens += 1
+            } else {
+                nbrOfSpells += 1
+            }
         }
-    
-        let averageNbrOfToken: Int = Int((Double(n * difficulty) * 1.5).rounded())
-        return (n + averageNbrOfToken, averageNbrOfToken + (difficulty <= 2 ? 1 : 2))
+        
+        let tokensRatioInDeck: Double = Double(nbrOfTokens) / Double(deck.count)
+        let averageNbrOfToken: Int = Int(Double(safeZoneSize) * tokensRatioInDeck)
+        let n: Int = safeZoneSize - averageNbrOfToken // Number of real cards you want to draw on average before storng cards come
+        
+        print("For a deck size of \(deck.count) with diff : \(difficulty) - deckSize : \(gameConfig.shared.deckSize) we have safe zone of \(safeZoneSize), n = \(n), nbrOfTokens = \(averageNbrOfToken)")
+        return (safeZoneSize, averageNbrOfToken + (difficulty <= 2 ? 1 : 2))
     }
     
     func drawUntilNonToken() -> CardsToCast {

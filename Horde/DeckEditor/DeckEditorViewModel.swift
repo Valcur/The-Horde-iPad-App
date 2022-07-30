@@ -33,9 +33,9 @@ class DeckEditorViewModel: ObservableObject {
         } else if selectedDeckListNumber == DeckSelectionNumber.tooStrongPermanentsList {
             deckSelectionInfo = "Select cards that are too strong to be drawed during the first turns (like boardwipes)"
         } else if selectedDeckListNumber == DeckSelectionNumber.availableTokensList {
-            deckSelectionInfo = "Tokens that could be spawned by cards drawed by the horde. You can make the horde cast non token spells too"
+            deckSelectionInfo = "Tokens/spells that the horde could have to create/cast during the game"
         } else if selectedDeckListNumber == DeckSelectionNumber.weakPermanentsList {
-            deckSelectionInfo = "Weak permanents the Horde could start with"
+            deckSelectionInfo = "Weak permanents the Horde could start the game with"
         } else if selectedDeckListNumber == DeckSelectionNumber.powerfullPermanentsList {
             deckSelectionInfo = "Powerfull permanents the Horde can spawn at milestones or between marathon stages"
         }
@@ -384,6 +384,7 @@ extension DeckEditorViewModel {
         
         createDeckListFromDeckData(deckData: deckData)
         showSaveButton = false
+        updateCardCountForSelectedDeck()
     }
     
     func createDeckListFromDeckData(deckData: String) {
@@ -542,7 +543,7 @@ extension DeckEditorViewModel {
     }
     
     func exportDeckToClipboard() {
-        popUpText = "Deck list copie to clipboard"
+        popUpText = "Deck list copied to clipboard"
         UIPasteboard.general.setValue(getDeckDataString(),
             forPasteboardType: UTType.plainText.identifier)
     }

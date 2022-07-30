@@ -308,15 +308,15 @@ struct CardShowView: View {
                 }
             }.onChange(of: hasCardFlashback) { _ in
                 deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
-            }.padding(20)
+            }.padding(20).padding(.top, 50)
             
             if selectedCard.cardType == .creature || selectedCard.cardType == .token {
                 // Select card type
                 Text("Change card type")
                     .foregroundColor(.white)
                     .font(.title3)
-                    .padding(.top, 50)
                     .padding(.leading, 20)
+                    .padding(.top, 20)
                 
                 HStack {
                     CardShowTypeSelectorView(text: "Creature", cardType: .creature, card: selectedCard, cardShowedcardType: $cardType)
@@ -452,13 +452,21 @@ struct TopTopControlRowView: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @State var deckName: String = ""
     
+    var isUserAllowedToModifyDeckInfo: Bool {
+        return (deckEditorViewModel.deckId < 7 && hordeAppViewModel.isPremium) || deckEditorViewModel.deckId >= 7
+    }
+    
     var body: some View {
         HStack {
             
             // Edit deck info
             Button(action: {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    deckEditorViewModel.showDeckEditorInfoView.toggle()
+                if isUserAllowedToModifyDeckInfo {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        deckEditorViewModel.showDeckEditorInfoView.toggle()
+                    }
+                } else {
+                    deckEditorViewModel.popUpText = "Premium required"
                 }
             }, label: {
                 HStack {
@@ -477,6 +485,7 @@ struct TopTopControlRowView: View {
                     Image(systemName: "pencil")
                         .font(.title2)
                         .foregroundColor(.white)
+                        .opacity(isUserAllowedToModifyDeckInfo ? 1 : 0)
                 }.padding(.leading, 30).padding(.trailing, 80) // To make the button bigger
             })
 
@@ -488,7 +497,6 @@ struct TopTopControlRowView: View {
                 HStack {
                     Text("Save")
                         .font(.title2)
-                        .fontWeight(.bold)
                         .foregroundColor(.white)
                     
                     Image(systemName: "arrow.down.doc")

@@ -48,7 +48,7 @@ struct GameView: View {
                         gameViewModel.damageTakenThisTurn = 0
                     }, label: {
                         VStack(spacing: 5) {
-                            Text("Card milled : \(gameViewModel.damageTakenThisTurn)")
+                            Text("Milled cards : \(gameViewModel.damageTakenThisTurn)")
                                 .fontWeight(.bold)
                                 .font(.title2)
                             
@@ -464,6 +464,7 @@ struct CastedCardView: View {
                 gameViewModel.nextButtonPressed()
             }.onChange(of: gameViewModel.cardsToCast.cardFromLibrary) { newCard in
                 cardToCastFromLibrary = newCard
+                //cardToCastFromLibrary.cardCount = 1
             }
         }
     }
