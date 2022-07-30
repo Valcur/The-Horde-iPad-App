@@ -36,6 +36,7 @@
 		DBA48CB228846CC3002F18A1 /* DeckEditorInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA48CB128846CC3002F18A1 /* DeckEditorInfoView.swift */; };
 		DBAEBC792833D1BB00E9137F /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAEBC782833D1BB00E9137F /* MenuView.swift */; };
 		DBAEBC7B2844C56300E9137F /* GameIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAEBC7A2844C56300E9137F /* GameIntroView.swift */; };
+		DBC732322895C49A006834B1 /* Eldrazi.txt in Resources */ = {isa = PBXBuildFile; fileRef = DBC732312895C49A006834B1 /* Eldrazi.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		DBAEBC782833D1BB00E9137F /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		DBAEBC7A2844C56300E9137F /* GameIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameIntroView.swift; sourceTree = "<group>"; };
 		DBB697422861F6070058D45B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DBC732312895C49A006834B1 /* Eldrazi.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Eldrazi.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				DB46EC8F288ADCE400781CB1 /* Dinosaur.txt */,
 				DB46EC91288ADCF000781CB1 /* Phyrexian.txt */,
 				DB46EC93288AE23B00781CB1 /* Human.txt */,
+				DBC732312895C49A006834B1 /* Eldrazi.txt */,
 			);
 			path = StartingDecks;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				DB46EC86288ADB2600781CB1 /* Zombie.txt in Resources */,
 				DB8C829E2828028B003DDED1 /* Preview Assets.xcassets in Resources */,
 				DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */,
+				DBC732322895C49A006834B1 /* Eldrazi.txt in Resources */,
 				DB46EC90288ADCE400781CB1 /* Dinosaur.txt in Resources */,
 				DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */,
 			);

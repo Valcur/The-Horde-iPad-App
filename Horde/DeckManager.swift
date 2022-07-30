@@ -318,10 +318,9 @@ struct DeckManager {
         if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.phyrexian)_Exist") as? Bool ?? false) {
             createPhyrexianDeck(deckId: DecksId.phyrexian)
         }
-        /*
         if !(UserDefaults.standard.object(forKey: "Deck_\(DecksId.eldrazi)_Exist") as? Bool ?? false) {
             createEldraziDeck(deckId: DecksId.eldrazi)
-        }*/
+        }
     }
     
     static func createHumanDeck(deckId: Int) {

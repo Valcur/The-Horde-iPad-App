@@ -394,7 +394,7 @@ class GameViewModel: ObservableObject {
                 shouldShowStrongPermanent = true
                 strongPermanentsToSpawn.append(strongCard!)
             }
-            strongCard = powerfullCards.randomElement()
+            strongCard = weakCards.randomElement()
             if strongCard != nil {
                 addCardToBoard(card: strongCard!)
                 shouldShowStrongPermanent = true
