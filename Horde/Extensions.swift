@@ -102,6 +102,9 @@ struct GradientView: View {
         case 7:
             gradient = Gradient(colors: [Color("GradientLight7Color"), Color("GradientDark7Color")])
             break
+        case 8:
+            gradient = Gradient(colors: [Color("GradientLight8Color"), Color("GradientDark8Color")])
+            break
         default:
             gradient = Gradient(colors: [Color("GradientLight2Color"), Color("GradientDark2Color")])
             break

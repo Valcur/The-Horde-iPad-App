@@ -374,6 +374,7 @@ struct MenuCustomView: View {
                     MenuCustomBackgroundColorChoiceView(gradientId: 5)
                     MenuCustomBackgroundColorChoiceView(gradientId: 6)
                     MenuCustomBackgroundColorChoiceView(gradientId: 7)
+                    MenuCustomBackgroundColorChoiceView(gradientId: 8)
                 }
             }
             
