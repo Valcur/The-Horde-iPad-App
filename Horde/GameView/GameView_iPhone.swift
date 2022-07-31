@@ -35,9 +35,9 @@ struct GameView_iPhone: View {
                     Spacer()
                     LifePointsView()
                         .environmentObject(LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife))
-                        .frame(width: UIScreen.main.bounds.width / 5)
+                        .frame(width: UIScreen.main.bounds.width / 4.5)
                         .cornerRadius(15)
-                        .padding(.trailing, 25)
+                        .padding(.trailing, (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0))
                         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
                         .scaleEffect(0.7, anchor: .center)
                 }
@@ -466,7 +466,7 @@ struct CastedCardView_iPhone: View {
                                 .scaleEffect(0.7)
                             HStack(spacing: 36) {
                                 if cardToCastFromLibrary.cardType != .token {
-                                    CardToCastView_iPhone(card: cardToCastFromLibrary)
+                                    CardToCastView_iPhone(card: cardToCastFromLibrary, showCardCount: false)
                                 }
                                 ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
                                     CardToCastView_iPhone(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
@@ -583,6 +583,7 @@ struct CardToCastView_iPhone: View {
     
     var card: Card
     @EnvironmentObject var gameViewModel: GameViewModel
+    var showCardCount: Bool = true
     
     var body: some View {
         ZStack {
@@ -590,7 +591,7 @@ struct CardToCastView_iPhone: View {
                 .frame(width: CardSize_iPhone.width.big_cast, height: CardSize_iPhone.height.big_cast)
                 .cornerRadius(CardSize_iPhone.cornerRadius.big_cast)
                 .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
-            if card.cardCount > 1 {
+            if showCardCount && card.cardCount > 1 {
                 Text("x\(card.cardCount)")
                     .fontWeight(.bold)
                     .font(.title)

@@ -451,7 +451,7 @@ struct CastedCardView: View {
                             .frame(height: 50)
                         HStack(spacing: 36) {
                             if cardToCastFromLibrary.cardType != .token {
-                                CardToCastView(card: cardToCastFromLibrary)
+                                CardToCastView(card: cardToCastFromLibrary, showCardCount: false)
                             }
                             ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
                                 CardToCastView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
@@ -464,7 +464,6 @@ struct CastedCardView: View {
                 gameViewModel.nextButtonPressed()
             }.onChange(of: gameViewModel.cardsToCast.cardFromLibrary) { newCard in
                 cardToCastFromLibrary = newCard
-                //cardToCastFromLibrary.cardCount = 1
             }
         }
     }
@@ -670,6 +669,7 @@ struct CardToCastView: View {
     
     var card: Card
     @EnvironmentObject var gameViewModel: GameViewModel
+    var showCardCount: Bool = true
     
     var body: some View {
         ZStack {
@@ -677,7 +677,7 @@ struct CardToCastView: View {
                 .frame(width: CardSize.width.big, height: CardSize.height.big)
                 .cornerRadius(CardSize.cornerRadius.big)
                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
-            if card.cardCount > 1 {
+            if showCardCount && card.cardCount > 1 {
                 Text("x\(card.cardCount)")
                     .fontWeight(.bold)
                     .font(.title)

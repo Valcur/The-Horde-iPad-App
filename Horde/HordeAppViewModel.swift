@@ -124,17 +124,19 @@ class HordeAppViewModel: ObservableObject {
     }
     
     func buy() {
-        IAPManager.shared.purchaseProduct(product: IAPManager.shared.products!.first!, success: {
-            if UserDefaults.standard.object(forKey: "IsPremium") as? Bool ?? false {
-                self.isPremium = true
-                if (UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8) <= 8 {
-                    self.numberOfDeckSlot = 9
-                    UserDefaults.standard.set(self.numberOfDeckSlot, forKey: "NumberOfDeckSlot")
+        if IAPManager.shared.products != nil && IAPManager.shared.products!.first != nil {
+            IAPManager.shared.purchaseProduct(product: IAPManager.shared.products!.first!, success: {
+                if UserDefaults.standard.object(forKey: "IsPremium") as? Bool ?? false {
+                    self.isPremium = true
+                    if (UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8) <= 8 {
+                        self.numberOfDeckSlot = 9
+                        UserDefaults.standard.set(self.numberOfDeckSlot, forKey: "NumberOfDeckSlot")
+                    }
                 }
-            }
-        }, failure: { error in
-            print("Buy Fail \(String(describing: error))")
-        })
+            }, failure: { error in
+                print("Buy Fail \(String(describing: error))")
+            })
+        }
     }
 }
 

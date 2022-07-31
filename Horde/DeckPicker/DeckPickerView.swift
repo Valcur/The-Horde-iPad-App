@@ -325,7 +325,7 @@ struct DeckPickingIntro: View {
             
             MenuTextWithImageParagraphView(text1: "", image: Image(systemName: "gear"), text2: "> How To Play to learn how to use this app")
         
-        }.frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 80)
+        }.frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 80).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
     }
 }
 

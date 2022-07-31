@@ -25,8 +25,10 @@ struct HordeAppNoHomeIndicatorView: View {
     let hordeAppViewModel = HordeAppViewModel()
     
     var body: some View {
-        HordeAppView()
-            .environmentObject(hordeAppViewModel)
+        GeometryReader { _ in
+            HordeAppView()
+                .environmentObject(hordeAppViewModel)
+        }.ignoresSafeArea()
     }
 }
 
@@ -35,6 +37,7 @@ struct HordeAppView: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let gameViewModel = GameViewModel()
     let deckPickerViewModel = DeckPickerViewModel()
+    let deckEditorViewModel = DeckEditorViewModel()
 
     var body: some View {
         ZStack {
@@ -63,6 +66,27 @@ struct HordeAppView: View {
                     .environmentObject(deckPickerViewModel)
                     .statusBar(hidden: true)
                     .transition(.opacity)
+                    .onChange(of: hordeAppViewModel.showDeckEditor) { isShowing in
+                        if isShowing {
+                            deckEditorViewModel.loadExistingDeck(deckId: deckPickerViewModel.deckPickedId)
+                        } else {
+                            deckEditorViewModel.deckId = -1
+                        }
+                    }
+                
+                if hordeAppViewModel.showDeckEditor {
+                    if UIDevice.current.userInterfaceIdiom == .pad {
+                        DeckEditorView()
+                            .environmentObject(deckEditorViewModel)
+                            .statusBar(hidden: true)
+                            .transition(.opacity)
+                    } else {
+                        DeckEditorView_iPhone()
+                            .environmentObject(deckEditorViewModel)
+                            .statusBar(hidden: true)
+                            .transition(.opacity)
+                    }
+                }
             }
             if hordeAppViewModel.shouldShowMenu {
                 if UIDevice.current.userInterfaceIdiom == .pad {

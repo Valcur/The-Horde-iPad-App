@@ -66,9 +66,9 @@ struct TopTopControlRowView_iPhone: View {
             // Edit deck info
             Button(action: {
                 if isUserAllowedToModifyDeckInfo {
-                    withAnimation(.easeInOut(duration: 0.5)) {
+                    //withAnimation(.easeInOut(duration: 0.5)) {
                         deckEditorViewModel.showDeckEditorInfoView.toggle()
-                    }
+                    //}
                 } else {
                     deckEditorViewModel.popUpText = "Premium required"
                 }
@@ -180,11 +180,15 @@ struct TopControlRowView_iPhone: View {
             }.frame(height: 20).padding([.leading, .trailing], 0)
             
             HStack() {
-                MenuTextParagraphView(text: deckEditorViewModel.deckSelectionInfo)
-                    .scaleEffect(0.7, anchor: .leading)
+                Text(deckEditorViewModel.deckSelectionInfo)
+                    .foregroundColor(.white)
+                    .font(.system(size: 10))
+                    .multilineTextAlignment(.leading)
                 Spacer()
-                MenuTextParagraphView(text: deckEditorViewModel.cardCountForSelectedDeck)
-                    .scaleEffect(0.7, anchor: .trailing)
+                Text(deckEditorViewModel.cardCountForSelectedDeck)
+                    .foregroundColor(.white)
+                    .font(.system(size: 10))
+                    .multilineTextAlignment(.leading)
             }.frame(height: 10)
         }.padding([.leading, .trailing], 15)
     }
@@ -483,7 +487,7 @@ struct CardSearchView_iPhone: View {
                     } else {
                         MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                             .scaleEffect(0.9)
-                            .padding(.top, 40)
+                            .padding(.bottom, 40)
                     }
                 }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
             }.ignoresSafeArea(.keyboard)
@@ -623,14 +627,16 @@ struct DeckEditorInfoView_iPhone: View {
                             .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 2)
                             .padding()
                         
-                        ScrollView {
-                            MultilineTextField("Deck Intro", text: $deckIntro, onCommit: {
-                                
-                            })
+                        if deckEditorViewModel.showDeckEditorInfoView {
+                            ScrollView {
+                                MultilineTextField("Deck Intro", text: $deckIntro, onCommit: {
+                                    
+                                })
+                            }
+                            .frame(height: 70)
+                            .padding(2)
+                            .border(.white, width: 2)
                         }
-                        .frame(height: 70)
-                        .padding(2)
-                        .border(.white, width: 2)
                     }
 
                     HStack(spacing: 0) {
@@ -640,21 +646,23 @@ struct DeckEditorInfoView_iPhone: View {
                             .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 2)
                             .padding()
                         
-                        ScrollView {
-                            MultilineTextField("", text: $deckRules, onCommit: {
-                                
-                            })
+                        if deckEditorViewModel.showDeckEditorInfoView {
+                            ScrollView {
+                                MultilineTextField("", text: $deckRules, onCommit: {
+                                    
+                                })
+                            }
+                            .frame(height: 70)
+                            .padding(2)
+                            .border(.white, width: 2)
                         }
-                        .frame(height: 70)
-                        .padding(2)
-                        .border(.white, width: 2)
                     }
                 }
                 
                 Spacer()
                 Button(action: {
+                    deckEditorViewModel.showDeckEditorInfoView.toggle()
                     withAnimation(.easeInOut(duration: 0.5)) {
-                        deckEditorViewModel.showDeckEditorInfoView.toggle()
                         deckEditorViewModel.saveDeckName(text: deckNametextBindingManager.text)
                         deckEditorViewModel.saveIntroText(text: deckIntro)
                         deckEditorViewModel.saveRulesText(text: deckRules)

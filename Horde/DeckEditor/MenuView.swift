@@ -224,7 +224,7 @@ struct MenuHowToPlayView: View {
                     VStack(alignment: .leading, spacing: 20) {
                         MenuTextBoldParagraphView(text: "Is an internet connection required to use this app ?")
                         
-                        MenuTextParagraphView(text: "Card images are downloaded the first time you draw them then saved wich means you will need an internet connection (dark color is shown while the image is downloading)")
+                        MenuTextParagraphView(text: "Yes, to download card images (dark color is shown while the image is downloading)")
                     }
                     
                     VStack(alignment: .leading, spacing: 20) {

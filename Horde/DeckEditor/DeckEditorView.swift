@@ -160,7 +160,7 @@ struct CardSearchView: View {
                         }
                     } else {
                         MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
-                            .padding(.top, 40)
+                            .padding(.bottom, 40)
                     }
                 }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
             }.ignoresSafeArea(.keyboard)
