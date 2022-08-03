@@ -25,7 +25,7 @@ import SwiftUI
             //print(card.cardName + " -> " + card.cardImageURL + " -> " + card.cardOracleId + card.specificSet)
             let url = URL(string: card.cardImageURL)!
 
-            self.loadData(cardName: card.cardId + card.specificSet, url: url) { (data, error) in
+            self.loadData(cardName: card.cardId, url: url) { (data, error) in
                 // Handle the loaded file data
                 if error == nil {
                     DispatchQueue.main.async {
@@ -86,24 +86,24 @@ import SwiftUI
                 isDirectory: false
             )
          */
-        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileCachePath = documents.appendingPathComponent(cardName, isDirectory: false)
+        let documents = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+        let fileCachePath = documents.appendingPathComponent("\(cardName).png")
         // If the image exists in the cache,
         // load the image from the cache and exit
-        if let data = try? Data(contentsOf: fileCachePath) {
+        if let data = try? Data(contentsOf: fileCachePath!) {
             completion(data, nil)
             return
         }
         
         // If the image does not exist in the cache,
         // download the image to the cache
-        download(url: url, toFile: fileCachePath) { (error) in
-            let data = try? Data(contentsOf: fileCachePath)
+        download(url: url, toFile: fileCachePath!) { (error) in
+            let data = try? Data(contentsOf: fileCachePath!)
             completion(data, error)
             // If temporary image, we delete it after retrieveing it
             if !self.shouldImageBeSaved {
                 do {
-                    try FileManager.default.removeItem(at: fileCachePath)
+                    try FileManager.default.removeItem(at: fileCachePath!)
                 } catch _ {
                     print("Temporary image supression failed")
                 }
@@ -152,10 +152,10 @@ class DownloadQueue: NSObject {
     private func imageAlreadyDownloaded(card: Card) -> Bool {
         // If the image exists in the cache,
         // load the image from the cache and exit
-        let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let cardFileCachePath = documents.appendingPathComponent(card.cardId + card.specificSet, isDirectory: false)
+        let documents = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+        let cardFileCachePath = documents.appendingPathComponent("\(card.cardId).png")
         //if (try? Data(contentsOf: cardFileCachePath)) != nil {
-        if FileManager.default.fileExists(atPath: cardFileCachePath.path) {
+        if FileManager.default.fileExists(atPath: cardFileCachePath!.path) {
             return true
         }
         return false

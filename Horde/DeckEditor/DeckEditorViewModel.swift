@@ -31,7 +31,7 @@ class DeckEditorViewModel: ObservableObject {
         if selectedDeckListNumber == DeckSelectionNumber.deckList {
             deckSelectionInfo = "Cards and tokens in the Horde library"
         } else if selectedDeckListNumber == DeckSelectionNumber.tooStrongPermanentsList {
-            deckSelectionInfo = "Select cards that are too strong to be drawed during the first turns (like boardwipes)"
+            deckSelectionInfo = "Select cards that are too strong to be drawn during the first turns (like boardwipes)"
         } else if selectedDeckListNumber == DeckSelectionNumber.availableTokensList {
             deckSelectionInfo = "Tokens/spells that the horde could have to create/cast during the game"
         } else if selectedDeckListNumber == DeckSelectionNumber.weakPermanentsList {

@@ -215,7 +215,7 @@ class LifePointsViewModel: ObservableObject {
     @Published var survivorLifepoints: Int
     
     init(startingLife: Int) {
-        self.hordeLifepoints = 30
+        self.hordeLifepoints = 20
         self.survivorLifepoints = startingLife
     }
 }

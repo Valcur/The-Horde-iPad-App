@@ -16,6 +16,7 @@ struct GameView: View {
     @State var gameIntroViewOpacity: CGFloat = 1
     @State var zoomViewOpacity: CGFloat = 0
     @State var strongPermanentsViewOpacity: CGFloat = 0
+    @State var lifepointsViewModel: LifePointsViewModel?
     
     var body: some View {
         ZStack {
@@ -29,12 +30,15 @@ struct GameView: View {
                 
                 ControlBarView()
             }.ignoresSafeArea()
-            
-            if hordeAppViewModel.useLifepointsCounter {
+            .onAppear() {
+                lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
+            }
+                
+            if hordeAppViewModel.useLifepointsCounter && lifepointsViewModel != nil {
                 HStack {
                     Spacer()
                     LifePointsView()
-                        .environmentObject(LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife))
+                        .environmentObject(lifepointsViewModel!)
                         .frame(width: UIScreen.main.bounds.width / 6, height: UIScreen.main.bounds.height / 2)
                         .cornerRadius(15)
                         .padding(.trailing, 10)

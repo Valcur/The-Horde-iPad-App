@@ -16,6 +16,7 @@ struct GameView_iPhone: View {
     @State var gameIntroViewOpacity: CGFloat = 1
     @State var zoomViewOpacity: CGFloat = 0
     @State var strongPermanentsViewOpacity: CGFloat = 0
+    @State var lifepointsViewModel: LifePointsViewModel?
     
     var body: some View {
         ZStack {
@@ -29,12 +30,15 @@ struct GameView_iPhone: View {
                 
                 ControlBarView_iPhone().frame(height: 50)
             }
+            .onAppear() {
+                lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
+            }
             
-            if hordeAppViewModel.useLifepointsCounter {
+            if hordeAppViewModel.useLifepointsCounter && lifepointsViewModel != nil {
                 HStack {
                     Spacer()
                     LifePointsView()
-                        .environmentObject(LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife))
+                        .environmentObject(lifepointsViewModel!)
                         .frame(width: UIScreen.main.bounds.width / 4.5)
                         .cornerRadius(15)
                         .padding(.trailing, (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0))
@@ -979,19 +983,19 @@ struct MenuView_iPhone: View {
                 }.padding(.top, 20)
                 if hordeAppViewModel.menuToShowId == 1 {
                     ScrollView(.vertical) {
-                        MenuRulesView().scaleEffect(0.85)
+                        MenuRulesView().scaleEffect(0.85, anchor: .top)
                     }.frame(width: UIScreen.main.bounds.width * 0.78)
                 } else if hordeAppViewModel.menuToShowId == 2 {
                     ScrollView(.vertical) {
-                        MenuHowToPlayView().scaleEffect(0.85)
+                        MenuHowToPlayView().scaleEffect(0.85, anchor: .top)
                     }.frame(width: UIScreen.main.bounds.width * 0.78)
                 } else if hordeAppViewModel.menuToShowId == 3 {
                    ScrollView(.vertical) {
-                       MenuContactView().scaleEffect(0.85)
+                       MenuContactView().scaleEffect(0.85, anchor: .top)
                    }.frame(width: UIScreen.main.bounds.width * 0.78)
                } else {
                     ScrollView(.vertical) {
-                        MenuCustomView().scaleEffect(0.85)
+                        MenuCustomView().scaleEffect(0.85, anchor: .top)
                     }.frame(width: UIScreen.main.bounds.width * 0.78)
                 }
             }.padding(.trailing, 0).padding(.top, hordeAppViewModel.readyToPlay ? 40 : 30).padding(.bottom, 30)

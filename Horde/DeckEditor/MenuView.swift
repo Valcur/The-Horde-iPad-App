@@ -228,6 +228,12 @@ struct MenuHowToPlayView: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "When I open a deck for the first time, it takes way too long to download images")
+                        
+                        MenuTextParagraphView(text: "Images are downloaded from Scryfall, they ask to download only two images per second.")
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 20) {
                         MenuTextBoldParagraphView(text: "Difference between Classic and Marathon ?")
                         
                         MenuTextParagraphView(text: "Classic : One deck to beat")
@@ -381,7 +387,7 @@ struct MenuCustomView: View {
             Toggle("Use less colorful background", isOn: $hordeAppViewModel.useLessColorFullBackground)
                 .foregroundColor(.white)
                 .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
-                    hordeAppViewModel.saveBattlefieldRowStylePreference()
+                    hordeAppViewModel.saveBackgroundColorPreference()
                 }
             
             MenuTextSubtitleView(text: "Life counter")
@@ -389,13 +395,13 @@ struct MenuCustomView: View {
             Toggle("Show life counter", isOn: $hordeAppViewModel.useLifepointsCounter)
                 .foregroundColor(.white)
                 .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
-                    hordeAppViewModel.saveBattlefieldRowStylePreference()
+                    hordeAppViewModel.saveUserLifepointsCounterPreference()
                 }
             
             Toggle("The Horde heals when survivors loose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
                 .foregroundColor(.white)
-                .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
-                    hordeAppViewModel.saveBattlefieldRowStylePreference()
+                .onChange(of: hordeAppViewModel.hordeGainLifeLostBySurvivor) { _ in
+                    hordeAppViewModel.saveUserLifepointsCounterPreference()
                 }
             
             HStack(spacing: 20) {
@@ -405,7 +411,7 @@ struct MenuCustomView: View {
                 // Start with 20
                 Button(action: {
                     hordeAppViewModel.survivorStartingLife = 20
-                    hordeAppViewModel.saveUseLifepointsCounterPreference()
+                    hordeAppViewModel.saveUserLifepointsCounterPreference()
                 }, label: {
                     Text("20")
                         .foregroundColor(hordeAppViewModel.survivorStartingLife == 20 ? .white : .gray)
@@ -416,7 +422,7 @@ struct MenuCustomView: View {
                 // Start with 40
                 Button(action: {
                     hordeAppViewModel.survivorStartingLife = 40
-                    hordeAppViewModel.saveUseLifepointsCounterPreference()
+                    hordeAppViewModel.saveUserLifepointsCounterPreference()
                 }, label: {
                     Text("40")
                         .foregroundColor(hordeAppViewModel.survivorStartingLife == 40 ? .white : .gray)
@@ -427,7 +433,7 @@ struct MenuCustomView: View {
                 // Start with 60
                 Button(action: {
                     hordeAppViewModel.survivorStartingLife = 60
-                    hordeAppViewModel.saveUseLifepointsCounterPreference()
+                    hordeAppViewModel.saveUserLifepointsCounterPreference()
                 }, label: {
                     Text("60")
                         .foregroundColor(hordeAppViewModel.survivorStartingLife == 60 ? .white : .gray)
@@ -438,7 +444,7 @@ struct MenuCustomView: View {
                 // Start with 80
                 Button(action: {
                     hordeAppViewModel.survivorStartingLife = 80
-                    hordeAppViewModel.saveUseLifepointsCounterPreference()
+                    hordeAppViewModel.saveUserLifepointsCounterPreference()
                 }, label: {
                     Text("80")
                         .foregroundColor(hordeAppViewModel.survivorStartingLife == 80 ? .white : .gray)

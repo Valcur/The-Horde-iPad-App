@@ -145,6 +145,7 @@ struct TopTopControlRowView_iPhone: View {
             Button(action: {
                 withAnimation(.easeIn(duration: 0.5)) {
                     hordeAppViewModel.showDeckEditor = false
+                    DownloadQueue.queue.resetQueue()
                 }
             }, label: {
                 Image(systemName: "xmark")
@@ -340,7 +341,35 @@ struct CardShowView_iPhone: View {
             }.onChange(of: hasCardFlashback) { _ in
                 deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
             }.padding(.top, 35)
-                .scaleEffect(0.7).frame(width: EditorSize.cardSearchPanelWidth)
+            .scaleEffect(0.7).frame(width: EditorSize.cardSearchPanelWidth)
+            .onChange(of: card) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
+            }.onChange(of: deckEditorViewModel.carouselIndex) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
+            }.onChange(of: cardType) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.card.cardType = cardType
+                }
+            }.onChange(of: hasCardFlashback) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.selectedCard.hasFlashback = self.hasCardFlashback
+                }
+            }.onChange(of: deckEditorViewModel.cardToShow) { _ in
+                if deckEditorViewModel.cardToShow != nil {
+                    self.card = deckEditorViewModel.cardToShow!
+                }
+            }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
+            }
                 
             if selectedCard.cardType == .creature || selectedCard.cardType == .token {
                 
@@ -355,34 +384,7 @@ struct CardShowView_iPhone: View {
                 HStack {
                     CardShowTypeSelectorView_iPhone(text: "Creature", cardType: .creature, card: selectedCard, cardShowedcardType: $cardType)
                     CardShowTypeSelectorView_iPhone(text: "Token", cardType: .token, card: selectedCard, cardShowedcardType: $cardType)
-                }.padding(.top, 0).onChange(of: card) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.cardType = selectedCard.cardType
-                        self.hasCardFlashback = selectedCard.hasFlashback
-                    }
-                }.onChange(of: deckEditorViewModel.carouselIndex) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.cardType = selectedCard.cardType
-                        self.hasCardFlashback = selectedCard.hasFlashback
-                    }
-                }.onChange(of: cardType) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.card.cardType = cardType
-                    }
-                }.onChange(of: hasCardFlashback) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.selectedCard.hasFlashback = self.hasCardFlashback
-                    }
-                }.onChange(of: deckEditorViewModel.cardToShow) { _ in
-                    if deckEditorViewModel.cardToShow != nil {
-                        self.card = deckEditorViewModel.cardToShow!
-                    }
-                }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.cardType = selectedCard.cardType
-                        self.hasCardFlashback = selectedCard.hasFlashback
-                    }
-                }
+                }.padding(.top, 0)
             }
             
             
@@ -423,7 +425,8 @@ struct CardShowTypeSelectorView_iPhone: View {
                 .font(.footnote)
                 .foregroundColor(cardShowedcardType == cardType ? .white : .gray)
                 .scaleEffect(0.8)
-        }).frame(maxWidth: .infinity).padding(.vertical, 5)
+                .padding(.vertical, 5)
+        }).frame(maxWidth: .infinity)
     }
 }
 
@@ -436,18 +439,6 @@ struct CardSearchView_iPhone: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                if cardSearchTextFieldText.count > 0 {
-                    Button(action: {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            cardSearchTextFieldText = ""
-                        }
-                    }, label: {
-                        Image(systemName: "clear")
-                            .font(.body)
-                            .foregroundColor(.white)
-                            .padding(5)
-                    })
-                }
                 ZStack(alignment: .leading) {
                     if cardSearchTextFieldText == "" {
                         Text("Search...")
@@ -467,6 +458,19 @@ struct CardSearchView_iPhone: View {
                         .foregroundColor(.gray)
                 }
 
+                if cardSearchTextFieldText.count > 0 {
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            cardSearchTextFieldText = ""
+                        }
+                    }, label: {
+                        Image(systemName: "clear")
+                            .font(.body)
+                            .foregroundColor(.white)
+                            .padding(5)
+                    })
+                }
+                
                 Button(action: {
                     isSearchingForTokens.toggle()
                 }, label: {
@@ -489,7 +493,7 @@ struct CardSearchView_iPhone: View {
                             .scaleEffect(0.9)
                             .padding(.bottom, 40)
                     }
-                }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
+                }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center).padding(.bottom, 40)
             }.ignoresSafeArea(.keyboard)
         }
     }

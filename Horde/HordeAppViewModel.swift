@@ -109,7 +109,7 @@ class HordeAppViewModel: ObservableObject {
         UserDefaults.standard.set(gradientId, forKey: "GradientId")
     }
     
-    func setBackgroundColorPreference() {
+    func saveBackgroundColorPreference() {
         UserDefaults.standard.set(self.useLessColorFullBackground, forKey: "UseLessColorFullBackground")
     }
     
@@ -117,7 +117,7 @@ class HordeAppViewModel: ObservableObject {
         UserDefaults.standard.set(self.oneRowBoardInsteadOfTwo, forKey: "OneRowBoardInsteadOfTwo")
     }
     
-    func saveUseLifepointsCounterPreference() {
+    func saveUserLifepointsCounterPreference() {
         UserDefaults.standard.set(self.useLifepointsCounter, forKey: "UseLifePointsCounter")
         UserDefaults.standard.set(self.hordeGainLifeLostBySurvivor, forKey: "HordeGainLifeLostBySurvivor")
         UserDefaults.standard.set(self.survivorStartingLife, forKey: "SurvivorStartingLife")

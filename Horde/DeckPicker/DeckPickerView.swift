@@ -277,7 +277,7 @@ struct GetMoreDeckSlotView: View {
                     .fontWeight(.bold)
                     .font(.title)
                 
-                Text(" - As many deck slots as you want \n - Full control on the starting decks and the ability to delete them")
+                Text(" - As many deck slots as you want \n - Full control over the starting decks and the ability to delete them")
                     .foregroundColor(.white)
                     .fontWeight(.bold)
                     .font(.subheadline)

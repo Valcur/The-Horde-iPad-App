@@ -162,7 +162,7 @@ struct CardSearchView: View {
                         MenuTextParagraphView(text: deckEditorViewModel.searchProgressInfo).rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
                             .padding(.bottom, 40)
                     }
-                }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center)
+                }.rotationEffect(Angle(degrees: 180)).scaleEffect(x: -1.0, y: 1.0, anchor: .center).padding(.bottom, 40)
             }.ignoresSafeArea(.keyboard)
         }
     }
@@ -306,9 +306,39 @@ struct CardShowView: View {
                         .foregroundColor(.white)
                         .font(.subheadline)
                 }
-            }.onChange(of: hasCardFlashback) { _ in
+            }
+            .padding(20).padding(.top, 50)
+            .onChange(of: hasCardFlashback) { _ in
                 deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
-            }.padding(20).padding(.top, 50)
+            }
+            .onChange(of: card) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
+            }.onChange(of: deckEditorViewModel.carouselIndex) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
+            }.onChange(of: cardType) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.card.cardType = cardType
+                }
+            }.onChange(of: hasCardFlashback) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.selectedCard.hasFlashback = self.hasCardFlashback
+                }
+            }.onChange(of: deckEditorViewModel.cardToShow) { _ in
+                if deckEditorViewModel.cardToShow != nil {
+                    self.card = deckEditorViewModel.cardToShow!
+                }
+            }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
+            }
             
             if selectedCard.cardType == .creature || selectedCard.cardType == .token {
                 // Select card type
@@ -321,34 +351,7 @@ struct CardShowView: View {
                 HStack {
                     CardShowTypeSelectorView(text: "Creature", cardType: .creature, card: selectedCard, cardShowedcardType: $cardType)
                     CardShowTypeSelectorView(text: "Token", cardType: .token, card: selectedCard, cardShowedcardType: $cardType)
-                }.padding().onChange(of: card) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.cardType = selectedCard.cardType
-                        self.hasCardFlashback = selectedCard.hasFlashback
-                    }
-                }.onChange(of: deckEditorViewModel.carouselIndex) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.cardType = selectedCard.cardType
-                        self.hasCardFlashback = selectedCard.hasFlashback
-                    }
-                }.onChange(of: cardType) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.card.cardType = cardType
-                    }
-                }.onChange(of: hasCardFlashback) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.selectedCard.hasFlashback = self.hasCardFlashback
-                    }
-                }.onChange(of: deckEditorViewModel.cardToShow) { _ in
-                    if deckEditorViewModel.cardToShow != nil {
-                        self.card = deckEditorViewModel.cardToShow!
-                    }
-                }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        self.cardType = selectedCard.cardType
-                        self.hasCardFlashback = selectedCard.hasFlashback
-                    }
-                }
+                }.padding()
             }
             
             Spacer()
@@ -387,7 +390,8 @@ struct CardShowTypeSelectorView: View {
                 .fontWeight(.bold)
                 .font(.title3)
                 .foregroundColor(cardShowedcardType == cardType ? .white : .gray)
-        }).frame(maxWidth: .infinity).padding(.vertical, 15)
+                .padding(.vertical, 15)
+        }).frame(maxWidth: .infinity)
     }
 }
 
@@ -536,6 +540,7 @@ struct TopTopControlRowView: View {
             Button(action: {
                 withAnimation(.easeIn(duration: 0.5)) {
                     hordeAppViewModel.showDeckEditor = false
+                    DownloadQueue.queue.resetQueue()
                 }
             }, label: {
                 Image(systemName: "xmark")

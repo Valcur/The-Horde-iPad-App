@@ -188,7 +188,7 @@ struct IntroBeforeGameStartView: View {
     var body: some View {
         MenuTextSubtitleView(text: "Lifepoints")
         
-        MenuTextParagraphView(text: "The horde start with 20 life points and only mills its library when his lifepoints are equal to 0. Each time a permanent or an ability controlled by the horde deals damage to the survivors, the Horde gains that much life. (This app can't keep tracks of lifepoint, use another app to handle Surviors and Horde's lifepoints)")
+        MenuTextParagraphView(text: "The horde start with 20 life points and only mills its library when his lifepoints are equal to 0. Each time a permanent or an ability controlled by the horde deals damage to the survivors, the Horde gains that much life.")
             .frame(width: UIScreen.main.bounds.width - 80)
         
         MenuTextSubtitleView(text: "Recommanded horde draw per turn")
