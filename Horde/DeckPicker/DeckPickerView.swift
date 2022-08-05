@@ -266,7 +266,9 @@ struct GetMoreDeckSlotView: View {
     
     @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    @State private var showingBuyInfo = false
     let rotationInDegrees: CGFloat = 5
+    @State var price = "Unknow"
     
     var body: some View {
         ZStack {
@@ -282,25 +284,63 @@ struct GetMoreDeckSlotView: View {
                     .fontWeight(.bold)
                     .font(.subheadline)
                 
-                Button(action: {
-                    hordeAppViewModel.buy()
-                }) {
-                    HStack(spacing: 0) {
-                        Text(IAPManager.shared.price() ?? "Unknow")
-                            .foregroundColor(.white)
-                            .fontWeight(.bold)
-                            .font(.title)
-                        
-                        Text(" / Month")
-                            .foregroundColor(.white)
-                            .font(.title)
-                    }.padding(15)
-                    .background(VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).cornerRadius(10))
+                HStack(spacing: 20) {
+                    Button(action: {
+                        //hordeAppViewModel.buy()
+                        showingBuyInfo = true
+                    }) {
+                        HStack(spacing: 0) {
+                            Text(price)
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
+                                .font(.title)
+                            
+                            Text(" / Month")
+                                .foregroundColor(.white)
+                                .font(.title)
+                        }.padding(15)
+                        .background(VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).cornerRadius(10))
+                        .onAppear() {
+                            price = IAPManager.shared.price() ?? "Unknow"
+                            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                                if self.price == "Unknow" {
+                                    price = IAPManager.shared.price() ?? "Unknow"
+                                }
+                            }
+                        }
+                    }
+                    .alert(isPresented: $showingBuyInfo) {
+                        Alert(
+                            title: Text("Subscription information"),
+                            message: Text("You may purchase an auto-renewing subscription through an In-App Purchase.\n\n • (in USD) Premium - 1 month ($1.99) : \n\n • Your subscription will be charged to your iTunes account at confirmation of purchase and will automatically renew (at the duration selected) unless auto-renew is turned off at least 24 hours before the end of the current period.\n\n • Current subscription may not be cancelled during the active subscription period; however, you can manage your subscription and/or turn off auto-renewal by visiting your iTunes Account Settings after purchase\n\n • Being Premium will give you, for the duration of your subsription, acess to an unlimited number of deck slots and the ability to delete the 7 decks already in the app."),
+                            primaryButton: .default(
+                                Text("Cancel"),
+                                action: {showingBuyInfo = false}
+                            ),
+                            secondaryButton: .destructive(
+                                Text("Continue"),
+                                action: {hordeAppViewModel.buy()}
+                            )
+                        )
+                    }
+                    Image(systemName: "cart")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
                 }
                 
-                Image(systemName: "cart")
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
+                HStack(spacing: 0) {
+                    Text("View our ")
+                        .foregroundColor(.white)
+                    
+                    Link("Privacy policy",
+                          destination: URL(string: "http://www.burning-beard.com/against-the-horde-app-policy")!)
+                    
+                    Text(", ")
+                        .foregroundColor(.white)
+                    
+                    Link("EULA",
+                          destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                }
                 
             }.rotationEffect(Angle.degrees(-rotationInDegrees))
                 .frame(width: 520, height: UIScreen.main

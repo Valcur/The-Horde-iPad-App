@@ -233,7 +233,6 @@ struct CardShowView: View {
             ZStack(alignment: .topLeading) {
                 ZStack(alignment: .bottom) {
                     // Card to show
-                    
                     CardToShowCarouselView(index: $deckEditorViewModel.carouselIndex.animation(), maxIndex: deckEditorViewModel.cardToShowReprints.count) {
                         if deckEditorViewModel.cardToShow != nil {
                             CarouselCardView(card: deckEditorViewModel.cardToShow!, delay: 0)
@@ -247,30 +246,36 @@ struct CardShowView: View {
                     HStack {
                         Spacer()
                         Button(action: {
-                            if deckEditorViewModel.removeCardShouldBeAnimated(card: getSelectedCardFromCarousel()) {
+                            let tmpCard = selectedCard
+                            tmpCard.cardType = self.cardType
+                            tmpCard.hasFlashback = self.hasCardFlashback
+                            if deckEditorViewModel.removeCardShouldBeAnimated(card: tmpCard) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
-                                    deckEditorViewModel.removeCardFromSelectedDeck(card: getSelectedCardFromCarousel())
+                                    deckEditorViewModel.removeCardFromSelectedDeck(card: tmpCard)
                                 }
                             } else {
-                                deckEditorViewModel.removeCardFromSelectedDeck(card: getSelectedCardFromCarousel())
+                                deckEditorViewModel.removeCardFromSelectedDeck(card: tmpCard)
                             }
                         }, label: {
                             Image(systemName: "minus.circle.fill")
                                 .font(.largeTitle)
                                 .foregroundColor(.white)
                                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
-                        }).scaleEffect(1.5).disabled(!deckEditorViewModel.isRemoveOneCardButtonEnable())
+                        }).scaleEffect(1.5).disabled(!deckEditorViewModel.isRemoveOneCardButtonEnable(card: selectedCard))
                         
                         Spacer()
                         Spacer()
                         
                         Button(action: {
-                            if deckEditorViewModel.addCardShouldBeAnimated(card: getSelectedCardFromCarousel()) {
+                            let tmpCard = selectedCard
+                            tmpCard.cardType = self.cardType
+                            tmpCard.hasFlashback = self.hasCardFlashback
+                            if deckEditorViewModel.addCardShouldBeAnimated(card: tmpCard) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
-                                    deckEditorViewModel.addCardToSelectedDeck(card: getSelectedCardFromCarousel())
+                                    deckEditorViewModel.addCardToSelectedDeck(card: tmpCard)
                                 }
                             } else {
-                                deckEditorViewModel.addCardToSelectedDeck(card: getSelectedCardFromCarousel())
+                                deckEditorViewModel.addCardToSelectedDeck(card: tmpCard)
                             }
                         }, label: {
                             Image(systemName: "plus.circle.fill")
@@ -308,32 +313,28 @@ struct CardShowView: View {
                 }
             }
             .padding(20).padding(.top, 50)
-            .onChange(of: hasCardFlashback) { _ in
-                deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
-            }
-            .onChange(of: card) { _ in
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.cardType = selectedCard.cardType
-                    self.hasCardFlashback = selectedCard.hasFlashback
-                }
-            }.onChange(of: deckEditorViewModel.carouselIndex) { _ in
+            .onChange(of: deckEditorViewModel.carouselIndex) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
                 }
             }.onChange(of: cardType) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    self.card.cardType = cardType
+                    self.selectedCard.cardType = cardType
                 }
             }.onChange(of: hasCardFlashback) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.selectedCard.hasFlashback = self.hasCardFlashback
-                }
-            }.onChange(of: deckEditorViewModel.cardToShow) { _ in
-                if deckEditorViewModel.cardToShow != nil {
-                    self.card = deckEditorViewModel.cardToShow!
+                    withAnimation(nil) {
+                        deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
+                    }
                 }
             }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.cardType = selectedCard.cardType
+                    self.hasCardFlashback = selectedCard.hasFlashback
+                }
+            }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
@@ -349,8 +350,8 @@ struct CardShowView: View {
                     .padding(.top, 20)
                 
                 HStack {
-                    CardShowTypeSelectorView(text: "Creature", cardType: .creature, card: selectedCard, cardShowedcardType: $cardType)
-                    CardShowTypeSelectorView(text: "Token", cardType: .token, card: selectedCard, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Creature", cardType: .creature, cardShowedcardType: $cardType)
+                    CardShowTypeSelectorView(text: "Token", cardType: .token, cardShowedcardType: $cardType)
                 }.padding()
             }
             
@@ -376,13 +377,26 @@ struct CardShowTypeSelectorView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let text: String
     let cardType: CardType
-    let card: Card
     @Binding var cardShowedcardType: CardType
+    
+    private var selectedCard: Card {
+        return deckEditorViewModel.changeCardToFitCardInSelectedDeck(card: self.getSelectedCardFromCarousel())
+    }
+    func getSelectedCardFromCarousel() -> Card {
+        if deckEditorViewModel.cardToShow == nil {
+            return Card(cardName: "Adult Gold Dragon", cardType: .creature, specificSet: "AFR")
+        }
+        if deckEditorViewModel.carouselIndex == 0 || deckEditorViewModel.cardToShowReprints.count == 0 {
+            return deckEditorViewModel.cardToShow!.recreateCard()
+        }
+        
+        return deckEditorViewModel.cardToShowReprints[deckEditorViewModel.carouselIndex - 1].recreateCard()
+    }
     
     var body: some View {
         Button(action: {
             withAnimation(.easeInOut(duration: 0.3)) {
-                deckEditorViewModel.changeCardTypeFromSelectedDeck(card: card, newCardType: cardType)
+                deckEditorViewModel.changeCardTypeFromSelectedDeck(card: selectedCard, newCardType: cardType)
                 cardShowedcardType = cardType
             }
         }, label: {
@@ -687,7 +701,7 @@ struct PageControl: View {
     let maxIndex: Int
 
     var body: some View {
-        HStack(spacing: 8) {
+        VStack() {
             /*
              Dot style
             ForEach(0...maxIndex, id: \.self) { index in
@@ -697,13 +711,17 @@ struct PageControl: View {
             }
              */
             if maxIndex > 0 {
+                Text("swipe")
+                    .foregroundColor(.white)
+                    .font(.subheadline)
+                    
                 Text("\(index + 1)/\(maxIndex + 1)")
                     .foregroundColor(.white)
                     .font(.title3)
-                    .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
             }
-        }
+        }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
         .padding(15)
+        .animation(nil)
     }
 }
 
@@ -775,7 +793,7 @@ struct CardOnDeckListView: View {
                     .font(.title)
                     .foregroundColor(.white)
             }
-            if card.hasFlashback && showCardCount{
+            if card.hasFlashback {
                 Image(systemName: "arrow.clockwise")
                     .font(.largeTitle)
                     .foregroundColor(.white)

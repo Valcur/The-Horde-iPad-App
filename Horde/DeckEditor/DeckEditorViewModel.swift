@@ -228,8 +228,21 @@ class DeckEditorViewModel: ObservableObject {
                 deck.tooStrongPermanentsList = changeCardTypeFromSpecificDeck(card: card, newCardType: newCardType, deck: deck.tooStrongPermanentsList)
             }
         } else {
-            deckSelected = changeCardTypeFromSpecificDeck(card: card, newCardType: newCardType, deck: deckSelected)
-            saveToSelectedDeck(deckSelected: deckSelected)
+            if deckSelected.firstIndex(of: card) != nil{
+                let tmpCard = deckSelected[deckSelected.firstIndex(of: card)!].recreateCard()
+                tmpCard.cardType = newCardType
+                
+                // Remove
+                deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected, removeCompletely: true)
+                saveToSelectedDeck(deckSelected: deckSelected, card: card)
+                
+                // Add
+                addCardToSelectedDeck(card: tmpCard, onlyAddOne: false)
+                saveToSelectedDeck(deckSelected: getSelectedDeck(card: tmpCard), card: tmpCard)
+            } else {
+                deckSelected = changeCardTypeFromSpecificDeck(card: card, newCardType: newCardType, deck: deckSelected)
+                saveToSelectedDeck(deckSelected: deckSelected)
+            }
         }
         showSaveButton = true
     }
@@ -258,8 +271,22 @@ class DeckEditorViewModel: ObservableObject {
                 deck.tooStrongPermanentsList = changeCardFlashbackValueFromSpecificDeck(card: card, newCardFlashbackValue: newFlashbackValue, deck: deck.tooStrongPermanentsList)
             }
         } else {
-            deckSelected = changeCardFlashbackValueFromSpecificDeck(card: card, newCardFlashbackValue: newFlashbackValue, deck: deckSelected)
-            saveToSelectedDeck(deckSelected: deckSelected)
+            // MUST BE CLEANED
+            if deckSelected.firstIndex(of: card) != nil{
+                let tmpCard = deckSelected[deckSelected.firstIndex(of: card)!].recreateCard()
+                tmpCard.hasFlashback = newFlashbackValue
+                
+                // Remove
+                deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected, removeCompletely: true)
+                saveToSelectedDeck(deckSelected: deckSelected, card: card)
+                
+                // Add
+                addCardToSelectedDeck(card: tmpCard, onlyAddOne: false)
+                saveToSelectedDeck(deckSelected: getSelectedDeck(card: tmpCard), card: tmpCard)
+            } else {
+                deckSelected = changeCardFlashbackValueFromSpecificDeck(card: card, newCardFlashbackValue: newFlashbackValue, deck: deckSelected)
+                saveToSelectedDeck(deckSelected: deckSelected)
+            }
         }
         showSaveButton = true
     }
@@ -512,11 +539,11 @@ extension DeckEditorViewModel {
         searchForCardReprints(card: card)
     }
     
-    func isRemoveOneCardButtonEnable() -> Bool {
-        if cardToShow == nil {
+    func isRemoveOneCardButtonEnable(card: Card?) -> Bool {
+        if card == nil {
             return false
         }
-        return getSelectedDeck(card: cardToShow).contains(cardToShow!)
+        return getSelectedDeck(card: card!).contains(card!)
     }
     
     // Need those 2 func, if not card animate like spawn when increasing count
@@ -606,6 +633,7 @@ extension DeckEditorViewModel {
             return
         }
         
+        DownloadQueue.queue.resetQueue()
         self.cardToShowReprints = []
         
         let scryfallSearchUrl = "https://api.scryfall.com/cards/search?order=released&q=oracleid%3A\(card.cardOracleId)&unique=prints"
@@ -670,7 +698,7 @@ extension DeckEditorViewModel {
     }
     
     func loadDeckName() -> String {
-        return UserDefaults.standard.object(forKey: "Deck_\(deckId)_DeckName") as? String ?? "Deck \(deckId)"
+        return UserDefaults.standard.object(forKey: "Deck_\(deckId)_DeckName") as? String ?? "Deck \(deckId + 1)"
     }
     
     func saveIntroText(text: String) {

@@ -35,13 +35,19 @@ class HordeAppViewModel: ObservableObject {
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
         self.survivorStartingLife = UserDefaults.standard.object(forKey: "SurvivorStartingLife") as? Int ?? 60
         self.numberOfDeckSlot = 8
+        
         IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
         IAPManager.shared.refreshSubscriptionsStatus(callback: {
             let date = UserDefaults.standard.object(forKey: IAPManager.getSubscriptionId()) as? Date ?? Date()
             if date > Date() {
                 print("IS PREMIUM UNTIL \(date)")
                 self.isPremium = true
-                self.numberOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+                var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+                if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
+                    testNbrOfDeckSlot += 1
+                    UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
+                }
+                self.numberOfDeckSlot = testNbrOfDeckSlot
             } else {
                 print("IS NOT PREMIUM SINCE \(date)")
                 self.isPremium = false
@@ -128,10 +134,12 @@ class HordeAppViewModel: ObservableObject {
             IAPManager.shared.purchaseProduct(product: IAPManager.shared.products!.first!, success: {
                 if UserDefaults.standard.object(forKey: "IsPremium") as? Bool ?? false {
                     self.isPremium = true
-                    if (UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8) <= 8 {
-                        self.numberOfDeckSlot = 9
-                        UserDefaults.standard.set(self.numberOfDeckSlot, forKey: "NumberOfDeckSlot")
+                    var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+                    if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
+                        testNbrOfDeckSlot += 1
+                        UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
                     }
+                    self.numberOfDeckSlot = testNbrOfDeckSlot
                 }
             }, failure: { error in
                 print("Buy Fail \(String(describing: error))")

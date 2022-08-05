@@ -32,7 +32,7 @@ struct Datum: Codable {
     let lang: String?
     let releasedAt: String?
     let uri, scryfallURI: String?
-    let layout: Layout?
+    let layout: String?
     let highresImage: Bool?
     let imageStatus: ImageStatus?
     let imageUris: ImageUris?
@@ -42,21 +42,21 @@ struct Datum: Codable {
     let colors, colorIdentity: [ColorIdentity]?
     let keywords: [String]?
     let legalities: Legalities?
-    let games: [Game]?
+    let games: [String]?
     let reserved, foil, nonfoil: Bool?
-    let finishes: [Finish]?
+    let finishes: [String]?
     let oversized, promo, reprint, variation: Bool?
     let setID, set, setName: String?
-    let setType: SetType?
+    let setType: String?
     let setURI, setSearchURI, scryfallSetURI, rulingsURI: String?
     let prints_search_uri: String?
     let collectorNumber: String?
     let digital: Bool?
-    let rarity: Rarity?
+    let rarity: String?
     let flavorText, cardBackID, artist: String?
     let artistIDS: [String]?
     let illustrationID: String?
-    let borderColor: BorderColor?
+    let borderColor: String?
     let frame: String?
     let fullArt, textless, booster, storySpotlight: Bool?
     let edhrecRank: Int?
@@ -159,14 +159,14 @@ enum Component: String, Codable {
 enum AllPartObject: String, Codable {
     case relatedCard = "related_card"
 }
-
+/*
 enum BorderColor: String, Codable {
     case black = "black"
     case borderless = "borderless"
     case silver = "silver"
     case white = "white"
 }
-
+*/
 // MARK: - CardFace
 struct CardFace: Codable {
     let object, name, mana_cost, typeLine: String?
@@ -215,24 +215,25 @@ struct ImageUris: Codable {
         case borderCrop
     }
 }
-
+/*
 enum Finish: String, Codable {
     case foil = "foil"
     case nonfoil = "nonfoil"
     case etched = "etched"
 }
-
+*/
+/*
 enum Game: String, Codable {
     case arena = "arena"
     case mtgo = "mtgo"
     case paper = "paper"
 }
-
+*/
 enum ImageStatus: String, Codable {
     case highresScan = "highres_scan"
     case lowres = "lowres"
 }
-
+/*
 enum Layout: String, Codable {
     case adventure = "adventure"
     case leveler = "leveler"
@@ -246,7 +247,8 @@ enum Layout: String, Codable {
     case saga = "saga"
     case split = "split"
     case meld = "meld"
-}
+    case augment: "augment"
+}*/
 
 // MARK: - Legalities
 struct Legalities: Codable {
@@ -293,7 +295,7 @@ struct Preview: Codable {
 struct PurchaseUris: Codable {
     let tcgplayer, cardmarket, cardhoarder: String?
 }
-
+/*
 enum Rarity: String, Codable {
     case common = "common"
     case mythic = "mythic"
@@ -301,7 +303,7 @@ enum Rarity: String, Codable {
     case uncommon = "uncommon"
     case special = "special"
 }
-
+*/
 // MARK: - RelatedUris
 struct RelatedUris: Codable {
     let tcgplayerInfiniteArticles, tcgplayerInfiniteDecks, edhrec: String?
@@ -319,7 +321,7 @@ enum SecurityStamp: String, Codable {
     case oval = "oval"
     case triangle = "triangle"
 }
-
+/*
 enum SetType: String, Codable {
     case alchemy = "alchemy"
     case box = "box"
@@ -332,3 +334,4 @@ enum SetType: String, Codable {
     case masters = "masters"
     case starter = "starter"
 }
+*/
