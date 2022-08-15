@@ -128,7 +128,7 @@ struct DeckPickingView: View {
                                 .fontWeight(.bold)
                                 .font(.title)
                                 .padding(.bottom, PickerSize.titlePaddingTop)
-                                .padding(.top, 50)
+                                .padding(.top, UIDevice.current.userInterfaceIdiom == .pad ? 50 : 10)
                         }
                         
                     }.rotationEffect(Angle.degrees(-rotationInDegrees))
@@ -212,6 +212,11 @@ struct DeckPickingView: View {
                         .padding(10)
                 }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
             }.background(Rectangle().opacity(0.00001)).padding(.horizontal, 30).opacity(isDeckSelected ? 1 : 0).offset(x: 25, y: -UIScreen.main.bounds.height / 2.3)
+                .onChange(of: isDeckSelected) { _ in
+                    withAnimation(.easeIn(duration: 0.3)) {
+                        confirmDeckDeletion = false
+                    }
+                }
         }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
     }
     
@@ -285,6 +290,10 @@ struct GetMoreDeckSlotView: View {
                     .font(.subheadline)
                 
                 HStack(spacing: 20) {
+                    Image(systemName: "cart")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                    
                     Button(action: {
                         //hordeAppViewModel.buy()
                         showingBuyInfo = true
@@ -299,7 +308,7 @@ struct GetMoreDeckSlotView: View {
                                 .foregroundColor(.white)
                                 .font(.title)
                         }.padding(15)
-                        .background(VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).cornerRadius(10))
+                        .background(Color("MainColor").cornerRadius(10))
                         .onAppear() {
                             price = IAPManager.shared.price() ?? "Unknow"
                             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
@@ -312,20 +321,33 @@ struct GetMoreDeckSlotView: View {
                     .alert(isPresented: $showingBuyInfo) {
                         Alert(
                             title: Text("Subscription information"),
-                            message: Text("You may purchase an auto-renewing subscription through an In-App Purchase.\n\n • (in USD) Premium - 1 month ($1.99) : \n\n • Your subscription will be charged to your iTunes account at confirmation of purchase and will automatically renew (at the duration selected) unless auto-renew is turned off at least 24 hours before the end of the current period.\n\n • Current subscription may not be cancelled during the active subscription period; however, you can manage your subscription and/or turn off auto-renewal by visiting your iTunes Account Settings after purchase\n\n • Being Premium will give you, for the duration of your subsription, acess to an unlimited number of deck slots and the ability to delete the 7 decks already in the app."),
-                            primaryButton: .default(
+                            message: Text("You may purchase an auto-renewing subscription through an In-App Purchase.\n\n • (in USD) Premium - 1 month ($1.99) \n\n • Your subscription will be charged to your iTunes account at confirmation of purchase and will automatically renew (at the duration selected) unless auto-renew is turned off at least 24 hours before the end of the current period.\n\n • Current subscription may not be cancelled during the active subscription period; however, you can manage your subscription and/or turn off auto-renewal by visiting your iTunes Account Settings after purchase\n\n • Being Premium will give you, for the duration of your subsription, acess to an unlimited number of deck slots and the ability to delete the 7 decks already in the app."),
+                            primaryButton: .destructive(
                                 Text("Cancel"),
                                 action: {showingBuyInfo = false}
                             ),
-                            secondaryButton: .destructive(
+                            secondaryButton: .default(
                                 Text("Continue"),
                                 action: {hordeAppViewModel.buy()}
                             )
                         )
                     }
-                    Image(systemName: "cart")
-                        .font(.largeTitle)
+                    
+                    Text("Already premium ? ")
                         .foregroundColor(.white)
+                        .fontWeight(.bold)
+                        .font(.subheadline)
+                        .padding(.leading, 20)
+                    
+                    Button(action: {
+                        hordeAppViewModel.restore()
+                    }) {
+                        Text("Restore")
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .padding(15)
+                            .background(VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).cornerRadius(10))
+                    }
                 }
                 
                 HStack(spacing: 0) {
@@ -343,9 +365,9 @@ struct GetMoreDeckSlotView: View {
                 }
                 
             }.rotationEffect(Angle.degrees(-rotationInDegrees))
-                .frame(width: 520, height: UIScreen.main
+                .frame(width: UIDevice.current.userInterfaceIdiom == .pad ? 760 : 640, height: UIScreen.main
                     .bounds.height)
-        }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: 520, height: UIScreen.main.bounds.height + 150)
+        }.frame(width: UIDevice.current.userInterfaceIdiom == .pad ? 760 : 640, height: UIScreen.main.bounds.height + 150).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
             .border(.white, width: 3)
         .rotationEffect(Angle.degrees(rotationInDegrees))
     }
@@ -400,6 +422,6 @@ struct PickerSize {
         static let picked: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 700 : 450
     }
     static let titlePaddingTop: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 100 : 0
-    static let vStackSpacing: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 30 : 15
+    static let vStackSpacing: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 30 : 10
     static let titleFontSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 70 : 60
 }

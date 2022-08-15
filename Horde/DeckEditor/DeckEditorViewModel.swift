@@ -14,7 +14,7 @@ class DeckEditorViewModel: ObservableObject {
     @Published var selectedDeckListNumber: Int = DeckSelectionNumber.deckList
     @Published var deck: DeckEditorCardList = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
     @Published var deckSelectionInfo: String = ""
-    @Published var searchProgressInfo: String = "Let's search some cards"
+    @Published var searchProgressInfo: String = "Let's search for some cards"
     @Published var popUpText: String = ""
     @Published var searchResult: [CardFromCardSearch] = []
     @Published var cardToShow: Card? //= Card(cardName: "AAAA", cardType: .token)

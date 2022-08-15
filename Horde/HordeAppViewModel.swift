@@ -146,5 +146,23 @@ class HordeAppViewModel: ObservableObject {
             })
         }
     }
+    
+    func restore() {
+        if IAPManager.shared.products != nil && IAPManager.shared.products!.first != nil {
+            IAPManager.shared.restorePurchases(success: {
+                if UserDefaults.standard.object(forKey: "IsPremium") as? Bool ?? false {
+                    self.isPremium = true
+                    var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+                    if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
+                        testNbrOfDeckSlot += 1
+                        UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
+                    }
+                    self.numberOfDeckSlot = testNbrOfDeckSlot
+                }
+            }, failure: { error in
+                print("Restore Fail \(String(describing: error))")
+            })
+        }
+    }
 }
 
