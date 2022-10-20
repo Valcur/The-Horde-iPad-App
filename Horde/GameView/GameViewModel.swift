@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class GameViewModel: ObservableObject {
     
@@ -14,6 +15,7 @@ class GameViewModel: ObservableObject {
     @Published var cardsOnBoard: [Card] = []
     @Published var cardsOnGraveyard: [Card] = []
     @Published var deck: [Card] = []
+    @Published var hand: [Card] = []
     
     @Published var showGraveyard = false
     @Published var damageTakenThisTurn: Int = 0
@@ -34,6 +36,10 @@ class GameViewModel: ObservableObject {
     @Published var cardToZoomIn = Card.emptyCard()
     @Published var shouldZoomOnCard: Bool = false
     
+    @Published var addCountersModeEnable: Bool = false
+    @Published var removeCountersModeEnable: Bool = false
+    @Published var returnToHandModeEnable: Bool = false
+    
     /** Turn order
         1) launch all in graveyard
           draw until a non token card is revealed
@@ -45,7 +51,7 @@ class GameViewModel: ObservableObject {
      */
     
     init() {
-        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
+        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardsFromHand: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
         
         deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
         print("Game initiating with deck \(deckPickedId)")
@@ -61,7 +67,7 @@ class GameViewModel: ObservableObject {
     }
     
     func startGame() {
-        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
+        cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardsFromHand: [], cardFromLibrary: Card(cardName: "", cardType: .creature, cardImageURL: ""))
         
         deckPickedId = UserDefaults.standard.object(forKey: "DeckPickedId") as? Int ?? 0
         print("Game initiating with deck \(deckPickedId)")
@@ -70,6 +76,7 @@ class GameViewModel: ObservableObject {
         
         cardsOnBoard = []
         cardsOnGraveyard = []
+        hand = []
         
         gameConfig.shared.deckSize = 100
         turnStep = -1
@@ -114,6 +121,7 @@ class GameViewModel: ObservableObject {
             
             cardsToCast = drawUntilNonToken()
             cardsToCast.cardsFromGraveyard = searchGraveyardForFlashback()
+            hand = regroupSameCardInArray(cardArray: hand)
         }
         if turnStep == 2 {
             // Add cards to board or graveyard
@@ -126,13 +134,12 @@ class GameViewModel: ObservableObject {
             for token in cardsToCast.tokensFromLibrary {
                 addCardToBoard(card: token)
             }
-            // A MODIFIER SI DES CREATURES SE RELANCENT EPUIS LE CIMETIERE
+
             cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
-            // Attack
-            
         }
         
         showLibraryTopCard = false
+        resetModes()
     }
     
     func setupHorde(withDifficulty: Int = -1) {
@@ -254,6 +261,8 @@ class GameViewModel: ObservableObject {
         
         var cardRevealed: Card
         var tokensRevealed: [Card] = []
+        var cardsFromHand: [Card] = regroupSameCardInArray(cardArray: hand)
+        hand = []
         
         repeat {
             cardRevealed = deck.removeLast()
@@ -268,7 +277,7 @@ class GameViewModel: ObservableObject {
         
         print("About to play \(cardRevealed.cardName) from library")
         
-        return CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: tokensRevealed, cardFromLibrary: cardRevealed)
+        return CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: tokensRevealed, cardsFromHand: cardsFromHand,cardFromLibrary: cardRevealed)
     }
     
     func regroupSameCardInArray(cardArray: [Card]) -> [Card] {
@@ -277,7 +286,7 @@ class GameViewModel: ObservableObject {
         while i < tmpArray.count {
             var j = i + 1
             while j < tmpArray.count {
-                if tmpArray[i] == tmpArray[j] {
+                if tmpArray[i] == tmpArray[j]  && tmpArray[i].countersOnCard == 0 && tmpArray[j].countersOnCard == 0 {
                     tmpArray[i].cardCount += tmpArray[j].cardCount
                     tmpArray.remove(at: j)
                     j -= 1
@@ -422,12 +431,27 @@ class GameViewModel: ObservableObject {
     func removeOneCardOnBoard(card: Card) {
         var tmpArray = cardsOnBoard
         for i in 0..<tmpArray.count {
-            if tmpArray[i] == card {
+            if tmpArray[i] == card  && tmpArray[i].countersOnCard == card.countersOnCard {
                 card.cardCount -= 1
                 if card.cardCount <= 0 {
                     tmpArray.remove(at: i)
                 }
                 sendToGraveyard(card: card)
+                
+                cardsOnBoard = tmpArray
+                return
+            }
+        }
+    }
+    
+    func exileOneCardOnBoard(card: Card) {
+        var tmpArray = cardsOnBoard
+        for i in 0..<tmpArray.count {
+            if tmpArray[i] == card  && tmpArray[i].countersOnCard == card.countersOnCard {
+                card.cardCount -= 1
+                if card.cardCount <= 0 {
+                    tmpArray.remove(at: i)
+                }
                 
                 cardsOnBoard = tmpArray
                 return
@@ -448,12 +472,25 @@ class GameViewModel: ObservableObject {
         }
     }
     
-    func destroyAllPermanents() {
-        let count = cardsOnBoard.count
-        for _ in 0 ..< count {
-            let tmpCard = cardsOnBoard.remove(at: 0)
-            sendToGraveyard(card: tmpCard)
-        }
+    func resetModes(addCountersModeEnable: Bool = false, removeCountersModeEnable: Bool = false, returnToHandModeEnable: Bool = false) {
+        self.addCountersModeEnable = addCountersModeEnable
+        self.removeCountersModeEnable = removeCountersModeEnable
+        self.returnToHandModeEnable = returnToHandModeEnable
+    }
+    
+    func toggleAddCounters() {
+        addCountersModeEnable.toggle()
+        resetModes(addCountersModeEnable: addCountersModeEnable)
+    }
+    
+    func toggleRemoveCounters() {
+        removeCountersModeEnable.toggle()
+        resetModes(removeCountersModeEnable: removeCountersModeEnable)
+    }
+    
+    func toggleReturnToHand() {
+        returnToHandModeEnable.toggle()
+        resetModes(returnToHandModeEnable: returnToHandModeEnable)
     }
     
     func createToken(token: Card) {
@@ -556,6 +593,61 @@ class GameViewModel: ObservableObject {
             gameConfig.shared.deckSize = 50
         }
         self.gameConfig.isClassicMode = isClassicMode
+    }
+    
+    func addCountersToCardOnBoard(card: Card) {
+        if card.cardCount > 1 {
+            let tmpCard = card.recreateCard()
+            tmpCard.cardCount = card.cardCount - 1
+            card.cardCount = 1
+            card.countersOnCard += 1
+            var cardIndexOnBoard = 0
+            for i in 0..<cardsOnBoard.count {
+                if cardsOnBoard[i] == card {
+                    cardIndexOnBoard = i
+                }
+            }
+            cardsOnBoard.insert(tmpCard, at: cardIndexOnBoard + 1)
+        } else {
+            card.countersOnCard += 1
+        }
+        
+        cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+    }
+    
+    func removeCountersFromCardOnBoard(card: Card) {
+        if card.countersOnCard > 0 {
+            card.countersOnCard -= 1
+        }
+        cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+    }
+    
+    func drawOneCard() {
+        let card = deck.last!
+        showLibraryTopCard = false
+        hand.append(card)
+        deck.removeLast()
+    }
+    
+    func returnToHandFromBoard(card: Card, allowTokenReturnToHand: Bool) {
+        exileOneCardOnBoard(card: card)
+        
+        if card.cardType != .token || allowTokenReturnToHand {
+            let tmpCard = card.recreateCard()
+            tmpCard.cardCount = 1
+            withAnimation(.easeInOut(duration: 0.5)) {
+                hand.append(tmpCard)
+            }
+        } else {
+            cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+        }
+    }
+    
+    func discardACardAtRandom() {
+        if hand.count > 0 {
+            let card = hand.remove(at: Int.random(in: 0..<hand.count))
+            cardsOnGraveyard.append(card)
+        }
     }
 }
 

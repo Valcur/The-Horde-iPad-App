@@ -20,6 +20,7 @@ class Card: Hashable, Identifiable {
     let cardOracleId: String    // Unique id of a card but same for each reprints
     let cardId: String          // Unique id of card and unique between reprints
     @Published var cardCount: Int = 1
+    @Published var countersOnCard: Int = 0
     
     init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = ""){
         self.cardType = cardType
@@ -137,6 +138,7 @@ class CardFromCardSearch: Card {
 struct CardsToCast {
     var cardsFromGraveyard: [Card]
     var tokensFromLibrary: [Card]
+    var cardsFromHand: [Card]
     var cardFromLibrary: Card
 }
 

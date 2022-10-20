@@ -71,6 +71,8 @@ struct GameView: View {
                     .animation(.easeInOut(duration: 0.3), value: gameViewModel.damageTakenThisTurn)
                 }
             }.transition(.move(edge: .top))
+            
+            HandView()
 
             StrongPermanentView()
                 .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
@@ -102,7 +104,7 @@ struct GameView: View {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             castedCardViewOpacity = 0
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
+                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardsFromHand: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
                             }
                         }
                     }
@@ -313,36 +315,39 @@ struct ControlBarView: View {
                     .font(.title)
                     .foregroundColor(.white)
             }.frame(width: 60)
-
-            // BoardWipe
             
-            HStack(spacing: 10) {
-                Text("Destroy all")
+            // Return to hand
+            
+            ReturnToHandView()
+            
+            // Draw a card
+            
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    gameViewModel.drawOneCard()
+                }
+            }, label: {
+                Text("Draw one")
                     .fontWeight(.bold)
                     .font(.subheadline)
-                    .foregroundColor(.gray)
-                    .frame(width: 100)
-                
-                Button(action: {
-                    print("Creatures Wipe button pressed")
-                    gameViewModel.destroyAllCreatures()
-                }, label: {
-                    Text("Creatures")
-                        .fontWeight(.bold)
-                        .font(.subheadline)
-                        .foregroundColor(.white)
-                })
-                
-                Button(action: {
-                    print("Permanents Wipe button pressed")
-                    gameViewModel.destroyAllPermanents()
-                }, label: {
-                    Text("Permanents")
-                        .fontWeight(.bold)
-                        .font(.subheadline)
-                        .foregroundColor(.white)
-                })
-            }//.frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+            })
+            
+            // Add/Remove counters
+            
+            AddCountersOnPermanentsView()
+            
+            // BoardWipe
+            
+            Button(action: {
+                print("Creatures Wipe button pressed")
+                gameViewModel.destroyAllCreatures()
+            }, label: {
+                Text("Destroy all creatures")
+                    .fontWeight(.bold)
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+            })
             
             Spacer()
             
@@ -459,6 +464,27 @@ struct CastedCardView: View {
                             }
                             ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
                                 CardToCastView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
+                            }
+                        }
+                    }
+                    
+                    if gameViewModel.cardsToCast.cardsFromHand.count > 0 {
+                        
+                        Rectangle()
+                            .foregroundColor(.white)
+                            .frame(width: 2, height: CardSize.height.big / 2)
+                            .padding(.top, 50)
+                        
+                        VStack {
+                            Text("From Hand")
+                                .fontWeight(.bold)
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .frame(height: 50)
+                            HStack(spacing: 36) {
+                                ForEach(gameViewModel.cardsToCast.cardsFromHand) { card in
+                                    CardToCastView(card: card)
+                                }
                             }
                         }
                     }
@@ -746,6 +772,7 @@ struct FlippingCardView: View {
 struct CardOnBoardView: View {
     
     @EnvironmentObject var gameViewModel: GameViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     var card: Card
     @GestureState var isDetectingLongPress = false
     
@@ -761,11 +788,22 @@ struct CardOnBoardView: View {
                         .font(.title2)
                         .foregroundColor(.white)
                 }
+                if card.countersOnCard > 0 {
+                    CountersOnCardView(countersCount: card.countersOnCard)
+                }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
             .onTapGesture(count: 1) {
-                print("Remove card")
-                gameViewModel.removeOneCardOnBoard(card: card)
+                if gameViewModel.addCountersModeEnable {
+                    gameViewModel.addCountersToCardOnBoard(card: card)
+                } else if gameViewModel.removeCountersModeEnable {
+                    gameViewModel.removeCountersFromCardOnBoard(card: card)
+                } else if gameViewModel.returnToHandModeEnable {
+                    gameViewModel.returnToHandFromBoard(card: card, allowTokenReturnToHand: hordeAppViewModel.allowReturnTokenToHand)
+                } else {
+                    print("Send \(card.cardName) to graveyard")
+                    gameViewModel.removeOneCardOnBoard(card: card)
+                }
             }
             .gesture(LongPressGesture(minimumDuration: 0.1)
                 .sequenced(before: LongPressGesture(minimumDuration: .infinity))
@@ -779,6 +817,22 @@ struct CardOnBoardView: View {
                     }
                 })
         })
+    }
+    
+    struct CountersOnCardView: View {
+        let countersCount: Int
+        var body: some View {
+            ZStack {
+                Text("\(countersCount)")
+                    .font(.title)
+                    .foregroundColor(.white)
+            }
+            .frame(width: 80, height: 80)
+            .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
+            .cornerRadius(40)
+            .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+            .offset(y: -40)
+        }
     }
 }
 
@@ -811,18 +865,21 @@ struct CardSize {
         static let big = (UIScreen.main.bounds.height / 100) * 6.3 * 5.5 as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 6.3 * 4.5 as CGFloat
         static let small = 54 as CGFloat
+        static let hand = (UIScreen.main.bounds.height / 100) * 6.3 * 3.5 as CGFloat
     }
     
     struct height {
         static let big = (UIScreen.main.bounds.height / 100) * 8.8 * 5.5 as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 8.8 * 4.5 as CGFloat
         static let small = 75 as CGFloat
+        static let hand = (UIScreen.main.bounds.height / 100) * 8.8 * 3.5 as CGFloat
     }
     
     struct cornerRadius {
         static let big = (UIScreen.main.bounds.height / 100) * 0.35 * 5.5 as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 0.35 * 4.5 as CGFloat
         static let small = 3 as CGFloat
+        static let hand = (UIScreen.main.bounds.height / 100) * 0.35 * 3.5 as CGFloat
     }
 }
 

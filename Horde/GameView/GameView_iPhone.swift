@@ -103,7 +103,7 @@ struct GameView_iPhone: View {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             castedCardViewOpacity = 0
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
+                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardsFromHand: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
                             }
                         }
                     }
@@ -330,33 +330,15 @@ struct ControlBarView_iPhone: View {
 
             // BoardWipe
             
-            HStack(spacing: 0) {
-                Text("Destroy all")
+            Button(action: {
+                print("Creatures Wipe button pressed")
+                gameViewModel.destroyAllCreatures()
+            }, label: {
+                Text("Destroy all creatures")
                     .fontWeight(.bold)
                     .font(.subheadline)
-                    .foregroundColor(.gray)
-                    .frame(width: 79).scaleEffect(scale)
-                
-                Button(action: {
-                    print("Creatures Wipe button pressed")
-                    gameViewModel.destroyAllCreatures()
-                }, label: {
-                    Text("Creatures")
-                        .fontWeight(.bold)
-                        .font(.subheadline)
-                        .foregroundColor(.white)
-                }).scaleEffect(scale)
-                
-                Button(action: {
-                    print("Permanents Wipe button pressed")
-                    gameViewModel.destroyAllPermanents()
-                }, label: {
-                    Text("Permanents")
-                        .fontWeight(.bold)
-                        .font(.subheadline)
-                        .foregroundColor(.white)
-                }).scaleEffect(scale)
-            }//.frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+            }).scaleEffect(scale)
             
             Spacer()
             

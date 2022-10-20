@@ -18,6 +18,7 @@ class HordeAppViewModel: ObservableObject {
     @Published var oneRowBoardInsteadOfTwo: Bool
     @Published var useLifepointsCounter: Bool
     @Published var hordeGainLifeLostBySurvivor: Bool
+    @Published var allowReturnTokenToHand: Bool
     @Published var survivorStartingLife: Int
     @Published var numberOfDeckSlot: Int
     @Published var isPremium = false
@@ -34,6 +35,7 @@ class HordeAppViewModel: ObservableObject {
         self.useLifepointsCounter = UserDefaults.standard.object(forKey: "UseLifePointsCounter") as? Bool ?? true
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
         self.survivorStartingLife = UserDefaults.standard.object(forKey: "SurvivorStartingLife") as? Int ?? 60
+        self.allowReturnTokenToHand = UserDefaults.standard.object(forKey: "AllowReturnTokenToHand") as? Bool ?? false
         self.numberOfDeckSlot = 8
         
         IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
@@ -121,6 +123,10 @@ class HordeAppViewModel: ObservableObject {
     
     func saveBattlefieldRowStylePreference() {
         UserDefaults.standard.set(self.oneRowBoardInsteadOfTwo, forKey: "OneRowBoardInsteadOfTwo")
+    }
+    
+    func saveAllowTokenReturnToHandPreference() {
+        UserDefaults.standard.set(self.allowReturnTokenToHand, forKey: "AllowReturnTokenToHand")
     }
     
     func saveUserLifepointsCounterPreference() {
