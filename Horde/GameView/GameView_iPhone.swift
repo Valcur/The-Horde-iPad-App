@@ -74,6 +74,9 @@ struct GameView_iPhone: View {
                 }
             }.transition(.move(edge: .top))
 
+            HandView()
+                //.scaleEffect(0.7)
+            
             StrongPermanentView()
                 .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
                 .onChange(of: gameViewModel.shouldShowStrongPermanent) { show in
@@ -328,6 +331,32 @@ struct ControlBarView_iPhone: View {
                     .foregroundColor(.white)
             }.frame(width: 30).padding(.leading, 10).scaleEffect(scale)
 
+            // Return to hand
+            
+            ReturnToHandView()
+                .frame(width: 30)
+                .scaleEffect(0.7)
+                .padding(.leading, CardSize_iPhone.width.normal * 0.7) // leave some space to make sure no accidental press on "Reveal Top" button
+            
+            // Draw a card
+            
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    gameViewModel.drawOneCard()
+                }
+            }, label: {
+                Text("Draw one")
+                    .fontWeight(.bold)
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+            }).scaleEffect(scale).frame(width: 40)
+            
+            // Add/Remove counters
+            
+            AddCountersOnPermanentsView()
+                .scaleEffect(0.7)
+                .frame(width: 90)
+            
             // BoardWipe
             
             Button(action: {
@@ -338,7 +367,7 @@ struct ControlBarView_iPhone: View {
                     .fontWeight(.bold)
                     .font(.subheadline)
                     .foregroundColor(.white)
-            }).scaleEffect(scale)
+            }).scaleEffect(scale).frame(width: 80)
             
             Spacer()
             
@@ -456,6 +485,28 @@ struct CastedCardView_iPhone: View {
                                 }
                                 ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
                                     CardToCastView_iPhone(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
+                                }
+                            }
+                        }
+                        
+                        if gameViewModel.cardsToCast.cardsFromHand.count > 0 {
+                            
+                            Rectangle()
+                                .foregroundColor(.white)
+                                .frame(width: 2, height: CardSize_iPhone.height.big_cast / 2)
+                                .padding(.top, 50)
+                            
+                            VStack {
+                                Text("From Hand")
+                                    .fontWeight(.bold)
+                                    .font(.title)
+                                    .foregroundColor(.white)
+                                    .frame(height: 50)
+                                    .scaleEffect(0.7)
+                                HStack(spacing: 36) {
+                                    ForEach(gameViewModel.cardsToCast.cardsFromHand) { card in
+                                        CardToCastView_iPhone(card: card)
+                                    }
                                 }
                             }
                         }
@@ -673,11 +724,22 @@ struct CardOnBoardView_iPhone: View {
                         .font(.title2)
                         .foregroundColor(.white)
                 }
+                if card.countersOnCard > 0 {
+                    CountersOnCardView(countersCount: card.countersOnCard)
+                }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
             .onTapGesture(count: 1) {
-                print("Remove card")
-                gameViewModel.removeOneCardOnBoard(card: card)
+                if gameViewModel.addCountersModeEnable {
+                    gameViewModel.addCountersToCardOnBoard(card: card)
+                } else if gameViewModel.removeCountersModeEnable {
+                    gameViewModel.removeCountersFromCardOnBoard(card: card)
+                } else if gameViewModel.returnToHandModeEnable {
+                    gameViewModel.returnToHandFromBoard(card: card, allowTokenReturnToHand: hordeAppViewModel.allowReturnTokenToHand)
+                } else {
+                    print("Send \(card.cardName) to graveyard")
+                    gameViewModel.removeOneCardOnBoard(card: card)
+                }
             }
             .gesture(LongPressGesture(minimumDuration: 0.1)
                 .sequenced(before: LongPressGesture(minimumDuration: .infinity))
@@ -691,6 +753,23 @@ struct CardOnBoardView_iPhone: View {
                     }
                 })
         })
+    }
+    
+    struct CountersOnCardView: View {
+        let countersCount: Int
+        var body: some View {
+            ZStack {
+                Text("\(countersCount)")
+                    .font(.title)
+                    .foregroundColor(.white)
+            }
+            .frame(width: 80, height: 80)
+            .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
+            .cornerRadius(40)
+            .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
+            .offset(y: -40)
+            .scaleEffect(0.6)
+        }
     }
     
     struct CustomZoomModifier : ViewModifier {

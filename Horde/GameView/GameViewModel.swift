@@ -134,6 +134,10 @@ class GameViewModel: ObservableObject {
             for token in cardsToCast.tokensFromLibrary {
                 addCardToBoard(card: token)
             }
+            
+            for card in cardsToCast.cardsFromHand {
+                addCardToBoard(card: card)
+            }
 
             cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
         }
@@ -277,7 +281,7 @@ class GameViewModel: ObservableObject {
         
         print("About to play \(cardRevealed.cardName) from library")
         
-        return CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: tokensRevealed, cardsFromHand: cardsFromHand,cardFromLibrary: cardRevealed)
+        return CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: tokensRevealed, cardsFromHand: cardsFromHand, cardFromLibrary: cardRevealed)
     }
     
     func regroupSameCardInArray(cardArray: [Card]) -> [Card] {
