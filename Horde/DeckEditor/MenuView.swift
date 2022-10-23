@@ -274,6 +274,26 @@ struct MenuHowToPlayView: View {
                     }
                 }
                 
+                Group {
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "How to handle the Horde's hand ?")
+                        
+                        MenuTextParagraphView(text: "Press the button with a hand icon to enable/disable the 'return to hand' mode. While the mode is enable, press a card on the battlefield to return it to the horde's hand")
+                        
+                        MenuTextParagraphView(text: "Press the Draw One button to make the horde draw a card")
+                        
+                        MenuTextParagraphView(text: "Press a card in the horde's hand to make the horde discard it")
+                    }
+                }
+                
+                Group {
+                    VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "How to add/remove counters on cards ?")
+                        
+                        MenuTextParagraphView(text: "Press the button with a +/- to enable/disable the 'add/remove' mode. While the 'add' mode is enable, press a card on the battlefield to add a counter to it. While the 'remove' mode is enable, press a card on the battlefield to remove a counter to it.")
+                    }
+                }
+                
                 LazyHStack(spacing: 30) {
                     Image("TutoLibraryReveal")
                     
@@ -390,19 +410,21 @@ struct MenuCustomView: View {
                     hordeAppViewModel.saveBackgroundColorPreference()
                 }
             
-            MenuTextSubtitleView(text: "Life counter")
-            
-            Toggle("Show life counter", isOn: $hordeAppViewModel.useLifepointsCounter)
-                .foregroundColor(.white)
-                .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
-                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                }
-            
-            Toggle("The Horde heals when survivors loose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
-                .foregroundColor(.white)
-                .onChange(of: hordeAppViewModel.hordeGainLifeLostBySurvivor) { _ in
-                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                }
+            Group {
+                MenuTextSubtitleView(text: "Life counter")
+                
+                Toggle("Show life counter", isOn: $hordeAppViewModel.useLifepointsCounter)
+                    .foregroundColor(.white)
+                    .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
+                        hordeAppViewModel.saveUserLifepointsCounterPreference()
+                    }
+                
+                Toggle("The Horde heals when survivors loose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
+                    .foregroundColor(.white)
+                    .onChange(of: hordeAppViewModel.hordeGainLifeLostBySurvivor) { _ in
+                        hordeAppViewModel.saveUserLifepointsCounterPreference()
+                    }
+            }
             
             HStack(spacing: 20) {
                 Text("Survivors starting life")
@@ -453,13 +475,23 @@ struct MenuCustomView: View {
                 })
             }
             
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                MenuTextSubtitleView(text: "Battlefield")
+            Group {
+                if UIDevice.current.userInterfaceIdiom == .phone {
+                    MenuTextSubtitleView(text: "Battlefield")
+                    
+                    Toggle("One big row of cards instead of two small rows", isOn: $hordeAppViewModel.oneRowBoardInsteadOfTwo)
+                        .foregroundColor(.white)
+                        .onChange(of: hordeAppViewModel.oneRowBoardInsteadOfTwo) { _ in
+                            hordeAppViewModel.saveBattlefieldRowStylePreference()
+                        }
+                }
                 
-                Toggle("One big row of cards instead of two small rows", isOn: $hordeAppViewModel.oneRowBoardInsteadOfTwo)
+                MenuTextSubtitleView(text: "Hand")
+                
+                Toggle("Allow tokens to be returned to hand (if set to NO, they will be exiled when returned to hand)", isOn: $hordeAppViewModel.allowReturnTokenToHand)
                     .foregroundColor(.white)
                     .onChange(of: hordeAppViewModel.oneRowBoardInsteadOfTwo) { _ in
-                        hordeAppViewModel.saveBattlefieldRowStylePreference()
+                        hordeAppViewModel.saveAllowTokenReturnToHandPreference()
                     }
             }
             
