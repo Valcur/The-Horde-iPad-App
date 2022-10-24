@@ -29,7 +29,7 @@ struct DeckEditorInfoView: View {
             image
                 .resizable()
                 .scaledToFill()
-                .frame(height: UIScreen.main.bounds.height)
+                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
 
             VStack {
                 Spacer()

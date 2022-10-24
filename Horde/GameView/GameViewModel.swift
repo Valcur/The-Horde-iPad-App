@@ -650,7 +650,9 @@ class GameViewModel: ObservableObject {
     func discardACardAtRandom() {
         if hand.count > 0 {
             let card = hand.remove(at: Int.random(in: 0..<hand.count))
-            cardsOnGraveyard.append(card)
+            if card.cardType != .token {
+                cardsOnGraveyard.append(card)
+            }
         }
     }
 }
