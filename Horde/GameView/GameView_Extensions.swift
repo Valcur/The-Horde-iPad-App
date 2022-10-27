@@ -78,9 +78,10 @@ struct HandView: View {
                         .resizable()
                         .frame(width: CardSize.width.hand * cardSizeCoeff, height: CardSize.height.hand * cardSizeCoeff)
                         .cornerRadius(CardSize.cornerRadius.hand * cardSizeCoeff)
-                        .offset(y: CardSize.height.hand / 2)
                         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
-                }).frame(height: CardSize.height.hand + 20).clipped()                        .rotationEffect(.degrees(180)).transition(.move(edge: .top))
+                }).offset(y: CardSize.height.hand / 2)
+                    .frame(height: CardSize.height.hand + 10).clipped()                        .rotationEffect(.degrees(180)).transition(.move(edge: .top))
+                    
             }
         }.position(x: UIScreen.main.bounds.width / 2, y: CardSize.height.hand / 2)
     }

@@ -265,7 +265,7 @@ class GameViewModel: ObservableObject {
         
         var cardRevealed: Card
         var tokensRevealed: [Card] = []
-        var cardsFromHand: [Card] = regroupSameCardInArray(cardArray: hand)
+        let cardsFromHand: [Card] = regroupSameCardInArray(cardArray: hand)
         hand = []
         
         repeat {
@@ -627,10 +627,12 @@ class GameViewModel: ObservableObject {
     }
     
     func drawOneCard() {
-        let card = deck.last!
-        showLibraryTopCard = false
-        hand.append(card)
-        deck.removeLast()
+        if deck.count > 0 {
+            let card = deck.last!
+            showLibraryTopCard = false
+            hand.append(card)
+            deck.removeLast()
+        }
     }
     
     func returnToHandFromBoard(card: Card, allowTokenReturnToHand: Bool) {
