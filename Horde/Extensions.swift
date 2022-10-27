@@ -312,3 +312,89 @@ struct MultilineTextField: View {
         }
     }
 }
+
+struct ShareSheet: UIViewControllerRepresentable {
+    typealias Callback = (_ activityType: UIActivity.ActivityType?, _ completed: Bool, _ returnedItems: [Any]?, _ error: Error?) -> Void
+    
+    @Binding var activityItems: [Any]
+    let applicationActivities: [UIActivity]? = nil
+    let excludedActivityTypes: [UIActivity.ActivityType]? = nil
+    let callback: Callback? = nil
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(
+            activityItems: activityItems,
+            applicationActivities: applicationActivities)
+        controller.excludedActivityTypes = excludedActivityTypes
+        controller.completionWithItemsHandler = callback
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        // nothing to do here
+    }
+}
+
+struct ShareOnDiscordView: View {
+    
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    @State private var showShareSheet = false
+    @State private var txtFile: [Any] = []
+    
+    var body: some View {
+        Button(action: {
+            txtFile = DeckManager.shareOnDiscord(
+                deckName: deckEditorViewModel.loadDeckName(),
+                deckList: deckEditorViewModel.getDeckDataString())
+            self.showShareSheet = true
+        }, label: {
+            Text(".txt")
+                .font(.title2)
+                .foregroundColor(.white)
+        })
+        .sheet(isPresented: $showShareSheet) {
+            ShareSheet(activityItems: $txtFile)
+        }
+    }
+}
+
+extension Data {
+    
+    /// Get the current directory
+    ///
+    /// - Returns: the Current directory in NSURL
+    func getDocumentsDirectory() -> NSString {
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0]
+        return documentsDirectory as NSString
+    }
+
+    /// Data into file
+    ///
+    /// - Parameters:
+    ///   - fileName: the Name of the file you want to write
+    /// - Returns: Returns the URL where the new file is located in NSURL
+    func dataToFile(fileName: String) -> NSURL? {
+
+        // Make a constant from the data
+        let data = self
+
+        // Make the file path (with the filename) where the file will be loacated after it is created
+        let filePath = getDocumentsDirectory().appendingPathComponent(fileName)
+
+        do {
+            // Write the file from data into the filepath (if there will be an error, the code jumps to the catch block below)
+            try data.write(to: URL(fileURLWithPath: filePath))
+
+            // Returns the URL where the new file is located in NSURL
+            return NSURL(fileURLWithPath: filePath)
+
+        } catch {
+            // Prints the localized description of the error from the do block
+            print("Error writing the file: \(error.localizedDescription)")
+        }
+
+        // Returns nil if there was an error in the do-catch -block
+        return nil
+    }
+}

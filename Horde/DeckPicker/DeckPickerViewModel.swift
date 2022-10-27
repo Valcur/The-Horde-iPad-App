@@ -11,9 +11,13 @@ import SwiftUI
 class DeckPickerViewModel: ObservableObject {
     
     @Published var deckPickedId: Int
+    @Published var showIntro: Bool
+    @Published var showDiscordInvite: Bool
 
     init() {
         self.deckPickedId = -1
+        self.showIntro = UserDefaults.standard.object(forKey: "ShowIntroduction") as? Bool ?? true
+        self.showDiscordInvite = UserDefaults.standard.object(forKey: "ShowDiscordInvite") as? Bool ?? true
         DeckManager.createStarterDecks()
     }
     
@@ -69,6 +73,20 @@ class DeckPickerViewModel: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "Deck_\(id)_Image")
         UserDefaults.standard.removeObject(forKey: "Deck_\(id)")
         self.deckPickedId = id
+    }
+    
+    func hideIntro() {
+        withAnimation(.easeInOut(duration: 0.5)) {
+            self.showIntro = false
+        }
+        //UserDefaults.standard.set(false, forKey: "ShowIntroduction")
+    }
+    
+    func hideDiscordInvite() {
+        withAnimation(.easeInOut(duration: 0.5)) {
+            self.showDiscordInvite = false
+        }
+        //UserDefaults.standard.set(false, forKey: "ShowDiscordInvite")
     }
 }
 

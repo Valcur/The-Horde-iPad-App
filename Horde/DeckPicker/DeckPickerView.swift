@@ -12,13 +12,72 @@ struct DeckPickerView: View {
     @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     
+    @State private var showHideIntroAlert = false
+    @State private var showHideDiscordAlert = false
+    
     var body: some View {
         ZStack{
             Color(.black)
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        DeckPickingIntro().id(-1)
+                        if deckPickerViewModel.showIntro {
+                            ZStack(alignment: .topTrailing) {
+                                DeckPickingIntro().id(-1)
+                                Button(action: {
+                                    showHideIntroAlert = true
+                                }, label: {
+                                    Image(systemName: "xmark")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.white)
+                                })
+                            }.padding(.trailing, 45)
+                                .alert(isPresented: $showHideIntroAlert) {
+                                    Alert(
+                                        title: Text("Hide Intro"),
+                                        message: Text("You see this message again"),
+                                        primaryButton: .destructive(
+                                            Text("Cancel"),
+                                            action: {showHideIntroAlert = false}
+                                        ),
+                                        secondaryButton: .default(
+                                            Text("Confirm"),
+                                            action: {deckPickerViewModel.hideIntro()}
+                                        )
+                                    )
+                                }
+                        }
+                        
+                        if deckPickerViewModel.showDiscordInvite {
+                            ZStack(alignment: .topTrailing) {
+                                DeckPickingDiscordView()
+                                Button(action: {
+                                    showHideDiscordAlert = true
+                                }, label: {
+                                    Image(systemName: "xmark")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.white)
+                                })
+                            }.padding(.trailing, 45)
+                                .alert(isPresented: $showHideDiscordAlert) {
+                                    Alert(
+                                        title: Text("Hide Discord invite"),
+                                        message: Text("You can still find a link in the options under 'contact'"),
+                                        primaryButton: .destructive(
+                                            Text("Cancel"),
+                                            action: {showHideDiscordAlert = false}
+                                        ),
+                                        secondaryButton: .default(
+                                            Text("Confirm"),
+                                            action: {deckPickerViewModel.hideDiscordInvite()}
+                                        )
+                                    )
+                                }
+                        }
+                        
+                        ZStack() {}.frame(width: 30, height: 1)
                         
                         ForEach(0..<hordeAppViewModel.numberOfDeckSlot, id: \.self) { i in
                             if deckPickerViewModel.deckForIdExist(id: i) {
@@ -388,6 +447,29 @@ struct DeckPickingIntro: View {
             MenuTextWithImageParagraphView(text1: "", image: Image(systemName: "gear"), text2: "> How To Play to learn how to use this app")
         
         }.frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 80).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+    }
+}
+
+struct DeckPickingDiscordView: View {
+    
+    var body: some View {
+        Link(destination: URL(string: "https://discord.com/invite/wzm7bu6KDJ")!) {
+            VStack(alignment: .leading, spacing: 30) {
+                Image("DiscordIcon")
+                    .resizable()
+                    .frame(width: 280, height: 80)
+                
+                MenuTextBoldParagraphView(text: "Join us on Discord")
+                
+                MenuTextParagraphView(text: "Share your horde decks or find new decks in our Discord Channel.")
+                
+                MenuTextBoldParagraphView(text: "Tap here to join")
+                
+            }.padding(30).frame(width: UIScreen.main.bounds.width / 3.5).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+                .overlay(RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.white, lineWidth: 2))
+                .padding([.leading, .trailing, .top], 35)
+        }
     }
 }
 

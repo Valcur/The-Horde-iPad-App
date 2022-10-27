@@ -548,6 +548,12 @@ struct TopTopControlRowView: View {
                     .foregroundColor(.white)
             })
             
+            Text("/")
+                .font(.title2)
+                .foregroundColor(.white)
+            
+            ShareOnDiscordView()
+            
             Spacer()
             
             // Exit

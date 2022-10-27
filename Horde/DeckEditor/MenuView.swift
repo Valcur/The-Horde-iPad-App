@@ -374,6 +374,15 @@ struct MenuContactView: View {
                     mailCopied = true
                 }
             
+            Link(destination: URL(string: "https://discord.com/invite/wzm7bu6KDJ")!) {
+                VStack {
+                    MenuTextParagraphView(text: "Join us on Discord !")
+                    Image("DiscordIcon")
+                        .resizable()
+                        .frame(width: 210, height: 60)
+                }
+            }
+            
             MenuTextTitleView(text: "Info")
             
             MenuTextParagraphView(text: "App icon by Superarticons")
