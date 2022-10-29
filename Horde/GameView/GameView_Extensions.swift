@@ -74,15 +74,37 @@ struct HandView: View {
                         gameViewModel.discardACardAtRandom()
                     }
                 }, label: {
-                    Image("MTGBackground")
-                        .resizable()
+                    CardBackView()
                         .frame(width: CardSize.width.hand * cardSizeCoeff, height: CardSize.height.hand * cardSizeCoeff)
                         .cornerRadius(CardSize.cornerRadius.hand * cardSizeCoeff)
                         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
                 }).offset(y: CardSize.height.hand / 2)
-                    .frame(height: CardSize.height.hand + 10).clipped()                        .rotationEffect(.degrees(180)).transition(.move(edge: .top))
+                    .frame(width: CardSize.width.hand * cardSizeCoeff + 10, height: CardSize.height.hand + 10).clipped()                        .rotationEffect(.degrees(180)).transition(.move(edge: .top))
                     
             }
         }.position(x: UIScreen.main.bounds.width / 2, y: CardSize.height.hand / 2)
+    }
+}
+
+struct CardBackView: View {
+    
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    private var customArtId: Int {
+        return hordeAppViewModel.customSleeveArtId
+    }
+    private var customBorderColorId: Int {
+        return hordeAppViewModel.customSleeveBorderColorId
+    }
+    
+    var body: some View {
+        if customArtId >= 0 {
+            GeometryReader { geo in
+                SleeveArtImageView(artId: customArtId).frame(width: geo.size.width, height: geo.size.height).clipped()
+                    .border(customBorderColorId == 0 ? .black : .white, width: geo.size.width * 0.03)
+            }
+        } else {
+            Image("MTGBackground")
+                .resizable()
+        }
     }
 }

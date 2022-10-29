@@ -118,6 +118,48 @@ struct GradientView: View {
     }
 }
 
+struct SleeveArtImageView: View {
+
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    var art: Image
+    
+    init(artId: Int) {
+        switch artId {
+        case -1:
+            art = Image("SleeveTest")
+            break
+        case 0:
+            art = Image("BlackBackground")
+            art = getCustomSleeveArt()
+            break
+        case 1:
+            art = Image("SleeveTest")
+            break
+        case 3:
+            art = Image("SleeveTest-1")
+            break
+        default:
+            art = Image("SleeveTest-2")
+            break
+        }
+    }
+    
+    func getCustomSleeveArt() -> Image {
+        guard let data = UserDefaults.standard.data(forKey: "CustomSleeveArtImage") else { return Image("BlackBackground") }
+        let decoded = try! PropertyListDecoder().decode(Data.self, from: data)
+        
+        guard let inputImage = UIImage(data: decoded) else {
+            return Image("BlackBackground")
+        }
+        
+        return Image(uiImage: inputImage)
+    }
+    
+    var body: some View {
+        art.resizable().scaledToFill()
+    }
+}
+
 struct CardSearchTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration

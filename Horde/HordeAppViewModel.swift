@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class HordeAppViewModel: ObservableObject {
     @Published var readyToPlay: Bool
@@ -15,6 +16,8 @@ class HordeAppViewModel: ObservableObject {
     @Published var difficulty: Int
     @Published var gradientId: Int
     @Published var useLessColorFullBackground: Bool
+    @Published var customSleeveArtId: Int
+    @Published var customSleeveBorderColorId: Int
     @Published var oneRowBoardInsteadOfTwo: Bool
     @Published var useLifepointsCounter: Bool
     @Published var hordeGainLifeLostBySurvivor: Bool
@@ -31,6 +34,8 @@ class HordeAppViewModel: ObservableObject {
         self.difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
         self.gradientId = UserDefaults.standard.object(forKey: "GradientId") as? Int ?? 1
         self.useLessColorFullBackground = UserDefaults.standard.object(forKey: "UseLessColorFullBackground") as? Bool ?? false
+        self.customSleeveArtId = UserDefaults.standard.object(forKey: "CustomSleeveArtId") as? Int ?? -1
+        self.customSleeveBorderColorId = UserDefaults.standard.object(forKey: "CustomSleeveBorderColorId") as? Int ?? 0
         self.oneRowBoardInsteadOfTwo = UserDefaults.standard.object(forKey: "OneRowBoardInsteadOfTwo") as? Bool ?? true
         self.useLifepointsCounter = UserDefaults.standard.object(forKey: "UseLifePointsCounter") as? Bool ?? true
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
@@ -76,6 +81,10 @@ class HordeAppViewModel: ObservableObject {
         for i in 0..<7 {
             UserDefaults.standard.set(backUpDeckList[i], forKey: "Deck_\(i)")
         }
+        
+        // Reset custom sleeves
+        self.customSleeveArtId = 0
+        UserDefaults.standard.set(0, forKey: "CustomSleeveArtId")
     }
     
     func createDeck(deckId: Int) {
@@ -117,10 +126,26 @@ class HordeAppViewModel: ObservableObject {
         UserDefaults.standard.set(gradientId, forKey: "GradientId")
     }
     
-    func saveBackgroundColorPreference() {
+    func saveStylePreferences() {
         UserDefaults.standard.set(self.useLessColorFullBackground, forKey: "UseLessColorFullBackground")
     }
     
+    func setCustomSleeveArtIdTo(artId: Int) {
+        self.customSleeveArtId = artId
+        UserDefaults.standard.set(artId, forKey: "CustomSleeveArtId")
+    }
+    
+    func saveCustomSleeveArt(image: UIImage) {
+        guard let data = image.jpegData(compressionQuality: 0.5) else { return }
+        let encoded = try! PropertyListEncoder().encode(data)
+        UserDefaults.standard.set(encoded, forKey: "CustomSleeveArtImage")
+    }
+    
+    func setCustomSleeveBorderColorIdTo(borderId: Int) {
+        self.customSleeveBorderColorId = borderId
+        UserDefaults.standard.set(borderId, forKey: "CustomSleeveBorderColorId")
+    }
+
     func saveBattlefieldRowStylePreference() {
         UserDefaults.standard.set(self.oneRowBoardInsteadOfTwo, forKey: "OneRowBoardInsteadOfTwo")
     }

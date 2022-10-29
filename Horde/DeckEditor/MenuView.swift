@@ -397,27 +397,54 @@ struct MenuCustomView: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     
     var body: some View {
-        LazyVStack(alignment: .leading, spacing: 30) {            
-            MenuTextSubtitleView(text: "Background Color")
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    MenuCustomBackgroundColorChoiceView(gradientId: 1)
-                    MenuCustomBackgroundColorChoiceView(gradientId: 2)
-                    MenuCustomBackgroundColorChoiceView(gradientId: 3)
-                    MenuCustomBackgroundColorChoiceView(gradientId: 4)
-                    MenuCustomBackgroundColorChoiceView(gradientId: 5)
-                    MenuCustomBackgroundColorChoiceView(gradientId: 6)
-                    MenuCustomBackgroundColorChoiceView(gradientId: 7)
-                    MenuCustomBackgroundColorChoiceView(gradientId: 8)
+        LazyVStack(alignment: .leading, spacing: 30) {
+            Group {
+                MenuTextSubtitleView(text: "Background Color")
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        MenuCustomBackgroundColorChoiceView(gradientId: 1)
+                        MenuCustomBackgroundColorChoiceView(gradientId: 2)
+                        MenuCustomBackgroundColorChoiceView(gradientId: 3)
+                        MenuCustomBackgroundColorChoiceView(gradientId: 4)
+                        MenuCustomBackgroundColorChoiceView(gradientId: 5)
+                        MenuCustomBackgroundColorChoiceView(gradientId: 6)
+                        MenuCustomBackgroundColorChoiceView(gradientId: 7)
+                        MenuCustomBackgroundColorChoiceView(gradientId: 8)
+                    }
                 }
+                
+                Toggle("Use less colorful background", isOn: $hordeAppViewModel.useLessColorFullBackground)
+                    .foregroundColor(.white)
+                    .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
+                        hordeAppViewModel.saveStylePreferences()
+                    }
+                
+                MenuTextSubtitleView(text: "Custom Sleeves")
+                
+                VStack {
+                    MenuTextParagraphView(text: "Sleeve Art")
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            MenuCustomSleeveArtChoiceView(artId: -1)
+                            MenuUploadCustomArtView(artId: 0)
+                            MenuCustomSleeveArtChoiceView(artId: 1)
+                            MenuCustomSleeveArtChoiceView(artId: 2)
+                            MenuCustomSleeveArtChoiceView(artId: 3)
+                        }
+                    }
+                    
+                    HStack(spacing: 10) {
+                        MenuTextParagraphView(text: "Border Color")
+                        Spacer()
+                        MenuCustomSleeveBorderColorChoiceView(colorId: 0)
+                        MenuCustomSleeveBorderColorChoiceView(colorId: 1)
+                    }
+                    
+                }//.opacity(hordeAppViewModel.isPremium ? 1 : 0.5)
+                
             }
-            
-            Toggle("Use less colorful background", isOn: $hordeAppViewModel.useLessColorFullBackground)
-                .foregroundColor(.white)
-                .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
-                    hordeAppViewModel.saveBackgroundColorPreference()
-                }
             
             Group {
                 MenuTextSubtitleView(text: "Life counter")
@@ -534,6 +561,111 @@ struct MenuCustomBackgroundColorChoiceView: View {
             GradientView(gradientId: gradientId).cornerRadius(15).frame(width: 150, height: 150).overlay(
                 RoundedRectangle(cornerRadius: 19).stroke(hordeAppViewModel.gradientId == gradientId ? .white : .clear, lineWidth: 4)).padding(10)
         })
+    }
+}
+
+struct MenuCustomSleeveBorderColorChoiceView: View {
+    
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    let colorId: Int
+    
+    var body: some View {
+        Button(action: {
+            print("Changing sleeve border color to \(colorId == 0 ? "Black" : "White")")
+            hordeAppViewModel.setCustomSleeveBorderColorIdTo(borderId: colorId)
+        }, label: {
+            Rectangle()
+                .foregroundColor(colorId == 0 ? .black : .white).opacity(0.8)
+                .cornerRadius(15)
+                .frame(width: 50, height: 50)
+                .overlay(RoundedRectangle(cornerRadius: 19).stroke(hordeAppViewModel.customSleeveBorderColorId == colorId ? .white : .clear, lineWidth: 4)).padding(10)
+        })
+    }
+}
+
+struct MenuCustomSleeveArtChoiceView: View {
+    
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    let artId: Int  // -1 for no art, 0 for uploaded image, > 0 for other
+    
+    var body: some View {
+        Button(action: {
+            print("Changing sleeve art color to \(artId)")
+            hordeAppViewModel.setCustomSleeveArtIdTo(artId: artId)
+        }, label: {
+            ZStack {
+                if artId == -1 {
+                    ZStack {
+                        Text("Disable")
+                            .foregroundColor(.white)
+                            .font(.title)
+                    }
+                } else {
+                    SleeveArtImageView(artId: artId)
+                }
+            }.frame(width: 150, height: 150).clipped().cornerRadius(15)
+                .overlay(RoundedRectangle(cornerRadius: 19).stroke(hordeAppViewModel.customSleeveArtId == artId ? .white : .clear, lineWidth: 4)).padding(10)
+        })
+    }
+}
+
+struct MenuUploadCustomArtView: View {
+    
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    @State private var image: Image?
+    @State private var inputImage: UIImage?
+    @State var showingImagePicker: Bool = false
+    let artId: Int
+    var customArtIsSelected: Bool {
+        return hordeAppViewModel.customSleeveArtId == artId
+    }
+    
+    var body: some View {
+        Button(action: {
+            if customArtIsSelected || UserDefaults.standard.data(forKey: "CustomSleeveArtImage") == nil {
+                self.showingImagePicker.toggle()
+            } else {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    hordeAppViewModel.setCustomSleeveArtIdTo(artId: artId)
+                }
+            }
+        }, label: {
+            ZStack {
+                SleeveArtImageView(artId: artId).opacity(0.5)
+                VStack {
+                    Image(systemName: "photo")
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                    
+                    if customArtIsSelected {
+                        Spacer()
+                        
+                        Text("Tap again to upload another picture")
+                            .font(.body)
+                            .foregroundColor(.white)
+                            .frame(width: 120)
+                    }
+                }.padding(15)
+            }
+        })
+        .frame(width: 150, height: 150).clipped().cornerRadius(15)
+        .overlay(RoundedRectangle(cornerRadius: 19).stroke(customArtIsSelected ? .white : .clear, lineWidth: 4)).padding(10)
+        .onChange(of: inputImage) { _ in loadImage() }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(image: $inputImage)
+        }
+    }
+    
+    func loadImage() {
+        guard let inputImage = inputImage else {
+            image = Image("BlackBackground")
+            return
+        }
+        hordeAppViewModel.saveCustomSleeveArt(image: inputImage)
+        withAnimation(.easeInOut(duration: 0.3)) {
+            hordeAppViewModel.setCustomSleeveArtIdTo(artId: artId)
+        }
+        image = Image(uiImage: inputImage)
     }
 }
 
