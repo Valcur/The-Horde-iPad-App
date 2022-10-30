@@ -46,6 +46,18 @@ struct GameView: View {
                 }
             }
             
+            Group {
+                HandView()
+                
+                if gameViewModel.hand.count > 0 {
+                    Button(action: {
+                        gameViewModel.playHand()
+                    }, label: {
+                        PurpleButtonLabel(text: "Play hand")
+                    }).position(x: UIScreen.main.bounds.width - 85, y: 35)
+                }
+            }
+            
             ZStack {
                 if gameViewModel.damageTakenThisTurn > 0 {
                     Button(action: {
@@ -71,8 +83,6 @@ struct GameView: View {
                     .animation(.easeInOut(duration: 0.3), value: gameViewModel.damageTakenThisTurn)
                 }
             }.transition(.move(edge: .top))
-            
-            HandView()
 
             StrongPermanentView()
                 .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
@@ -417,6 +427,10 @@ struct CastedCardView: View {
     @EnvironmentObject var gameViewModel: GameViewModel
     @State var cardToCastFromLibrary: Card = Card.emptyCard()
     
+    var isCastingSomethingFromLibrary: Bool {
+        return gameViewModel.cardsToCast.cardFromLibrary != Card.emptyCard() || gameViewModel.cardsToCast.tokensFromLibrary.count > 0
+    }
+    
     var body: some View {
         // The button to leave the menu is the background
         Button(action: {
@@ -451,28 +465,32 @@ struct CastedCardView: View {
                             .padding(.top, 50)
                     }
                     
-                    VStack {
-                        Text("From Library")
-                            .fontWeight(.bold)
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .frame(height: 50)
-                        HStack(spacing: 36) {
-                            if cardToCastFromLibrary.cardType != .token {
-                                CardToCastView(card: cardToCastFromLibrary, showCardCount: false)
-                            }
-                            ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
-                                CardToCastView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
+                    if isCastingSomethingFromLibrary {
+                        VStack {
+                            Text("From Library")
+                                .fontWeight(.bold)
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .frame(height: 50)
+                            HStack(spacing: 36) {
+                                if cardToCastFromLibrary.cardType != .token {
+                                    CardToCastView(card: cardToCastFromLibrary, showCardCount: false)
+                                }
+                                ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
+                                    CardToCastView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
+                                }
                             }
                         }
                     }
                     
                     if gameViewModel.cardsToCast.cardsFromHand.count > 0 {
                         
-                        Rectangle()
-                            .foregroundColor(.white)
-                            .frame(width: 2, height: CardSize.height.big / 2)
-                            .padding(.top, 50)
+                        if isCastingSomethingFromLibrary {
+                            Rectangle()
+                                .foregroundColor(.white)
+                                .frame(width: 2, height: CardSize.height.big / 2)
+                                .padding(.top, 50)
+                        }
                         
                         VStack {
                             Text("From Hand")

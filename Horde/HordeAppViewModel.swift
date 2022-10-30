@@ -43,7 +43,15 @@ class HordeAppViewModel: ObservableObject {
         self.allowReturnTokenToHand = UserDefaults.standard.object(forKey: "AllowReturnTokenToHand") as? Bool ?? false
         self.numberOfDeckSlot = 8
         
-        IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
+        self.isPremium = true
+        var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+        if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
+            testNbrOfDeckSlot += 1
+            UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
+        }
+        self.numberOfDeckSlot = testNbrOfDeckSlot
+        
+        /*IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
         IAPManager.shared.refreshSubscriptionsStatus(callback: {
             let date = UserDefaults.standard.object(forKey: IAPManager.getSubscriptionId()) as? Date ?? Date()
             if date > Date() {
@@ -63,7 +71,7 @@ class HordeAppViewModel: ObservableObject {
             }
         }, failure: { error in
             print("Error \(String(describing: error))")
-        })
+        })*/
     }
     
     func lostPremiumSubscription() {

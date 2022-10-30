@@ -632,6 +632,7 @@ struct MenuUploadCustomArtView: View {
         }, label: {
             ZStack {
                 SleeveArtImageView(artId: artId).opacity(0.5)
+                    .frame(width: 150, height: 150)
                 VStack {
                     Image(systemName: "photo")
                         .foregroundColor(.white)

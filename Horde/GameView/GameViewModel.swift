@@ -136,7 +136,7 @@ class GameViewModel: ObservableObject {
             }
             
             for card in cardsToCast.cardsFromHand {
-                addCardToBoard(card: card)
+                castCard(card: card)
             }
 
             cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
@@ -145,7 +145,7 @@ class GameViewModel: ObservableObject {
         showLibraryTopCard = false
         resetModes()
     }
-    
+        
     func setupHorde(withDifficulty: Int = -1) {
         // Marathon setup
         if !gameConfig.isClassicMode && marathonStage == -1 {
@@ -523,6 +523,15 @@ class GameViewModel: ObservableObject {
         }
     }
     
+    func castCard(card: Card) {
+        if card.cardType == .token || card.cardType == .creature || card.cardType == .enchantment || card.cardType == .artifact {
+            addCardToBoard(card: card)
+            cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+        } else {
+            cardsOnGraveyard.append(card)
+        }
+    }
+    
     func removeCardFromGraveyard(card: Card) {
         for i in 0..<cardsOnGraveyard.count {
             if cardsOnGraveyard[i] == card {
@@ -632,6 +641,16 @@ class GameViewModel: ObservableObject {
             showLibraryTopCard = false
             hand.append(card)
             deck.removeLast()
+        }
+    }
+    
+    func playHand() {
+        if hand.count > 0 {
+            hand = regroupSameCardInArray(cardArray: hand)
+            let empty: [Card] = []
+            cardsToCast = CardsToCast(cardsFromGraveyard: empty, tokensFromLibrary: empty, cardsFromHand: hand, cardFromLibrary: Card.emptyCard())
+            turnStep = 1
+            hand = []
         }
     }
     

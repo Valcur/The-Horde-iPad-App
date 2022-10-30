@@ -47,6 +47,18 @@ struct GameView_iPhone: View {
                 }
             }
             
+            Group {
+                HandView()
+                
+                if gameViewModel.hand.count > 0 {
+                    Button(action: {
+                        gameViewModel.playHand()
+                    }, label: {
+                        PurpleButtonLabel(text: "Play hand")
+                    }).scaleEffect(0.7).position(x: UIScreen.main.bounds.width - 70, y: 25)
+                }
+            }
+            
             ZStack {
                 if gameViewModel.damageTakenThisTurn > 0 {
                     Button(action: {
@@ -73,9 +85,6 @@ struct GameView_iPhone: View {
                     .scaleEffect(0.7)
                 }
             }.transition(.move(edge: .top))
-
-            HandView()
-                //.scaleEffect(0.7)
             
             StrongPermanentView()
                 .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
@@ -219,8 +228,7 @@ struct HordeBoardView_iPhone: View {
                                     .cornerRadius(CardSize_iPhone.cornerRadius.normal)
                                     .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal + deckThickness)
                                 
-                                Image("MTGBackground")
-                                    .resizable()
+                                CardBackView()
                                     .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal)
                                     .cornerRadius(CardSize_iPhone.cornerRadius.normal)
                                     .offset(y: -deckThickness)
@@ -438,6 +446,10 @@ struct CastedCardView_iPhone: View {
     @EnvironmentObject var gameViewModel: GameViewModel
     @State var cardToCastFromLibrary: Card = Card(cardName: "Polyraptor", cardType: .token)
     
+    var isCastingSomethingFromLibrary: Bool {
+        return gameViewModel.cardsToCast.cardFromLibrary != Card.emptyCard() || gameViewModel.cardsToCast.tokensFromLibrary.count > 0
+    }
+    
     var body: some View {
         ZStack {
             // The button to leave the menu is the background
@@ -473,28 +485,32 @@ struct CastedCardView_iPhone: View {
                                 .padding(.top, 50)
                         }
                         
-                        VStack {
-                            Text("From Library")
-                                .fontWeight(.bold)
-                                .font(.title)
-                                .foregroundColor(.white)
-                                .scaleEffect(0.7)
-                            HStack(spacing: 36) {
-                                if cardToCastFromLibrary.cardType != .token {
-                                    CardToCastView_iPhone(card: cardToCastFromLibrary, showCardCount: false)
-                                }
-                                ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
-                                    CardToCastView_iPhone(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
+                        if isCastingSomethingFromLibrary {
+                            VStack {
+                                Text("From Library")
+                                    .fontWeight(.bold)
+                                    .font(.title)
+                                    .foregroundColor(.white)
+                                    .scaleEffect(0.7)
+                                HStack(spacing: 36) {
+                                    if cardToCastFromLibrary.cardType != .token {
+                                        CardToCastView_iPhone(card: cardToCastFromLibrary, showCardCount: false)
+                                    }
+                                    ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
+                                        CardToCastView_iPhone(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
+                                    }
                                 }
                             }
                         }
                         
                         if gameViewModel.cardsToCast.cardsFromHand.count > 0 {
                             
-                            Rectangle()
-                                .foregroundColor(.white)
-                                .frame(width: 2, height: CardSize_iPhone.height.big_cast / 2)
-                                .padding(.top, 50)
+                            if isCastingSomethingFromLibrary {
+                                Rectangle()
+                                    .foregroundColor(.white)
+                                    .frame(width: 2, height: CardSize_iPhone.height.big_cast / 2)
+                                    .padding(.top, 50)
+                            }
                             
                             VStack {
                                 Text("From Hand")
@@ -686,8 +702,7 @@ struct FlippingCardView_iPhone: View {
                 .cornerRadius(CardSize_iPhone.cornerRadius.normal)
                 .rotation3DEffect(Angle(degrees: frontDegree), axis: (x: 0, y: 1, z: 0))
                 .scaleEffect(cardScale)
-            Image("MTGBackground")
-                .resizable()
+            CardBackView()
                 .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal)
                 .cornerRadius(CardSize_iPhone.cornerRadius.normal)
                 .rotation3DEffect(Angle(degrees: backDegree), axis: (x: 0, y: 1, z: 0))
