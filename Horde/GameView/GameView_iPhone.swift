@@ -41,10 +41,9 @@ struct GameView_iPhone: View {
                         .environmentObject(lifepointsViewModel!)
                         .frame(width: UIScreen.main.bounds.width / 4.5)
                         .cornerRadius(15)
-                        .padding(.trailing, (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0))
                         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
                         .scaleEffect(0.7, anchor: .center)
-                }
+                }.padding(.trailing, (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0))
             }
             
             Group {
@@ -1053,7 +1052,7 @@ struct MenuView_iPhone: View {
                 VStack(alignment: .trailing, spacing: 0) {
                     MenuButtonView_iPhone(title: "Rules", id: 1).scaleEffect(0.7)
                     MenuButtonView_iPhone(title: "How to", id: 2).scaleEffect(0.7)
-                    MenuButtonView_iPhone(title: "Custom", id: 4).scaleEffect(0.7)
+                    MenuButtonView_iPhone(title: "Options", id: 4).scaleEffect(0.7)
                     MenuButtonView_iPhone(title: "Contact", id: 3).scaleEffect(0.7)
                     Spacer()
                 }.padding(.top, 20)

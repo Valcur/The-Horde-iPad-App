@@ -41,7 +41,7 @@ struct MenuView: View {
                 VStack(alignment: .trailing, spacing: 0) {
                     MenuButtonView(title: "Rules", id: 1)
                     MenuButtonView(title: "How to play", id: 2)
-                    MenuButtonView(title: "Custom", id: 4)
+                    MenuButtonView(title: "Options", id: 4)
                     MenuButtonView(title: "Contact", id: 3)
                     Spacer()
                 }
@@ -246,7 +246,7 @@ struct MenuHowToPlayView: View {
                         
                         MenuTextParagraphView(text: "Swipe up/down to increase/decrease. If you want to make a small change, press the upper part to increase, or the bottom part to decrease")
                         
-                        MenuTextParagraphView(text: "By default, the Horde heal when survivors lose life. If you don't want to play with this rules you can disable it in the 'Custom' menu")
+                        MenuTextParagraphView(text: "By default, the Horde heal when survivors lose life. If you don't want to play with this rules you can disable it in the 'Options' menu")
                     }
                     
                     VStack(alignment: .leading, spacing: 20) {
@@ -379,13 +379,15 @@ struct MenuContactView: View {
                     MenuTextParagraphView(text: "Join us on Discord !")
                     Image("DiscordIcon")
                         .resizable()
-                        .frame(width: 210, height: 60)
+                        .frame(width: 280, height: 75)
                 }
             }
             
             MenuTextTitleView(text: "Info")
             
             MenuTextParagraphView(text: "App icon by Superarticons")
+            
+            MenuTextParagraphView(text: "Sleeves art by Pazuah")
             
             MenuTextBoldParagraphView(text: "This app is unofficial Fan Content permitted under the Fan Content Policy. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC.")
         }.padding(.trailing, 30)
@@ -420,11 +422,12 @@ struct MenuCustomView: View {
                         hordeAppViewModel.saveStylePreferences()
                     }
                 
-                MenuTextSubtitleView(text: "Custom Sleeves")
+                HStack {
+                    MenuTextSubtitleView(text: "Custom Sleeves")
+                    Image(systemName: "crown.fill").foregroundColor(.white).font(.title)
+                }
                 
                 VStack {
-                    MenuTextParagraphView(text: "Sleeve Art")
-                    
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 10) {
                             MenuCustomSleeveArtChoiceView(artId: -1)
@@ -432,6 +435,11 @@ struct MenuCustomView: View {
                             MenuCustomSleeveArtChoiceView(artId: 1)
                             MenuCustomSleeveArtChoiceView(artId: 2)
                             MenuCustomSleeveArtChoiceView(artId: 3)
+                            MenuCustomSleeveArtChoiceView(artId: 4)
+                            MenuCustomSleeveArtChoiceView(artId: 5)
+                            MenuCustomSleeveArtChoiceView(artId: 6)
+                            MenuCustomSleeveArtChoiceView(artId: 7)
+                            MenuCustomSleeveArtChoiceView(artId: 8)
                         }
                     }
                     
@@ -441,9 +449,7 @@ struct MenuCustomView: View {
                         MenuCustomSleeveBorderColorChoiceView(colorId: 0)
                         MenuCustomSleeveBorderColorChoiceView(colorId: 1)
                     }
-                    
-                }//.opacity(hordeAppViewModel.isPremium ? 1 : 0.5)
-                
+                }.opacity(hordeAppViewModel.isPremium ? 1 : 0.5).allowsHitTesting(hordeAppViewModel.isPremium)
             }
             
             Group {

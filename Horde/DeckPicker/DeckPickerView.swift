@@ -23,7 +23,7 @@ struct DeckPickerView: View {
                     HStack {
                         if deckPickerViewModel.showIntro {
                             ZStack(alignment: .topTrailing) {
-                                DeckPickingIntro().id(-1)
+                                DeckPickingIntro()
                                 Button(action: {
                                     showHideIntroAlert = true
                                 }, label: {
@@ -31,12 +31,12 @@ struct DeckPickerView: View {
                                         .resizable()
                                         .frame(width: 30, height: 30)
                                         .foregroundColor(.white)
-                                })
-                            }.padding(.trailing, 45)
+                                }).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+                            }.padding(.trailing, 25)
                                 .alert(isPresented: $showHideIntroAlert) {
                                     Alert(
                                         title: Text("Hide Intro"),
-                                        message: Text("You see this message again"),
+                                        message: Text("You won't see the intro ever again"),
                                         primaryButton: .destructive(
                                             Text("Cancel"),
                                             action: {showHideIntroAlert = false}
@@ -59,7 +59,7 @@ struct DeckPickerView: View {
                                         .resizable()
                                         .frame(width: 30, height: 30)
                                         .foregroundColor(.white)
-                                })
+                                }).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
                             }.padding(.trailing, 45)
                                 .alert(isPresented: $showHideDiscordAlert) {
                                     Alert(
@@ -354,7 +354,6 @@ struct GetMoreDeckSlotView: View {
                         .foregroundColor(.white)
                     
                     Button(action: {
-                        //hordeAppViewModel.buy()
                         showingBuyInfo = true
                     }) {
                         HStack(spacing: 0) {
@@ -446,7 +445,7 @@ struct DeckPickingIntro: View {
             
             MenuTextWithImageParagraphView(text1: "", image: Image(systemName: "gear"), text2: "> How To Play to learn how to use this app")
         
-        }.frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 80).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+        }.frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 35).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
     }
 }
 
@@ -457,19 +456,17 @@ struct DeckPickingDiscordView: View {
             VStack(alignment: .leading, spacing: 30) {
                 Image("DiscordIcon")
                     .resizable()
-                    .frame(width: 280, height: 80)
+                    .frame(width: 280, height: 75)
                 
                 MenuTextBoldParagraphView(text: "Join us on Discord")
                 
-                MenuTextParagraphView(text: "Share your horde decks or find new decks in our Discord Channel.")
+                MenuTextParagraphView(text: "Share your horde decks or find new decks in our Discord server.")
                 
                 MenuTextBoldParagraphView(text: "Tap here to join")
                 
-            }.padding(30).frame(width: UIScreen.main.bounds.width / 3.5).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
-                .overlay(RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white, lineWidth: 2))
-                .padding([.leading, .trailing, .top], 35)
-        }
+            }.frame(width: 280)
+            .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+        }.padding([.leading, .trailing], 35).padding(.top, UIDevice.current.userInterfaceIdiom == .pad ? 40 : 0)
     }
 }
 

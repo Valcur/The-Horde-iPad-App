@@ -126,20 +126,35 @@ struct SleeveArtImageView: View {
     init(artId: Int) {
         switch artId {
         case -1:
-            art = Image("SleeveTest")
+            art = Image("BlackBackground")
             break
         case 0:
             art = Image("BlackBackground")
             art = getCustomSleeveArt()
             break
-        case 1:
-            art = Image("SleeveTest")
+        case 2:
+            art = Image("Sleeve_2")
             break
         case 3:
-            art = Image("SleeveTest-1")
+            art = Image("Sleeve_3")
+            break
+        case 4:
+            art = Image("Sleeve_4")
+            break
+        case 5:
+            art = Image("Sleeve_5")
+            break
+        case 6:
+            art = Image("Sleeve_6")
+            break
+        case 7:
+            art = Image("Sleeve_7")
+            break
+        case 8:
+            art = Image("Sleeve_8")
             break
         default:
-            art = Image("SleeveTest-2")
+            art = Image("Sleeve_1")
             break
         }
     }

@@ -79,14 +79,14 @@ class DeckPickerViewModel: ObservableObject {
         withAnimation(.easeInOut(duration: 0.5)) {
             self.showIntro = false
         }
-        //UserDefaults.standard.set(false, forKey: "ShowIntroduction")
+        UserDefaults.standard.set(false, forKey: "ShowIntroduction")
     }
     
     func hideDiscordInvite() {
         withAnimation(.easeInOut(duration: 0.5)) {
             self.showDiscordInvite = false
         }
-        //UserDefaults.standard.set(false, forKey: "ShowDiscordInvite")
+        UserDefaults.standard.set(false, forKey: "ShowDiscordInvite")
     }
 }
 

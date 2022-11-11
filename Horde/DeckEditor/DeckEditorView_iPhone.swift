@@ -134,10 +134,17 @@ struct TopTopControlRowView_iPhone: View {
             Button(action: {
                 deckEditorViewModel.exportDeckToClipboard()
             }, label: {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.title2)
+                Image(systemName: "doc.on.doc")
+                    .font(.title3)
                     .foregroundColor(.white)
             }).scaleEffect(0.7)
+            
+            Text("/")
+                .font(.title2)
+                .foregroundColor(.white)
+                .scaleEffect(0.7)
+            
+            ShareOnDiscordView().scaleEffect(0.7)
             
             Spacer()
             

@@ -34,24 +34,16 @@ class HordeAppViewModel: ObservableObject {
         self.difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
         self.gradientId = UserDefaults.standard.object(forKey: "GradientId") as? Int ?? 1
         self.useLessColorFullBackground = UserDefaults.standard.object(forKey: "UseLessColorFullBackground") as? Bool ?? false
-        self.customSleeveArtId = UserDefaults.standard.object(forKey: "CustomSleeveArtId") as? Int ?? -1
+        self.customSleeveArtId = -1
         self.customSleeveBorderColorId = UserDefaults.standard.object(forKey: "CustomSleeveBorderColorId") as? Int ?? 0
         self.oneRowBoardInsteadOfTwo = UserDefaults.standard.object(forKey: "OneRowBoardInsteadOfTwo") as? Bool ?? true
         self.useLifepointsCounter = UserDefaults.standard.object(forKey: "UseLifePointsCounter") as? Bool ?? true
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
         self.survivorStartingLife = UserDefaults.standard.object(forKey: "SurvivorStartingLife") as? Int ?? 60
-        self.allowReturnTokenToHand = UserDefaults.standard.object(forKey: "AllowReturnTokenToHand") as? Bool ?? false
+        self.allowReturnTokenToHand = UserDefaults.standard.object(forKey: "AllowReturnTokenToHand") as? Bool ?? true
         self.numberOfDeckSlot = 8
         
-        self.isPremium = true
-        var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
-        if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
-            testNbrOfDeckSlot += 1
-            UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
-        }
-        self.numberOfDeckSlot = testNbrOfDeckSlot
-        
-        /*IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
+        IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
         IAPManager.shared.refreshSubscriptionsStatus(callback: {
             let date = UserDefaults.standard.object(forKey: IAPManager.getSubscriptionId()) as? Date ?? Date()
             if date > Date() {
@@ -62,6 +54,7 @@ class HordeAppViewModel: ObservableObject {
                     testNbrOfDeckSlot += 1
                     UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
                 }
+                self.customSleeveArtId = UserDefaults.standard.object(forKey: "CustomSleeveArtId") as? Int ?? -1
                 self.numberOfDeckSlot = testNbrOfDeckSlot
             } else {
                 print("IS NOT PREMIUM SINCE \(date)")
@@ -71,7 +64,7 @@ class HordeAppViewModel: ObservableObject {
             }
         }, failure: { error in
             print("Error \(String(describing: error))")
-        })*/
+        })
     }
     
     func lostPremiumSubscription() {
@@ -91,8 +84,8 @@ class HordeAppViewModel: ObservableObject {
         }
         
         // Reset custom sleeves
-        self.customSleeveArtId = 0
-        UserDefaults.standard.set(0, forKey: "CustomSleeveArtId")
+        self.customSleeveArtId = -1
+        UserDefaults.standard.set(-1, forKey: "CustomSleeveArtId")
     }
     
     func createDeck(deckId: Int) {
@@ -134,8 +127,9 @@ class HordeAppViewModel: ObservableObject {
         UserDefaults.standard.set(gradientId, forKey: "GradientId")
     }
     
+    // UNUSED
     func saveStylePreferences() {
-        UserDefaults.standard.set(self.useLessColorFullBackground, forKey: "UseLessColorFullBackground")
+        //UserDefaults.standard.set(self.useLessColorFullBackground, forKey: "UseLessColorFullBackground")
     }
     
     func setCustomSleeveArtIdTo(artId: Int) {
