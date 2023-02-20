@@ -519,8 +519,8 @@ struct CastedCardView_iPhone: View {
                                     .frame(height: 50)
                                     .scaleEffect(0.7)
                                 HStack(spacing: 36) {
-                                    ForEach(gameViewModel.cardsToCast.cardsFromHand) { card in
-                                        CardToCastView_iPhone(card: card)
+                                    ForEach(0..<gameViewModel.cardsToCast.cardsFromHand.count, id: \.self) {
+                                        CardToCastView_iPhone(card: gameViewModel.cardsToCast.cardsFromHand[$0])
                                     }
                                 }
                             }

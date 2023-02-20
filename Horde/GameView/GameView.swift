@@ -499,8 +499,8 @@ struct CastedCardView: View {
                                 .foregroundColor(.white)
                                 .frame(height: 50)
                             HStack(spacing: 36) {
-                                ForEach(gameViewModel.cardsToCast.cardsFromHand) { card in
-                                    CardToCastView(card: card)
+                                ForEach(0..<gameViewModel.cardsToCast.cardsFromHand.count, id: \.self) {
+                                    CardToCastView(card: gameViewModel.cardsToCast.cardsFromHand[$0])
                                 }
                             }
                         }
@@ -600,7 +600,6 @@ struct GraveyardView: View {
                 .foregroundColor(.white)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 20) {
-                    //ForEach(gameViewModel.cardsOnGraveyard, id: \.self) { card in
                     ForEach(0..<gameViewModel.cardsOnGraveyard.count, id: \.self) { i in
                         VStack(spacing: 15) {
                             Button(action: {

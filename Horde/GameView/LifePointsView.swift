@@ -89,6 +89,7 @@ struct LifePointsHordePanelView: View {
 struct LifePointsSurvivorsPanelView: View {
     
     @EnvironmentObject var lifePointsViewModel: LifePointsViewModel
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     
     @State var prevValue: CGFloat = 0
     @State var totalChange: Int = 0
@@ -148,7 +149,9 @@ struct LifePointsSurvivorsPanelView: View {
     private func startTotalChangeTimer() {
         totalChangeTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { timer in
             if totalChange < 0 {
-                lifePointsViewModel.hordeLifepoints += -totalChange
+                if hordeAppViewModel.hordeGainLifeLostBySurvivor {
+                    lifePointsViewModel.hordeLifepoints += -totalChange
+                }
             }
             
             totalChange = 0

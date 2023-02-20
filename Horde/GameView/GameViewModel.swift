@@ -588,6 +588,7 @@ class GameViewModel: ObservableObject {
     }
     
     func castTopLibraryCard() {
+        guard deck.count > 0 else { return }
         let card = deck.last!
         showLibraryTopCard = false
         if card.cardType == .token || card.cardType == .creature || card.cardType == .enchantment || card.cardType == .artifact {

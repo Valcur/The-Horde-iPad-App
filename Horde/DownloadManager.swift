@@ -23,7 +23,7 @@ import SwiftUI
     func startDownloading() {
         if card.cardImageURL != "" {
             //print(card.cardName + " -> " + card.cardImageURL + " -> " + card.cardOracleId + card.specificSet)
-            let url = URL(string: card.cardImageURL)!
+            guard let url = URL(string: card.cardImageURL) else { return }
 
             self.loadData(cardName: card.cardId, url: url) { (data, error) in
                 // Handle the loaded file data
