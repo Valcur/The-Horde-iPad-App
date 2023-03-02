@@ -495,8 +495,8 @@ struct CastedCardView_iPhone: View {
                                     if cardToCastFromLibrary.cardType != .token {
                                         CardToCastView_iPhone(card: cardToCastFromLibrary, showCardCount: false)
                                     }
-                                    ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
-                                        CardToCastView_iPhone(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
+                                    ForEach(gameViewModel.cardsToCast.tokensFromLibrary, id: \.id) { card in
+                                        CardToCastView_iPhone(card: card)
                                     }
                                 }
                             }
@@ -519,8 +519,8 @@ struct CastedCardView_iPhone: View {
                                     .frame(height: 50)
                                     .scaleEffect(0.7)
                                 HStack(spacing: 36) {
-                                    ForEach(0..<gameViewModel.cardsToCast.cardsFromHand.count, id: \.self) {
-                                        CardToCastView_iPhone(card: gameViewModel.cardsToCast.cardsFromHand[$0])
+                                    ForEach(gameViewModel.cardsToCast.cardsFromHand, id: \.id) { card in
+                                        CardToCastView_iPhone(card: card)
                                     }
                                 }
                             }

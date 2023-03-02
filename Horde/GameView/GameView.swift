@@ -476,8 +476,8 @@ struct CastedCardView: View {
                                 if cardToCastFromLibrary.cardType != .token {
                                     CardToCastView(card: cardToCastFromLibrary, showCardCount: false)
                                 }
-                                ForEach(0..<gameViewModel.cardsToCast.tokensFromLibrary.count, id: \.self) {
-                                    CardToCastView(card: gameViewModel.cardsToCast.tokensFromLibrary[$0])
+                                ForEach(gameViewModel.cardsToCast.tokensFromLibrary, id: \.id) { card in
+                                    CardToCastView(card: card)
                                 }
                             }
                         }
@@ -499,8 +499,8 @@ struct CastedCardView: View {
                                 .foregroundColor(.white)
                                 .frame(height: 50)
                             HStack(spacing: 36) {
-                                ForEach(0..<gameViewModel.cardsToCast.cardsFromHand.count, id: \.self) {
-                                    CardToCastView(card: gameViewModel.cardsToCast.cardsFromHand[$0])
+                                ForEach(gameViewModel.cardsToCast.cardsFromHand, id: \.id) { card in
+                                    CardToCastView(card: card)
                                 }
                             }
                         }
@@ -555,15 +555,15 @@ struct StrongPermanentView: View {
 
                     HStack(spacing: 36) {
                         if UIDevice.current.userInterfaceIdiom == .pad {
-                            ForEach(0..<gameViewModel.strongPermanentsToSpawn.count, id: \.self) { i in
-                                CardView(card: gameViewModel.strongPermanentsToSpawn[i])
+                            ForEach(gameViewModel.strongPermanentsToSpawn, id: \.id) { card in
+                                CardView(card: card)
                                     .frame(width: CardSize.width.big, height: CardSize.height.big)
                                     .cornerRadius(CardSize.cornerRadius.big)
                                     .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
                             }
                         } else {
-                            ForEach(0..<gameViewModel.strongPermanentsToSpawn.count, id: \.self) { i in
-                                CardView(card: gameViewModel.strongPermanentsToSpawn[i])
+                            ForEach(gameViewModel.strongPermanentsToSpawn, id: \.id) { card in
+                                CardView(card: card)
                                     .frame(width: CardSize_iPhone.width.big_cast, height: CardSize_iPhone.height.big_cast)
                                     .cornerRadius(CardSize_iPhone.cornerRadius.big_cast)
                                     .shadow(color: Color("ShadowColor"), radius: 2, x: 0, y: 2)

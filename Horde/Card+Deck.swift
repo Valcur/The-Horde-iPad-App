@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class Card: Hashable, Identifiable {
+class Card: Hashable, Identifiable, ObservableObject {
     
     let id = UUID()
     let cardName: String

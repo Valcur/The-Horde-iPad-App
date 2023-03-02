@@ -418,7 +418,7 @@ struct MenuCustomView: View {
                 
                 Toggle("Use less colorful background", isOn: $hordeAppViewModel.useLessColorFullBackground)
                     .foregroundColor(.white)
-                    .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
+                    .onChange(of: hordeAppViewModel.useLessColorFullBackground) { _ in
                         hordeAppViewModel.saveStylePreferences()
                     }
                 
