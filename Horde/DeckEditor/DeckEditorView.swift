@@ -469,6 +469,7 @@ struct TopTopControlRowView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @State var deckName: String = ""
+    @State private var showSaveAlert = false
     
     var isUserAllowedToModifyDeckInfo: Bool {
         return (deckEditorViewModel.deckId < 7 && hordeAppViewModel.isPremium) || deckEditorViewModel.deckId >= 7
@@ -558,15 +559,38 @@ struct TopTopControlRowView: View {
             
             // Exit
             Button(action: {
-                withAnimation(.easeIn(duration: 0.5)) {
-                    hordeAppViewModel.showDeckEditor = false
-                    DownloadQueue.queue.resetQueue()
+                if deckEditorViewModel.showSaveButton {
+                    showSaveAlert = true
+                } else {
+                    withAnimation(.easeIn(duration: 0.5)) {
+                        hordeAppViewModel.showDeckEditor = false
+                        DownloadQueue.queue.resetQueue()
+                    }
                 }
             }, label: {
                 Image(systemName: "xmark")
                     .font(.title2)
                     .foregroundColor(.white)
             })
+            .alert(isPresented: $showSaveAlert) {
+                Alert(
+                    title: Text("Leave DeckEditor"),
+                    message: Text("You have unsaved changes."),
+                    primaryButton: .destructive(
+                        Text("Cancel"),
+                        action: {showSaveAlert = false}
+                    ),
+                    secondaryButton: .default(
+                        Text("Exit without saving"),
+                        action: {
+                            withAnimation(.easeIn(duration: 0.5)) {
+                                hordeAppViewModel.showDeckEditor = false
+                                DownloadQueue.queue.resetQueue()
+                            }
+                        }
+                    )
+                )
+            }
         }.padding(10)
     }
 }

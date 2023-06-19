@@ -29,7 +29,7 @@ struct MenuView: View {
                     hordeAppViewModel.shouldShowMenu = false
                     hordeAppViewModel.readyToPlay = false
                 }, label: {
-                    Text("Exit")
+                    Text("Menu")
                         .foregroundColor(.gray)
                         .fontWeight(.bold)
                         .font(.largeTitle)
@@ -337,6 +337,12 @@ struct MenuHowToPlayView: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 20) {
+                        MenuTextBoldParagraphView(text: "Can I import a horde decklist I found on another website ?")
+                        
+                        MenuTextParagraphView(text: "No, you can only import decklist made using this app.")
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 20) {
                         MenuTextBoldParagraphView(text: "I want a deck with 96.45% of tokens and 99.97814% of lategame cards, is it possible ?")
                         
                         MenuTextParagraphView(text: "You can make crazy decks but if your deck is far from a classic horde deck the option 'Remove the strongest cards from the beginning of the deck' might fail to generate the deck and get stuck. Just disable it and enjoy your crazy deck !")
@@ -461,7 +467,7 @@ struct MenuCustomView: View {
                         hordeAppViewModel.saveUserLifepointsCounterPreference()
                     }
                 
-                Toggle("The Horde heals when survivors loose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
+                Toggle("The Horde heals when survivors lose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
                     .foregroundColor(.white)
                     .onChange(of: hordeAppViewModel.hordeGainLifeLostBySurvivor) { _ in
                         hordeAppViewModel.saveUserLifepointsCounterPreference()

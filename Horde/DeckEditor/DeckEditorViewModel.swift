@@ -440,14 +440,17 @@ extension DeckEditorViewModel {
                         let cardDataArray = line.components(separatedBy: " ")
                         
                         let cardCount = Int(cardDataArray[0]) ?? 0
-                        var cardName = cardDataArray[4]
-                        for i in 5..<cardDataArray.count - 2 {
-                            cardName += " " + cardDataArray[i]
+
+                        if cardDataArray.count >= 7 {
+                            var cardName = cardDataArray[4]
+                            for i in 5..<cardDataArray.count - 2 {
+                                cardName += " " + cardDataArray[i]
+                            }
+                            
+                            let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardDataArray[3] == DeckDataPattern.cardHaveFlashback, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
+                            card.cardCount = cardCount
+                            addCardToSelectedDeck(card: card, onlyAddOne: false)
                         }
-                        
-                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardDataArray[3] == DeckDataPattern.cardHaveFlashback, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
-                        card.cardCount = cardCount
-                        addCardToSelectedDeck(card: card, onlyAddOne: false)
                     }
                 }
             }
@@ -563,8 +566,12 @@ extension DeckEditorViewModel {
     
     func importDeckFromClipboard() {
         if let deckData = UIPasteboard.general.string {
-            popUpText = "Deck list imported from clipboard"
             createDeckListFromDeckData(deckData: deckData)
+            if !deckData.contains(DeckDataPattern.deck){
+                popUpText = "Only import decklist made with this app"
+            } else {
+                popUpText = "Deck list imported from clipboard"
+            }
             showSaveButton = true
         }
     }

@@ -87,15 +87,28 @@ struct DeckEditorInfoView: View {
                                 .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                                 .padding()
                             
-                            TextEditor(text: $deckIntro)
-                                .frame(height: 120)
-                                .padding(.vertical)
-                                .foregroundColor(.white)
-                                .font(.subheadline)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                                .padding(.horizontal, 10)
-                                .border(.white, width: 2)
+                            if #available(iOS 16, *) {
+                                TextEditor(text: $deckIntro)
+                                    .scrollContentBackground(.hidden)
+                                    .frame(height: 120)
+                                    .padding(.vertical)
+                                    .foregroundColor(.white)
+                                    .font(.subheadline)
+                                    .autocapitalization(.none)
+                                    .disableAutocorrection(true)
+                                    .padding(.horizontal, 10)
+                                    .border(.white, width: 2)
+                            } else {
+                                TextEditor(text: $deckIntro)
+                                    .frame(height: 120)
+                                    .padding(.vertical)
+                                    .foregroundColor(.white)
+                                    .font(.subheadline)
+                                    .autocapitalization(.none)
+                                    .disableAutocorrection(true)
+                                    .padding(.horizontal, 10)
+                                    .border(.white, width: 2)
+                            }
                         }
                     }
                     
@@ -114,15 +127,28 @@ struct DeckEditorInfoView: View {
                                 .shadow(color: Color("ShadowColor"), radius: 8, x: 0, y: 4)
                                 .padding()
                             
-                            TextEditor(text: $deckRules)
-                                .frame(height: 120)
-                                .padding(.vertical)
-                                .foregroundColor(.white)
-                                .font(.subheadline)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                                .padding(.horizontal, 10)
-                                .border(.white, width: 2)
+                            if #available(iOS 16, *) {
+                                TextEditor(text: $deckRules)
+                                    .scrollContentBackground(.hidden)
+                                    .frame(height: 120)
+                                    .padding(.vertical)
+                                    .foregroundColor(.white)
+                                    .font(.subheadline)
+                                    .autocapitalization(.none)
+                                    .disableAutocorrection(true)
+                                    .padding(.horizontal, 10)
+                                    .border(.white, width: 2)
+                            } else {
+                                TextEditor(text: $deckRules)
+                                    .frame(height: 120)
+                                    .padding(.vertical)
+                                    .foregroundColor(.white)
+                                    .font(.subheadline)
+                                    .autocapitalization(.none)
+                                    .disableAutocorrection(true)
+                                    .padding(.horizontal, 10)
+                                    .border(.white, width: 2)
+                            }
                         }
                     }
                 }
