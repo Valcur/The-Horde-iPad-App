@@ -11,6 +11,8 @@
 		DB28BF98282FB13000A3BFBD /* DeckPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF97282FB13000A3BFBD /* DeckPickerView.swift */; };
 		DB28BF9A282FCEE300A3BFBD /* DeckPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF99282FCEE300A3BFBD /* DeckPickerViewModel.swift */; };
 		DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */; };
+		DB3027422A4073730012F88A /* DeckBrowserVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3027412A4073730012F88A /* DeckBrowserVM.swift */; };
+		DB3027452A4073860012F88A /* DeckBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3027442A4073860012F88A /* DeckBrowserView.swift */; };
 		DB46EC86288ADB2600781CB1 /* Zombie.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC85288ADB2600781CB1 /* Zombie.txt */; };
 		DB46EC8C288ADCCD00781CB1 /* Sliver.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8B288ADCCD00781CB1 /* Sliver.txt */; };
 		DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8D288ADCD700781CB1 /* Nature.txt */; };
@@ -45,6 +47,8 @@
 		DB28BF97282FB13000A3BFBD /* DeckPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckPickerView.swift; sourceTree = "<group>"; };
 		DB28BF99282FCEE300A3BFBD /* DeckPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckPickerViewModel.swift; sourceTree = "<group>"; };
 		DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HordeAppViewModel.swift; sourceTree = "<group>"; };
+		DB3027412A4073730012F88A /* DeckBrowserVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBrowserVM.swift; sourceTree = "<group>"; };
+		DB3027442A4073860012F88A /* DeckBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBrowserView.swift; sourceTree = "<group>"; };
 		DB46EC85288ADB2600781CB1 /* Zombie.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Zombie.txt; sourceTree = "<group>"; };
 		DB46EC8B288ADCCD00781CB1 /* Sliver.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Sliver.txt; sourceTree = "<group>"; };
 		DB46EC8D288ADCD700781CB1 /* Nature.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Nature.txt; sourceTree = "<group>"; };
@@ -95,6 +99,23 @@
 				DB28BF99282FCEE300A3BFBD /* DeckPickerViewModel.swift */,
 			);
 			path = DeckPicker;
+			sourceTree = "<group>";
+		};
+		DB3027402A4073620012F88A /* DeckBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				DB3027412A4073730012F88A /* DeckBrowserVM.swift */,
+				DB3027432A4073760012F88A /* Views */,
+			);
+			path = DeckBrowser;
+			sourceTree = "<group>";
+		};
+		DB3027432A4073760012F88A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DB3027442A4073860012F88A /* DeckBrowserView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		DB46EC84288ADAF400781CB1 /* StartingDecks */ = {
@@ -152,6 +173,7 @@
 		DB8C829528280289003DDED1 /* Horde */ = {
 			isa = PBXGroup;
 			children = (
+				DB3027402A4073620012F88A /* DeckBrowser */,
 				DB46EC84288ADAF400781CB1 /* StartingDecks */,
 				DB8C829628280289003DDED1 /* HordeApp.swift */,
 				DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */,
@@ -272,6 +294,7 @@
 				DB8C82A7282804EB003DDED1 /* GameViewModel.swift in Sources */,
 				DB491D0D287C4415001826E1 /* DeckEditorViewModel.swift in Sources */,
 				DB4C2C2728F83225003E2646 /* GameView_Extensions.swift in Sources */,
+				DB3027422A4073730012F88A /* DeckBrowserVM.swift in Sources */,
 				DB97BC1A282A6783001A216C /* DownloadManager.swift in Sources */,
 				DB8C829928280289003DDED1 /* GameView.swift in Sources */,
 				DBAEBC7B2844C56300E9137F /* GameIntroView.swift in Sources */,
@@ -283,6 +306,7 @@
 				DB8C82A528280349003DDED1 /* Card+Deck.swift in Sources */,
 				DB97BC1E282AEA5C001A216C /* Extensions.swift in Sources */,
 				DBAEBC792833D1BB00E9137F /* MenuView.swift in Sources */,
+				DB3027452A4073860012F88A /* DeckBrowserView.swift in Sources */,
 				DB532721288EE1A70039DFEA /* IAPManager.swift in Sources */,
 				DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */,
 				DB28BF98282FB13000A3BFBD /* DeckPickerView.swift in Sources */,
