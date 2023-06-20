@@ -13,6 +13,7 @@
 		DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */; };
 		DB3027422A4073730012F88A /* DeckBrowserVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3027412A4073730012F88A /* DeckBrowserVM.swift */; };
 		DB3027452A4073860012F88A /* DeckBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3027442A4073860012F88A /* DeckBrowserView.swift */; };
+		DB3027492A41C83B0012F88A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DB3027482A41C83B0012F88A /* GoogleService-Info.plist */; };
 		DB46EC86288ADB2600781CB1 /* Zombie.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC85288ADB2600781CB1 /* Zombie.txt */; };
 		DB46EC8C288ADCCD00781CB1 /* Sliver.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8B288ADCCD00781CB1 /* Sliver.txt */; };
 		DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8D288ADCD700781CB1 /* Nature.txt */; };
@@ -27,6 +28,9 @@
 		DB4C2C2728F83225003E2646 /* GameView_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4C2C2628F83225003E2646 /* GameView_Extensions.swift */; };
 		DB532721288EE1A70039DFEA /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB532720288EE1A70039DFEA /* IAPManager.swift */; };
 		DB532724288EE5430039DFEA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB532723288EE5430039DFEA /* StoreKit.framework */; };
+		DB7F9F932A41DCDA00CBB50C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = DB7F9F922A41DCDA00CBB50C /* FirebaseFirestore */; };
+		DB7F9F952A41DCDA00CBB50C /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = DB7F9F942A41DCDA00CBB50C /* FirebaseFirestoreCombine-Community */; };
+		DB7F9F972A41DCDA00CBB50C /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = DB7F9F962A41DCDA00CBB50C /* FirebaseFirestoreSwift */; };
 		DB8C829728280289003DDED1 /* HordeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829628280289003DDED1 /* HordeApp.swift */; };
 		DB8C829928280289003DDED1 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829828280289003DDED1 /* GameView.swift */; };
 		DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB8C829A2828028B003DDED1 /* Assets.xcassets */; };
@@ -49,6 +53,7 @@
 		DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HordeAppViewModel.swift; sourceTree = "<group>"; };
 		DB3027412A4073730012F88A /* DeckBrowserVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBrowserVM.swift; sourceTree = "<group>"; };
 		DB3027442A4073860012F88A /* DeckBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBrowserView.swift; sourceTree = "<group>"; };
+		DB3027482A41C83B0012F88A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DB46EC85288ADB2600781CB1 /* Zombie.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Zombie.txt; sourceTree = "<group>"; };
 		DB46EC8B288ADCCD00781CB1 /* Sliver.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Sliver.txt; sourceTree = "<group>"; };
 		DB46EC8D288ADCD700781CB1 /* Nature.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Nature.txt; sourceTree = "<group>"; };
@@ -85,7 +90,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB7F9F952A41DCDA00CBB50C /* FirebaseFirestoreCombine-Community in Frameworks */,
 				DB532724288EE5430039DFEA /* StoreKit.framework in Frameworks */,
+				DB7F9F932A41DCDA00CBB50C /* FirebaseFirestore in Frameworks */,
+				DB7F9F972A41DCDA00CBB50C /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +181,7 @@
 		DB8C829528280289003DDED1 /* Horde */ = {
 			isa = PBXGroup;
 			children = (
+				DB3027482A41C83B0012F88A /* GoogleService-Info.plist */,
 				DB3027402A4073620012F88A /* DeckBrowser */,
 				DB46EC84288ADAF400781CB1 /* StartingDecks */,
 				DB8C829628280289003DDED1 /* HordeApp.swift */,
@@ -229,6 +238,11 @@
 			dependencies = (
 			);
 			name = Horde;
+			packageProductDependencies = (
+				DB7F9F922A41DCDA00CBB50C /* FirebaseFirestore */,
+				DB7F9F942A41DCDA00CBB50C /* FirebaseFirestoreCombine-Community */,
+				DB7F9F962A41DCDA00CBB50C /* FirebaseFirestoreSwift */,
+			);
 			productName = Horde;
 			productReference = DB8C829328280289003DDED1 /* Horde.app */;
 			productType = "com.apple.product-type.application";
@@ -257,6 +271,9 @@
 				Base,
 			);
 			mainGroup = DB8C828A28280289003DDED1;
+			packageReferences = (
+				DB7F9F912A41DCDA00CBB50C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = DB8C829428280289003DDED1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -278,6 +295,7 @@
 				DB8C829E2828028B003DDED1 /* Preview Assets.xcassets in Resources */,
 				DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */,
 				DBC732322895C49A006834B1 /* Eldrazi.txt in Resources */,
+				DB3027492A41C83B0012F88A /* GoogleService-Info.plist in Resources */,
 				DB46EC90288ADCE400781CB1 /* Dinosaur.txt in Resources */,
 				DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */,
 			);
@@ -519,6 +537,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DB7F9F912A41DCDA00CBB50C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DB7F9F922A41DCDA00CBB50C /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB7F9F912A41DCDA00CBB50C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		DB7F9F942A41DCDA00CBB50C /* FirebaseFirestoreCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB7F9F912A41DCDA00CBB50C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreCombine-Community";
+		};
+		DB7F9F962A41DCDA00CBB50C /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB7F9F912A41DCDA00CBB50C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DB8C828B28280289003DDED1 /* Project object */;
 }

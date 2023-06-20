@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct HordeApp: App {
-    
     @UIApplicationDelegateAdaptor(MyAppDelegate.self) var appDelegate
     //let hordeAppViewModel = HordeAppViewModel()
     
@@ -26,8 +25,13 @@ struct HordeAppNoHomeIndicatorView: View {
     
     var body: some View {
         GeometryReader { _ in
+            /*
             HordeAppView()
                 .environmentObject(hordeAppViewModel)
+             */
+            DeckBrowserView()
+                .environmentObject(hordeAppViewModel)
+                .environmentObject(DeckBrowserViewModel())
         }.ignoresSafeArea()
     }
 }

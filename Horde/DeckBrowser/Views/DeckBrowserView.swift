@@ -28,6 +28,9 @@ struct MainView: View {
     var body: some View {
         VStack {
             HStack {
+                Button(action: {}, label: {
+                    PurpleButtonLabel(text: "Exit")
+                })
                 Text("Explore")
                     .headline()
                 
@@ -40,44 +43,59 @@ struct MainView: View {
                     .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
                     .cornerRadius(15).frame(maxWidth: 200)
                 
-                Button(action: {}, label: {
+                Button(action: {
+                    deckBrowserVM.searchForDecks(withText: searchText)
+                }, label: {
                     PurpleButtonLabel(text: "Search")
                 })
             }
             Rectangle().frame(height: 1).foregroundColor(.white)
             ScrollView {
                 LazyVGrid(columns: gridLayout) {
-                    ForEach(deckBrowserVM.decks[0..<deckBrowserVM.decks.count]) { deck in
-                        DeckView(deck: deck)
+                    if deckBrowserVM.decks.count == 0 {
+                        Text(deckBrowserVM.searchResultMessage)
+                            .headline()
+                    } else {
+                        ForEach(deckBrowserVM.decks[0..<deckBrowserVM.decks.count]) { deck in
+                            DeckView(deck: deck)
+                        }
                     }
                 }
             }.padding()
-        }.padding()
+        }.padding(.horizontal, 8).padding(.vertical, 10)
     }
     
     struct DeckView: View {
         @EnvironmentObject var deckBrowserVM: DeckBrowserViewModel
-        let deck: DeckBrowserDeck
+        @ObservedObject var deck: DeckBrowserDeck
+        
         var body: some View {
             Button(action: {
                 deckBrowserVM.setSelectedDeck(deck)
             }, label: {
                 ZStack {
-                    Color.black
-                    Image(deck.artId)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(height: 200)
-                    Color.black.opacity(0.3)
+                    if let image = deck.image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 150)
+                    } else {
+                        Color.black
+                    }
+                    
+                    Color.black.opacity(0.2)
                     VStack(alignment: .leading) {
                         Text(deck.title)
                             .title()
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         Spacer()
                         Text(deck.author)
                             .headline()
-                    }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }.padding(5)
                 }.cornerRadius(10)
-            }).frame(height: 200).padding()
+            }).frame(height: 150).padding(5)
         }
     }
 }
@@ -90,11 +108,21 @@ struct DeckView: View {
                 if let deck = selectedDeck {
                     Text(deck.title)
                         .title()
+                        .multilineTextAlignment(.leading)
                     
-                    Image(deck.artId)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 200)
+                    if let image = deck.image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 250)
+                            .clipped()
+                    } else {
+                        Color.black
+                    }
+                    
+                    Button(action: {}, label: {
+                        PurpleButtonLabel(text: "Play")
+                    })
                     
                     Text(deck.intro)
                         .headline()
@@ -105,15 +133,28 @@ struct DeckView: View {
                     Text(deck.rules)
                         .headline()
                     
+                    HStack {
+                        Button(action: {}, label: {
+                            PurpleButtonLabel(text: "Decklist")
+                        })
+                        Button(action: {}, label: {
+                            PurpleButtonLabel(text: "Add")
+                        })
+                    }
+                    
                     Spacer()
                 }
             }.padding()
         }.frame(width: 350).frame(maxHeight: .infinity).background(
             ZStack {
                 if let deck = selectedDeck {
-                    Image(deck.artId)
-                        .resizable()
-                        .scaledToFill()
+                    if let image = deck.image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        Color.black
+                    }
                 }
                 VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
             }.allowsHitTesting(false)

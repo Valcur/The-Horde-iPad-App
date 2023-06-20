@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import UIKit
+import FirebaseCore
 
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
@@ -50,6 +51,7 @@ class MyAppDelegate: NSObject, UIApplicationDelegate {
     ) -> UISceneConfiguration {
         let config = UISceneConfiguration(name: "My Scene Delegate", sessionRole: connectingSceneSession.role)
         config.delegateClass = MySceneDelegate.self
+        FirebaseApp.configure()
         return config
     }
 }
