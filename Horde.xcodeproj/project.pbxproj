@@ -13,7 +13,6 @@
 		DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */; };
 		DB3027422A4073730012F88A /* DeckBrowserVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3027412A4073730012F88A /* DeckBrowserVM.swift */; };
 		DB3027452A4073860012F88A /* DeckBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3027442A4073860012F88A /* DeckBrowserView.swift */; };
-		DB3027492A41C83B0012F88A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DB3027482A41C83B0012F88A /* GoogleService-Info.plist */; };
 		DB46EC86288ADB2600781CB1 /* Zombie.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC85288ADB2600781CB1 /* Zombie.txt */; };
 		DB46EC8C288ADCCD00781CB1 /* Sliver.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8B288ADCCD00781CB1 /* Sliver.txt */; };
 		DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */ = {isa = PBXBuildFile; fileRef = DB46EC8D288ADCD700781CB1 /* Nature.txt */; };
@@ -53,7 +52,6 @@
 		DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HordeAppViewModel.swift; sourceTree = "<group>"; };
 		DB3027412A4073730012F88A /* DeckBrowserVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBrowserVM.swift; sourceTree = "<group>"; };
 		DB3027442A4073860012F88A /* DeckBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBrowserView.swift; sourceTree = "<group>"; };
-		DB3027482A41C83B0012F88A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DB46EC85288ADB2600781CB1 /* Zombie.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Zombie.txt; sourceTree = "<group>"; };
 		DB46EC8B288ADCCD00781CB1 /* Sliver.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Sliver.txt; sourceTree = "<group>"; };
 		DB46EC8D288ADCD700781CB1 /* Nature.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Nature.txt; sourceTree = "<group>"; };
@@ -181,7 +179,6 @@
 		DB8C829528280289003DDED1 /* Horde */ = {
 			isa = PBXGroup;
 			children = (
-				DB3027482A41C83B0012F88A /* GoogleService-Info.plist */,
 				DB3027402A4073620012F88A /* DeckBrowser */,
 				DB46EC84288ADAF400781CB1 /* StartingDecks */,
 				DB8C829628280289003DDED1 /* HordeApp.swift */,
@@ -295,7 +292,6 @@
 				DB8C829E2828028B003DDED1 /* Preview Assets.xcassets in Resources */,
 				DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */,
 				DBC732322895C49A006834B1 /* Eldrazi.txt in Resources */,
-				DB3027492A41C83B0012F88A /* GoogleService-Info.plist in Resources */,
 				DB46EC90288ADCE400781CB1 /* Dinosaur.txt in Resources */,
 				DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */,
 			);
