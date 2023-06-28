@@ -15,54 +15,101 @@ struct DeckBrowserView: View {
         HStack(spacing: 0) {
             MainView()
             
-            DeckView(selectedDeck: deckBrowserVM.selectedDeck).shadow(radius: 5)
+            SelectedDeckView(selectedDeck: deckBrowserVM.selectedDeck).shadow(radius: 5)
         }.background(GradientView(gradientId: hordeAppViewModel.gradientId)).ignoresSafeArea()
     }
 }
 
 struct MainView: View {
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @EnvironmentObject var deckBrowserVM: DeckBrowserViewModel
     @State var searchText = ""
-    var gridLayout = [GridItem(), GridItem(), GridItem()]
+    var gridLayout: [GridItem] {
+        if UIDevice.isIPhone {
+            return [GridItem(), GridItem()]
+        }
+        return [GridItem(), GridItem(), GridItem()]
+    }
     
     var body: some View {
         VStack {
             HStack {
-                Button(action: {}, label: {
+                Button(action: {
+                    hordeAppViewModel.showDeckBrowser = false
+                }, label: {
                     PurpleButtonLabel(text: "Exit")
-                })
-                Text("Explore")
-                    .headline()
+                }).iPhoneScaler(maxHeight: 50, anchor: .leading)
                 
                 Spacer()
       
-                TextField("", text: $searchText)
+                HStack {
+                    TextField("", text: $searchText, onCommit: {
+                        deckBrowserVM.searchForDecks(withText: searchText)
+                    })
                     .font(.title3)
                     .foregroundColor(.white)
-                    .padding(15)
-                    .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
-                    .cornerRadius(15).frame(maxWidth: 200)
-                
-                Button(action: {
-                    deckBrowserVM.searchForDecks(withText: searchText)
-                }, label: {
-                    PurpleButtonLabel(text: "Search")
-                })
-            }
-            Rectangle().frame(height: 1).foregroundColor(.white)
+                    .placeholder("Search for decks", when: searchText.isEmpty)
+                    .padding(.horizontal, 15).padding(.vertical, 12)
+                    .blurredBackground().frame(width: 200)
+                    
+                    Button(action: {
+                        deckBrowserVM.searchForDecks(withText: searchText)
+                    }, label: {
+                        PurpleButtonLabel(text: "Search")
+                    })
+                }.iPhoneScaler(maxHeight: 50, anchor: .trailing).padding(.trailing, UIDevice.isIPhone ? 10 : 0)
+            }.padding(.leading, UIDevice.isIPhone ? 50 : 0)
+            //Rectangle().frame(height: 1).foregroundColor(.white)
             ScrollView {
-                LazyVGrid(columns: gridLayout) {
-                    if deckBrowserVM.decks.count == 0 {
+                VStack {
+                    if deckBrowserVM.resultStatus == .progress {
                         Text(deckBrowserVM.searchResultMessage)
                             .headline()
                     } else {
-                        ForEach(deckBrowserVM.decks[0..<deckBrowserVM.decks.count]) { deck in
-                            DeckView(deck: deck)
+                        if deckBrowserVM.resultStatus == .error {
+                            HStack {
+                                Text("Error")
+                                    .headline()
+                                
+                                Spacer()
+                                
+                                Button(action: {
+                                    deckBrowserVM.iniRecentDecks()
+                                }, label: {
+                                    PurpleButtonLabel(text: "Return")
+                                })
+                            }
+                        } else if deckBrowserVM.resultStatus == .nameSearch {
+                            HStack {
+                                Text(deckBrowserVM.decks.count == 0 ? "No result found for \(searchText)" : "Search result for \(searchText)")
+                                    .headline()
+                                
+                                Spacer()
+                                
+                                Button(action: {
+                                    deckBrowserVM.seeAllDecks()
+                                }, label: {
+                                    PurpleButtonLabel(text: "Return")
+                                })
+                            }
+                        }
+                        LazyVGrid(columns: gridLayout) {
+                            ForEach(deckBrowserVM.decks[0..<deckBrowserVM.decks.count]) { deck in
+                                DeckView(deck: deck)
+                            }
+
+                            if deckBrowserVM.resultStatus == .mostRecent {
+                                Button(action: {
+                                    deckBrowserVM.seeAllDecks()
+                                }, label: {
+                                    PurpleButtonLabel(text: "See all")
+                                })
+                            }
                         }
                     }
-                }
-            }.padding()
-        }.padding(.horizontal, 8).padding(.vertical, 10)
+                }.padding().iPhoneScaler(maxHeight: .infinity, scaleEffect: 0.95, anchor: .topTrailing)
+            }
+        }
     }
     
     struct DeckView: View {
@@ -95,16 +142,20 @@ struct MainView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }.padding(5)
                 }.cornerRadius(10)
-            }).frame(height: 150).padding(5)
+            }).frame(height: 150).padding(5).shadowed()
         }
     }
 }
 
-struct DeckView: View {
+struct SelectedDeckView: View {
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    @EnvironmentObject var deckBrowserVM: DeckBrowserViewModel
+    @State var progressMessage = ""
     let selectedDeck: DeckBrowserDeck?
+    
     var body: some View {
         ScrollView(.vertical) {
-            VStack {
+            VStack(spacing: 20) {
                 if let deck = selectedDeck {
                     Text(deck.title)
                         .title()
@@ -114,38 +165,51 @@ struct DeckView: View {
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFill()
-                            .frame(height: 250)
+                            .frame(width: UIDevice.isIPhone ? 230 : 330, height: UIDevice.isIPhone ? 150 : 250)
                             .clipped()
                     } else {
                         Color.black
+                            .frame(width: UIDevice.isIPhone ? 230 : 330, height: UIDevice.isIPhone ? 150 : 250)
                     }
                     
-                    Button(action: {}, label: {
-                        PurpleButtonLabel(text: "Play")
+                    Button(action: {
+                        deckBrowserVM.playWithSelectedDeck()
+                        hordeAppViewModel.readyToPlay = true
+                    }, label: {
+                        PurpleButtonLabel(text: "Play", isPrimary: true)
                     })
                     
                     Text(deck.intro)
-                        .headline()
+                        .text()
                     
                     Text("Special rules")
-                        .title()
+                        .headline()
                     
                     Text(deck.rules)
+                        .text()
+                    
+                    Text(progressMessage)
                         .headline()
                     
                     HStack {
-                        Button(action: {}, label: {
+                        Button(action: {
+                            hordeAppViewModel.showDeckEditor = true
+                        }, label: {
                             PurpleButtonLabel(text: "Decklist")
                         })
-                        Button(action: {}, label: {
-                            PurpleButtonLabel(text: "Add")
-                        })
+                        if deck.image != nil && progressMessage != "Deck added" {
+                            Button(action: {
+                                deckBrowserVM.addToYourDecks(progressMessage: $progressMessage)
+                            }, label: {
+                                PurpleButtonLabel(text: "Add")
+                            })
+                        }
                     }
                     
                     Spacer()
                 }
-            }.padding()
-        }.frame(width: 350).frame(maxHeight: .infinity).background(
+            }.padding(.horizontal, 10).padding(.top, 15)
+        }.frame(width: UIDevice.isIPhone ? 250 : 350).frame(maxHeight: .infinity).background(
             ZStack {
                 if let deck = selectedDeck {
                     if let image = deck.image {
@@ -159,39 +223,24 @@ struct DeckView: View {
                 VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
             }.allowsHitTesting(false)
         ).clipped()
+        .onChange(of: selectedDeck) { _ in
+            progressMessage = ""
+        }
     }
 }
-
-
 
 struct DeckBrowserView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 15, *) {
             DeckBrowserView()
                 .environmentObject(HordeAppViewModel())
-                .environmentObject(DeckBrowserViewModel())
+                .environmentObject(DeckBrowserViewModel(hordeVM: HordeAppViewModel()))
                 .previewInterfaceOrientation(.landscapeLeft)
                 .previewDevice(PreviewDevice(rawValue: "iPad Air (5th generation)"))
         } else {
             DeckBrowserView()
                 .environmentObject(HordeAppViewModel())
-                .environmentObject(DeckBrowserViewModel())
+                .environmentObject(DeckBrowserViewModel(hordeVM: HordeAppViewModel()))
         }
-    }
-}
-
-extension Text {
-    func title() -> Text {
-        self
-            .font(.title)
-            .fontWeight(.bold)
-            .foregroundColor(.white)
-    }
-    
-    func headline() -> Text {
-        self
-            .font(.title3)
-            .fontWeight(.semibold)
-            .foregroundColor(.white)
     }
 }

@@ -132,7 +132,7 @@ class DownloadQueue: NSObject {
         self.timeToStartDownload = Date()
     }
     private var timeToStartDownload: Date
-    private var delayBetweenDownloads: CGFloat = 0.5
+    private var delayBetweenDownloads: CGFloat = 0.1
     
     func getDelayBeforeDownload(card: Card) -> TimeInterval {
         if imageAlreadyDownloaded(card: card) { return 0 }

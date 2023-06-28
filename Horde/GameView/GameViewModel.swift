@@ -59,7 +59,7 @@ class GameViewModel: ObservableObject {
         turnStep = -1
         marathonStage = -1
         
-        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
+        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100, tokensAreRealCards: true), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
         
         strongPermanentsAlreadySpawned = [false, false, false, false]
         
@@ -318,7 +318,7 @@ class GameViewModel: ObservableObject {
     }
     
     func sendToGraveyard(card: Card) {
-        if card.cardType != .token {
+        if card.cardType != .token || gameConfig.shared.tokensAreRealCards {
             let tmpCard = card.recreateCard()
             tmpCard.cardCount = 1
             cardsOnGraveyard.append(tmpCard)
@@ -544,7 +544,7 @@ class GameViewModel: ObservableObject {
     func sendTopLibraryCardToGraveyard() {
         if deck.count > 0 {
             let card = deck.removeLast()
-            if card.cardType != .token {
+            if card.cardType != .token || gameConfig.shared.tokensAreRealCards {
                 cardsOnGraveyard.append(card)
             }
             damageTakenThisTurn += 1
@@ -655,10 +655,10 @@ class GameViewModel: ObservableObject {
         }
     }
     
-    func returnToHandFromBoard(card: Card, allowTokenReturnToHand: Bool) {
+    func returnToHandFromBoard(card: Card) {
         exileOneCardOnBoard(card: card)
         
-        if card.cardType != .token || allowTokenReturnToHand {
+        if card.cardType != .token || gameConfig.shared.tokensAreRealCards {
             let tmpCard = card.recreateCard()
             tmpCard.cardCount = 1
             withAnimation(.easeInOut(duration: 0.5)) {
@@ -672,7 +672,7 @@ class GameViewModel: ObservableObject {
     func discardACardAtRandom() {
         if hand.count > 0 {
             let card = hand.remove(at: Int.random(in: 0..<hand.count))
-            if card.cardType != .token {
+            if card.cardType != .token || gameConfig.shared.tokensAreRealCards {
                 cardsOnGraveyard.append(card)
             }
         }
@@ -689,6 +689,7 @@ struct SharedParameters {
     var shouldStartWithWeakPermanent: Bool
     var shouldntHaveStrongCardsInFirstQuarter: Bool
     var deckSize: Int
+    var tokensAreRealCards: Bool
 }
 
 struct ClassicModeParameters {

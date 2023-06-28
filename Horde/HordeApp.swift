@@ -25,13 +25,8 @@ struct HordeAppNoHomeIndicatorView: View {
     
     var body: some View {
         GeometryReader { _ in
-            /*
-            HordeAppView()
+            HordeAppView(hordeVM: hordeAppViewModel)
                 .environmentObject(hordeAppViewModel)
-             */
-            DeckBrowserView()
-                .environmentObject(hordeAppViewModel)
-                .environmentObject(DeckBrowserViewModel())
         }.ignoresSafeArea()
     }
 }
@@ -42,6 +37,11 @@ struct HordeAppView: View {
     let gameViewModel = GameViewModel()
     let deckPickerViewModel = DeckPickerViewModel()
     let deckEditorViewModel = DeckEditorViewModel()
+    let deckBrowserVM: DeckBrowserViewModel
+    
+    init(hordeVM: HordeAppViewModel) {
+        deckBrowserVM = DeckBrowserViewModel(hordeVM: hordeVM)
+    }
 
     var body: some View {
         ZStack {
@@ -65,6 +65,19 @@ struct HordeAppView: View {
                             gameViewModel.startGame()
                         }
                 }
+            } else if hordeAppViewModel.showDeckBrowser {
+                DeckBrowserView()
+                    .environmentObject(deckBrowserVM)
+                    .statusBar(hidden: true)
+                    .onChange(of: hordeAppViewModel.showDeckEditor) { isShowing in
+                        if isShowing {
+                            if let selectedDeck = deckBrowserVM.selectedDeck {
+                                deckEditorViewModel.iniWithDeckBrowser(deckList: selectedDeck.deckList)
+                            }
+                        } else {
+                            deckEditorViewModel.deckId = -1
+                        }
+                    }
             } else {
                 DeckPickerView()
                     .environmentObject(deckPickerViewModel)
@@ -77,19 +90,18 @@ struct HordeAppView: View {
                             deckEditorViewModel.deckId = -1
                         }
                     }
-                
-                if hordeAppViewModel.showDeckEditor {
-                    if UIDevice.current.userInterfaceIdiom == .pad {
-                        DeckEditorView()
-                            .environmentObject(deckEditorViewModel)
-                            .statusBar(hidden: true)
-                            .transition(.opacity)
-                    } else {
-                        DeckEditorView_iPhone()
-                            .environmentObject(deckEditorViewModel)
-                            .statusBar(hidden: true)
-                            .transition(.opacity)
-                    }
+            }
+            if hordeAppViewModel.showDeckEditor {
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    DeckEditorView()
+                        .environmentObject(deckEditorViewModel)
+                        .statusBar(hidden: true)
+                        .transition(.opacity)
+                } else {
+                    DeckEditorView_iPhone()
+                        .environmentObject(deckEditorViewModel)
+                        .statusBar(hidden: true)
+                        .transition(.opacity)
                 }
             }
             if hordeAppViewModel.shouldShowMenu {

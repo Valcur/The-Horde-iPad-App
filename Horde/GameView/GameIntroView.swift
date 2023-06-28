@@ -150,6 +150,9 @@ struct IntroSetupView: View {
                     
                     Toggle("Remove the strongest cards from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
                         .foregroundColor(.white)
+                    
+                    Toggle("Tokens are sent to the graveyard and returned to hand", isOn: $gameViewModel.gameConfig.shared.tokensAreRealCards)
+                        .foregroundColor(.white)
                 }
             }.padding([.leading, .trailing], 50)
         }.background(Color(.white).opacity(0.00000001))

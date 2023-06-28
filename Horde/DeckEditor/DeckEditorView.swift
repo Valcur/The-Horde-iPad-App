@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct DeckEditorView: View {
-    
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State private var username: String = ""
     
@@ -16,7 +15,7 @@ struct DeckEditorView: View {
         GeometryReader { _ in
             ZStack {
                 HStack(spacing: 0){
-                    if !deckEditorViewModel.isDeckTooStrongSelected() {
+                    if !deckEditorViewModel.isDeckTooStrongSelected() && !deckEditorViewModel.isReadOnly {
                         LeftPanelView()
                             .frame(width: EditorSize.cardSearchPanelWidth)
                             .transition(.move(edge: .leading))
@@ -215,6 +214,7 @@ struct CardShowView: View {
     @State var card: Card
     @State var cardType: CardType
     @State var hasCardFlashback: Bool
+    @State var hasCardDefender: Bool
     
     private let gradient = Gradient(colors: [Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.3), Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.0)])
     
@@ -226,6 +226,7 @@ struct CardShowView: View {
         self.card = card
         self.cardType = card.cardType
         self.hasCardFlashback = card.hasFlashback
+        self.hasCardDefender = card.hasDefender
     }
     
     var body: some View {
@@ -249,6 +250,7 @@ struct CardShowView: View {
                             let tmpCard = selectedCard
                             tmpCard.cardType = self.cardType
                             tmpCard.hasFlashback = self.hasCardFlashback
+                            tmpCard.hasDefender = self.hasCardDefender
                             if deckEditorViewModel.removeCardShouldBeAnimated(card: tmpCard) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     deckEditorViewModel.removeCardFromSelectedDeck(card: tmpCard)
@@ -270,6 +272,7 @@ struct CardShowView: View {
                             let tmpCard = selectedCard
                             tmpCard.cardType = self.cardType
                             tmpCard.hasFlashback = self.hasCardFlashback
+                            tmpCard.hasDefender = self.hasCardDefender
                             if deckEditorViewModel.addCardShouldBeAnimated(card: tmpCard) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     deckEditorViewModel.addCardToSelectedDeck(card: tmpCard)
@@ -313,10 +316,12 @@ struct CardShowView: View {
                 }
             }
             .padding(20).padding(.top, 50)
+            
             .onChange(of: deckEditorViewModel.carouselIndex) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
+                    self.hasCardDefender = selectedCard.hasDefender
                 }
             }.onChange(of: cardType) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -329,19 +334,39 @@ struct CardShowView: View {
                         deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
                     }
                 }
+            }.onChange(of: hasCardDefender) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.selectedCard.hasDefender = self.hasCardDefender
+                    withAnimation(nil) {
+                        deckEditorViewModel.changeCardDefenderFromSelectedDeck(card: selectedCard, newDefenderValue: hasCardDefender)
+                    }
+                }
             }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
+                    self.hasCardDefender = selectedCard.hasDefender
                 }
             }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
+                    self.hasCardDefender = selectedCard.hasDefender
                 }
             }
             
             if selectedCard.cardType == .creature || selectedCard.cardType == .token {
+                
+                // Enable/Disable defender
+                Toggle(isOn: $hasCardDefender) {
+                    VStack(alignment: .leading) {
+                        Text("Can't attack")
+                            .foregroundColor(.white)
+                            .font(.title3)
+                    }
+                }
+                .padding(.horizontal, 20).padding(.top, 0).padding(.bottom, 20)
+                
                 // Select card type
                 Text("Change card type")
                     .foregroundColor(.white)
@@ -430,7 +455,7 @@ struct TopControlRowView: View {
                 Spacer()
                 DeckListSelectorView(deckListName: "Weak", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
                 Spacer()
-                DeckListSelectorView(deckListName: "Powerfull", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
+                DeckListSelectorView(deckListName: "Powerful", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
             }.frame(height: 40).padding([.leading, .trailing], 20)
             
             HStack() {
@@ -472,7 +497,7 @@ struct TopTopControlRowView: View {
     @State private var showSaveAlert = false
     
     var isUserAllowedToModifyDeckInfo: Bool {
-        return (deckEditorViewModel.deckId < 7 && hordeAppViewModel.isPremium) || deckEditorViewModel.deckId >= 7
+        return !deckEditorViewModel.isReadOnly && ((deckEditorViewModel.deckId < 7 && hordeAppViewModel.isPremium) || deckEditorViewModel.deckId >= 7)
     }
     
     var body: some View {
@@ -508,37 +533,40 @@ struct TopTopControlRowView: View {
                 }.padding(.leading, 30).padding(.trailing, 80) // To make the button bigger
             })
 
-            
-            // Save
-            Button(action: {
-                deckEditorViewModel.saveDeck()
-            }, label: {
-                HStack {
-                    Text("Save")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                    
-                    Image(systemName: "arrow.down.doc")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                }
-            }).padding(.leading, 30).padding(.trailing, 80) // To make the button bigger
-                .opacity(deckEditorViewModel.showSaveButton ? 1 : 0)
+            if !deckEditorViewModel.isReadOnly {
+                // Save
+                Button(action: {
+                    deckEditorViewModel.saveDeck()
+                }, label: {
+                    HStack {
+                        Text("Save")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                        
+                        Image(systemName: "arrow.down.doc")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }
+                }).padding(.leading, 30).padding(.trailing, 80) // To make the button bigger
+                    .opacity(deckEditorViewModel.showSaveButton ? 1 : 0)
+            }
             
             Spacer()
             
-            // Import
-            Button(action: {
-                deckEditorViewModel.importDeckFromClipboard()
-            }, label: {
-                Image(systemName: "square.and.arrow.down")
+            if !deckEditorViewModel.isReadOnly {
+                // Import
+                Button(action: {
+                    deckEditorViewModel.importDeckFromClipboard()
+                }, label: {
+                    Image(systemName: "square.and.arrow.down")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                })
+                
+                Text("/")
                     .font(.title2)
                     .foregroundColor(.white)
-            })
-            
-            Text("/")
-                .font(.title2)
-                .foregroundColor(.white)
+            }
             
             // Export
             Button(action: {
@@ -629,7 +657,7 @@ struct DeckListView: View {
                             deckEditorViewModel.showCard(card: card)
                         }, label: {
                             CardOnDeckListView(card: card, showCardCount: !(deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList))
-                        }).transition(.scale.combined(with: .opacity))
+                        }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
                     }
                 }.padding([.leading, .trailing], 10).padding(.bottom, 10)
             }.animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
@@ -769,7 +797,7 @@ struct DeckListMainDeckView: View {
                                 deckEditorViewModel.showCard(card: card)
                             }, label: {
                                 CardOnDeckListView(card: card)
-                            }).transition(.scale.combined(with: .opacity))
+                            }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
                 }
@@ -793,7 +821,7 @@ struct DeckListTooStrongView: View {
                             }, label: {
                                 CardOnDeckListView(card: card)
                                     .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
-                            }).transition(.scale.combined(with: .opacity))
+                            }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
                 }
@@ -829,6 +857,13 @@ struct CardOnDeckListView: View {
                     .foregroundColor(.white)
                     .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
                     .offset(x: CardSize.width.normal / 3, y: -CardSize.height.normal / 3)
+            }
+            if card.hasDefender {
+                Text("Can't attack")
+                    .headline()
+                    .padding()
+                    .blurredBackground()
+                    .offset(y: -CardSize.height.normal / 6)
             }
         }
         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)

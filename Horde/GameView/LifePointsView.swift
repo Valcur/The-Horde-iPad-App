@@ -187,6 +187,8 @@ struct LifePointsPanelView: View {
                     .foregroundColor(.white)
                 
                 Spacer()
+                
+                Spacer()
             }
             
             

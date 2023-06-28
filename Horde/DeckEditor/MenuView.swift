@@ -533,14 +533,6 @@ struct MenuCustomView: View {
                             hordeAppViewModel.saveBattlefieldRowStylePreference()
                         }
                 }
-                
-                MenuTextSubtitleView(text: "Hand")
-                
-                Toggle("Allow tokens to be returned to hand (if set to NO, they will be exiled when returned to hand)", isOn: $hordeAppViewModel.allowReturnTokenToHand)
-                    .foregroundColor(.white)
-                    .onChange(of: hordeAppViewModel.oneRowBoardInsteadOfTwo) { _ in
-                        hordeAppViewModel.saveAllowTokenReturnToHandPreference()
-                    }
             }
             
             MenuTextSubtitleView(text: "Delete images")

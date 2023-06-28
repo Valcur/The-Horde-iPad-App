@@ -46,7 +46,8 @@ struct DeckManager {
                             cardName += " " + cardDataArray[i]
                         }
                         
-                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardDataArray[3] == DeckEditorViewModel.DeckDataPattern.cardHaveFlashback, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
+                        let cardEffects = DeckEditorViewModel.getCardSpecialEffects(effects: cardDataArray[3])
+                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
                         card.cardCount = cardCount
                         deck = addCardToSelectedDeck(card: card, selectedDeckListNumber: selectedDeckListNumber, deckList: deck)
                     }

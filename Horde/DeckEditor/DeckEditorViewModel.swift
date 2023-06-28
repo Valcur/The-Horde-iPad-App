@@ -14,7 +14,7 @@ class DeckEditorViewModel: ObservableObject {
     @Published var selectedDeckListNumber: Int = DeckSelectionNumber.deckList
     @Published var deck: DeckEditorCardList = DeckEditorCardList(deckList: MainDeckList(creatures: [], tokens: [], instantsAndSorceries: [], artifactsAndEnchantments: []), tooStrongPermanentsList: [], availableTokensList: [], weakPermanentsList: [], powerfullPermanentsList: [])
     @Published var deckSelectionInfo: String = ""
-    @Published var searchProgressInfo: String = "Let's search for some cards"
+    @Published var searchProgressInfo: String = ""
     @Published var popUpText: String = ""
     @Published var searchResult: [CardFromCardSearch] = []
     @Published var cardToShow: Card? //= Card(cardName: "AAAA", cardType: .token)
@@ -24,6 +24,7 @@ class DeckEditorViewModel: ObservableObject {
     @Published var cardCountForSelectedDeck: String = ""
     @Published var carouselIndex = 0
     @Published var showSaveButton = false
+    @Published var isReadOnly = false
     
     func changeSelectedDeckTo(newSelectedDeck: Int) {
         selectedDeckListNumber = newSelectedDeck
@@ -291,6 +292,49 @@ class DeckEditorViewModel: ObservableObject {
         showSaveButton = true
     }
     
+    func changeCardDefenderFromSelectedDeck(card : Card, newDefenderValue: Bool) {
+        
+        var deckSelected = getSelectedDeck(card: card)
+        
+        if selectedDeckListNumber == DeckSelectionNumber.deckList
+        {
+            if deckSelected.contains(card) {
+                
+                let tmpCard = deckSelected[deckSelected.firstIndex(of: card)!].recreateCard()
+                tmpCard.hasDefender = newDefenderValue
+                
+                // Remove
+                deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected, removeCompletely: true)
+                saveToSelectedDeck(deckSelected: deckSelected, card: card)
+                
+                // Add
+                addCardToSelectedDeck(card: tmpCard, onlyAddOne: false)
+                saveToSelectedDeck(deckSelected: getSelectedDeck(card: tmpCard), card: tmpCard)
+                
+                // Changing main deck type change in tooStrong at the same time
+                deck.tooStrongPermanentsList = changeCardDefenderValueFromSpecificDeck(card: card, newCardDefenderValue: newDefenderValue, deck: deck.tooStrongPermanentsList)
+            }
+        } else {
+            // MUST BE CLEANED
+            if deckSelected.firstIndex(of: card) != nil{
+                let tmpCard = deckSelected[deckSelected.firstIndex(of: card)!].recreateCard()
+                tmpCard.hasDefender = newDefenderValue
+                
+                // Remove
+                deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected, removeCompletely: true)
+                saveToSelectedDeck(deckSelected: deckSelected, card: card)
+                
+                // Add
+                addCardToSelectedDeck(card: tmpCard, onlyAddOne: false)
+                saveToSelectedDeck(deckSelected: getSelectedDeck(card: tmpCard), card: tmpCard)
+            } else {
+                deckSelected = changeCardDefenderValueFromSpecificDeck(card: card, newCardDefenderValue: newDefenderValue, deck: deckSelected)
+                saveToSelectedDeck(deckSelected: deckSelected)
+            }
+        }
+        showSaveButton = true
+    }
+    
     func removeCardFromSpecificDeck(card : Card, deck: [Card], removeCompletely: Bool = false) -> [Card] {
         var tmpArray = deck
         for i in 0..<tmpArray.count {
@@ -331,6 +375,18 @@ class DeckEditorViewModel: ObservableObject {
         for i in 0..<tmpArray.count {
             if tmpArray[i] == card {
                 tmpArray[i].hasFlashback = newCardFlashbackValue
+                
+                return tmpArray
+            }
+        }
+        return deck
+    }
+    
+    func changeCardDefenderValueFromSpecificDeck(card : Card, newCardDefenderValue: Bool, deck: [Card]) -> [Card] {
+        let tmpArray = deck
+        for i in 0..<tmpArray.count {
+            if tmpArray[i] == card {
+                tmpArray[i].hasDefender = newCardDefenderValue
                 
                 return tmpArray
             }
@@ -398,8 +454,10 @@ class DeckEditorViewModel: ObservableObject {
         static let availableTokens = "## Available Tokens ##"
         static let weakPermanents = "## Weak Permanents ##"
         static let powerfullPermanents = "## Powerfull Permanents ##"
-        static let cardHaveFlashback = "YES"
-        static let cardDontHaveFlashback = "NO"
+        static let cardHaveFlashbackOLD = "YES"
+        static let cardDontHaveFlashbackOLD = "NO"
+        static let cardHaveFlashback = "f"
+        static let cardHaveDefender = "d"
     }
 }
 
@@ -412,6 +470,14 @@ extension DeckEditorViewModel {
         createDeckListFromDeckData(deckData: deckData)
         showSaveButton = false
         updateCardCountForSelectedDeck()
+        isReadOnly = false
+    }
+    
+    func iniWithDeckBrowser(deckList: String) {
+        createDeckListFromDeckData(deckData: deckList)
+        showSaveButton = false
+        updateCardCountForSelectedDeck()
+        isReadOnly = true
     }
     
     func createDeckListFromDeckData(deckData: String) {
@@ -447,7 +513,8 @@ extension DeckEditorViewModel {
                                 cardName += " " + cardDataArray[i]
                             }
                             
-                            let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback: cardDataArray[3] == DeckDataPattern.cardHaveFlashback, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
+                            let cardEffects = DeckEditorViewModel.getCardSpecialEffects(effects: cardDataArray[3])
+                            let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback:  cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
                             card.cardCount = cardCount
                             addCardToSelectedDeck(card: card, onlyAddOne: false)
                         }
@@ -522,8 +589,22 @@ extension DeckEditorViewModel {
     func getCardDataString(card: Card) -> String {
         // For tokens we remove the set from the name
         let cardName = card.cardType == .token ? card.cardName.replacingOccurrences(of: card.specificSet, with: "") : card.cardName
-        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(card.hasFlashback ? DeckDataPattern.cardHaveFlashback : DeckDataPattern.cardDontHaveFlashback) \(cardName) \(card.cardOracleId) \(card.cardId)\n"
+        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(cardSpecialEffectsToString(cardHasFlashback: card.hasFlashback, cardHasDefender: card.hasDefender)) \(cardName) \(card.cardOracleId) \(card.cardId)\n"
         return cardData
+    }
+    
+    static func getCardSpecialEffects(effects: String) -> (Bool, Bool) {
+        // Old format
+        if effects == DeckDataPattern.cardHaveFlashbackOLD || effects == DeckDataPattern.cardDontHaveFlashbackOLD {
+            return (effects == DeckDataPattern.cardHaveFlashbackOLD, false)
+        }
+        let effectsArray = effects.components(separatedBy: "-")
+        return (effectsArray[0] == DeckDataPattern.cardHaveFlashback,
+                effectsArray[1] == DeckDataPattern.cardHaveDefender)
+    }
+    
+    private func cardSpecialEffectsToString(cardHasFlashback: Bool, cardHasDefender: Bool) -> String {
+        return "\(cardHasFlashback ? DeckDataPattern.cardHaveFlashback : "")-\(cardHasDefender ? DeckDataPattern.cardHaveDefender : "")"
     }
 }
 
@@ -610,7 +691,7 @@ extension DeckEditorViewModel {
                             if decodedData.data != nil {
                                 self.searchResult = []
                                 decodedData.data!.forEach {
-                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
+                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), hasDefender: true, specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
                                 }
                             }
                             self.searchProgressInfo = "Nothing found"

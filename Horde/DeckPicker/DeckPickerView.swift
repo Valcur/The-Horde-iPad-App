@@ -79,6 +79,8 @@ struct DeckPickerView: View {
                         
                         ZStack() {}.frame(width: 30, height: 1)
                         
+                        DeckPicker_DeckBrowserView()
+                        
                         ForEach(0..<hordeAppViewModel.numberOfDeckSlot, id: \.self) { i in
                             if deckPickerViewModel.deckForIdExist(id: i) {
                                 DeckPickingView(deckPicker: deckPickerViewModel.getDeck(id: i)).id(i)
@@ -323,6 +325,37 @@ struct CreateNewDeckView: View {
                 .border(.white, width: 3)
             .rotationEffect(Angle.degrees(rotationInDegrees))
         }.animation(.easeInOut(duration: 0.5), value: deckPickerViewModel.deckPickedId)
+    }
+}
+
+struct DeckPicker_DeckBrowserView: View {
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    let rotationInDegrees: CGFloat = 5
+    
+    var body: some View {
+        Button(action: {
+            hordeAppViewModel.showDeckBrowser = true
+        }) {
+            ZStack {
+                VStack(alignment: .center, spacing: 40) {
+                    
+                    Text("Find new decks")
+                        .foregroundColor(.white)
+                        .fontWeight(.bold)
+                        .font(.title)
+                        .padding(.bottom, PickerSize.titlePaddingTop)
+                    
+                    Image(systemName: "books.vertical")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                    
+                }.rotationEffect(Angle.degrees(-rotationInDegrees))
+                    .frame(width: 500, height: UIScreen.main
+                        .bounds.height)
+            }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: PickerSize.width.unpicked, height: UIScreen.main.bounds.height + 150)
+                .border(.white, width: 3)
+            .rotationEffect(Angle.degrees(rotationInDegrees))
+        }
     }
 }
 

@@ -404,7 +404,7 @@ struct ControlBarView: View {
                 print("New turn pressed")
                 gameViewModel.nextButtonPressed()
             }, label: {
-                PurpleButtonLabel(text: "Draw")
+                PurpleButtonLabel(text: "Draw", isPrimary: true)
             }).disabled(gameViewModel.isNextButtonDisabled() || nexButtonDisable)
                 .onChange(of: gameViewModel.turnStep) { _ in
                     if gameViewModel.turnStep == 1 {
@@ -729,6 +729,13 @@ struct CardToCastView: View {
                     .font(.title)
                     .foregroundColor(.white)
             }
+            if card.hasDefender {
+                Text("Can't attack")
+                    .headline()
+                    .padding()
+                    .blurredBackground()
+                    .offset(y: -CardSize.height.big / 3.5)
+            }
         }.frame(height: CardSize.height.big + 60)
     }
 }
@@ -806,6 +813,13 @@ struct CardOnBoardView: View {
                 if card.countersOnCard > 0 {
                     CountersOnCardView(countersCount: card.countersOnCard)
                 }
+                if card.hasDefender {
+                    Text("Can't attack")
+                        .headline()
+                        .padding()
+                        .blurredBackground()
+                        .offset(y: -CardSize.height.normal / 3.5)
+                }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
             .onTapGesture(count: 1) {
@@ -814,7 +828,7 @@ struct CardOnBoardView: View {
                 } else if gameViewModel.removeCountersModeEnable {
                     gameViewModel.removeCountersFromCardOnBoard(card: card)
                 } else if gameViewModel.returnToHandModeEnable {
-                    gameViewModel.returnToHandFromBoard(card: card, allowTokenReturnToHand: hordeAppViewModel.allowReturnTokenToHand)
+                    gameViewModel.returnToHandFromBoard(card: card)
                 } else {
                     print("Send \(card.cardName) to graveyard")
                     gameViewModel.removeOneCardOnBoard(card: card)
@@ -911,25 +925,6 @@ struct ContentView_Previews: PreviewProvider {
                 .environmentObject(GameViewModel())
                 .environmentObject(HordeAppViewModel())
         }
-    }
-}
-
-// Change name, not purple anymore
-struct PurpleButtonLabel: View {
-    
-    var text: String
-    
-    var body: some View {
-        Text(text)
-            .fontWeight(.bold)
-            .font(.subheadline)
-            .padding()
-            .frame(width: 150, height: 50)
-            .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark)))
-            .cornerRadius(40)
-            .foregroundColor(.white)
-            .padding(10)
-            .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
     }
 }
 

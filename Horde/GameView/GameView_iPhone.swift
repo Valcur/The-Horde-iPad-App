@@ -422,7 +422,7 @@ struct ControlBarView_iPhone: View {
                 print("New turn pressed")
                 gameViewModel.nextButtonPressed()
             }, label: {
-                PurpleButtonLabel_iPhone(text: "Draw").padding(.trailing, 20)
+                PurpleButtonLabel_iPhone(text: "Draw", isPrimary: true).padding(.trailing, 20)
             }).disabled(gameViewModel.isNextButtonDisabled() || nexButtonDisable)
                 .onChange(of: gameViewModel.turnStep) { _ in
                     if gameViewModel.turnStep == 1 {
@@ -649,6 +649,13 @@ struct CardToCastView_iPhone: View {
                     .font(.title)
                     .foregroundColor(.white)
             }
+            if card.hasDefender {
+                Text("Can't attack")
+                    .headline()
+                    .padding()
+                    .blurredBackground()
+                    .offset(y: -CardSize.height.big / 3.5)
+            }
         }
     }
 }
@@ -741,6 +748,13 @@ struct CardOnBoardView_iPhone: View {
                 if card.countersOnCard > 0 {
                     CountersOnCardView(countersCount: card.countersOnCard)
                 }
+                if card.hasDefender {
+                    Text("Can't attack")
+                        .headline()
+                        .padding()
+                        .blurredBackground()
+                        .offset(y: -CardSize.height.big / 3.5)
+                }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
             .onTapGesture(count: 1) {
@@ -749,7 +763,7 @@ struct CardOnBoardView_iPhone: View {
                 } else if gameViewModel.removeCountersModeEnable {
                     gameViewModel.removeCountersFromCardOnBoard(card: card)
                 } else if gameViewModel.returnToHandModeEnable {
-                    gameViewModel.returnToHandFromBoard(card: card, allowTokenReturnToHand: hordeAppViewModel.allowReturnTokenToHand)
+                    gameViewModel.returnToHandFromBoard(card: card)
                 } else {
                     print("Send \(card.cardName) to graveyard")
                     gameViewModel.removeOneCardOnBoard(card: card)
@@ -837,16 +851,6 @@ struct CardSize_iPhone {
         static let big_graveyard = (UIScreen.main.bounds.height / 100) * 0.35 * 5.5 as CGFloat
         static let normal = (UIScreen.main.bounds.height / 100) * 0.35 * 4.5 as CGFloat
         static let small = 2.1 as CGFloat
-    }
-}
-
-// Change name, not purple anymore
-struct PurpleButtonLabel_iPhone: View {
-    
-    var text: String
-    
-    var body: some View {
-        PurpleButtonLabel(text: text).scaleEffect(0.7).frame(width: 100)
     }
 }
 

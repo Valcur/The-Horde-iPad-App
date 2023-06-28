@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB0BA9332A4C41CD008157ED /* UIExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0BA9322A4C41CD008157ED /* UIExtensions.swift */; };
 		DB261E78286C4D150086D9B9 /* GameView_iPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB261E77286C4D150086D9B9 /* GameView_iPhone.swift */; };
 		DB28BF98282FB13000A3BFBD /* DeckPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF97282FB13000A3BFBD /* DeckPickerView.swift */; };
 		DB28BF9A282FCEE300A3BFBD /* DeckPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB28BF99282FCEE300A3BFBD /* DeckPickerViewModel.swift */; };
@@ -30,6 +31,9 @@
 		DB7F9F932A41DCDA00CBB50C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = DB7F9F922A41DCDA00CBB50C /* FirebaseFirestore */; };
 		DB7F9F952A41DCDA00CBB50C /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = DB7F9F942A41DCDA00CBB50C /* FirebaseFirestoreCombine-Community */; };
 		DB7F9F972A41DCDA00CBB50C /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = DB7F9F962A41DCDA00CBB50C /* FirebaseFirestoreSwift */; };
+		DB7F9F992A41F7F600CBB50C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DB7F9F982A41F7F600CBB50C /* GoogleService-Info.plist */; };
+		DB7F9F9C2A432FD800CBB50C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F9F9B2A432FD800CBB50C /* Buttons.swift */; };
+		DB7F9F9E2A432FFA00CBB50C /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F9F9D2A432FFA00CBB50C /* Misc.swift */; };
 		DB8C829728280289003DDED1 /* HordeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829628280289003DDED1 /* HordeApp.swift */; };
 		DB8C829928280289003DDED1 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8C829828280289003DDED1 /* GameView.swift */; };
 		DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB8C829A2828028B003DDED1 /* Assets.xcassets */; };
@@ -46,6 +50,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DB0BA9322A4C41CD008157ED /* UIExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIExtensions.swift; sourceTree = "<group>"; };
 		DB261E77286C4D150086D9B9 /* GameView_iPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView_iPhone.swift; sourceTree = "<group>"; };
 		DB28BF97282FB13000A3BFBD /* DeckPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckPickerView.swift; sourceTree = "<group>"; };
 		DB28BF99282FCEE300A3BFBD /* DeckPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckPickerViewModel.swift; sourceTree = "<group>"; };
@@ -66,6 +71,9 @@
 		DB4C2C2628F83225003E2646 /* GameView_Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView_Extensions.swift; sourceTree = "<group>"; };
 		DB532720288EE1A70039DFEA /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		DB532723288EE5430039DFEA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		DB7F9F982A41F7F600CBB50C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DB7F9F9B2A432FD800CBB50C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		DB7F9F9D2A432FFA00CBB50C /* Misc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		DB8C829328280289003DDED1 /* Horde.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Horde.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB8C829628280289003DDED1 /* HordeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HordeApp.swift; sourceTree = "<group>"; };
 		DB8C829828280289003DDED1 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -120,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				DB3027442A4073860012F88A /* DeckBrowserView.swift */,
+				DB0BA9322A4C41CD008157ED /* UIExtensions.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -159,6 +168,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DB7F9F9A2A432FCB00CBB50C /* Commons */ = {
+			isa = PBXGroup;
+			children = (
+				DB7F9F9B2A432FD800CBB50C /* Buttons.swift */,
+				DB7F9F9D2A432FFA00CBB50C /* Misc.swift */,
+			);
+			path = Commons;
+			sourceTree = "<group>";
+		};
 		DB8C828A28280289003DDED1 = {
 			isa = PBXGroup;
 			children = (
@@ -179,10 +197,12 @@
 		DB8C829528280289003DDED1 /* Horde */ = {
 			isa = PBXGroup;
 			children = (
-				DB3027402A4073620012F88A /* DeckBrowser */,
-				DB46EC84288ADAF400781CB1 /* StartingDecks */,
 				DB8C829628280289003DDED1 /* HordeApp.swift */,
 				DB28BF9B28301DBD00A3BFBD /* HordeAppViewModel.swift */,
+				DB7F9F9A2A432FCB00CBB50C /* Commons */,
+				DB7F9F982A41F7F600CBB50C /* GoogleService-Info.plist */,
+				DB3027402A4073620012F88A /* DeckBrowser */,
+				DB46EC84288ADAF400781CB1 /* StartingDecks */,
 				DB28BF96282FB10F00A3BFBD /* DeckPicker */,
 				DBA48CB0288449CA002F18A1 /* GameView */,
 				DB491D09287C3DEF001826E1 /* DeckEditor */,
@@ -292,6 +312,7 @@
 				DB8C829E2828028B003DDED1 /* Preview Assets.xcassets in Resources */,
 				DB8C829B2828028B003DDED1 /* Assets.xcassets in Resources */,
 				DBC732322895C49A006834B1 /* Eldrazi.txt in Resources */,
+				DB7F9F992A41F7F600CBB50C /* GoogleService-Info.plist in Resources */,
 				DB46EC90288ADCE400781CB1 /* Dinosaur.txt in Resources */,
 				DB46EC8E288ADCD700781CB1 /* Nature.txt in Resources */,
 			);
@@ -312,6 +333,7 @@
 				DB97BC1A282A6783001A216C /* DownloadManager.swift in Sources */,
 				DB8C829928280289003DDED1 /* GameView.swift in Sources */,
 				DBAEBC7B2844C56300E9137F /* GameIntroView.swift in Sources */,
+				DB7F9F9E2A432FFA00CBB50C /* Misc.swift in Sources */,
 				DB46EC98288DDF6F00781CB1 /* DeckEditorView_iPhone.swift in Sources */,
 				DB8C829728280289003DDED1 /* HordeApp.swift in Sources */,
 				DB491D0F287C8350001826E1 /* ScryfallQuerry.swift in Sources */,
@@ -319,12 +341,14 @@
 				DB97BC1C282A8318001A216C /* DeckManager.swift in Sources */,
 				DB8C82A528280349003DDED1 /* Card+Deck.swift in Sources */,
 				DB97BC1E282AEA5C001A216C /* Extensions.swift in Sources */,
+				DB7F9F9C2A432FD800CBB50C /* Buttons.swift in Sources */,
 				DBAEBC792833D1BB00E9137F /* MenuView.swift in Sources */,
 				DB3027452A4073860012F88A /* DeckBrowserView.swift in Sources */,
 				DB532721288EE1A70039DFEA /* IAPManager.swift in Sources */,
 				DB28BF9C28301DBD00A3BFBD /* HordeAppViewModel.swift in Sources */,
 				DB28BF98282FB13000A3BFBD /* DeckPickerView.swift in Sources */,
 				DB46EC96288C1C1900781CB1 /* LifePointsView.swift in Sources */,
+				DB0BA9332A4C41CD008157ED /* UIExtensions.swift in Sources */,
 				DB28BF9A282FCEE300A3BFBD /* DeckPickerViewModel.swift in Sources */,
 				DBA48CB228846CC3002F18A1 /* DeckEditorInfoView.swift in Sources */,
 			);

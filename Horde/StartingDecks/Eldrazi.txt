@@ -43,8 +43,8 @@
 1 OGW sorcery NO Witness the End 340d2261-9454-4ab0-827c-49c7e76c7781 0c06d8ec-55ab-4be9-a470-77c79d643d1f
 
 15 TEMN token NO Eldrazi Horror 294116b1-58c6-40bb-8997-0deda327c522 11d25bde-a303-4b06-a3e1-4ad642deae58
-25 TBFZ token NO Eldrazi Scion 0eb3cd4b-c34e-448c-a9ab-e7b0b4524833 5a5c74d5-b219-4514-8fd6-62705459422c
-15 TROE token NO Eldrazi Spawn 3aaf906a-e749-4e86-ac79-97650b92f271 e0e3826c-3c85-4910-bd6c-04894ea328d0
+25 TBFZ token -d Eldrazi Scion 0eb3cd4b-c34e-448c-a9ab-e7b0b4524833 5a5c74d5-b219-4514-8fd6-62705459422c
+15 TROE token -d Eldrazi Spawn 3aaf906a-e749-4e86-ac79-97650b92f271 e0e3826c-3c85-4910-bd6c-04894ea328d0
 5 TPCA token NO Eldrazi 8ce49358-21b3-4b5c-ad8c-a07ac256dee4 f9a7ed9a-25e4-41ad-a53e-d589e923af2c
 
 ## Too Strong ##
