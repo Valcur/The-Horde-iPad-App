@@ -177,13 +177,14 @@ class GameViewModel: ObservableObject {
             self.deck.shuffle()
         }
 
-        // No strong cards inf irst quarter
+        // No strong cards in first quarter
         if (gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter) && marathonStage <= 0 {
             
             let difficulty = UserDefaults.standard.object(forKey: "Difficulty") as? Int ?? 1
             let sizeAndnbrOfTokens = getSafeZoneCardCountAndAverageTokens(difficulty: difficulty)
             let quarter = sizeAndnbrOfTokens.0
             let averageNumberOfTokens = sizeAndnbrOfTokens.1
+            let minNumberOfTokens = averageNumberOfTokens - averageNumberOfTokens / 5
             
             var nbrOfTokens = 0
             
@@ -209,14 +210,60 @@ class GameViewModel: ObservableObject {
                         nbrOfTokens += 1
                     }
                 }
-                print("loop \(n) + in \(quarter) max \(averageNumberOfTokens) has \(nbrOfTokens) tokens ")
+                print("loop \(n) + in \(quarter) max \(averageNumberOfTokens) min \(minNumberOfTokens) has \(nbrOfTokens) tokens ")
                 n += 1
-            } while nbrOfTokens >= averageNumberOfTokens && n < 100
+            } while (nbrOfTokens >= averageNumberOfTokens || nbrOfTokens <= minNumberOfTokens) && n < 100
             
             // Can't suffle without no strong cards wich means too many strong cards -> wouldn't be fun -> let's get a new deck
             if n >= 100 {
                 setupHorde(withDifficulty: withDifficulty)
                 return
+            } else {
+                // Once safeZone has the good amount of cards, space them to make interesting rounds
+                let maxNumberOfTokensInARow = Int(ceil(Double(quarter) / Double(averageNumberOfTokens) + 1.0))
+                var currentNumberOfTokensInARow = 0
+                var previousCardWasAlreadyNonToken = true
+                
+                for i in 1..<quarter {
+                    if deck[deck.count - i].cardType == .token {
+                        currentNumberOfTokensInARow += 1
+                        if currentNumberOfTokensInARow > maxNumberOfTokensInARow {
+                            currentNumberOfTokensInARow = 0
+                            
+                            var j = i + 1
+                            while j < quarter - 1 && deck[deck.count - i].cardType == .token {
+                                if deck[deck.count - j].cardType != .token {
+                                    let tmp = deck[deck.count - i].recreateCard()
+                                    deck[deck.count - i] = deck[deck.count - j].recreateCard()
+                                    deck[deck.count - j] = tmp
+                                }
+                                j += 1
+                            }
+                            if j == quarter - 2 {
+                                print("fail finding non token")
+                            }
+                        }
+                    } else {
+                        if previousCardWasAlreadyNonToken {
+                            previousCardWasAlreadyNonToken = false
+                            
+                            var j = i + 1
+                            while j < quarter - 1 && deck[deck.count - i].cardType != .token {
+                                if deck[deck.count - j].cardType == .token {
+                                    let tmp = deck[deck.count - i].recreateCard()
+                                    deck[deck.count - i] = deck[deck.count - j].recreateCard()
+                                    deck[deck.count - j] = tmp
+                                }
+                                j += 1
+                            }
+                            if j == quarter - 2 {
+                                print("fail finding token")
+                            }
+                        } else {
+                            previousCardWasAlreadyNonToken = true
+                        }
+                    }
+                }
             }
         }
         
@@ -469,7 +516,9 @@ class GameViewModel: ObservableObject {
             let type = cardsOnBoard[i].cardType
             if type == .creature || type == .token {
                 let tmpCard = cardsOnBoard.remove(at: i)
-                sendToGraveyard(card: tmpCard)
+                for _ in 0..<tmpCard.cardCount {
+                    sendToGraveyard(card: tmpCard)
+                }
                 i -= 1
             }
             i += 1

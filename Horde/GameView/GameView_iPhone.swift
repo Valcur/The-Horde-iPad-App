@@ -754,6 +754,7 @@ struct CardOnBoardView_iPhone: View {
                         .padding()
                         .blurredBackground()
                         .offset(y: -CardSize.height.big / 3.5)
+                        .scaleEffect(0.7)
                 }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)

@@ -864,6 +864,7 @@ struct CardOnDeckListView: View {
                     .padding()
                     .blurredBackground()
                     .offset(y: -CardSize.height.normal / 6)
+                    .scaleEffect(UIDevice.isIPhone ? 0.7 : 1)
             }
         }
         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)

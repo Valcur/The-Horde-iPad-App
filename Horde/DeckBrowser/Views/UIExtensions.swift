@@ -40,10 +40,18 @@ extension Text {
         }
     }
     
-    func text() -> Text {
-        self
-            .font(.body)
-            .foregroundColor(.white)
+    func text() -> some View {
+        ZStack {
+            if UIDevice.isIPhone {
+                self
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+            } else {
+                self
+                    .font(.body)
+                    .foregroundColor(.white)
+            }
+        }
     }
 }
 
@@ -67,15 +75,22 @@ extension View {
         placeholder(when: shouldShow, alignment: alignment) { Text(text).foregroundColor(.gray).text() }
     }
     
-    func iPhoneScaler(maxHeight: CGFloat, scaleEffect: CGFloat = 0.8, anchor: UnitPoint = .center) -> some View {
+    func iPhoneScaler(maxHeight: CGFloat, maxWidth: CGFloat = .infinity, scaleEffect: CGFloat = 0.8, anchor: UnitPoint = .center) -> some View {
         ZStack {
             if UIDevice.isIPhone {
                 self
                     .scaleEffect(scaleEffect, anchor: anchor)
                     .frame(maxHeight: maxHeight)
+                    .frame(maxWidth: maxWidth)
             } else {
                 self
             }
         }
     }
+    
+    func scrollableVStask() -> some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            self
+        }
+     }
 }

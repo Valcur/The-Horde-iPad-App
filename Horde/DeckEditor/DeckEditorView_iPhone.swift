@@ -16,7 +16,7 @@ struct DeckEditorView_iPhone: View {
         GeometryReader { _ in
             ZStack {
                 HStack(spacing: 0){
-                    if !deckEditorViewModel.isDeckTooStrongSelected() {
+                    if !deckEditorViewModel.isDeckTooStrongSelected() && !deckEditorViewModel.isReadOnly {
                         LeftPanelView_iPhone()
                             .frame(width: EditorSize.cardSearchPanelWidth)
                             .transition(.move(edge: .leading))
@@ -57,7 +57,7 @@ struct TopTopControlRowView_iPhone: View {
     @State var deckName: String = ""
     
     var isUserAllowedToModifyDeckInfo: Bool {
-        return (deckEditorViewModel.deckId < 7 && hordeAppViewModel.isPremium) || deckEditorViewModel.deckId >= 7
+        return !deckEditorViewModel.isReadOnly && ((deckEditorViewModel.deckId < 7 && hordeAppViewModel.isPremium) || deckEditorViewModel.deckId >= 7)
     }
     
     var body: some View {
@@ -97,38 +97,41 @@ struct TopTopControlRowView_iPhone: View {
 
             
             // Save
-            Button(action: {
-                deckEditorViewModel.saveDeck()
-            }, label: {
-                HStack {
-                    Text("Save")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .scaleEffect(0.7)
-                    
-                    Image(systemName: "arrow.down.doc")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                }.scaleEffect(0.7)
-            }).padding(.leading, 0).padding(.trailing, 40) // To make the button bigger
-                .opacity(deckEditorViewModel.showSaveButton ? 1 : 0)
-                
+            if !deckEditorViewModel.isReadOnly {
+                Button(action: {
+                    deckEditorViewModel.saveDeck()
+                }, label: {
+                    HStack {
+                        Text("Save")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                            .scaleEffect(0.7)
+                        
+                        Image(systemName: "arrow.down.doc")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }.scaleEffect(0.7)
+                }).padding(.leading, 0).padding(.trailing, 40) // To make the button bigger
+                    .opacity(deckEditorViewModel.showSaveButton ? 1 : 0)
+            }
             
             Spacer()
             
             // Import
-            Button(action: {
-                deckEditorViewModel.importDeckFromClipboard()
-            }, label: {
-                Image(systemName: "square.and.arrow.down")
+            if !deckEditorViewModel.isReadOnly {
+                Button(action: {
+                    deckEditorViewModel.importDeckFromClipboard()
+                }, label: {
+                    Image(systemName: "square.and.arrow.down")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }).scaleEffect(0.7)
+                
+                Text("/")
                     .font(.title2)
                     .foregroundColor(.white)
-            }).scaleEffect(0.7)
-            
-            Text("/")
-                .font(.title2)
-                .foregroundColor(.white)
-                .scaleEffect(0.7)
+                    .scaleEffect(0.7)
+            }
             
             // Export
             Button(action: {
@@ -254,6 +257,7 @@ struct CardShowView_iPhone: View {
     @State var card: Card
     @State var cardType: CardType
     @State var hasCardFlashback: Bool
+    @State var hasCardDefender: Bool
     
     private let gradient = Gradient(colors: [Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.3), Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.0)])
     
@@ -265,6 +269,7 @@ struct CardShowView_iPhone: View {
         self.card = card
         self.cardType = card.cardType
         self.hasCardFlashback = card.hasFlashback
+        self.hasCardDefender = card.hasDefender
     }
     
     var body: some View {
@@ -356,6 +361,7 @@ struct CardShowView_iPhone: View {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
+                    self.hasCardDefender = selectedCard.hasDefender
                 }
             }.onChange(of: cardType) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -368,19 +374,39 @@ struct CardShowView_iPhone: View {
                         deckEditorViewModel.changeCardFlashbackFromSelectedDeck(card: selectedCard, newFlashbackValue: hasCardFlashback)
                     }
                 }
+            }.onChange(of: hasCardDefender) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.selectedCard.hasDefender = self.hasCardDefender
+                    withAnimation(nil) {
+                        deckEditorViewModel.changeCardDefenderFromSelectedDeck(card: selectedCard, newDefenderValue: hasCardDefender)
+                    }
+                }
             }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
+                    self.hasCardDefender = selectedCard.hasDefender
                 }
             }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
                     self.hasCardFlashback = selectedCard.hasFlashback
+                    self.hasCardDefender = selectedCard.hasDefender
                 }
             }
                 
             if selectedCard.cardType == .creature || selectedCard.cardType == .token {
+                
+                // Enable/Disable defender
+                Toggle(isOn: $hasCardDefender) {
+                    VStack(alignment: .leading) {
+                        Text("Can't attack")
+                            .foregroundColor(.white)
+                            .font(.body)
+                    }.frame(width: EditorSize.cardSearchPanelWidth)
+                }
+                .padding(.horizontal, 20).padding(.top, 0).padding(.bottom, 10)
+                .scaleEffect(0.7).frame(width: EditorSize.cardSearchPanelWidth)
                 
                 // Select card type
                 Text("Change card type")
@@ -396,10 +422,9 @@ struct CardShowView_iPhone: View {
                 }.padding(.top, 0)
             }
             
-            
             Spacer()
-            
-        }
+
+        }.scrollableVStask()
     }
     
     func getSelectedCardFromCarousel() -> Card {

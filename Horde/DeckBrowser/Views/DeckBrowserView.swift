@@ -16,7 +16,7 @@ struct DeckBrowserView: View {
             MainView()
             
             SelectedDeckView(selectedDeck: deckBrowserVM.selectedDeck).shadow(radius: 5)
-        }.background(GradientView(gradientId: hordeAppViewModel.gradientId)).ignoresSafeArea()
+        }.background(GradientView(gradientId: hordeAppViewModel.gradientId).ignoresSafeArea())
     }
 }
 
@@ -26,9 +26,9 @@ struct MainView: View {
     @State var searchText = ""
     var gridLayout: [GridItem] {
         if UIDevice.isIPhone {
-            return [GridItem(), GridItem()]
+            return [GridItem(.flexible()), GridItem(.flexible())]
         }
-        return [GridItem(), GridItem(), GridItem()]
+        return [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     }
     
     var body: some View {
@@ -38,7 +38,7 @@ struct MainView: View {
                     hordeAppViewModel.showDeckBrowser = false
                 }, label: {
                     PurpleButtonLabel(text: "Exit")
-                }).iPhoneScaler(maxHeight: 50, anchor: .leading)
+                }).iPhoneScaler(maxHeight: 50, maxWidth: 100, anchor: .leading).padding(.leading, 10)
                 
                 Spacer()
       
@@ -57,19 +57,21 @@ struct MainView: View {
                     }, label: {
                         PurpleButtonLabel(text: "Search")
                     })
-                }.iPhoneScaler(maxHeight: 50, anchor: .trailing).padding(.trailing, UIDevice.isIPhone ? 10 : 0)
-            }.padding(.leading, UIDevice.isIPhone ? 50 : 0)
+                }.iPhoneScaler(maxHeight: 50, maxWidth: 290, anchor: .trailing).offset(x: UIDevice.isIPhone ? -15 : 0)
+            }
             //Rectangle().frame(height: 1).foregroundColor(.white)
             ScrollView {
                 VStack {
                     if deckBrowserVM.resultStatus == .progress {
                         Text(deckBrowserVM.searchResultMessage)
                             .headline()
+                            .iPhoneScaler(maxHeight: 50, anchor: .leading)
                     } else {
                         if deckBrowserVM.resultStatus == .error {
                             HStack {
                                 Text("Error")
                                     .headline()
+                                    .iPhoneScaler(maxHeight: 50, anchor: .leading)
                                 
                                 Spacer()
                                 
@@ -77,20 +79,21 @@ struct MainView: View {
                                     deckBrowserVM.iniRecentDecks()
                                 }, label: {
                                     PurpleButtonLabel(text: "Return")
-                                })
+                                }).iPhoneScaler(maxHeight: 50, anchor: .trailing)
                             }
                         } else if deckBrowserVM.resultStatus == .nameSearch {
                             HStack {
                                 Text(deckBrowserVM.decks.count == 0 ? "No result found for \(searchText)" : "Search result for \(searchText)")
                                     .headline()
+                                    .iPhoneScaler(maxHeight: 50, anchor: .leading)
                                 
                                 Spacer()
                                 
                                 Button(action: {
-                                    deckBrowserVM.seeAllDecks()
+                                    deckBrowserVM.iniRecentDecks()
                                 }, label: {
                                     PurpleButtonLabel(text: "Return")
-                                })
+                                }).iPhoneScaler(maxHeight: 50, anchor: .trailing)
                             }
                         }
                         LazyVGrid(columns: gridLayout) {
@@ -107,7 +110,7 @@ struct MainView: View {
                             }
                         }
                     }
-                }.padding().iPhoneScaler(maxHeight: .infinity, scaleEffect: 0.95, anchor: .topTrailing)
+                }.padding()//.iPhoneScaler(maxHeight: .infinity, scaleEffect: 0.95, anchor: .topTrailing)
             }
         }
     }
@@ -124,7 +127,7 @@ struct MainView: View {
                     if let image = deck.image {
                         Image(uiImage: image)
                             .resizable()
-                            .scaledToFill()
+                            //.scaledToFill()
                             .frame(height: 150)
                     } else {
                         Color.black
@@ -179,14 +182,18 @@ struct SelectedDeckView: View {
                         PurpleButtonLabel(text: "Play", isPrimary: true)
                     })
                     
-                    Text(deck.intro)
-                        .text()
+                    if deck.intro.count > 0 {
+                        Text(deck.intro)
+                            .text()
+                    }
                     
-                    Text("Special rules")
-                        .headline()
-                    
-                    Text(deck.rules)
-                        .text()
+                    if deck.rules.count > 0 {
+                        Text("Special rules")
+                            .headline()
+                        
+                        Text(deck.rules)
+                            .text()
+                    }
                     
                     Text(progressMessage)
                         .headline()

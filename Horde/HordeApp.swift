@@ -37,7 +37,7 @@ struct HordeAppView: View {
     let gameViewModel = GameViewModel()
     let deckPickerViewModel = DeckPickerViewModel()
     let deckEditorViewModel = DeckEditorViewModel()
-    let deckBrowserVM: DeckBrowserViewModel
+    @State var deckBrowserVM: DeckBrowserViewModel
     
     init(hordeVM: HordeAppViewModel) {
         deckBrowserVM = DeckBrowserViewModel(hordeVM: hordeVM)
@@ -118,5 +118,10 @@ struct HordeAppView: View {
         }
         .animation(.easeInOut(duration: 0.3), value: hordeAppViewModel.shouldShowMenu)
         .animation(.easeInOut(duration: 0.8), value: hordeAppViewModel.readyToPlay)
+        .onChange(of: hordeAppViewModel.showDeckBrowser) { isShowing in
+            if isShowing {
+                deckBrowserVM = DeckBrowserViewModel(hordeVM: hordeAppViewModel)
+            }
+        }
     }
 }

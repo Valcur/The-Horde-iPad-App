@@ -478,7 +478,7 @@ struct DeckPickingIntro: View {
             
             MenuTextWithImageParagraphView(text1: "", image: Image(systemName: "gear"), text2: "> How To Play to learn how to use this app")
         
-        }.frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 35).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+        }.scrollableVStask().frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 35).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
     }
 }
 
@@ -497,7 +497,7 @@ struct DeckPickingDiscordView: View {
                 
                 MenuTextBoldParagraphView(text: "Tap here to join")
                 
-            }.frame(width: 280)
+            }.scrollableVStask().frame(width: 280)
             .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
         }.padding([.leading, .trailing], 35).padding(.top, UIDevice.current.userInterfaceIdiom == .pad ? 40 : 0)
     }

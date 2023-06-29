@@ -17,6 +17,7 @@ class DeckBrowserViewModel: ObservableObject {
     @Published var searchResultMessage: String = ""
     @Published var decks: [DeckBrowserDeck] = []
     @Published var resultStatus: ResultStatus = .mostRecent
+    private var mostRecentDecks: [DeckBrowserDeck] = []
     
     init(hordeVM: HordeAppViewModel) {
         self.hordeVM = hordeVM
@@ -27,6 +28,14 @@ class DeckBrowserViewModel: ObservableObject {
         searchResultMessage = "Loading most recent decks"
         decks = []
         resultStatus = .progress
+        
+        // Si on les as déja chargé, pas besoin de retélécharger
+        if mostRecentDecks.count > 0 {
+            decks = mostRecentDecks
+            resultStatus = .mostRecent
+            return
+        }
+        
 
         let query = db.collection("decks").whereField("public", isEqualTo: true).order(by: "lastModified", descending: true).limit(to: 14)
         
@@ -39,6 +48,7 @@ class DeckBrowserViewModel: ObservableObject {
                     self.decks.append(self.newDeckWithData(deck.data()))
                 }
                 self.resultStatus = .mostRecent
+                self.mostRecentDecks = self.decks
             }
         }
     }
@@ -94,7 +104,6 @@ extension DeckBrowserViewModel {
                 for deck in querySnapshot!.documents {
                     self.decks.append(self.newDeckWithData(deck.data()))
                 }
-                print(self.decks)
                 self.resultStatus = .nameSearch
             }
         }

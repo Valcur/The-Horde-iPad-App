@@ -22,7 +22,7 @@ struct PurpleButtonLabel: View {
             Text(text)
                 .headline()
                 .padding()
-                .frame(maxWidth: 150).frame(height: 50)
+                .frame(maxWidth: 150).frame(height: 50).frame(minWidth: 100)
                 .background(Color.black)
                     .cornerRadius(15)
                     .shadowed()
@@ -31,7 +31,7 @@ struct PurpleButtonLabel: View {
             Text(text)
                 .headline()
                 .padding()
-                .frame(maxWidth: 150).frame(height: 50)
+                .frame(maxWidth: 170).frame(height: 50).frame(minWidth: 100)
                 .blurredBackground()
                 .padding(UIDevice.isIPhone ? 0 : 10)
         }
@@ -48,6 +48,8 @@ struct PurpleButtonLabel_iPhone: View {
     }
     
     var body: some View {
-        PurpleButtonLabel(text: text, isPrimary: isPrimary).scaleEffect(0.7).frame(maxWidth: 130)
+        ZStack {
+            PurpleButtonLabel(text: text, isPrimary: isPrimary).frame(minWidth: 140).scaleEffect(0.7)
+        }.frame(width: 100).clipped()
     }
 }
