@@ -10,6 +10,7 @@ import SwiftUI
 
 class HordeAppViewModel: ObservableObject {
     @Published var readyToPlay: Bool
+    @Published var showDeckBrowser: Bool
     @Published var shouldShowMenu: Bool
     @Published var showDeckEditor: Bool
     @Published var menuToShowId: Int
@@ -21,13 +22,13 @@ class HordeAppViewModel: ObservableObject {
     @Published var oneRowBoardInsteadOfTwo: Bool
     @Published var useLifepointsCounter: Bool
     @Published var hordeGainLifeLostBySurvivor: Bool
-    @Published var allowReturnTokenToHand: Bool
     @Published var survivorStartingLife: Int
     @Published var numberOfDeckSlot: Int
     @Published var isPremium = false
     
     init() {
         self.readyToPlay = false
+        self.showDeckBrowser = true
         self.shouldShowMenu = false
         self.showDeckEditor = false
         self.menuToShowId = 1
@@ -36,11 +37,10 @@ class HordeAppViewModel: ObservableObject {
         self.useLessColorFullBackground = UserDefaults.standard.object(forKey: "UseLessColorFullBackground") as? Bool ?? false
         self.customSleeveArtId = -1
         self.customSleeveBorderColorId = UserDefaults.standard.object(forKey: "CustomSleeveBorderColorId") as? Int ?? 0
-        self.oneRowBoardInsteadOfTwo = UserDefaults.standard.object(forKey: "OneRowBoardInsteadOfTwo") as? Bool ?? true
+        self.oneRowBoardInsteadOfTwo = UserDefaults.standard.object(forKey: "OneRowBoardInsteadOfTwo") as? Bool ?? false
         self.useLifepointsCounter = UserDefaults.standard.object(forKey: "UseLifePointsCounter") as? Bool ?? true
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
         self.survivorStartingLife = UserDefaults.standard.object(forKey: "SurvivorStartingLife") as? Int ?? 60
-        self.allowReturnTokenToHand = UserDefaults.standard.object(forKey: "AllowReturnTokenToHand") as? Bool ?? true
         self.numberOfDeckSlot = 8
         
         IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
@@ -150,10 +150,6 @@ class HordeAppViewModel: ObservableObject {
 
     func saveBattlefieldRowStylePreference() {
         UserDefaults.standard.set(self.oneRowBoardInsteadOfTwo, forKey: "OneRowBoardInsteadOfTwo")
-    }
-    
-    func saveAllowTokenReturnToHandPreference() {
-        UserDefaults.standard.set(self.allowReturnTokenToHand, forKey: "AllowReturnTokenToHand")
     }
     
     func saveUserLifepointsCounterPreference() {

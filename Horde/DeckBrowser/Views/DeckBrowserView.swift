@@ -11,12 +11,16 @@ struct DeckBrowserView: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @EnvironmentObject var deckBrowserVM: DeckBrowserViewModel
     
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+        
     var body: some View {
-        HStack(spacing: 0) {
-            MainView()
-            
-            SelectedDeckView(selectedDeck: deckBrowserVM.selectedDeck).shadow(radius: 5)
-        }.background(GradientView(gradientId: hordeAppViewModel.gradientId).ignoresSafeArea())
+        GeometryReader { geo in
+            HStack(spacing: 0) {
+                MainView().padding(.leading, safeAreaInsets.leading)
+                
+                SelectedDeckView(selectedDeck: deckBrowserVM.selectedDeck).shadow(radius: 5)
+            }.background(GradientView(gradientId: hordeAppViewModel.gradientId))
+        }
     }
 }
 
@@ -124,26 +128,28 @@ struct MainView: View {
                 deckBrowserVM.setSelectedDeck(deck)
             }, label: {
                 ZStack {
-                    if let image = deck.image {
-                        Image(uiImage: image)
-                            .resizable()
-                            //.scaledToFill()
-                            .frame(height: 150)
-                    } else {
-                        Color.black
+                    GeometryReader { geo in
+                        if let image = deck.image {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: geo.size.width, height: 150)
+                        } else {
+                            Color.black
+                        }
+                        
+                        Color.black.opacity(0.2)
+                        VStack(alignment: .leading) {
+                            Text(deck.title)
+                                .title()
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Spacer()
+                            Text(deck.author)
+                                .headline()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }.padding(5)
                     }
-                    
-                    Color.black.opacity(0.2)
-                    VStack(alignment: .leading) {
-                        Text(deck.title)
-                            .title()
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Spacer()
-                        Text(deck.author)
-                            .headline()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }.padding(5)
                 }.cornerRadius(10)
             }).frame(height: 150).padding(5).shadowed()
         }
@@ -156,8 +162,10 @@ struct SelectedDeckView: View {
     @State var progressMessage = ""
     let selectedDeck: DeckBrowserDeck?
     
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+    
     var body: some View {
-        ScrollView(.vertical) {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 20) {
                 if let deck = selectedDeck {
                     Text(deck.title)
@@ -216,7 +224,9 @@ struct SelectedDeckView: View {
                     Spacer()
                 }
             }.padding(.horizontal, 10).padding(.top, 15)
-        }.frame(width: UIDevice.isIPhone ? 250 : 350).frame(maxHeight: .infinity).background(
+        }.frame(width: UIDevice.isIPhone ? 250 : 350)
+            .padding(.trailing, safeAreaInsets.leading)
+            .frame(maxHeight: .infinity).background(
             ZStack {
                 if let deck = selectedDeck {
                     if let image = deck.image {

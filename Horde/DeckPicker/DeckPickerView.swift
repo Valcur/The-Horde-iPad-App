@@ -21,7 +21,7 @@ struct DeckPickerView: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        if deckPickerViewModel.showIntro {
+                        if true {
                             ZStack(alignment: .topTrailing) {
                                 DeckPickingIntro()
                                 Button(action: {
@@ -49,7 +49,7 @@ struct DeckPickerView: View {
                                 }
                         }
                         
-                        if deckPickerViewModel.showDiscordInvite {
+                        if true {
                             ZStack(alignment: .topTrailing) {
                                 DeckPickingDiscordView()
                                 Button(action: {
@@ -478,7 +478,7 @@ struct DeckPickingIntro: View {
             
             MenuTextWithImageParagraphView(text1: "", image: Image(systemName: "gear"), text2: "> How To Play to learn how to use this app")
         
-        }.scrollableVStask().frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 35).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
+        }.frame(width: UIScreen.main.bounds.width / 3).padding([.leading, .trailing], 35).scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
     }
 }
 
@@ -493,11 +493,11 @@ struct DeckPickingDiscordView: View {
                 
                 MenuTextBoldParagraphView(text: "Join us on Discord")
                 
-                MenuTextParagraphView(text: "Share your horde decks or find new decks in our Discord server.")
+                MenuTextParagraphView(text: "Share your experience with other horde players and learn more about future updates for the iOS and web app.")
                 
                 MenuTextBoldParagraphView(text: "Tap here to join")
                 
-            }.scrollableVStask().frame(width: 280)
+            }.frame(width: 280)
             .scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7)
         }.padding([.leading, .trailing], 35).padding(.top, UIDevice.current.userInterfaceIdiom == .pad ? 40 : 0)
     }
