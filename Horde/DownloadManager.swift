@@ -87,7 +87,11 @@ import SwiftUI
             )
          */
         let documents = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
-        let fileCachePath = documents.appendingPathComponent("\(cardName).png")
+        var fileCachePath = documents.appendingPathComponent("\(cardName).png")
+        if cardName.contains("https://") {
+            fileCachePath = documents.appendingPathComponent("\(cardName.replacingOccurrences(of: "/", with: ""))")
+            print("downloading \(url)")
+        }
         // If the image exists in the cache,
         // load the image from the cache and exit
         if let data = try? Data(contentsOf: fileCachePath!) {
@@ -101,6 +105,7 @@ import SwiftUI
             let data = try? Data(contentsOf: fileCachePath!)
             completion(data, error)
             // If temporary image, we delete it after retrieveing it
+            
             if !self.shouldImageBeSaved {
                 do {
                     try FileManager.default.removeItem(at: fileCachePath!)

@@ -513,8 +513,14 @@ extension DeckEditorViewModel {
                                 cardName += " " + cardDataArray[i]
                             }
                             
+                            let cardId = cardDataArray.last ?? ""
                             let cardEffects = DeckEditorViewModel.getCardSpecialEffects(effects: cardDataArray[3])
-                            let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback:  cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardDataArray.last ?? "")
+                            var card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback:  cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
+                            
+                            if cardId.contains("https://") {
+                                card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: cardId, hasFlashback: cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
+                            }
+                            
                             card.cardCount = cardCount
                             addCardToSelectedDeck(card: card, onlyAddOne: false)
                         }
@@ -598,13 +604,12 @@ extension DeckEditorViewModel {
         if effects == DeckDataPattern.cardHaveFlashbackOLD || effects == DeckDataPattern.cardDontHaveFlashbackOLD {
             return (effects == DeckDataPattern.cardHaveFlashbackOLD, false)
         }
-        let effectsArray = effects.components(separatedBy: "-")
-        return (effectsArray[0] == DeckDataPattern.cardHaveFlashback,
-                effectsArray[1] == DeckDataPattern.cardHaveDefender)
+        return (effects.contains(DeckDataPattern.cardHaveFlashback),
+                effects.contains(DeckDataPattern.cardHaveDefender))
     }
     
     private func cardSpecialEffectsToString(cardHasFlashback: Bool, cardHasDefender: Bool) -> String {
-        return "\(cardHasFlashback ? DeckDataPattern.cardHaveFlashback : "")-\(cardHasDefender ? DeckDataPattern.cardHaveDefender : "")"
+        return "-\(cardHasFlashback ? DeckDataPattern.cardHaveFlashback : "")\(cardHasDefender ? DeckDataPattern.cardHaveDefender : "")"
     }
 }
 
@@ -723,6 +728,10 @@ extension DeckEditorViewModel {
         
         DownloadQueue.queue.resetQueue()
         self.cardToShowReprints = []
+        
+        if card.cardId.contains("https://") {
+            return
+        }
         
         let scryfallSearchUrl = "https://api.scryfall.com/cards/search?order=released&q=oracleid%3A\(card.cardOracleId)&unique=prints"
         print(scryfallSearchUrl)

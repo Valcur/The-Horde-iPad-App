@@ -21,7 +21,7 @@ struct DeckPickerView: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        if true {
+                        if deckPickerViewModel.showIntro {
                             ZStack(alignment: .topTrailing) {
                                 DeckPickingIntro()
                                 Button(action: {
@@ -49,7 +49,7 @@ struct DeckPickerView: View {
                                 }
                         }
                         
-                        if true {
+                        if deckPickerViewModel.showDiscordInvite {
                             ZStack(alignment: .topTrailing) {
                                 DeckPickingDiscordView()
                                 Button(action: {
@@ -196,7 +196,7 @@ struct DeckPickingView: View {
                         .frame(width: 500, height: UIScreen.main
                             .bounds.height)
                         .transition(.opacity)
-                }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: pickerWidth(), height: UIScreen.main.bounds.height + 150)
+                }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: pickerWidth(), height: UIScreen.main.bounds.height + 180)
                     .clipped()
                 .rotationEffect(Angle.degrees(rotationInDegrees))
                 

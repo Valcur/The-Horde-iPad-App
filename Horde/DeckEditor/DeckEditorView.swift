@@ -856,15 +856,19 @@ struct CardOnDeckListView: View {
                     .font(.largeTitle)
                     .foregroundColor(.white)
                     .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
-                    .offset(x: CardSize.width.normal / 3, y: -CardSize.height.normal / 3)
+                    .offset(x: CardSize.width.normal / 3)
+                    .scaleEffect(UIDevice.isIPhone ? 0.7 : 1, anchor: .trailing)
             }
             if card.hasDefender {
-                Text("Can't attack")
-                    .headline()
-                    .padding()
-                    .blurredBackground()
-                    .offset(y: -CardSize.height.normal / 6)
-                    .scaleEffect(UIDevice.isIPhone ? 0.7 : 1)
+                ZStack {
+                    Text("Can't attack")
+                        .headline()
+                        .padding()
+                        .blurredBackground()
+                        .frame(width: CardSize.width.normal * (UIDevice.isIPhone ? 1.3 : 1))
+                        .offset(y: -CardSize.height.normal / 3.5)
+                        .iPhoneScaler(maxHeight: 40, scaleEffect: 0.65)
+                }.frame(width: CardSize.width.normal)
             }
         }
         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)

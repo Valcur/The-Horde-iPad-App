@@ -212,13 +212,13 @@ class GameViewModel: ObservableObject {
                 }
                 print("loop \(n) + in \(quarter) max \(averageNumberOfTokens) min \(minNumberOfTokens) has \(nbrOfTokens) tokens ")
                 n += 1
-            } while (nbrOfTokens >= averageNumberOfTokens || nbrOfTokens <= minNumberOfTokens) && n < 100
+            } while (nbrOfTokens >= averageNumberOfTokens || nbrOfTokens <= minNumberOfTokens) && n < 100 && averageNumberOfTokens > quarter / 8
             
             // Can't suffle without no strong cards wich means too many strong cards -> wouldn't be fun -> let's get a new deck
             if n >= 100 {
                 setupHorde(withDifficulty: withDifficulty)
                 return
-            } else {
+            } else if averageNumberOfTokens > quarter / 8 {
                 // Once safeZone has the good amount of cards, space them to make interesting rounds
                 let maxNumberOfTokensInARow = Int(ceil(Double(quarter) / Double(averageNumberOfTokens) + 1.0))
                 var currentNumberOfTokensInARow = 0

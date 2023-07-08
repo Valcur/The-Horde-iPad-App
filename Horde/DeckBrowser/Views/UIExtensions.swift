@@ -90,7 +90,7 @@ extension View {
     
     func scrollableVStask() -> some View {
         ScrollView(.vertical, showsIndicators: false) {
-            self
+            self.padding(.bottom, 50)
         }
      }
 }

@@ -168,7 +168,11 @@ class DeckBrowserDeck: Identifiable, ObservableObject, Equatable {
     }
     
     func loadDeckImage() {
-        guard let url = URL(string: "https://api.scryfall.com/cards/\(artId)?format=img&version=art_crop") else { return }
+        var url = "https://api.scryfall.com/cards/\(artId)?format=img&version=art_crop"
+        if artId.contains("https://") {
+            url = artId
+        }
+        guard let url = URL(string: url) else { return }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {

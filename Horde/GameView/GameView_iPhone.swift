@@ -749,12 +749,15 @@ struct CardOnBoardView_iPhone: View {
                     CountersOnCardView(countersCount: card.countersOnCard)
                 }
                 if card.hasDefender {
-                    Text("Can't attack")
-                        .headline()
-                        .padding()
-                        .blurredBackground()
-                        .offset(y: -CardSize.height.big / 3.5)
-                        .scaleEffect(0.7)
+                    ZStack {
+                        Text("Can't attack")
+                            .headline()
+                            .padding()
+                            .blurredBackground()
+                            .frame(width: CardSize.width.normal * (UIDevice.isIPhone ? 1.3 : 1))
+                            .offset(y: -CardSize.height.big / 3.5)
+                            .scaleEffect(0.65)
+                    }.frame(width: CardSize_iPhone.width.normal)
                 }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
@@ -1006,7 +1009,10 @@ struct IntroSetupView_iPhone: View {
                             }
                         }
                         
-                        Toggle("Remove the strongest cards from the beginning of the deck", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
+                        Toggle("Remove strong cards and distribute tokens evenly during the first turns", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
+                            .foregroundColor(.white)
+                        
+                        Toggle("Tokens are sent to the graveyard and returned to hand", isOn: $gameViewModel.gameConfig.shared.tokensAreRealCards)
                             .foregroundColor(.white)
                     }
                 }.padding([.leading, .trailing], 50)
