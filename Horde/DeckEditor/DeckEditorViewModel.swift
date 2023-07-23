@@ -94,6 +94,17 @@ class DeckEditorViewModel: ObservableObject {
         return false
     }
     
+    func cardHasDefenderKeyword(keywords: [String]) -> Bool {
+        let keywordToSearch: [String] = ["defender"]
+        
+        for keyword in keywords {
+            if keywordToSearch.contains(keyword.lowercased()) {
+                return true
+            }
+        }
+        return false
+    }
+    
     func getSelectedDeck(card: Card? = nil) -> [Card] {
         if selectedDeckListNumber == DeckSelectionNumber.deckList
         {
@@ -517,8 +528,11 @@ extension DeckEditorViewModel {
                             let cardEffects = DeckEditorViewModel.getCardSpecialEffects(effects: cardDataArray[3])
                             var card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback:  cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
                             
-                            if cardId.contains("https://") {
+                            if cardId.contains("https://i.imgur") {
                                 card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: cardId, hasFlashback: cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
+                            } else if card.cardId.contains("D::") {
+                                let discordURL = "https://media.discordapp.net/attachments/1127961672225673256/" + card.cardId.dropFirst(3) + "?width=488&height=680"
+                                card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: discordURL, hasFlashback: cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
                             }
                             
                             card.cardCount = cardCount
@@ -696,7 +710,7 @@ extension DeckEditorViewModel {
                             if decodedData.data != nil {
                                 self.searchResult = []
                                 decodedData.data!.forEach {
-                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), hasDefender: true, specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
+                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), hasDefender: self.cardHasDefenderKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
                                 }
                             }
                             self.searchProgressInfo = "Nothing found"
@@ -729,7 +743,9 @@ extension DeckEditorViewModel {
         DownloadQueue.queue.resetQueue()
         self.cardToShowReprints = []
         
-        if card.cardId.contains("https://") {
+        if card.cardId.contains("https://i.imgur") {
+            return
+        } else if card.cardId.contains("D::") {
             return
         }
         
@@ -751,7 +767,7 @@ extension DeckEditorViewModel {
                                 self.cardToShowReprints = []
                                 decodedData.data!.forEach {
                                     if ($0.id ?? "") != card.cardId {
-                                        self.cardToShowReprints.append(Card(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? ""))
+                                        self.cardToShowReprints.append(Card(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), hasDefender: self.cardHasDefenderKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? ""))
                                     }
                                 }
                             }

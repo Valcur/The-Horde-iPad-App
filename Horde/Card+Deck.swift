@@ -34,10 +34,12 @@ class Card: Hashable, Identifiable, ObservableObject {
         
         // Remove after "//" in name, example : "Amethyst Dragon // Explosive Crystal" -> only keep Amethyst Dragon
         var cardNameString = ""
-        if let index = cardName.range(of: " //")?.lowerBound {
-            let substring = cardName[..<index]
-            let string = String(substring)
-            cardNameString = "\(string)"
+        if cardName.contains(" //") {
+            if let index = cardName.range(of: " //")?.lowerBound {
+                let substring = cardName[..<index]
+                let string = String(substring)
+                cardNameString = "\(string)"
+            }
         } else {
             cardNameString = "\(cardName)"
         }

@@ -51,7 +51,9 @@ class MyAppDelegate: NSObject, UIApplicationDelegate {
     ) -> UISceneConfiguration {
         let config = UISceneConfiguration(name: "My Scene Delegate", sessionRole: connectingSceneSession.role)
         config.delegateClass = MySceneDelegate.self
-        FirebaseApp.configure()
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
         return config
     }
 }

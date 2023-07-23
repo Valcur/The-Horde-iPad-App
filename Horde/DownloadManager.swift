@@ -88,7 +88,7 @@ import SwiftUI
          */
         let documents = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
         var fileCachePath = documents.appendingPathComponent("\(cardName).png")
-        if cardName.contains("https://") {
+        if cardName.contains("https://i.imgur") || cardName.contains("D::") {
             fileCachePath = documents.appendingPathComponent("\(cardName.replacingOccurrences(of: "/", with: ""))")
             print("downloading \(url)")
         }

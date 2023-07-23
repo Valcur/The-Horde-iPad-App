@@ -169,7 +169,7 @@ class DeckBrowserDeck: Identifiable, ObservableObject, Equatable {
     
     func loadDeckImage() {
         var url = "https://api.scryfall.com/cards/\(artId)?format=img&version=art_crop"
-        if artId.contains("https://") {
+        if artId.contains("https://i.imgur") {
             url = artId
         }
         guard let url = URL(string: url) else { return }
