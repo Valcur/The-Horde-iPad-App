@@ -33,6 +33,8 @@ class GameViewModel: ObservableObject {
     @Published var strongPermanentsToSpawn: [Card] = []
     @Published var shouldShowStrongPermanent: Bool = false
     
+    @Published var lastMilledToken: [Card] = []
+    
     @Published var cardToZoomIn = Card.emptyCard()
     @Published var shouldZoomOnCard: Bool = false
     
@@ -59,11 +61,12 @@ class GameViewModel: ObservableObject {
         turnStep = -1
         marathonStage = -1
         
-        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100, tokensAreRealCards: true), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
+        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100, tokensAreRealCards: false), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
         
         strongPermanentsAlreadySpawned = [false, false, false, false]
         
         setupDeck(deckPickedId: 1)
+        gameConfig = getCustomConfig()
     }
     
     func startGame() {
@@ -111,6 +114,7 @@ class GameViewModel: ObservableObject {
         // Setup step
         if turnStep == 0 {
             setupHorde()
+            saveCustomConfig()
         }
         if turnStep == 1 {
             // If empty, start new marathon stage
@@ -369,6 +373,8 @@ class GameViewModel: ObservableObject {
             let tmpCard = card.recreateCard()
             tmpCard.cardCount = 1
             cardsOnGraveyard.append(tmpCard)
+        } else {
+            addNewLastMilledToken(card: card)
         }
     }
     
@@ -595,6 +601,8 @@ class GameViewModel: ObservableObject {
             let card = deck.removeLast()
             if card.cardType != .token || gameConfig.shared.tokensAreRealCards {
                 cardsOnGraveyard.append(card)
+            } else {
+                addNewLastMilledToken(card: card)
             }
             damageTakenThisTurn += 1
             
@@ -723,25 +731,54 @@ class GameViewModel: ObservableObject {
             let card = hand.remove(at: Int.random(in: 0..<hand.count))
             if card.cardType != .token || gameConfig.shared.tokensAreRealCards {
                 cardsOnGraveyard.append(card)
+            } else {
+                addNewLastMilledToken(card: card)
             }
         }
     }
+    
+    private func addNewLastMilledToken(card: Card) {
+        if lastMilledToken.count == 0 {
+            lastMilledToken.append(card.recreateCard())
+        } else {
+            lastMilledToken[0] = card.recreateCard()
+        }
+    }
+    
+    private func saveCustomConfig() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(gameConfig) {
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: "GameConfig")
+        }
+    }
+    
+    private func getCustomConfig() -> GameConfig {
+        let defaults = UserDefaults.standard
+        if let savedConfig = defaults.object(forKey: "GameConfig") as? Data {
+            let decoder = JSONDecoder()
+            if let loadedGameConfig = try? decoder.decode(GameConfig.self, from: savedConfig) {
+                return loadedGameConfig
+            }
+        }
+        return GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100, tokensAreRealCards: false), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
+    }
 }
 
-struct GameConfig {
+struct GameConfig: Codable {
     var isClassicMode: Bool
     var shared: SharedParameters
     var classic: ClassicModeParameters
 }
 
-struct SharedParameters {
+struct SharedParameters: Codable {
     var shouldStartWithWeakPermanent: Bool
     var shouldntHaveStrongCardsInFirstQuarter: Bool
     var deckSize: Int
     var tokensAreRealCards: Bool
 }
 
-struct ClassicModeParameters {
+struct ClassicModeParameters: Codable {
     var shouldSpawnStrongPermanents: Bool
     var spawnStrongPermanentAt25: Bool
     var spawnStrongPermanentAt50: Bool

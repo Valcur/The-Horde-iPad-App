@@ -63,8 +63,8 @@ struct RightPanelView: View {
     var body: some View {
         ZStack {
             GradientView(gradientId: hordeAppViewModel.gradientId)
-            VStack {
-                TopTopControlRowView()
+            VStack(spacing: 0) {
+                TopTopControlRowView().background(Color("DarkGray"))
                 TopControlRowView()
                 Spacer()
                 DeckListView()
@@ -453,17 +453,17 @@ struct TopControlRowView: View {
                     .foregroundColor(.white)
                     .frame(width: 1, height: 30)
                 Spacer()
-                DeckListSelectorView(deckListName: "Weak", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
+                DeckListSelectorView(deckListName: "Start", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
                 Spacer()
-                DeckListSelectorView(deckListName: "Powerful", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
-            }.frame(height: 40).padding([.leading, .trailing], 20)
+                DeckListSelectorView(deckListName: "Milestones", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
+            }.frame(height: 40).background(Color("DarkGray")).shadowed()
             
             HStack() {
                 MenuTextParagraphView(text: deckEditorViewModel.deckSelectionInfo)
                 Spacer()
                 MenuTextParagraphView(text: deckEditorViewModel.cardCountForSelectedDeck)
-            }.frame(height: 20)
-        }.padding([.leading, .trailing], 15)
+            }.frame(height: 20).padding([.leading, .trailing], 15)
+        }
     }
 }
 
@@ -472,6 +472,9 @@ struct DeckListSelectorView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let deckListName: String
     let deckListNumber: Int
+    var isSelected: Bool {
+        deckEditorViewModel.selectedDeckListNumber == deckListNumber
+    }
     
     var body: some View {
         VStack {
@@ -480,10 +483,16 @@ struct DeckListSelectorView: View {
                     deckEditorViewModel.changeSelectedDeckTo(newSelectedDeck: deckListNumber)
                 }
             }, label: {
-                Text(deckListName)
-                    .fontWeight(.bold)
-                    .font(.title3)
-                    .foregroundColor(deckEditorViewModel.selectedDeckListNumber == deckListNumber ? .white : .gray)
+                VStack {
+                    Text(deckListName)
+                        .fontWeight(.bold)
+                        .font(.title3)
+                        .foregroundColor(isSelected ? .white : .gray)
+                        .padding(.bottom, 5)
+                    Rectangle()
+                        .frame(height: 2)
+                        .foregroundColor(isSelected ? .white : Color("DarkGray"))
+                }
             })
         }
     }
@@ -640,18 +649,18 @@ struct DeckListView: View {
     var body: some View {
         // Show the current selected list
         if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.deckList {
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.vertical, showsIndicators: true) {
                 DeckListMainDeckView()
                     .animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
             }
         } else if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList {
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.vertical, showsIndicators: true) {
                 DeckListTooStrongView()
                     .animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
             }
         } else {
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 10), count: 2), alignment: .top, spacing: 15) {
+            ScrollView(.vertical, showsIndicators: true) {
+                LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
                     ForEach(deckListToShow) { card in
                         Button(action: {
                             deckEditorViewModel.showCard(card: card)
@@ -786,18 +795,23 @@ struct PageControl: View {
 struct DeckListMainDeckView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    let deckRowTitles = ["Creatures", "Artifacts and Enchantments", "Instants and Sorceries", "Tokens"]
     
     var body: some View {
-        HStack(spacing: 80) {
+        VStack(spacing: 80) {
             ForEach(0..<4, id: \.self) { i in
                 if deckEditorViewModel.getAllDecksInMainDeckList()[i].count > 0 {
-                    LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 10), count: 2), alignment: .top, spacing: 15) {
-                        ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
-                            Button(action: {
-                                deckEditorViewModel.showCard(card: card)
-                            }, label: {
-                                CardOnDeckListView(card: card)
-                            }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                    VStack(alignment: .leading) {
+                        Text("\(deckRowTitles[i]) (\(deckEditorViewModel.getAllDecksInMainDeckList()[i].map({$0.cardCount}).reduce(0, +)))")
+                            .headline()
+                        LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
+                            ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
+                                Button(action: {
+                                    deckEditorViewModel.showCard(card: card)
+                                }, label: {
+                                    CardOnDeckListView(card: card)
+                                }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                            }
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
                 }
@@ -809,19 +823,24 @@ struct DeckListMainDeckView: View {
 struct DeckListTooStrongView: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    let deckRowTitles = ["Creatures", "Artifacts and Enchantments", "Instants and Sorceries", "Tokens"]
     
     var body: some View {
-        HStack(spacing: 80) {
+        VStack(spacing: 80) {
             ForEach(0..<4, id: \.self) { i in
                 if deckEditorViewModel.getAllDecksInMainDeckList()[i].count > 0 {
-                    LazyHGrid(rows: Array(repeating: .init(.fixed(CardSize.height.normal), spacing: 10), count: 2), alignment: .top, spacing: 15) {
-                        ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
-                            Button(action: {
-                                deckEditorViewModel.addCardToSelectedDeck(card: card)
-                            }, label: {
-                                CardOnDeckListView(card: card)
-                                    .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
-                            }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                    VStack {
+                        Text("\(deckRowTitles[i]) (\(deckEditorViewModel.getAllDecksInMainDeckList()[i].map({$0.cardCount}).reduce(0, +)))")
+                            .headline()
+                        LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
+                            ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
+                                Button(action: {
+                                    deckEditorViewModel.addCardToSelectedDeck(card: card)
+                                }, label: {
+                                    CardOnDeckListView(card: card)
+                                        .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
+                                }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                            }
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
                 }

@@ -411,6 +411,7 @@ struct MenuCustomView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
+                        MenuUploadCustomBackgroundImage()
                         MenuCustomBackgroundColorChoiceView(gradientId: 1)
                         MenuCustomBackgroundColorChoiceView(gradientId: 2)
                         MenuCustomBackgroundColorChoiceView(gradientId: 3)
@@ -456,71 +457,6 @@ struct MenuCustomView: View {
                         MenuCustomSleeveBorderColorChoiceView(colorId: 1)
                     }
                 }.opacity(hordeAppViewModel.isPremium ? 1 : 0.5).allowsHitTesting(hordeAppViewModel.isPremium)
-            }
-            
-            Group {
-                MenuTextSubtitleView(text: "Life counter")
-                
-                Toggle("Show life counter", isOn: $hordeAppViewModel.useLifepointsCounter)
-                    .foregroundColor(.white)
-                    .onChange(of: hordeAppViewModel.useLifepointsCounter) { _ in
-                        hordeAppViewModel.saveUserLifepointsCounterPreference()
-                    }
-                
-                Toggle("The Horde heals when survivors lose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
-                    .foregroundColor(.white)
-                    .onChange(of: hordeAppViewModel.hordeGainLifeLostBySurvivor) { _ in
-                        hordeAppViewModel.saveUserLifepointsCounterPreference()
-                    }
-            }
-            
-            HStack(spacing: 20) {
-                Text("Survivors starting life")
-                    .foregroundColor(.white)
-                Spacer()
-                // Start with 20
-                Button(action: {
-                    hordeAppViewModel.survivorStartingLife = 20
-                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                }, label: {
-                    Text("20")
-                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 20 ? .white : .gray)
-                        .fontWeight(.bold)
-                        .font(.title2)
-                })
-                
-                // Start with 40
-                Button(action: {
-                    hordeAppViewModel.survivorStartingLife = 40
-                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                }, label: {
-                    Text("40")
-                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 40 ? .white : .gray)
-                        .fontWeight(.bold)
-                        .font(.title2)
-                })
-                
-                // Start with 60
-                Button(action: {
-                    hordeAppViewModel.survivorStartingLife = 60
-                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                }, label: {
-                    Text("60")
-                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 60 ? .white : .gray)
-                        .fontWeight(.bold)
-                        .font(.title2)
-                })
-                
-                // Start with 80
-                Button(action: {
-                    hordeAppViewModel.survivorStartingLife = 80
-                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                }, label: {
-                    Text("80")
-                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 80 ? .white : .gray)
-                        .fontWeight(.bold)
-                        .font(.title2)
-                })
             }
             
             Group {
@@ -669,6 +605,66 @@ struct MenuUploadCustomArtView: View {
         hordeAppViewModel.saveCustomSleeveArt(image: inputImage)
         withAnimation(.easeInOut(duration: 0.3)) {
             hordeAppViewModel.setCustomSleeveArtIdTo(artId: artId)
+        }
+        image = Image(uiImage: inputImage)
+    }
+}
+
+struct MenuUploadCustomBackgroundImage: View {
+    
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
+    @State private var image: Image?
+    @State private var inputImage: UIImage?
+    @State var showingImagePicker: Bool = false
+    var customArtIsSelected: Bool {
+        return hordeAppViewModel.gradientId == -1
+    }
+    
+    var body: some View {
+        Button(action: {
+            if customArtIsSelected || UserDefaults.standard.data(forKey: "CustomBackgroundArtImage") == nil {
+                self.showingImagePicker.toggle()
+            } else {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    hordeAppViewModel.setBackgroundColorGradientTo(gradientId: -1)
+                }
+            }
+        }, label: {
+            ZStack {
+                GradientView(gradientId: -1)
+                    .frame(width: 150, height: 150)
+                VStack {
+                    Image(systemName: "photo")
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                    
+                    if customArtIsSelected {
+                        Spacer()
+                        
+                        Text("Tap again to upload another picture")
+                            .font(.body)
+                            .foregroundColor(.white)
+                            .frame(width: 120)
+                    }
+                }.padding(15)
+            }
+        })
+        .frame(width: 150, height: 150).clipped().cornerRadius(15)
+        .overlay(RoundedRectangle(cornerRadius: 19).stroke(customArtIsSelected ? .white : .clear, lineWidth: 4)).padding(10)
+        .onChange(of: inputImage) { _ in loadImage() }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(image: $inputImage)
+        }
+    }
+    
+    func loadImage() {
+        guard let inputImage = inputImage else {
+            image = Image("BlackBackground")
+            return
+        }
+        hordeAppViewModel.saveCustomBackgroundArt(image: inputImage)
+        withAnimation(.easeInOut(duration: 0.3)) {
+            hordeAppViewModel.setBackgroundColorGradientTo(gradientId: -1)
         }
         image = Image(uiImage: inputImage)
     }

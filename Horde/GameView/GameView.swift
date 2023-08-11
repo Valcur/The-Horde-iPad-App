@@ -16,7 +16,6 @@ struct GameView: View {
     @State var gameIntroViewOpacity: CGFloat = 1
     @State var zoomViewOpacity: CGFloat = 0
     @State var strongPermanentsViewOpacity: CGFloat = 0
-    @State var lifepointsViewModel: LifePointsViewModel?
     
     var body: some View {
         ZStack {
@@ -28,17 +27,21 @@ struct GameView: View {
                 
                 Spacer()
                 
-                ControlBarView()
+                if hordeAppViewModel.gradientId == -1 {
+                    ControlBarView().background(
+                        LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.7), Color.black.opacity(0.7), Color.black.opacity(0)]),
+                                                          startPoint: .bottom,
+                                                          endPoint: .top))
+                } else {
+                    ControlBarView()
+                }
             }.ignoresSafeArea()
-            .onAppear() {
-                lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
-            }
                 
-            if hordeAppViewModel.useLifepointsCounter && lifepointsViewModel != nil {
+            if gameViewModel.turnStep != -1 && hordeAppViewModel.useLifepointsCounter {
                 HStack {
                     Spacer()
                     LifePointsView()
-                        .environmentObject(lifepointsViewModel!)
+                        .environmentObject(LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife))
                         .frame(width: UIScreen.main.bounds.width / 6, height: UIScreen.main.bounds.height / 2)
                         .cornerRadius(15)
                         .padding(.trailing, 10)
@@ -154,7 +157,7 @@ struct GameView: View {
                 .opacity(gameIntroViewOpacity)
                 .ignoresSafeArea()
                 .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep > 0 {
+                    if gameViewModel.turnStep >= 0 {
                         withAnimation(.easeInOut(duration: 0.3).delay(0.1)) {
                             gameIntroViewOpacity = 0
                         }
@@ -171,6 +174,8 @@ struct HordeBoardView: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let cardThickness: CGFloat = 0.4
     @State var toggler: Bool = false
+    @State var lastMilledTokenOpacity: Double = 1
+    @State var lastMilledTokenScale: Double = 1
     
     var deckThickness: CGFloat {
         return gameViewModel.deck.count < 250 ? CGFloat(gameViewModel.deck.count) * cardThickness : 250 * cardThickness
@@ -209,6 +214,25 @@ struct HordeBoardView: View {
                             .foregroundColor(.black)
                             .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                             .opacity(0.5)
+                    }
+                    ForEach(gameViewModel.lastMilledToken, id:\.id) { lastMilledToken in
+                        CardView(card: lastMilledToken)
+                            .frame(width: CardSize.width.normal, height: CardSize.height.normal)
+                            .cornerRadius(CardSize.cornerRadius.normal)
+                            .opacity(lastMilledTokenOpacity)
+                            .scaleEffect(lastMilledTokenScale)
+                            .id(lastMilledToken.id)
+                            .onAppear() {
+                                print("new token")
+                                lastMilledTokenOpacity = 1
+                                lastMilledTokenScale = 1
+                                withAnimation(.easeInOut(duration: 1)) {
+                                    lastMilledTokenOpacity = 0
+                                }
+                                withAnimation(.easeInOut(duration: 0.8).delay(0.2)) {
+                                    lastMilledTokenScale = 0
+                                }
+                            }
                     }
                     Text("\(gameViewModel.cardsOnGraveyard.count)")
                         .fontWeight(.bold)

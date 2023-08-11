@@ -149,10 +149,10 @@ struct GameView_iPhone: View {
                     }
                 }
             
-            GameIntroView_iPhone()
+            GameIntroView()
                 .opacity(gameIntroViewOpacity)
                 .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep > 0 {
+                    if gameViewModel.turnStep >= 0 {
                         withAnimation(.easeInOut(duration: 0.3).delay(0.1)) {
                             gameIntroViewOpacity = 0
                         }

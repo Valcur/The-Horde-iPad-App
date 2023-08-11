@@ -15,152 +15,208 @@ struct GameIntroView: View {
     var body: some View {
         // The button to leave the menu is the background
         ZStack {
-            Button(action: {
-                print("Start game button pressed")
-                isDeckBeingGenerated = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    gameViewModel.nextButtonPressed()
-                    isDeckBeingGenerated = false
-                }
-            }, label: {
-                VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
-            }).buttonStyle(StaticButtonStyle())
+            VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
             
             VStack(spacing: 50) {
-                
-                if gameViewModel.turnStep == -1 {
-                    IntroSetupView(isDeckBeingGenerated: $isDeckBeingGenerated)
-                } else if gameViewModel.turnStep == 0 {
-                    IntroBeforeGameStartView()
-                }
-                
-            }.padding([.leading, .trailing], 40)
-                .transition(AnyTransition.slide)
+                IntroSetupView(isDeckBeingGenerated: $isDeckBeingGenerated)
+            }.transition(AnyTransition.slide)
         }.ignoresSafeArea().frame(width: UIScreen.main.bounds.width)
     }
 }
 
 struct IntroSetupView: View {
-    
+    @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @EnvironmentObject var gameViewModel: GameViewModel
     @Binding var isDeckBeingGenerated: Bool
     
     var body: some View {
-        ZStack {
-            Color(.white).frame(width: 600, height: 180).opacity(0.000001)
-            HStack(spacing: 100) {
-                GameModeSwitchButtonView(title: "Classic", setModeToClassic: true)
-                GameModeSwitchButtonView(title: "Marathon", setModeToClassic: false)
-            }
-        }.frame(height: 60)
-        
-        ZStack {
-            Color(.white).opacity(0.000001)
-            HStack(alignment: .top, spacing: 50) {
-
-                VStack(spacing: 30) {
-                    
-                    MenuTextSubtitleView(text: "Token multiplicator")
-                    
-                    MenuTextParagraphView(text: "Increase the amount of tokens to make the horde reveal more cards each times")
-                    
-                    HStack(spacing: 20) {
-                        IntroDifficultyChoiceButtonView(multiplicator: 1)
-                        IntroDifficultyChoiceButtonView(multiplicator: 2)
-                        IntroDifficultyChoiceButtonView(multiplicator: 3)
-                        IntroDifficultyChoiceButtonView(multiplicator: 4)
-                    }
-                        
-                    MenuTextSubtitleView(text: "Deck Size")
-                    
-                    MenuTextParagraphView(text: "Reduce the library size for small group of players, or increase it's size to make the game longer")
-                    
-                    HStack(spacing: 20) {
-                        IntroPlayerChoiceButtonView(percent: 25)
-                        IntroPlayerChoiceButtonView(percent: 50)
-                        IntroPlayerChoiceButtonView(percent: 75)
-                        IntroPlayerChoiceButtonView(percent: 100)
-                        IntroPlayerChoiceButtonView(percent: 200)
-                        IntroPlayerChoiceButtonView(percent: 300)
-                    }
+        VStack {
+            ZStack {
+                Color("DarkGray")
+                HStack(spacing: 100) {
+                    Spacer()
+                    GameModeSwitchButtonView(title: "Classic", setModeToClassic: true)
+                    GameModeSwitchButtonView(title: "Marathon", setModeToClassic: false)
+                    Spacer()
                 }
-                
-                Rectangle()
-                    .foregroundColor(.white)
-                    .frame(width: 2)
-                    .padding([.top, .bottom], 70)
-                
-                VStack(spacing: 30) {
-                    
-                    MenuTextSubtitleView(text: "Config")
-                    
-                    Toggle("Horde starts with a random permanent (different for every deck)", isOn: $gameViewModel.gameConfig.shared.shouldStartWithWeakPermanent)
-                        .foregroundColor(.white)
-                    
-                    if gameViewModel.gameConfig.isClassicMode {
-                        VStack(spacing: 15)  {
-                            Toggle("Spawn a random powerfull permanent (different for every deck) when reaching milestone", isOn: $gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
+            }.frame(height: 70)
+            
+            ScrollView(.vertical) {
+                VStack(spacing: 40) {
+                    HStack(alignment: .top, spacing: 50) {
+                        VStack(spacing: 30) {
+                            
+                            MenuTextSubtitleView(text: "Token multiplicator")
+                            
+                            MenuTextParagraphView(text: "Increase the amount of tokens to make the horde reveal more cards each times")
+                            
+                            HStack(spacing: 20) {
+                                IntroDifficultyChoiceButtonView(multiplicator: 1)
+                                IntroDifficultyChoiceButtonView(multiplicator: 2)
+                                IntroDifficultyChoiceButtonView(multiplicator: 3)
+                                IntroDifficultyChoiceButtonView(multiplicator: 4)
+                            }
+                            
+                            MenuTextSubtitleView(text: "Deck Size")
+                            
+                            MenuTextParagraphView(text: "Reduce the library size for small group of players, or increase it's size to make the game longer")
+                            
+                            HStack(spacing: 20) {
+                                IntroPlayerChoiceButtonView(percent: 25)
+                                IntroPlayerChoiceButtonView(percent: 50)
+                                IntroPlayerChoiceButtonView(percent: 75)
+                                IntroPlayerChoiceButtonView(percent: 100)
+                                IntroPlayerChoiceButtonView(percent: 200)
+                                IntroPlayerChoiceButtonView(percent: 300)
+                            }
+                            
+                            MenuTextSubtitleView(text: "Life counter")
+                            
+                            Toggle("Show life counter", isOn: $hordeAppViewModel.useLifepointsCounter)
                                 .foregroundColor(.white)
                             
-                            if gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents {
-                                HStack(spacing: 20) {
-                                    // Spawn at 25
-                                    Button(action: {
-                                        gameViewModel.gameConfig.classic.spawnStrongPermanentAt25.toggle()
-                                    }, label: {
-                                        Text("25%")
-                                            .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt25 ? .white : .gray)
-                                            .fontWeight(.bold)
-                                            .font(.title2)
-                                    })
-                                    
-                                    // Spawn at 50
-                                    Button(action: {
-                                        gameViewModel.gameConfig.classic.spawnStrongPermanentAt50.toggle()
-                                    }, label: {
-                                        Text("50%")
-                                            .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt50 ? .white : .gray)
-                                            .fontWeight(.bold)
-                                            .font(.title2)
-                                    })
-                                    
-                                    // Spawn at 75
-                                    Button(action: {
-                                        gameViewModel.gameConfig.classic.spawnStrongPermanentAt75.toggle()
-                                    }, label: {
-                                        Text("75%")
-                                            .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt75 ? .white : .gray)
-                                            .fontWeight(.bold)
-                                            .font(.title2)
-                                    })
-                                    
-                                    // Spawn at 100
-                                    Button(action: {
-                                        gameViewModel.gameConfig.classic.spawnStrongPermanentAt100.toggle()
-                                    }, label: {
-                                        Text("100%")
-                                            .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt100 ? .white : .gray)
-                                            .fontWeight(.bold)
-                                            .font(.title2)
-                                    })
-                                }
+                            Toggle("The Horde heals when survivors lose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
+                                .foregroundColor(.white)
+                            
+                            HStack(spacing: 20) {
+                                Text("Survivors starting life")
+                                    .foregroundColor(.white)
+                                Spacer()
+                                // Start with 20
+                                Button(action: {
+                                    hordeAppViewModel.survivorStartingLife = 20
+                                    hordeAppViewModel.saveUserLifepointsCounterPreference()
+                                }, label: {
+                                    Text("20")
+                                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 20 ? .white : .gray)
+                                        .fontWeight(.bold)
+                                        .font(.title2)
+                                })
+                                
+                                // Start with 40
+                                Button(action: {
+                                    hordeAppViewModel.survivorStartingLife = 40
+                                    hordeAppViewModel.saveUserLifepointsCounterPreference()
+                                }, label: {
+                                    Text("40")
+                                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 40 ? .white : .gray)
+                                        .fontWeight(.bold)
+                                        .font(.title2)
+                                })
+                                
+                                // Start with 60
+                                Button(action: {
+                                    hordeAppViewModel.survivorStartingLife = 60
+                                    hordeAppViewModel.saveUserLifepointsCounterPreference()
+                                }, label: {
+                                    Text("60")
+                                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 60 ? .white : .gray)
+                                        .fontWeight(.bold)
+                                        .font(.title2)
+                                })
+                                
+                                // Start with 80
+                                Button(action: {
+                                    hordeAppViewModel.survivorStartingLife = 80
+                                    hordeAppViewModel.saveUserLifepointsCounterPreference()
+                                }, label: {
+                                    Text("80")
+                                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 80 ? .white : .gray)
+                                        .fontWeight(.bold)
+                                        .font(.title2)
+                                })
                             }
                         }
+                        
+                        Rectangle()
+                            .foregroundColor(.white)
+                            .frame(width: 2)
+                            .padding([.top, .bottom], 70)
+                        
+                        VStack(spacing: 30) {
+                            
+                            MenuTextSubtitleView(text: "Options")
+                            
+                            if gameViewModel.gameConfig.isClassicMode {
+                                VStack(spacing: 15)  {
+                                    Toggle("Spawn a random powerfull permanent (different for every deck) when reaching milestone", isOn: $gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
+                                        .foregroundColor(.white)
+                                    
+                                    if gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents {
+                                        HStack(spacing: 20) {
+                                            // Spawn at 25
+                                            Button(action: {
+                                                gameViewModel.gameConfig.classic.spawnStrongPermanentAt25.toggle()
+                                            }, label: {
+                                                Text("25%")
+                                                    .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt25 ? .white : .gray)
+                                                    .fontWeight(.bold)
+                                                    .font(.title2)
+                                            })
+                                            
+                                            // Spawn at 50
+                                            Button(action: {
+                                                gameViewModel.gameConfig.classic.spawnStrongPermanentAt50.toggle()
+                                            }, label: {
+                                                Text("50%")
+                                                    .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt50 ? .white : .gray)
+                                                    .fontWeight(.bold)
+                                                    .font(.title2)
+                                            })
+                                            
+                                            // Spawn at 75
+                                            Button(action: {
+                                                gameViewModel.gameConfig.classic.spawnStrongPermanentAt75.toggle()
+                                            }, label: {
+                                                Text("75%")
+                                                    .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt75 ? .white : .gray)
+                                                    .fontWeight(.bold)
+                                                    .font(.title2)
+                                            })
+                                            
+                                            // Spawn at 100
+                                            Button(action: {
+                                                gameViewModel.gameConfig.classic.spawnStrongPermanentAt100.toggle()
+                                            }, label: {
+                                                Text("100%")
+                                                    .foregroundColor(gameViewModel.gameConfig.classic.spawnStrongPermanentAt100 ? .white : .gray)
+                                                    .fontWeight(.bold)
+                                                    .font(.title2)
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            Toggle("Cistribute tokens evenly and remove strong cards during the first turns", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
+                                .foregroundColor(.white)
+                            
+                            Toggle("Tokens are sent to the graveyard and returned to hand", isOn: $gameViewModel.gameConfig.shared.tokensAreRealCards)
+                                .foregroundColor(.white)
+                            
+                            Toggle("Horde starts with a random permanent instead of all (only enable this if the deck ask you to)", isOn: $gameViewModel.gameConfig.shared.shouldStartWithWeakPermanent)
+                                .foregroundColor(.white)
+                        }
                     }
-                    
-                    Toggle("Remove strong cards and distribute tokens evenly during the first turns", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
-                        .foregroundColor(.white)
-                    
-                    Toggle("Tokens are sent to the graveyard and returned to hand", isOn: $gameViewModel.gameConfig.shared.tokensAreRealCards)
-                        .foregroundColor(.white)
-                }
-            }.padding([.leading, .trailing], 50)
-        }.background(Color(.white).opacity(0.00000001))
-            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 1.8)
-            .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
-            .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
-        
-        MenuTextBoldParagraphView(text: isDeckBeingGenerated ? "Generating deck, please wait ..." : "Touch to continue").scaleEffect(isDeckBeingGenerated ? 1.2 : 1)
+                    if isDeckBeingGenerated {
+                        MenuTextBoldParagraphView(text: "Generating deck, please wait ...")
+                    } else {
+                        Button(action: {
+                            print("Start game button pressed")
+                            isDeckBeingGenerated = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                gameViewModel.nextButtonPressed()
+                                isDeckBeingGenerated = false
+                            }
+                        }, label: {
+                            PurpleButtonLabel(text: "Touch to continue", isPrimary: true, noMaxWidth: true)
+                        })
+                    }
+                }.padding(.top, 40).padding([.leading, .trailing], 40)
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
+        .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.classic.shouldSpawnStrongPermanents)
     }
 }
 
@@ -178,11 +234,17 @@ struct GameModeSwitchButtonView: View {
             print("Set mode to \(title)")
             gameViewModel.changeGameMode(isClassicMode: setModeToClassic)
         }, label: {
-            Text(title)
-                .foregroundColor(isSelected ? .white : .gray)
-                .fontWeight(.bold)
-                .font(.largeTitle)
-                .scaleEffect(isSelected ? 1 : 0.7)
+            VStack {
+                Text(title)
+                    .foregroundColor(isSelected ? .white : .gray)
+                    .fontWeight(.bold)
+                    .font(.title)
+                    .padding(.bottom, 5)
+                Spacer()
+                Rectangle()
+                    .frame(height: 2)
+                    .foregroundColor(isSelected ? .white : Color("DarkGray"))
+            }
         }).animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
     }
 }

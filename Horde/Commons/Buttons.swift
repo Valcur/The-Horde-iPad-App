@@ -11,10 +11,12 @@ import SwiftUI
 struct PurpleButtonLabel: View {
     private let text: String
     private let isPrimary: Bool
+    private let noMaxWidth: Bool
     
-    init(text: String, isPrimary: Bool = false) {
+    init(text: String, isPrimary: Bool = false, noMaxWidth: Bool = false) {
         self.text = text
         self.isPrimary = isPrimary
+        self.noMaxWidth = noMaxWidth
     }
     
     var body: some View {
@@ -22,7 +24,7 @@ struct PurpleButtonLabel: View {
             Text(text)
                 .headline()
                 .padding()
-                .frame(maxWidth: 150).frame(height: 50).frame(minWidth: 100)
+                .frame(maxWidth: noMaxWidth ? .infinity : 150).frame(height: 50).frame(minWidth: 100)
                 .background(Color.black)
                     .cornerRadius(15)
                     .shadowed()
@@ -31,7 +33,7 @@ struct PurpleButtonLabel: View {
             Text(text)
                 .headline()
                 .padding()
-                .frame(maxWidth: 170).frame(height: 50).frame(minWidth: 100)
+                .frame(maxWidth: noMaxWidth ? .infinity : 170).frame(height: 50).frame(minWidth: 100)
                 .blurredBackground()
                 .padding(UIDevice.isIPhone ? 0 : 10)
         }

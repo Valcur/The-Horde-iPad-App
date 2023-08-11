@@ -85,8 +85,10 @@ struct GradientView: View {
     
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let gradient: Gradient
+    let gradientId: Int
     
     init(gradientId: Int) {
+        self.gradientId = gradientId
         switch gradientId {
         case 1:
             gradient = Gradient(colors: [Color("GradientLightColor"), Color("GradientDarkColor")])
@@ -116,9 +118,25 @@ struct GradientView: View {
     }
     
     var body: some View {
-        LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
-            .saturation(hordeAppViewModel.useLessColorFullBackground ? 0.6 : 1)
-            .ignoresSafeArea()
+        if gradientId != -1 {
+            LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
+                .saturation(hordeAppViewModel.useLessColorFullBackground ? 0.6 : 1)
+                .ignoresSafeArea()
+        } else {
+            getCustomSleeveArt().resizable().scaledToFill().ignoresSafeArea().frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        }
+        
+    }
+    
+    func getCustomSleeveArt() -> Image {
+        guard let data = UserDefaults.standard.data(forKey: "CustomBackgroundArtImage") else { return Image("BlackBackground") }
+        let decoded = try! PropertyListDecoder().decode(Data.self, from: data)
+        
+        guard let inputImage = UIImage(data: decoded) else {
+            return Image("BlackBackground")
+        }
+        
+        return Image(uiImage: inputImage)
     }
 }
 
