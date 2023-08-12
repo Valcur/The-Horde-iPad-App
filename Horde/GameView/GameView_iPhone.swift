@@ -168,6 +168,9 @@ struct HordeBoardView_iPhone: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     let cardThickness: CGFloat = 0.2
     @State var toggler: Bool = false
+    @State var lastMilledTokenOpacity: Double = 1
+    @State var lastMilledTokenScale: Double = 1
+    @GestureState var isDetectingLongPress = false
     
     var deckThickness: CGFloat {
         return gameViewModel.deck.count < 250 ? CGFloat(gameViewModel.deck.count) * cardThickness : 250 * cardThickness
@@ -207,6 +210,25 @@ struct HordeBoardView_iPhone: View {
                             .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal)
                             .opacity(0.5)
                     }
+                    ForEach(gameViewModel.lastMilledToken, id:\.id) { lastMilledToken in
+                        CardView(card: lastMilledToken)
+                            .frame(width: CardSize_iPhone.width.normal, height: CardSize_iPhone.height.normal)
+                            .cornerRadius(CardSize_iPhone.cornerRadius.normal)
+                            .opacity(lastMilledTokenOpacity)
+                            .scaleEffect(lastMilledTokenScale)
+                            .id(lastMilledToken.id)
+                            .onAppear() {
+                                print("new token")
+                                lastMilledTokenOpacity = 1
+                                lastMilledTokenScale = 1
+                                withAnimation(.easeInOut(duration: 1)) {
+                                    lastMilledTokenOpacity = 0
+                                }
+                                withAnimation(.easeInOut(duration: 0.8).delay(0.2)) {
+                                    lastMilledTokenScale = 0
+                                }
+                            }
+                    }
                     Text("\(gameViewModel.cardsOnGraveyard.count)")
                         .fontWeight(.bold)
                         .font(.title2)
@@ -236,6 +258,22 @@ struct HordeBoardView_iPhone: View {
                                 if gameViewModel.showLibraryTopCard {
                                     FlippingCardView(card: gameViewModel.deck.last!)
                                         .offset(y: -deckThickness)
+                                        .onTapGesture(count: 1) {
+                                            gameViewModel.sendTopLibraryCardToGraveyard()
+                                        }
+                                        .gesture(LongPressGesture(minimumDuration: 0.1)
+                                            .sequenced(before: LongPressGesture(minimumDuration: .infinity))
+                                            .updating($isDetectingLongPress) { value, state, transaction in
+                                                switch value {
+                                                    case .second(true, nil): //This means the first Gesture completed
+                                                        state = true //Update the GestureState
+                                                        DispatchQueue.main.async {
+                                                            gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
+                                                            gameViewModel.cardToZoomIn = gameViewModel.deck.last!
+                                                        }
+                                                    default: break
+                                                }
+                                            })
                                 }
                             }
                         }).frame(height: CardSize_iPhone.height.normal).offset(y: -deckThickness / 2).shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 2)
@@ -404,8 +442,10 @@ struct ControlBarView_iPhone: View {
                                             switch value {
                                                 case .second(true, nil): //This means the first Gesture completed
                                                     state = true //Update the GestureState
-                                                gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
-                                                gameViewModel.cardToZoomIn = token
+                                                    DispatchQueue.main.async {
+                                                        gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
+                                                        gameViewModel.cardToZoomIn = token
+                                                    }
                                                 default: break
                                             }
                                         })

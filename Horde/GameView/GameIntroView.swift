@@ -39,10 +39,24 @@ struct IntroSetupView: View {
                     GameModeSwitchButtonView(title: "Marathon", setModeToClassic: false)
                     Spacer()
                 }
-            }.frame(height: 70)
+            }.frame(height: UIDevice.isIPhone ? 40 : 70)
             
             ScrollView(.vertical) {
                 VStack(spacing: 40) {
+                    if isDeckBeingGenerated {
+                        MenuTextBoldParagraphView(text: "Generating deck, please wait ...")
+                    } else {
+                        Button(action: {
+                            print("Start game button pressed")
+                            isDeckBeingGenerated = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                gameViewModel.nextButtonPressed()
+                                isDeckBeingGenerated = false
+                            }
+                        }, label: {
+                            PurpleButtonLabel(text: "Touch to continue", isPrimary: true, noMaxWidth: true)
+                        })
+                    }
                     HStack(alignment: .top, spacing: 50) {
                         VStack(spacing: 30) {
                             
@@ -70,61 +84,62 @@ struct IntroSetupView: View {
                                 IntroPlayerChoiceButtonView(percent: 300)
                             }
                             
-                            MenuTextSubtitleView(text: "Life counter")
-                            
-                            Toggle("Show life counter", isOn: $hordeAppViewModel.useLifepointsCounter)
-                                .foregroundColor(.white)
-                            
-                            Toggle("The Horde heals when survivors lose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
-                                .foregroundColor(.white)
-                            
-                            HStack(spacing: 20) {
-                                Text("Survivors starting life")
+                            Group {
+                                MenuTextSubtitleView(text: "Life counter")
+                                
+                                Toggle("Show life counter", isOn: $hordeAppViewModel.useLifepointsCounter)
                                     .foregroundColor(.white)
-                                Spacer()
-                                // Start with 20
-                                Button(action: {
-                                    hordeAppViewModel.survivorStartingLife = 20
-                                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                                }, label: {
-                                    Text("20")
-                                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 20 ? .white : .gray)
-                                        .fontWeight(.bold)
-                                        .font(.title2)
-                                })
                                 
-                                // Start with 40
-                                Button(action: {
-                                    hordeAppViewModel.survivorStartingLife = 40
-                                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                                }, label: {
-                                    Text("40")
-                                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 40 ? .white : .gray)
-                                        .fontWeight(.bold)
-                                        .font(.title2)
-                                })
+                                Toggle("The Horde heals when survivors lose life", isOn: $hordeAppViewModel.hordeGainLifeLostBySurvivor)
+                                    .foregroundColor(.white)
                                 
-                                // Start with 60
-                                Button(action: {
-                                    hordeAppViewModel.survivorStartingLife = 60
-                                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                                }, label: {
-                                    Text("60")
-                                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 60 ? .white : .gray)
-                                        .fontWeight(.bold)
-                                        .font(.title2)
-                                })
+                                MenuTextParagraphView(text: "Survivors starting life")
                                 
-                                // Start with 80
-                                Button(action: {
-                                    hordeAppViewModel.survivorStartingLife = 80
-                                    hordeAppViewModel.saveUserLifepointsCounterPreference()
-                                }, label: {
-                                    Text("80")
-                                        .foregroundColor(hordeAppViewModel.survivorStartingLife == 80 ? .white : .gray)
-                                        .fontWeight(.bold)
-                                        .font(.title2)
-                                })
+                                HStack(spacing: 20) {
+                                    // Start with 20
+                                    Button(action: {
+                                        hordeAppViewModel.survivorStartingLife = 20
+                                        hordeAppViewModel.saveUserLifepointsCounterPreference()
+                                    }, label: {
+                                        Text("20")
+                                            .foregroundColor(hordeAppViewModel.survivorStartingLife == 20 ? .white : .gray)
+                                            .fontWeight(.bold)
+                                            .font(UIDevice.isIPhone ? .title3 : .title2)
+                                    })
+                                    
+                                    // Start with 40
+                                    Button(action: {
+                                        hordeAppViewModel.survivorStartingLife = 40
+                                        hordeAppViewModel.saveUserLifepointsCounterPreference()
+                                    }, label: {
+                                        Text("40")
+                                            .foregroundColor(hordeAppViewModel.survivorStartingLife == 40 ? .white : .gray)
+                                            .fontWeight(.bold)
+                                            .font(UIDevice.isIPhone ? .title3 : .title2)
+                                    })
+                                    
+                                    // Start with 60
+                                    Button(action: {
+                                        hordeAppViewModel.survivorStartingLife = 60
+                                        hordeAppViewModel.saveUserLifepointsCounterPreference()
+                                    }, label: {
+                                        Text("60")
+                                            .foregroundColor(hordeAppViewModel.survivorStartingLife == 60 ? .white : .gray)
+                                            .fontWeight(.bold)
+                                            .font(UIDevice.isIPhone ? .title3 : .title2)
+                                    })
+                                    
+                                    // Start with 80
+                                    Button(action: {
+                                        hordeAppViewModel.survivorStartingLife = 80
+                                        hordeAppViewModel.saveUserLifepointsCounterPreference()
+                                    }, label: {
+                                        Text("80")
+                                            .foregroundColor(hordeAppViewModel.survivorStartingLife == 80 ? .white : .gray)
+                                            .fontWeight(.bold)
+                                            .font(UIDevice.isIPhone ? .title3 : .title2)
+                                    })
+                                }
                             }
                         }
                         
@@ -188,7 +203,7 @@ struct IntroSetupView: View {
                                 }
                             }
                             
-                            Toggle("Cistribute tokens evenly and remove strong cards during the first turns", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
+                            Toggle("Distribute tokens evenly and remove strong cards during the first turns", isOn: $gameViewModel.gameConfig.shared.shouldntHaveStrongCardsInFirstQuarter)
                                 .foregroundColor(.white)
                             
                             Toggle("Tokens are sent to the graveyard and returned to hand", isOn: $gameViewModel.gameConfig.shared.tokensAreRealCards)
@@ -198,21 +213,7 @@ struct IntroSetupView: View {
                                 .foregroundColor(.white)
                         }
                     }
-                    if isDeckBeingGenerated {
-                        MenuTextBoldParagraphView(text: "Generating deck, please wait ...")
-                    } else {
-                        Button(action: {
-                            print("Start game button pressed")
-                            isDeckBeingGenerated = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                gameViewModel.nextButtonPressed()
-                                isDeckBeingGenerated = false
-                            }
-                        }, label: {
-                            PurpleButtonLabel(text: "Touch to continue", isPrimary: true, noMaxWidth: true)
-                        })
-                    }
-                }.padding(.top, 40).padding([.leading, .trailing], 40)
+                }.padding(.top, 40).padding([.leading, .trailing], UIDevice.isIPhone ? 10 : 40).padding(.bottom, 40).scaleEffect(UIDevice.isIPhone ? 0.9 : 1, anchor: .top)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)
@@ -235,12 +236,12 @@ struct GameModeSwitchButtonView: View {
             gameViewModel.changeGameMode(isClassicMode: setModeToClassic)
         }, label: {
             VStack {
+                Spacer()
                 Text(title)
                     .foregroundColor(isSelected ? .white : .gray)
                     .fontWeight(.bold)
-                    .font(.title)
+                    .font(UIDevice.isIPhone ? .title2 : .title)
                     .padding(.bottom, 5)
-                Spacer()
                 Rectangle()
                     .frame(height: 2)
                     .foregroundColor(isSelected ? .white : Color("DarkGray"))
@@ -293,7 +294,7 @@ struct IntroDifficultyChoiceButtonView: View {
             Text("\(multiplicator)x")
                 .foregroundColor(isSelected ? .white : .gray)
                 .fontWeight(.bold)
-                .font(.title2)
+                .font(UIDevice.isIPhone ? .title3 : .title2)
         })
     }
 }
@@ -315,7 +316,7 @@ struct IntroPlayerChoiceButtonView: View {
             Text("\(percent)%")
                 .foregroundColor(isSelected ? .white : .gray)
                 .fontWeight(.bold)
-                .font(.title2)
+                .font(UIDevice.isIPhone ? .title3 : .title2)
         })
     }
 }

@@ -87,8 +87,8 @@ struct GradientView: View {
     let gradient: Gradient
     let gradientId: Int
     
-    init(gradientId: Int) {
-        self.gradientId = gradientId
+    init(gradientId: Int, colorOnly: Bool = false) {
+        self.gradientId = colorOnly ? 3 : gradientId
         switch gradientId {
         case 1:
             gradient = Gradient(colors: [Color("GradientLightColor"), Color("GradientDarkColor")])

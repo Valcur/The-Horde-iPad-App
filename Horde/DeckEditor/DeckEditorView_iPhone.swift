@@ -37,12 +37,12 @@ struct RightPanelView_iPhone: View {
     
     var body: some View {
         ZStack {
-            GradientView(gradientId: hordeAppViewModel.gradientId)
+            GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true)
             VStack(spacing: 0) {
-                TopTopControlRowView_iPhone()
+                TopTopControlRowView_iPhone().background(Color("DarkGray"))
                 TopControlRowView_iPhone()
                 Spacer()
-                DeckListView().scaleEffect(0.95, anchor: .topLeading)
+                DeckListView()
                 Spacer()
 
             }.ignoresSafeArea()
@@ -185,10 +185,10 @@ struct TopControlRowView_iPhone: View {
                     .foregroundColor(.white)
                     .frame(width: 1, height: 20)
                 Spacer()
-                DeckListSelectorView_iPhone(deckListName: "Weak", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
+                DeckListSelectorView_iPhone(deckListName: "Start", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
                 Spacer()
-                DeckListSelectorView_iPhone(deckListName: "Powerfull", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
-            }.frame(height: 20).padding([.leading, .trailing], 0)
+                DeckListSelectorView_iPhone(deckListName: "Milestones", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
+            }.frame(height: 28).background(Color("DarkGray")).shadowed()
             
             HStack() {
                 Text(deckEditorViewModel.deckSelectionInfo)
@@ -200,8 +200,8 @@ struct TopControlRowView_iPhone: View {
                     .foregroundColor(.white)
                     .font(.system(size: 10))
                     .multilineTextAlignment(.leading)
-            }.frame(height: 10)
-        }.padding([.leading, .trailing], 15)
+            }.frame(height: 10).padding([.leading, .trailing], 15)
+        }
     }
 }
 
@@ -210,6 +210,9 @@ struct DeckListSelectorView_iPhone: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let deckListName: String
     let deckListNumber: Int
+    var isSelected: Bool {
+        deckEditorViewModel.selectedDeckListNumber == deckListNumber
+    }
     
     var body: some View {
         VStack {
@@ -218,10 +221,17 @@ struct DeckListSelectorView_iPhone: View {
                     deckEditorViewModel.changeSelectedDeckTo(newSelectedDeck: deckListNumber)
                 }
             }, label: {
-                Text(deckListName)
-                    .fontWeight(.bold)
-                    .font(.footnote)
-                    .foregroundColor(deckEditorViewModel.selectedDeckListNumber == deckListNumber ? .white : .gray)
+                VStack {
+                   Text(deckListName)
+                       .fontWeight(.bold)
+                       .font(.footnote
+                       )
+                       .foregroundColor(isSelected ? .white : .gray)
+                       .padding(.bottom, 0)
+                   Rectangle()
+                       .frame(height: 2)
+                       .foregroundColor(isSelected ? .white : Color("DarkGray"))
+               }
             })
         }
     }
@@ -234,14 +244,14 @@ struct LeftPanelView_iPhone: View {
     
     var body: some View {
         ZStack {
-            GradientView(gradientId: hordeAppViewModel.gradientId)
+            GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true)
             VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
             
             ZStack {
                 CardSearchView_iPhone()
                 ZStack {
                     if deckEditorViewModel.cardToShow != nil {
-                        GradientView(gradientId: hordeAppViewModel.gradientId).transition(.move(edge: .trailing))
+                        GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true).transition(.move(edge: .trailing))
                         VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).transition(.move(edge: .trailing))
                         CardShowView_iPhone(card: deckEditorViewModel.cardToShow!).transition(.move(edge: .trailing))
                     }

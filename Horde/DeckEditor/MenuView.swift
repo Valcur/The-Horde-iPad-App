@@ -164,7 +164,7 @@ struct MenuTextSubtitleView: View {
         Text(text)
             .foregroundColor(.white)
             .fontWeight(.bold)
-            .font(.title)
+            .font(UIDevice.isIPhone ? .title2 : .title)
     }
 }
 

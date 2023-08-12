@@ -62,7 +62,7 @@ struct RightPanelView: View {
     
     var body: some View {
         ZStack {
-            GradientView(gradientId: hordeAppViewModel.gradientId)
+            GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true)
             VStack(spacing: 0) {
                 TopTopControlRowView().background(Color("DarkGray"))
                 TopControlRowView()
@@ -82,14 +82,14 @@ struct LeftPanelView: View {
     
     var body: some View {
         ZStack {
-            GradientView(gradientId: hordeAppViewModel.gradientId)
+            GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true)
             VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
             
             ZStack {
                 CardSearchView()
                 ZStack {
                     if deckEditorViewModel.cardToShow != nil {
-                        GradientView(gradientId: hordeAppViewModel.gradientId).transition(.move(edge: .trailing))
+                        GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true).transition(.move(edge: .trailing))
                         VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).transition(.move(edge: .trailing))
                         CardShowView(card: deckEditorViewModel.cardToShow!).transition(.move(edge: .trailing))
                     }
@@ -803,7 +803,7 @@ struct DeckListMainDeckView: View {
                 if deckEditorViewModel.getAllDecksInMainDeckList()[i].count > 0 {
                     VStack(alignment: .leading) {
                         Text("\(deckRowTitles[i]) (\(deckEditorViewModel.getAllDecksInMainDeckList()[i].map({$0.cardCount}).reduce(0, +)))")
-                            .headline()
+                            .headline().scaleEffect(UIDevice.isIPhone ? 0.8 : 1, anchor: .leading)
                         LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
                             ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
                                 Button(action: {
@@ -829,7 +829,7 @@ struct DeckListTooStrongView: View {
         VStack(spacing: 80) {
             ForEach(0..<4, id: \.self) { i in
                 if deckEditorViewModel.getAllDecksInMainDeckList()[i].count > 0 {
-                    VStack {
+                    VStack(alignment: .leading) {
                         Text("\(deckRowTitles[i]) (\(deckEditorViewModel.getAllDecksInMainDeckList()[i].map({$0.cardCount}).reduce(0, +)))")
                             .headline()
                         LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
