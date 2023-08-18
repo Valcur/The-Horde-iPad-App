@@ -66,7 +66,6 @@
 1 ROE creature NO Ulamog, the Infinite Gyre b817bc56-9b4d-4c50-bafa-3c652b99578f 225e3cc6-34d0-4f81-9f49-162d97e2ea59
 
 ## Weak Permanents ##
-1 ZNR artifact NO Forsaken Monument 7777fab1-df3f-467f-b9e2-46dd2bd2166e 0c8f362c-f035-48b3-8e74-ef23240b44f7
 
 ## Powerfull Permanents ##
 1 EMN creature NO Brisela, Voice of Nightmares b23587e0-9fb7-492e-8bb4-f218e8e4ce6c 5a7a212e-e0b6-4f12-a95c-173cae023f93

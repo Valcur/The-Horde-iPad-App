@@ -15,13 +15,6 @@ struct MenuView: View {
     var body: some View {
         ZStack(alignment: .trailing) {
             VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
-            Button(action: {
-                print("Return to menu button pressed")
-                hordeAppViewModel.shouldShowMenu = false
-            }, label: {
-                Rectangle()
-                    .opacity(0.00000001)
-            }).buttonStyle(StaticButtonStyle())
             
             if hordeAppViewModel.readyToPlay {
                 Button(action: {
@@ -29,12 +22,9 @@ struct MenuView: View {
                     hordeAppViewModel.shouldShowMenu = false
                     hordeAppViewModel.readyToPlay = false
                 }, label: {
-                    Text("Menu")
-                        .foregroundColor(.gray)
-                        .fontWeight(.bold)
-                        .font(.largeTitle)
-                        .frame(width: 100, height: 80)
-                }).position(x: 60, y: 40)
+                    PurpleButtonLabel(text: "Return to menu", isPrimary: true, noMaxWidth: true)
+                        .frame(width: 200)
+                }).position(x: 110, y: 40)
             }
             
             HStack(alignment: .top, spacing: 0) {
@@ -44,6 +34,15 @@ struct MenuView: View {
                     MenuButtonView(title: "Options", id: 4)
                     MenuButtonView(title: "Contact", id: 3)
                     Spacer()
+                    Button(action: {
+                        print("Return to menu button pressed")
+                        hordeAppViewModel.shouldShowMenu = false
+                    }, label: {
+                        Text("Close")
+                            .foregroundColor(.gray)
+                            .fontWeight(.bold)
+                            .font(.largeTitle)
+                    }).buttonStyle(StaticButtonStyle()).padding([.trailing, .bottom], 30)
                 }
                 if hordeAppViewModel.menuToShowId == 1 {
                     ScrollView(.vertical) {
@@ -98,46 +97,63 @@ struct MenuRulesView: View {
             Group {
                 MenuTextBoldParagraphView(text: "Rules by Peter Knudson")
                 
-                MenuTextParagraphView(text: "The goal of Horde Magic is to survive the onslaught of Zombies. The Horde deck has no life total, so the only way to win is to... uh... not die. Eventually the deck will run out of cards and you'll be able to breath sight of relief.\n\nZombies generally don't do a lot of thinking. They just want you dead. So in Horde Magic, the Horde has no decisions to make, and thus the Horde deck also doesn't require a pilot to run. This creates unique co-op gameplay, which many are likely to really enjoy. Additionally, you can battle the Horde deck solo.")
+                MenuTextParagraphView(text: "The goal of Horde Magic is to survive the onslaught of creatures. The Horde deck has no life total (see Additional rules if you want the Horde to use lifepoints), so the only way to win is to... uh... not die. Eventually the deck will run out of cards and you'll be able to breath sight of relief.")
+                
+                MenuTextParagraphView(text: "In Horde Magic, the Horde has no decisions to make, and thus the Horde deck also doesn't require a pilot to run. This creates unique co-op gameplay, which many are likely to really enjoy. Additionally, you can battle the Horde deck solo.")
             }
             
             Group {
-                MenuTextTitleView(text: "The Rules")
-                MenuTextParagraphView(text: "I've had a lot fun playing Horde Magic with friends at school and at my local store and I've been encouraged to share my format with others. If you find this concept interesting, the Horde deck can be assembled quite inexpensively, especially if you have a bunch of Zombie tokens lying around.")
-                
                 MenuTextSubtitleView(text: "Starting the Game")
                 MenuTextParagraphView(text: "To play Horde Magic, each player needs a Commander deck. Any other Magic deck will do, but Horde Magic was developed to play with the multitude of Commander decks that people own.")
                 
-                MenuTextSubtitleView(text: "The Survivors:")
+                MenuTextSubtitleView(text: "The Survivors")
                 MenuTextParagraphView(text: "There can be anywhere between one and four Survivors, which are the players teaming up to defend against the Horde. The number of Survivors determine the number of cards in the Horde deck, as the difficulty needs to scale accordingly. The Survivors have a collective life total of 20 life per player, and everybody loses when that life total becomes 0.")
                 
-                MenuTextSubtitleView(text: "The Horde:")
-                MenuTextParagraphView(text: "The number of Zombies you'll face over the course of the game is based on the number of Survivors. For three Survivors, take your 100 card Horde deck and remove a random 25 cards, bringing your Horde deck to a total of 75. The Horde starts with no cards in hand and no permanents on the battlefield.")
+                MenuTextSubtitleView(text: "The Horde")
+                MenuTextParagraphView(text: "The number of creatures you'll face over the course of the game is based on the number of Survivors. For less than 3 Survivors, take your 100 card Horde deck and remove between 25-75 cards (Using the deck size options).")
             }
             
             Group {
                 MenuTextTitleView(text: "Game Play")
-                MenuTextParagraphView(text: "The Survivors get 3 turns to set up their defenses before the Horde takes a turn. Just like in Archenemy and Two-Headed Giant, the Survivors take turns simultaneously. After the 3 turn set-up, the Survivors and the Horde alternate turns.\n\nOn each of the Zombie's turns, the top card of their library is flipped over. If the card is a Zombie token, then another is flipped over. Cards are flipped over until a non-token card is revealed. Sometimes the card is a Bad Moon, sometimes it's a Souless One, and sometimes it's even a Plague Wind. At that point, all of the tokens flipped this way are cast, and the non-token card is cast last.\n\nThen the Zombies enter combat. Since Zombies are generally brainless, they come charging in without thinking twice. All Zombies have haste and must attack each turn if able. That's just how they roll. Since the survivors are on a team together, when the Zombies attack, they attack every player at the same time, just like in Two-Headed Giant, and when any of the survivors choose to block, they block for the whole team.")
                 
-                MenuTextSubtitleView(text: "Defeating the Horde:")
-                MenuTextParagraphView(text: "You, as the Survivors, win when the Zombie deck can't flip over anymore Zombies, and the Horde doesn't control any more Zombies. You can use anything at your disposal to stem the bleeding, from Walls, to Wrath of Gods, to blocking with huge fatties. However, if you and your teammates feel that you have adequate defenses for the next Zombie attack, you can also attack the Horde at it's source. Zombies can't block, and have no life total, so it's safe to go on the offensive if you think you can survive the next wave of Zombies.")
+                MenuTextParagraphView(text: "The Survivors get 3 turns to set up their defenses before the Horde takes a turn. Just like in Archenemy and Two-Headed Giant, the Survivors take turns simultaneously. After the 3 turn set-up, the Survivors and the Horde alternate turns.")
+                
+                MenuTextParagraphView(text: "On each of the Horde's turns, the top card of their library is flipped over. If the card is a creature token, then another is flipped over. Cards are flipped over until a non-token card is revealed. Sometimes the card is a Bad Moon, sometimes it's a Souless One, and sometimes it's even a Plague Wind. At that point, all of the tokens flipped this way are cast, and the non-token card is cast last.")
+                
+                MenuTextParagraphView(text: "Then the Horde enter combat. All its creatures come charging in without thinking twice. All creatures have haste and must attack each turn if able. That's just how they roll. Since the survivors are on a team together, when the Horde attack, they attack every player at the same time, just like in Two-Headed Giant, and when any of the survivors choose to block, they block for the whole team.")
+            }
+            
+            Group {
+                
+                MenuTextSubtitleView(text: "Defeating the Horde")
+                
+                MenuTextParagraphView(text: "You, as the Survivors, win when the Horde deck can't flip over anymore cards, and the Horde doesn't control any more creatures. You can use anything at your disposal to stem the bleeding, from Walls, to Wrath of Gods, to blocking with huge fatties. However, if you and your teammates feel that you have adequate defenses for the next attack, you can also attack the Horde at it's source. Creatures can't block, so it's safe to go on the offensive if you think you can survive the next wave.")
+                
                 MenuTextBoldParagraphView(text: "For each point of damage done to the Horde, the Horde mills one card off the top of their deck.")
                 
-                MenuTextSubtitleView(text: "Winning:")
-                MenuTextParagraphView(text: "The Survivors are victorious when all the Zombies in play are dead, and the Horde deck has run out of cards. The Horde wins when the Survivors' life total becomes 0.")
-                
+                MenuTextSubtitleView(text: "Winning")
+                MenuTextParagraphView(text: "The Survivors are victorious when all the creatures in play are dead, and the Horde deck has run out of cards. The Horde wins when the Survivors' life total becomes 0.")
+            }
+            Group {
                 MenuTextTitleView(text: "Rules Notes")
-                MenuTextParagraphView(text: "The Zombie deck is built so that, hopefully, the Horde deck is not presented with any decisions. In order for the deck to gather the co-op experience, many awesome Zombie cards were omitted. However, there are lots of cards that the Survivors might play that cause the Horde to make a choice (such as Fact or Fiction or Chainer's Edict). In this case, the Horde makes this choice as randomly as possible.\n\nThe Zombie tokens and cards from the Horde deck use the stack, so you can respond to them coming into to play, or counter them.\n\nThe Horde has infinite mana, so cards like Propaganda and Mana Leak don't work. Sorry!\n\nIf you return a permanent to the Horde's hand, it gets cast again on their next main phase.\n\nThere are a LOT of Magic cards in existence. If something doesn't work the way it's supposed to, just come up with the most fair way to execute the card. If you can't, cycle it. This is a casual format.")
+                MenuTextParagraphView(text: "The Horde deck is built so that, hopefully, the Horde is not presented with any decisions. However, there are lots of cards that the Survivors might play that cause the Horde to make a choice (such as Fact or Fiction or Chainer's Edict). In this case, the Horde makes this choice as randomly as possible.")
+                MenuTextParagraphView(text: "The creature tokens and cards from the Horde deck use the stack, so you can respond to them coming into to play, or counter them.")
+                MenuTextParagraphView(text: "The Horde never use any activated abilities of permanents it controls unless stated by the deck special rules.")
+                MenuTextParagraphView(text: "The Horde has infinite mana, so cards like Propaganda and Mana Leak don't work. Sorry! The Horde always pays kicker or any other additional cost.")
+                MenuTextParagraphView(text: "If you return a permanent to the Horde's hand, it gets cast again on their next turn.")
+                MenuTextParagraphView(text: "There are a LOT of Magic cards in existence. If something doesn't work the way it's supposed to, just come up with the most fair way to execute the card. If you can't, cycle it. This is a casual format.")
+                MenuTextParagraphView(text: "If the horde has to choose a target, it choose the BEST target. BEST is higher strength, then higher Mana Value. If still multiple possible targets, targets randomly")
+                MenuTextParagraphView(text: "If survivors have planeswalkers, each time a creature controlled by the horde isn't blocked, it deals damage to the planeswalker. Target the planeswalker with highest Mana Value first if survivors have multiple planeswalkers.")
             }
 
             Group {
                 MenuTextTitleView(text: "Additional rules")
                 
-                MenuTextParagraphView(text: "If the horde has to choose a target, it choose the BEST target. BEST is higher strength, then higher Mana Value. If still multiple possible targets, targets randomly")
+                MenuTextParagraphView(text: "Optional : the Horde starts with 20 lifepoints and only mills its library when his lifepoints are equal to 0.")
                 
-                MenuTextParagraphView(text: "If survivors have planeswalkers, each time a creature controlled by the horde isn't blocked : heads or tails for each of those creature to know if it deals damage to the planeswalker or the survivors. Target the planeswalker with higher Mana Value first if survivors have multiple planeswalkers")
+                MenuTextParagraphView(text: "Optional : each time a permanent or an ability controlled by the Horde deals damage to the survivors, the Horde gains that much life.")
                 
-                MenuTextBoldParagraphView(text: "Remember that this is a casual format, you can change as many rules as you want. What matters is that you have fun :)")
+                MenuTextBoldParagraphView(text: "Remember that this is a casual format, you can change as many rules as you want. What matters is that you have fun.")
             }
         }.padding(.trailing, 30)
     }
@@ -407,11 +423,19 @@ struct MenuCustomView: View {
     var body: some View {
         LazyVStack(alignment: .leading, spacing: 30) {
             Group {
-                MenuTextSubtitleView(text: "Background Color")
+                MenuTextSubtitleView(text: "Background")
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-                        MenuUploadCustomBackgroundImage()
+                        ZStack(alignment: .topTrailing) {
+                            MenuUploadCustomBackgroundImage()
+                                .opacity(hordeAppViewModel.isPremium ? 1 : 0.5).allowsHitTesting(hordeAppViewModel.isPremium)
+                            if !hordeAppViewModel.isPremium {
+                                Image(systemName: "crown.fill").foregroundColor(.white).font(.title)
+                                    .offset(x: 5, y: -5)
+                            }
+                        }
+                        
                         MenuCustomBackgroundColorChoiceView(gradientId: 1)
                         MenuCustomBackgroundColorChoiceView(gradientId: 2)
                         MenuCustomBackgroundColorChoiceView(gradientId: 3)
@@ -420,7 +444,7 @@ struct MenuCustomView: View {
                         MenuCustomBackgroundColorChoiceView(gradientId: 6)
                         MenuCustomBackgroundColorChoiceView(gradientId: 7)
                         MenuCustomBackgroundColorChoiceView(gradientId: 8)
-                    }
+                    }.padding(.vertical, 3)
                 }
                 
                 Toggle("Use less colorful background", isOn: $hordeAppViewModel.useLessColorFullBackground)

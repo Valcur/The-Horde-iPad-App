@@ -58,11 +58,6 @@
 ## Available Tokens ##
 
 ## Weak Permanents ##
-1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
-1 SLD enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 1a43d9e8-3320-4873-b322-b323c792ce5e
-1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
-1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
-1 CMR creature NO Odric, Lunarch Marshal bad76170-c773-4be5-9457-20dc9f745cb4 17b429bd-d7da-45f5-988b-7eed0d3efeaa
 
 ## Powerfull Permanents ##
 1 SLD creature NO Akroma, Angel of Wrath 107f204c-9fd3-490d-8887-be63d14fc6a4 cf75f895-3481-4c21-a85f-c819613bccc3

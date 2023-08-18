@@ -21,7 +21,6 @@ class DeckBrowserViewModel: ObservableObject {
     
     init(hordeVM: HordeAppViewModel) {
         self.hordeVM = hordeVM
-        iniRecentDecks()
     }
     
     func iniRecentDecks() {
@@ -38,6 +37,35 @@ class DeckBrowserViewModel: ObservableObject {
         
 
         let query = db.collection("decks").whereField("public", isEqualTo: true).order(by: "lastModified", descending: true).limit(to: 14)
+        
+        query.getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+                self.resultStatus = .error
+            } else {
+                for deck in querySnapshot!.documents {
+                    self.decks.append(self.newDeckWithData(deck.data()))
+                }
+                self.resultStatus = .mostRecent
+                self.mostRecentDecks = self.decks
+            }
+        }
+    }
+    
+    func iniTopDecks() {
+        searchResultMessage = "Loading most liked decks"
+        decks = []
+        resultStatus = .progress
+        
+        // Si on les as déja chargé, pas besoin de retélécharger
+        if mostRecentDecks.count > 0 {
+            decks = mostRecentDecks
+            resultStatus = .mostRecent
+            return
+        }
+        
+
+        let query = db.collection("decks").whereField("public", isEqualTo: true).order(by: "likesCount", descending: true).limit(to: 14)
         
         query.getDocuments() { (querySnapshot, err) in
             if let err = err {

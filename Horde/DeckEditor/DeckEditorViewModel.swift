@@ -26,17 +26,20 @@ class DeckEditorViewModel: ObservableObject {
     @Published var showSaveButton = false
     @Published var isReadOnly = false
     
+    @Published var shouldZoomOnCard = false
+    @Published var cardToZoomIn = Card.emptyCard()
+    
     func changeSelectedDeckTo(newSelectedDeck: Int) {
         selectedDeckListNumber = newSelectedDeck
         
         if selectedDeckListNumber == DeckSelectionNumber.deckList {
             deckSelectionInfo = "Cards and tokens in the Horde library"
         } else if selectedDeckListNumber == DeckSelectionNumber.tooStrongPermanentsList {
-            deckSelectionInfo = "Select cards that are too strong to be drawn during the first turns (like boardwipes)"
+            deckSelectionInfo = "Select cards that are too strong to be drawn during the first turns"
         } else if selectedDeckListNumber == DeckSelectionNumber.availableTokensList {
             deckSelectionInfo = "Tokens/spells that the horde could have to create/cast during the game"
         } else if selectedDeckListNumber == DeckSelectionNumber.weakPermanentsList {
-            deckSelectionInfo = "Weak permanents the Horde could start the game with"
+            deckSelectionInfo = "Permanents the Horde will start the game with"
         } else if selectedDeckListNumber == DeckSelectionNumber.powerfullPermanentsList {
             deckSelectionInfo = "Powerfull permanents the Horde can spawn at milestones or between marathon stages"
         }

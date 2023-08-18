@@ -333,29 +333,48 @@ struct DeckPicker_DeckBrowserView: View {
     let rotationInDegrees: CGFloat = 5
     
     var body: some View {
-        Button(action: {
-            hordeAppViewModel.showDeckBrowser = true
-        }) {
-            ZStack {
-                VStack(alignment: .center, spacing: 40) {
-                    
-                    Text("Find new decks")
-                        .foregroundColor(.white)
-                        .fontWeight(.bold)
-                        .font(.title)
-                        .padding(.bottom, PickerSize.titlePaddingTop)
-                    
-                    Image(systemName: "books.vertical")
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                    
-                }.rotationEffect(Angle.degrees(-rotationInDegrees))
-                    .frame(width: 500, height: UIScreen.main
-                        .bounds.height)
-            }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: PickerSize.width.unpicked, height: UIScreen.main.bounds.height + 150)
-                .border(.white, width: 3)
-            .rotationEffect(Angle.degrees(rotationInDegrees))
-        }
+        ZStack {
+            VStack(spacing: 0) {
+                Button(action: {
+                    hordeAppViewModel.showDeckBrowser = 1
+                }) {
+                    VStack(alignment: .center, spacing: 10) {
+                        Spacer()
+                        Text("Latest decks")
+                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                            .font(.title)
+                            .padding(.bottom, PickerSize.titlePaddingTop)
+                        
+                        Image(systemName: "books.vertical")
+                            .font(.largeTitle)
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                }.offset(x: 10)
+                
+                Button(action: {
+                    hordeAppViewModel.showDeckBrowser = 2
+                }) {
+                    VStack(alignment: .center, spacing: 10) {
+                        Spacer()
+                        Text("Top decks")
+                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                            .font(.title)
+                            .padding(.bottom, PickerSize.titlePaddingTop)
+                        
+                        Image(systemName: "star")
+                            .font(.largeTitle)
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                }.offset(x: -10)
+            }.rotationEffect(Angle.degrees(-rotationInDegrees))
+            .frame(width: 500, height: UIScreen.main.bounds.height)
+        }.scaleEffect(UIDevice.current.userInterfaceIdiom == .pad ? 1 : 0.7).frame(width: PickerSize.width.unpicked, height: UIScreen.main.bounds.height + 150)
+        .border(.white, width: 3)
+        .rotationEffect(Angle.degrees(rotationInDegrees))
     }
 }
 

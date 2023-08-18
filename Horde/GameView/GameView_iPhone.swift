@@ -28,7 +28,14 @@ struct GameView_iPhone: View {
                 
                 Spacer()
                 
-                ControlBarView_iPhone().frame(height: 50)
+                if hordeAppViewModel.gradientId == -1 {
+                    ControlBarView_iPhone().frame(height: 50).background(
+                        LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.7), Color.black.opacity(0.7), Color.black.opacity(0)]),
+                                                          startPoint: .bottom,
+                                                          endPoint: .top))
+                } else {
+                    ControlBarView_iPhone().frame(height: 50)
+                }
             }
             .onAppear() {
                 lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
@@ -42,7 +49,7 @@ struct GameView_iPhone: View {
                         .frame(width: UIScreen.main.bounds.width / 4.5)
                         .cornerRadius(15)
                         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
-                        .scaleEffect(0.7, anchor: .center)
+                        .scaleEffect(0.7, anchor: .trailing)
                 }.padding(.trailing, (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0))
             }
             
@@ -300,7 +307,7 @@ struct HordeBoardView_iPhone: View {
                                 }, label: {
                                     ButtonLabelWithImage_iPhone(imageName: "arrow.up.right.square")
                                 })
-                            }.offset(y: CardSize_iPhone.height.normal / 2)
+                            }.offset(y: CardSize_iPhone.height.normal / 2 - 15)
                                 .frame(width: CardSize_iPhone.width.normal -  40, height: 50).zIndex(50)
                         } else {
                             Button(action: {
@@ -308,7 +315,7 @@ struct HordeBoardView_iPhone: View {
                                 gameViewModel.showLibraryTopCard = true
                             }, label: {
                                 PurpleButtonLabel_iPhone(text: "Reveal top")
-                            }).offset(y: CardSize_iPhone.height.normal / 2)
+                            }).offset(y: CardSize_iPhone.height.normal / 2 - 15)
                         }
                     } else {
                         RoundedRectangle(cornerRadius: CardSize_iPhone.cornerRadius.normal)
@@ -381,7 +388,7 @@ struct ControlBarView_iPhone: View {
             ReturnToHandView()
                 .frame(width: 30)
                 .scaleEffect(0.7)
-                .padding(.leading, CardSize_iPhone.width.normal * 0.7) // leave some space to make sure no accidental press on "Reveal Top" button
+                //.padding(.leading, CardSize_iPhone.width.normal * 0.7) // leave some space to make sure no accidental press on "Reveal Top" button
             
             // Draw a card
             
@@ -458,24 +465,43 @@ struct ControlBarView_iPhone: View {
             
             // Next
             
-            Button(action: {
-                print("New turn pressed")
-                gameViewModel.nextButtonPressed()
-            }, label: {
-                PurpleButtonLabel_iPhone(text: "Draw", isPrimary: true).padding(.trailing, 20)
-            }).disabled(gameViewModel.isNextButtonDisabled() || nexButtonDisable)
-                .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep == 1 {
-                        nexButtonDisable = true
+            HStack(spacing: 10) {
+                if gameViewModel.gameConfig.shared.useAlternativeDrawMode {
+                    HStack {
+                        Button(action: {
+                            if gameViewModel.alternativeDrawCount > 1 {
+                                gameViewModel.alternativeDrawCount -= 1
+                            }
+                        }, label: {
+                            PurpleButtonLabel(text: "-", minWidth: 60).scaleEffect(0.7).frame(width: 40)
+                        })
+                        Button(action: {
+                            gameViewModel.alternativeDrawCount += 1
+                        }, label: {
+                            PurpleButtonLabel(text: "+", minWidth: 60).scaleEffect(0.7).frame(width: 40)
+                        })
                     }
-                    if gameViewModel.turnStep == 2 {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                nexButtonDisable = false
+                }
+                
+                Button(action: {
+                    print("New turn pressed")
+                    gameViewModel.nextButtonPressed()
+                }, label: {
+                    PurpleButtonLabel_iPhone(text: gameViewModel.gameConfig.shared.useAlternativeDrawMode ? "Draw \(gameViewModel.alternativeDrawCount)" : "Draw", isPrimary: true)
+                }).disabled(gameViewModel.isNextButtonDisabled() || nexButtonDisable)
+                    .onChange(of: gameViewModel.turnStep) { _ in
+                        if gameViewModel.turnStep == 1 {
+                            nexButtonDisable = true
+                        }
+                        if gameViewModel.turnStep == 2 {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    nexButtonDisable = false
+                                }
                             }
                         }
                     }
-                }
+            }.padding(.trailing, 20)
         }
     }
 }
@@ -819,8 +845,10 @@ struct CardOnBoardView_iPhone: View {
                     switch value {
                         case .second(true, nil): //This means the first Gesture completed
                             state = true //Update the GestureState
-                        gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
-                        gameViewModel.cardToZoomIn = self.card
+                        DispatchQueue.main.async {
+                            gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
+                            gameViewModel.cardToZoomIn = self.card
+                        }
                         default: break
                     }
                 })
@@ -1077,26 +1105,14 @@ struct MenuView_iPhone: View {
     var body: some View {
         ZStack(alignment: .trailing) {
             VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
-            Button(action: {
-                print("Return to menu button pressed")
-                hordeAppViewModel.shouldShowMenu = false
-            }, label: {
-                Rectangle()
-                    .opacity(0.00000001)
-            }).buttonStyle(StaticButtonStyle())
-            
             if hordeAppViewModel.readyToPlay {
                 Button(action: {
                     print("Return to menu button pressed")
                     hordeAppViewModel.shouldShowMenu = false
                     hordeAppViewModel.readyToPlay = false
                 }, label: {
-                    Text("Exit")
-                        .foregroundColor(.gray)
-                        .fontWeight(.bold)
-                        .font(.title)
-                        .frame(width: 100, height: 80)
-                }).position(x: -90, y: -40).scaleEffect(0.7)
+                    PurpleButtonLabel_iPhone(text: "Return to menu", isPrimary: true, noMaxWidth: true, minWidth: 170)
+                }).position(x: 90, y: 40)
             }
             
             HStack(alignment: .top, spacing: 0) {
@@ -1106,6 +1122,16 @@ struct MenuView_iPhone: View {
                     MenuButtonView_iPhone(title: "Options", id: 4).scaleEffect(0.7)
                     MenuButtonView_iPhone(title: "Contact", id: 3).scaleEffect(0.7)
                     Spacer()
+                    Button(action: {
+                        print("Return to menu button pressed")
+                        hordeAppViewModel.shouldShowMenu = false
+                    }, label: {
+                        Text("Close")
+                            .foregroundColor(.gray)
+                            .fontWeight(.bold)
+                            .font(.title)
+                            .frame(maxWidth: .infinity, alignment: .trailing).frame(height: 55).padding(.trailing, 15)
+                    }).buttonStyle(StaticButtonStyle()).padding(.trailing, 15).scaleEffect(0.7)
                 }.padding(.top, 20)
                 if hordeAppViewModel.menuToShowId == 1 {
                     ScrollView(.vertical) {

@@ -41,6 +41,7 @@ class GameViewModel: ObservableObject {
     @Published var addCountersModeEnable: Bool = false
     @Published var removeCountersModeEnable: Bool = false
     @Published var returnToHandModeEnable: Bool = false
+    @Published var alternativeDrawCount: Int = 2
     
     /** Turn order
         1) launch all in graveyard
@@ -61,7 +62,7 @@ class GameViewModel: ObservableObject {
         turnStep = -1
         marathonStage = -1
         
-        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100, tokensAreRealCards: false), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
+        gameConfig = GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100, tokensAreRealCards: false, useAlternativeDrawMode: false), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
         
         strongPermanentsAlreadySpawned = [false, false, false, false]
         
@@ -123,7 +124,11 @@ class GameViewModel: ObservableObject {
                 generateMarathonStage(atStage: marathonStage)
             }
             
-            cardsToCast = drawUntilNonToken()
+            if gameConfig.shared.useAlternativeDrawMode {
+                cardsToCast = drawFixed()
+            } else {
+                cardsToCast = drawUntilNonToken()
+            }
             cardsToCast.cardsFromGraveyard = searchGraveyardForFlashback()
             hand = regroupSameCardInArray(cardArray: hand)
         }
@@ -136,7 +141,7 @@ class GameViewModel: ObservableObject {
             }
             
             for token in cardsToCast.tokensFromLibrary {
-                addCardToBoard(card: token)
+                castCard(card: token)
             }
             
             for card in cardsToCast.cardsFromHand {
@@ -154,7 +159,6 @@ class GameViewModel: ObservableObject {
         // Marathon setup
         if !gameConfig.isClassicMode && marathonStage == -1 {
             gameConfig.shared.deckSize = 50
-            gameConfig.shared.shouldStartWithWeakPermanent = false
             gameConfig.classic.shouldSpawnStrongPermanents = false
             marathonStage = 0
         }
@@ -216,7 +220,7 @@ class GameViewModel: ObservableObject {
                 }
                 print("loop \(n) + in \(quarter) max \(averageNumberOfTokens) min \(minNumberOfTokens) has \(nbrOfTokens) tokens ")
                 n += 1
-            } while (nbrOfTokens >= averageNumberOfTokens || nbrOfTokens <= minNumberOfTokens) && n < 100 && averageNumberOfTokens > quarter / 8
+            } while averageNumberOfTokens > 1 && (nbrOfTokens >= averageNumberOfTokens || nbrOfTokens < minNumberOfTokens) && n < 100 && averageNumberOfTokens > quarter / 8
             
             // Can't suffle without no strong cards wich means too many strong cards -> wouldn't be fun -> let's get a new deck
             if n >= 100 {
@@ -275,7 +279,12 @@ class GameViewModel: ObservableObject {
         if gameConfig.shared.shouldStartWithWeakPermanent {
             let weakCard: Card? = weakCards.randomElement()
             if weakCard != nil {
-                addCardToBoard(card: weakCard!)
+                castCard(card: weakCard!)
+            }
+        } else {
+            // Spawn all available
+            for card in weakCards {
+                castCard(card: card)
             }
         }
     }
@@ -313,7 +322,6 @@ class GameViewModel: ObservableObject {
     }
     
     func drawUntilNonToken() -> CardsToCast {
-        
         var cardRevealed: Card
         var tokensRevealed: [Card] = []
         let cardsFromHand: [Card] = regroupSameCardInArray(cardArray: hand)
@@ -331,6 +339,27 @@ class GameViewModel: ObservableObject {
         tokensRevealed = regroupSameCardInArray(cardArray: tokensRevealed)
         
         print("About to play \(cardRevealed.cardName) from library")
+        
+        return CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: tokensRevealed, cardsFromHand: cardsFromHand, cardFromLibrary: cardRevealed)
+    }
+    
+    func drawFixed() -> CardsToCast {
+        var cardRevealed: Card
+        var tokensRevealed: [Card] = []
+        let cardsFromHand: [Card] = regroupSameCardInArray(cardArray: hand)
+        hand = []
+        
+        cardRevealed = Card(cardName: "Nothing", cardType: .token)
+        var cardDrawed = 0
+        
+        while cardDrawed < alternativeDrawCount && deck.count != 0 {
+            tokensRevealed.append(deck.removeLast())
+            spawnStrongPermanentIfNeeded()
+            cardDrawed += 1
+        }
+        
+        // We regroup tokens
+        tokensRevealed = regroupSameCardInArray(cardArray: tokensRevealed)
         
         return CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: tokensRevealed, cardsFromHand: cardsFromHand, cardFromLibrary: cardRevealed)
     }
@@ -761,7 +790,7 @@ class GameViewModel: ObservableObject {
                 return loadedGameConfig
             }
         }
-        return GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100, tokensAreRealCards: false), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
+        return GameConfig(isClassicMode: true, shared: SharedParameters(shouldStartWithWeakPermanent: false, shouldntHaveStrongCardsInFirstQuarter: true, deckSize: 100, tokensAreRealCards: false, useAlternativeDrawMode: false), classic: ClassicModeParameters(shouldSpawnStrongPermanents: false, spawnStrongPermanentAt25: false, spawnStrongPermanentAt50: true, spawnStrongPermanentAt75: false, spawnStrongPermanentAt100: false))
     }
 }
 
@@ -776,6 +805,7 @@ struct SharedParameters: Codable {
     var shouldntHaveStrongCardsInFirstQuarter: Bool
     var deckSize: Int
     var tokensAreRealCards: Bool
+    var useAlternativeDrawMode: Bool
 }
 
 struct ClassicModeParameters: Codable {

@@ -11,6 +11,7 @@ struct DeckEditorView_iPhone: View {
     
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State private var username: String = ""
+    @State private var zoomViewOpacity: CGFloat = 0
     
     var body: some View {
         GeometryReader { _ in
@@ -25,6 +26,20 @@ struct DeckEditorView_iPhone: View {
                 }
                 PopUpInfoView().scaleEffect(0.7, anchor: .top)
                 DeckEditorInfoView_iPhone().opacity(deckEditorViewModel.showDeckEditorInfoView ? 1 : 0)
+                ZoomCardView()
+                    .opacity(zoomViewOpacity)
+                    .scaleEffect(1.4)
+                    .onChange(of: deckEditorViewModel.shouldZoomOnCard) { shouldZoom in
+                        if shouldZoom {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                zoomViewOpacity = 1
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                zoomViewOpacity = 0
+                            }
+                        }
+                    }
             }
         }.ignoresSafeArea()
     }
@@ -55,6 +70,7 @@ struct TopTopControlRowView_iPhone: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @State var deckName: String = ""
+    @State private var showSaveAlert = false
     
     var isUserAllowedToModifyDeckInfo: Bool {
         return !deckEditorViewModel.isReadOnly && ((deckEditorViewModel.deckId < 7 && hordeAppViewModel.isPremium) || deckEditorViewModel.deckId >= 7)
@@ -153,15 +169,38 @@ struct TopTopControlRowView_iPhone: View {
             
             // Exit
             Button(action: {
-                withAnimation(.easeIn(duration: 0.5)) {
-                    hordeAppViewModel.showDeckEditor = false
-                    DownloadQueue.queue.resetQueue()
+                if deckEditorViewModel.showSaveButton {
+                    showSaveAlert = true
+                } else {
+                    withAnimation(.easeIn(duration: 0.5)) {
+                        hordeAppViewModel.showDeckEditor = false
+                        DownloadQueue.queue.resetQueue()
+                    }
                 }
             }, label: {
                 Image(systemName: "xmark")
                     .font(.title2)
                     .foregroundColor(.white)
             }).scaleEffect(0.7).padding(.trailing, 5)
+                .alert(isPresented: $showSaveAlert) {
+                    Alert(
+                        title: Text("Leave DeckEditor"),
+                        message: Text("You have unsaved changes."),
+                        primaryButton: .destructive(
+                            Text("Cancel"),
+                            action: {showSaveAlert = false}
+                        ),
+                        secondaryButton: .default(
+                            Text("Exit without saving"),
+                            action: {
+                                withAnimation(.easeIn(duration: 0.5)) {
+                                    hordeAppViewModel.showDeckEditor = false
+                                    DownloadQueue.queue.resetQueue()
+                                }
+                            }
+                        )
+                    )
+                }
         }.padding(.horizontal, 10).padding(.vertical, 2)
     }
 }
@@ -176,9 +215,9 @@ struct TopControlRowView_iPhone: View {
                 Group {
                     DeckListSelectorView_iPhone(deckListName: "Horde Deck", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.deckList)
                     Spacer()
-                    DeckListSelectorView_iPhone(deckListName: "Lategame cards", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList)
+                    DeckListSelectorView_iPhone(deckListName: "Lategame", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList)
                     Spacer()
-                    DeckListSelectorView_iPhone(deckListName: "Tokens available", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.availableTokensList)
+                    DeckListSelectorView_iPhone(deckListName: "Create row", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.availableTokensList)
                 }
                 Spacer()
                 Rectangle()

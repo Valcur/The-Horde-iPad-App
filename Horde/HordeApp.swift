@@ -65,7 +65,7 @@ struct HordeAppView: View {
                             gameViewModel.startGame()
                         }
                 }
-            } else if hordeAppViewModel.showDeckBrowser {
+            } else if hordeAppViewModel.showDeckBrowser != 0 {
                 DeckBrowserView()
                     .environmentObject(deckBrowserVM)
                     .statusBar(hidden: true)
@@ -119,8 +119,12 @@ struct HordeAppView: View {
         .animation(.easeInOut(duration: 0.3), value: hordeAppViewModel.shouldShowMenu)
         .animation(.easeInOut(duration: 0.8), value: hordeAppViewModel.readyToPlay)
         .onChange(of: hordeAppViewModel.showDeckBrowser) { isShowing in
-            if isShowing {
+            if isShowing == 1 {
                 deckBrowserVM = DeckBrowserViewModel(hordeVM: hordeAppViewModel)
+                deckBrowserVM.iniRecentDecks()
+            } else if isShowing == 2 {
+                deckBrowserVM = DeckBrowserViewModel(hordeVM: hordeAppViewModel)
+                deckBrowserVM.iniTopDecks()
             }
         }
     }

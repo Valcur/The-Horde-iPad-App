@@ -10,6 +10,7 @@ import SwiftUI
 struct DeckEditorView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State private var username: String = ""
+    @State private var zoomViewOpacity: CGFloat = 0
     
     var body: some View {
         GeometryReader { _ in
@@ -24,6 +25,20 @@ struct DeckEditorView: View {
                 }
                 PopUpInfoView()
                 DeckEditorInfoView().opacity(deckEditorViewModel.showDeckEditorInfoView ? 1 : 0)
+                ZoomCardView()
+                    .opacity(zoomViewOpacity)
+                    .scaleEffect(1.4)
+                    .onChange(of: deckEditorViewModel.shouldZoomOnCard) { shouldZoom in
+                        if shouldZoom {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                zoomViewOpacity = 1
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                zoomViewOpacity = 0
+                            }
+                        }
+                    }
             }
         }.ignoresSafeArea()
     }
@@ -444,9 +459,9 @@ struct TopControlRowView: View {
                 Group {
                     DeckListSelectorView(deckListName: "Horde Deck", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.deckList)
                     Spacer()
-                    DeckListSelectorView(deckListName: "Lategame cards", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList)
+                    DeckListSelectorView(deckListName: "Lategame", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.tooStrongPermanentsList)
                     Spacer()
-                    DeckListSelectorView(deckListName: "Tokens available", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.availableTokensList)
+                    DeckListSelectorView(deckListName: "Create row", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.availableTokensList)
                 }
                 Spacer()
                 Rectangle()
@@ -633,7 +648,6 @@ struct TopTopControlRowView: View {
 }
 
 struct DeckListView: View {
-    
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     var deckListToShow: [Card] {
         if deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList {
@@ -662,11 +676,8 @@ struct DeckListView: View {
             ScrollView(.vertical, showsIndicators: true) {
                 LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
                     ForEach(deckListToShow) { card in
-                        Button(action: {
-                            deckEditorViewModel.showCard(card: card)
-                        }, label: {
-                            CardOnDeckListView(card: card, showCardCount: !(deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList))
-                        }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                        CardOnDeckListView(card: card, showCardCount: !(deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList))
+                            .transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
                     }
                 }.padding([.leading, .trailing], 10).padding(.bottom, 10)
             }.animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
@@ -806,11 +817,8 @@ struct DeckListMainDeckView: View {
                             .headline().scaleEffect(UIDevice.isIPhone ? 0.8 : 1, anchor: .leading)
                         LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
                             ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
-                                Button(action: {
-                                    deckEditorViewModel.showCard(card: card)
-                                }, label: {
-                                    CardOnDeckListView(card: card)
-                                }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                                CardOnDeckListView(card: card)
+                                    .transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
                             }
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
@@ -834,12 +842,9 @@ struct DeckListTooStrongView: View {
                             .headline()
                         LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
                             ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
-                                Button(action: {
-                                    deckEditorViewModel.addCardToSelectedDeck(card: card)
-                                }, label: {
-                                    CardOnDeckListView(card: card)
-                                        .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
-                                }).transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                                CardOnDeckListView(card: card, isSelectingTooStrongCards: true)
+                                    .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
+                                    .transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
                             }
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
@@ -850,13 +855,16 @@ struct DeckListTooStrongView: View {
 }
 
 struct CardOnDeckListView: View {
-    
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     let card: Card
     private var showCardCount: Bool
+    private var isSelectingTooStrongCards: Bool
+    @GestureState var isDetectingLongPress = false
     
-    init(card: Card, showCardCount: Bool = true) {
+    init(card: Card, showCardCount: Bool = true, isSelectingTooStrongCards: Bool = false) {
         self.card = card
         self.showCardCount = showCardCount
+        self.isSelectingTooStrongCards = isSelectingTooStrongCards
     }
     
     var body: some View {
@@ -893,6 +901,46 @@ struct CardOnDeckListView: View {
         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
         .onChange(of: card.cardCount) { _ in
             print("Change detected")
+        }
+        .onTapGesture(count: 1) {
+            if isSelectingTooStrongCards {
+                deckEditorViewModel.addCardToSelectedDeck(card: card)
+            } else {
+                deckEditorViewModel.showCard(card: card)
+            }
+        }
+        .gesture(LongPressGesture(minimumDuration: 0.1)
+            .sequenced(before: LongPressGesture(minimumDuration: .infinity))
+            .updating($isDetectingLongPress) { value, state, transaction in
+                switch value {
+                    case .second(true, nil):
+                        state = true
+                    print("ca zoom")
+                        DispatchQueue.main.async {
+                            deckEditorViewModel.shouldZoomOnCard = true
+                            deckEditorViewModel.cardToZoomIn = card
+                        }
+                    default: break
+                }
+            })
+    }
+}
+
+struct ZoomCardView: View {
+    @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
+    
+    var body: some View {
+        // The button to leave the menu is the background
+        ZStack {
+            Button(action: {
+                deckEditorViewModel.shouldZoomOnCard = false
+            }, label: {
+                VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+            }).buttonStyle(StaticButtonStyle())
+            
+            CardView(card: deckEditorViewModel.cardToZoomIn)
+                .frame(width: CardSize_iPhone.width.big_cast, height: CardSize_iPhone.height.big_cast)
+                .cornerRadius(CardSize_iPhone.cornerRadius.big_cast)
         }
     }
 }

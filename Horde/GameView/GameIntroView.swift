@@ -30,7 +30,7 @@ struct IntroSetupView: View {
     @Binding var isDeckBeingGenerated: Bool
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ZStack {
                 Color("DarkGray")
                 HStack(spacing: 100) {
@@ -45,7 +45,7 @@ struct IntroSetupView: View {
                 VStack(spacing: 40) {
                     if isDeckBeingGenerated {
                         MenuTextBoldParagraphView(text: "Generating deck, please wait ...")
-                    } else {
+                    } else if gameViewModel.turnStep == -1 {
                         Button(action: {
                             print("Start game button pressed")
                             isDeckBeingGenerated = true
@@ -75,7 +75,7 @@ struct IntroSetupView: View {
                             
                             MenuTextParagraphView(text: "Reduce the library size for small group of players, or increase it's size to make the game longer")
                             
-                            HStack(spacing: 20) {
+                            HStack(spacing: UIDevice.isIPhone ? 5 : 20) {
                                 IntroPlayerChoiceButtonView(percent: 25)
                                 IntroPlayerChoiceButtonView(percent: 50)
                                 IntroPlayerChoiceButtonView(percent: 75)
@@ -211,9 +211,12 @@ struct IntroSetupView: View {
                             
                             Toggle("Horde starts with a random permanent instead of all (only enable this if the deck ask you to)", isOn: $gameViewModel.gameConfig.shared.shouldStartWithWeakPermanent)
                                 .foregroundColor(.white)
+                            
+                            Toggle("Alternative draw mode : draw a fixed number of cards each turn", isOn: $gameViewModel.gameConfig.shared.useAlternativeDrawMode)
+                                .foregroundColor(.white)
                         }
                     }
-                }.padding(.top, 40).padding([.leading, .trailing], UIDevice.isIPhone ? 10 : 40).padding(.bottom, 40).scaleEffect(UIDevice.isIPhone ? 0.9 : 1, anchor: .top)
+                }.padding(.top, 40).padding([.leading, .trailing], UIDevice.isIPhone ? 10 : 40).padding(.bottom, 60).scaleEffect(UIDevice.isIPhone ? 0.9 : 1, anchor: .top)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: gameViewModel.gameConfig.isClassicMode)

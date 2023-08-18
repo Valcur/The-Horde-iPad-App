@@ -424,24 +424,43 @@ struct ControlBarView: View {
             
             // Next
             
-            Button(action: {
-                print("New turn pressed")
-                gameViewModel.nextButtonPressed()
-            }, label: {
-                PurpleButtonLabel(text: "Draw", isPrimary: true)
-            }).disabled(gameViewModel.isNextButtonDisabled() || nexButtonDisable)
-                .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep == 1 {
-                        nexButtonDisable = true
+            VStack(spacing: 0) {
+                if gameViewModel.gameConfig.shared.useAlternativeDrawMode {
+                    HStack {
+                        Button(action: {
+                            if gameViewModel.alternativeDrawCount > 1 {
+                                gameViewModel.alternativeDrawCount -= 1
+                            }
+                        }, label: {
+                            PurpleButtonLabel(text: "-", minWidth: 50)
+                        }).frame(width: 70)
+                        Button(action: {
+                            gameViewModel.alternativeDrawCount += 1
+                        }, label: {
+                            PurpleButtonLabel(text: "+", minWidth: 50)
+                        }).frame(width: 70)
                     }
-                    if gameViewModel.turnStep == 2 {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                nexButtonDisable = false
+                }
+                
+                Button(action: {
+                    print("New turn pressed")
+                    gameViewModel.nextButtonPressed()
+                }, label: {
+                    PurpleButtonLabel(text: gameViewModel.gameConfig.shared.useAlternativeDrawMode ? "Draw \(gameViewModel.alternativeDrawCount)" : "Draw", isPrimary: true)
+                }).disabled(gameViewModel.isNextButtonDisabled() || nexButtonDisable)
+                    .onChange(of: gameViewModel.turnStep) { _ in
+                        if gameViewModel.turnStep == 1 {
+                            nexButtonDisable = true
+                        }
+                        if gameViewModel.turnStep == 2 {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    nexButtonDisable = false
+                                }
                             }
                         }
                     }
-                }
+            }.offset(y: gameViewModel.gameConfig.shared.useAlternativeDrawMode ? -35 : 0)
         }
     }
 }

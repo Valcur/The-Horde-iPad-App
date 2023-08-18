@@ -19,7 +19,7 @@ struct DeckBrowserView: View {
                 MainView().padding(.leading, safeAreaInsets.leading)
                 
                 SelectedDeckView(selectedDeck: deckBrowserVM.selectedDeck).shadow(radius: 5)
-            }.background(GradientView(gradientId: hordeAppViewModel.gradientId))
+            }.background(GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true))
         }
     }
 }
@@ -39,7 +39,7 @@ struct MainView: View {
         VStack {
             HStack {
                 Button(action: {
-                    hordeAppViewModel.showDeckBrowser = false
+                    hordeAppViewModel.showDeckBrowser = 0
                 }, label: {
                     PurpleButtonLabel(text: "Exit")
                 }).iPhoneScaler(maxHeight: 50, maxWidth: 100, anchor: .leading).padding(.leading, 10)

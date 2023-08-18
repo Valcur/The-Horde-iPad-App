@@ -65,11 +65,6 @@
 1 TNCC token NO Wurm 1adf3c28-58c0-4239-ba4a-c53d345709b4 2ca9dbff-d7c7-4769-adab-e09163a29f9e
 
 ## Weak Permanents ##
-1 KLD enchantment NO Authority of the Consuls 55f3c721-e13a-406e-bc8e-d6cdc91ac477 324b2f55-1e09-490e-8f7e-bfde85a91ac4
-1 VOC enchantment NO Ghostly Prison e828b189-0e8f-43b8-b909-4c23e742e028 8169d44d-b15a-47e0-b417-24f2f4945d0f
-1 M21 enchantment NO Glorious Anthem e3886fe8-9b76-4613-8891-4ec74657c087 17d154d3-7ae5-43ff-9978-d974285e2c89
-1 GPT enchantment NO Hissing Miasma e257d8e0-06e9-433d-a750-1962db399388 f394fd39-842f-4c98-b857-bdad3fd09758
-1 10E enchantment NO Primal Rage d6464ee4-23fc-4d68-bbda-3b53772015d1 ebe3b738-703d-465c-bc76-2b66f1e0aff2
 
 ## Powerfull Permanents ##
 1 MB1 enchantment NO Beastmaster Ascension 11b5308d-5bc0-4782-875f-a28be36e665d 3ac51aa4-710e-4171-9fb8-9f28525e3e26
