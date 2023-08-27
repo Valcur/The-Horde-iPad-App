@@ -33,6 +33,7 @@ import SwiftUI
                             self.data = data! as Data
                             self.imageReadyToShow = true
                             self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
+                            self.card.objectWillChange.send()
                         }
                     }
                 }

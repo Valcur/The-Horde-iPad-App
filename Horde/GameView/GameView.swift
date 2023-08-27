@@ -16,10 +16,16 @@ struct GameView: View {
     @State var gameIntroViewOpacity: CGFloat = 1
     @State var zoomViewOpacity: CGFloat = 0
     @State var strongPermanentsViewOpacity: CGFloat = 0
+    @State var lifepointsViewModel: LifePointsViewModel?
     
     var body: some View {
         ZStack {
             GradientView(gradientId: hordeAppViewModel.gradientId)
+                .onChange(of: gameIntroViewOpacity) { opacity in
+                    if opacity == 0 {
+                        lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
+                    }
+                }
             
             VStack {
                 HordeBoardView()
@@ -37,11 +43,11 @@ struct GameView: View {
                 }
             }.ignoresSafeArea()
                 
-            if gameViewModel.turnStep != -1 && hordeAppViewModel.useLifepointsCounter {
+            if lifepointsViewModel != nil && gameViewModel.turnStep != -1 && hordeAppViewModel.useLifepointsCounter {
                 HStack {
                     Spacer()
                     LifePointsView()
-                        .environmentObject(LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife))
+                        .environmentObject(lifepointsViewModel!)
                         .frame(width: UIScreen.main.bounds.width / 6, height: UIScreen.main.bounds.height / 2)
                         .cornerRadius(15)
                         .padding(.trailing, 10)

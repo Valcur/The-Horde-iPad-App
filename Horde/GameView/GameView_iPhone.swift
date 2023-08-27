@@ -21,6 +21,11 @@ struct GameView_iPhone: View {
     var body: some View {
         ZStack {
             GradientView(gradientId: hordeAppViewModel.gradientId)
+                .onChange(of: gameIntroViewOpacity) { opacity in
+                    if opacity == 0 {
+                        lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
+                    }
+                }
             
             VStack {
                 HordeBoardView_iPhone()
@@ -37,11 +42,8 @@ struct GameView_iPhone: View {
                     ControlBarView_iPhone().frame(height: 50)
                 }
             }
-            .onAppear() {
-                lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
-            }
             
-            if hordeAppViewModel.useLifepointsCounter && lifepointsViewModel != nil {
+            if lifepointsViewModel != nil && hordeAppViewModel.useLifepointsCounter && lifepointsViewModel != nil {
                 HStack {
                     Spacer()
                     LifePointsView()
