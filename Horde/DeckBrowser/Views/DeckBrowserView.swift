@@ -173,11 +173,25 @@ struct SelectedDeckView: View {
                         .multilineTextAlignment(.leading)
                     
                     if let image = deck.image {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: UIDevice.isIPhone ? 230 : 330, height: UIDevice.isIPhone ? 150 : 250)
-                            .clipped()
+                        ZStack(alignment: .bottomTrailing) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: UIDevice.isIPhone ? 230 : 330, height: UIDevice.isIPhone ? 150 : 250)
+                                .clipped()
+                            HStack {
+                                Button(action: {}, label: {
+                                    PurpleButtonLabel(text: "Like", isPrimary: true)
+                                })
+                                if deck.likes.count > 0 {
+                                    Text("\(deck.likes.count)")
+                                        .headline()
+                                    Image(systemName: "heart.fill")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                }
+                            }
+                        }
                     } else {
                         Color.black
                             .frame(width: UIDevice.isIPhone ? 230 : 330, height: UIDevice.isIPhone ? 150 : 250)

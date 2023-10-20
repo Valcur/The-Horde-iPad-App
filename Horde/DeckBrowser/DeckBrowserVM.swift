@@ -82,7 +82,7 @@ class DeckBrowserViewModel: ObservableObject {
     }
     
     private func newDeckWithData(_ deckData: [String: Any]) -> DeckBrowserDeck {
-        return DeckBrowserDeck(title: deckData["name"] as! String, author: deckData["author"] as! String, authorId: deckData["authorUuid"] as! String, deckList: deckData["deckList"] as! String, intro: deckData["intro"] as! String, rules: deckData["specialRules"] as! String, artId: deckData["artId"] as! String)
+        return DeckBrowserDeck(title: deckData["name"] as! String, author: deckData["author"] as! String, authorId: deckData["authorUuid"] as! String, deckList: deckData["deckList"] as! String, intro: deckData["intro"] as! String, rules: deckData["specialRules"] as! String, artId: deckData["artId"] as! String, likes: (deckData["likes"] ?? []) as! [String])
     }
 }
 
@@ -181,9 +181,10 @@ class DeckBrowserDeck: Identifiable, ObservableObject, Equatable {
     let intro: String
     let rules: String
     let artId: String
+    let likes: [String]
     @Published var image: UIImage?
     
-    init(title: String, author: String, authorId: String, deckList: String, intro: String, rules: String, artId: String) {
+    init(title: String, author: String, authorId: String, deckList: String, intro: String, rules: String, artId: String, likes: [String]) {
         self.title = title
         self.author = author
         self.authorId = authorId
@@ -192,6 +193,7 @@ class DeckBrowserDeck: Identifiable, ObservableObject, Equatable {
         self.rules = rules
         self.artId = artId
         self.image = nil
+        self.likes = likes
         loadDeckImage()
     }
     
