@@ -10,7 +10,7 @@ import SwiftUI
 
 class HordeAppViewModel: ObservableObject {
     @Published var readyToPlay: Bool
-    @Published var showDeckBrowser: Bool
+    @Published var showDeckBrowser: Int
     @Published var shouldShowMenu: Bool
     @Published var showDeckEditor: Bool
     @Published var menuToShowId: Int
@@ -25,10 +25,11 @@ class HordeAppViewModel: ObservableObject {
     @Published var survivorStartingLife: Int
     @Published var numberOfDeckSlot: Int
     @Published var isPremium = false
+    let userId: String
     
     init() {
         self.readyToPlay = false
-        self.showDeckBrowser = true
+        self.showDeckBrowser = 0
         self.shouldShowMenu = false
         self.showDeckEditor = false
         self.menuToShowId = 1
@@ -42,6 +43,24 @@ class HordeAppViewModel: ObservableObject {
         self.hordeGainLifeLostBySurvivor = UserDefaults.standard.object(forKey: "HordeGainLifeLostBySurvivor") as? Bool ?? true
         self.survivorStartingLife = UserDefaults.standard.object(forKey: "SurvivorStartingLife") as? Int ?? 60
         self.numberOfDeckSlot = 8
+        if let userIdTmp = UserDefaults.standard.string(forKey: "UserId") {
+            self.userId = userIdTmp
+        } else {
+            self.userId =  "IOS-\(UUID().uuidString)"
+            UserDefaults.standard.setValue(self.userId, forKey: "UserId")
+        }
+        
+        let forcePremium = false
+        if forcePremium {
+            self.isPremium = true
+            var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
+            if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
+                testNbrOfDeckSlot += 1
+                UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
+            }
+            self.customSleeveArtId = UserDefaults.standard.object(forKey: "CustomSleeveArtId") as? Int ?? -1
+            self.numberOfDeckSlot = testNbrOfDeckSlot
+        }
         
         IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
         IAPManager.shared.refreshSubscriptionsStatus(callback: {
@@ -141,6 +160,12 @@ class HordeAppViewModel: ObservableObject {
         guard let data = image.jpegData(compressionQuality: 0.5) else { return }
         let encoded = try! PropertyListEncoder().encode(data)
         UserDefaults.standard.set(encoded, forKey: "CustomSleeveArtImage")
+    }
+    
+    func saveCustomBackgroundArt(image: UIImage) {
+        guard let data = image.jpegData(compressionQuality: 0.5) else { return }
+        let encoded = try! PropertyListEncoder().encode(data)
+        UserDefaults.standard.set(encoded, forKey: "CustomBackgroundArtImage")
     }
     
     func setCustomSleeveBorderColorIdTo(borderId: Int) {

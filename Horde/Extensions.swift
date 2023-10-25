@@ -487,3 +487,9 @@ extension UIDevice {
         UIDevice.current.userInterfaceIdiom == .phone
     }
 }
+
+extension Font {
+    static func cardCount() -> Font {
+        return .system(size: 40)
+    }
+}

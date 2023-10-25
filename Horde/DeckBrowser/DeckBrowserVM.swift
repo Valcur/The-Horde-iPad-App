@@ -44,7 +44,7 @@ class DeckBrowserViewModel: ObservableObject {
                 self.resultStatus = .error
             } else {
                 for deck in querySnapshot!.documents {
-                    self.decks.append(self.newDeckWithData(deck.data()))
+                    self.decks.append(self.newDeckWithData(deck.data(), deckId: deck.documentID))
                 }
                 self.resultStatus = .mostRecent
                 self.mostRecentDecks = self.decks
@@ -58,6 +58,7 @@ class DeckBrowserViewModel: ObservableObject {
         resultStatus = .progress
         
         // Si on les as déja chargé, pas besoin de retélécharger
+        // ??????
         if mostRecentDecks.count > 0 {
             decks = mostRecentDecks
             resultStatus = .mostRecent
@@ -73,7 +74,7 @@ class DeckBrowserViewModel: ObservableObject {
                 self.resultStatus = .error
             } else {
                 for deck in querySnapshot!.documents {
-                    self.decks.append(self.newDeckWithData(deck.data()))
+                    self.decks.append(self.newDeckWithData(deck.data(), deckId: deck.documentID))
                 }
                 self.resultStatus = .mostRecent
                 self.mostRecentDecks = self.decks
@@ -81,8 +82,8 @@ class DeckBrowserViewModel: ObservableObject {
         }
     }
     
-    private func newDeckWithData(_ deckData: [String: Any]) -> DeckBrowserDeck {
-        return DeckBrowserDeck(title: deckData["name"] as! String, author: deckData["author"] as! String, authorId: deckData["authorUuid"] as! String, deckList: deckData["deckList"] as! String, intro: deckData["intro"] as! String, rules: deckData["specialRules"] as! String, artId: deckData["artId"] as! String, likes: (deckData["likes"] ?? []) as! [String])
+    private func newDeckWithData(_ deckData: [String: Any], deckId: String) -> DeckBrowserDeck {
+        return DeckBrowserDeck(deckId: deckId, title: deckData["name"] as! String, author: deckData["author"] as! String, authorId: deckData["authorUuid"] as! String, deckList: deckData["deckList"] as! String, intro: deckData["intro"] as! String, rules: deckData["specialRules"] as! String, artId: deckData["artId"] as! String, likes: (deckData["likes"] ?? []) as? [String] ?? [])
     }
 }
 
@@ -104,7 +105,7 @@ extension DeckBrowserViewModel {
                 self.resultStatus = .error
             } else {
                 for deck in querySnapshot!.documents {
-                    self.decks.append(self.newDeckWithData(deck.data()))
+                    self.decks.append(self.newDeckWithData(deck.data(), deckId: deck.documentID))
                 }
                 self.resultStatus = .allRecent
             }
@@ -130,7 +131,7 @@ extension DeckBrowserViewModel {
                 self.resultStatus = .error
             } else {
                 for deck in querySnapshot!.documents {
-                    self.decks.append(self.newDeckWithData(deck.data()))
+                    self.decks.append(self.newDeckWithData(deck.data(), deckId: deck.documentID))
                 }
                 self.resultStatus = .nameSearch
             }
@@ -174,6 +175,7 @@ extension DeckBrowserViewModel {
 
 class DeckBrowserDeck: Identifiable, ObservableObject, Equatable {
     let id = UUID()
+    let deckId: String
     let title: String
     let author: String
     let authorId: String
@@ -181,10 +183,11 @@ class DeckBrowserDeck: Identifiable, ObservableObject, Equatable {
     let intro: String
     let rules: String
     let artId: String
-    let likes: [String]
+    var likes: [String]
     @Published var image: UIImage?
     
-    init(title: String, author: String, authorId: String, deckList: String, intro: String, rules: String, artId: String, likes: [String]) {
+    init(deckId: String, title: String, author: String, authorId: String, deckList: String, intro: String, rules: String, artId: String, likes: [String]) {
+        self.deckId = deckId
         self.title = title
         self.author = author
         self.authorId = authorId

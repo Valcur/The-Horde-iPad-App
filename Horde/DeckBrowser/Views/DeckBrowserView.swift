@@ -36,7 +36,7 @@ struct MainView: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Button(action: {
                     hordeAppViewModel.showDeckBrowser = 0
@@ -62,7 +62,7 @@ struct MainView: View {
                         PurpleButtonLabel(text: "Search")
                     })
                 }.iPhoneScaler(maxHeight: 50, maxWidth: 290, anchor: .trailing).offset(x: UIDevice.isIPhone ? -15 : 0)
-            }
+            }.background(Color("DarkGray").ignoresSafeArea().shadowed())
             //Rectangle().frame(height: 1).foregroundColor(.white)
             ScrollView {
                 VStack {
@@ -160,6 +160,7 @@ struct SelectedDeckView: View {
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
     @EnvironmentObject var deckBrowserVM: DeckBrowserViewModel
     @State var progressMessage = ""
+    @State var allowedToLikeDeck = true
     let selectedDeck: DeckBrowserDeck?
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
@@ -173,24 +174,37 @@ struct SelectedDeckView: View {
                         .multilineTextAlignment(.leading)
                     
                     if let image = deck.image {
-                        ZStack(alignment: .bottomTrailing) {
+                        ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: UIDevice.isIPhone ? 230 : 330, height: UIDevice.isIPhone ? 150 : 250)
                                 .clipped()
                             HStack {
-                                Button(action: {}, label: {
-                                    PurpleButtonLabel(text: "Like", isPrimary: true)
-                                })
                                 if deck.likes.count > 0 {
                                     Text("\(deck.likes.count)")
-                                        .headline()
-                                    Image(systemName: "heart.fill")
-                                        .font(.headline)
+                                        .font(.system(size: 25))
                                         .foregroundColor(.white)
+                                        .fontWeight(.bold)
+                                        .shadow(color: .black.opacity(0.8), radius: 3, x: 0, y: 0)
+                                    Image(systemName: "heart.fill")
+                                        .font(.system(size: 25))
+                                        .foregroundColor(.white)
+                                        .padding(.trailing, 8)
+                                        .shadow(color: .black.opacity(0.8), radius: 3, x: 0, y: 0)
                                 }
-                            }
+                                if allowedToLikeDeck {
+                                    Button(action: {
+                                        if allowedToLikeDeck {
+                                            deckBrowserVM.likeDeck(deckId: deck.deckId)
+                                        }
+                                        allowedToLikeDeck = false
+                                    }, label: {
+                                        PurpleButtonLabel(text: "Like", isPrimary: true, minWidth: 70).frame(width: 70)
+                                            .padding(.trailing, 5)
+                                    })
+                                }
+                            }.frame(height: 60)
                         }
                     } else {
                         Color.black
@@ -256,6 +270,18 @@ struct SelectedDeckView: View {
         ).clipped()
         .onChange(of: selectedDeck) { _ in
             progressMessage = ""
+            updateIsAllowedToLikeDeck()
+        }
+    }
+    
+    func updateIsAllowedToLikeDeck() {
+        if let deck = deckBrowserVM.selectedDeck {
+            print(deck.title)
+            allowedToLikeDeck = !deck.likes.contains(hordeAppViewModel.userId)
+            print(allowedToLikeDeck)
+        } else {
+            print("2")
+            allowedToLikeDeck = false
         }
     }
 }

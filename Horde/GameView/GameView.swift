@@ -242,7 +242,7 @@ struct HordeBoardView: View {
                     }
                     Text("\(gameViewModel.cardsOnGraveyard.count)")
                         .fontWeight(.bold)
-                        .font(.title)
+                        .font(.cardCount())
                         .foregroundColor(.white)
                 }
                 
@@ -314,7 +314,7 @@ struct HordeBoardView: View {
 
                     Text("\(gameViewModel.deck.count)")
                         .fontWeight(.bold)
-                        .font(.title)
+                        .font(.cardCount())
                         .foregroundColor(.white)
                         .offset(y: -deckThickness)
                 }
@@ -649,6 +649,37 @@ struct GraveyardView: View {
                 .foregroundColor(.white)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 20) {
+                    VStack {
+                        Button(action: {
+                            gameViewModel.graveyardAllExile()
+                        }, label: {
+                            PurpleButtonLabel(text: "Exile all", isPrimary: true, noMaxWidth: true, minWidth: 220)
+                        })
+                        
+                        Button(action: {
+                            gameViewModel.graveyardAllBattlefield()
+                        }, label: {
+                            PurpleButtonLabel(text: "All battlefield", isPrimary: true, noMaxWidth: true, minWidth: 220)
+                        })
+                        
+                        Button(action: {
+                            gameViewModel.graveyardAllShuffle()
+                        }, label: {
+                            PurpleButtonLabel(text: "Shuffle all", isPrimary: true, noMaxWidth: true, minWidth: 220)
+                        })
+                        
+                        Button(action: {
+                            gameViewModel.graveyardAllTop()
+                        }, label: {
+                            PurpleButtonLabel(text: "All top", isPrimary: true, noMaxWidth: true, minWidth: 220)
+                        })
+                        
+                        Button(action: {
+                            gameViewModel.graveyardAllBottom()
+                        }, label: {
+                            PurpleButtonLabel(text: "All bottom", isPrimary: true, noMaxWidth: true, minWidth: 220)
+                        })
+                    }.padding(.trailing, 20).padding(.bottom, 50)
                     ForEach(0..<gameViewModel.cardsOnGraveyard.count, id: \.self) { i in
                         VStack(spacing: 15) {
                             Button(action: {
@@ -773,9 +804,9 @@ struct CardToCastView: View {
                 .cornerRadius(CardSize.cornerRadius.big)
                 .shadow(color: Color("ShadowColor"), radius: 4, x: 0, y: 4)
             if showCardCount && card.cardCount > 1 {
-                Text("x\(card.cardCount)")
+                Text("\(card.cardCount)")
                     .fontWeight(.bold)
-                    .font(.title)
+                    .font(.cardCount())
                     .foregroundColor(.white)
             }
             if card.hasDefender {
@@ -854,9 +885,9 @@ struct CardOnBoardView: View {
                     .frame(width: CardSize.width.normal, height: CardSize.height.normal)
                     .cornerRadius(CardSize.cornerRadius.normal)
                 if card.cardCount > 1 {
-                    Text("x\(card.cardCount)")
+                    Text("\(card.cardCount)")
                         .fontWeight(.bold)
-                        .font(.title2)
+                        .font(.cardCount())
                         .foregroundColor(.white)
                 }
                 if card.countersOnCard > 0 {

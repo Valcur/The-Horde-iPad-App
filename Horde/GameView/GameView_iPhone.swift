@@ -628,7 +628,37 @@ struct GraveyardView_iPhone: View {
                     .scaleEffect(0.7)
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 20) {
-                        //ForEach(gameViewModel.cardsOnGraveyard, id: \.self) { card in
+                        VStack {
+                            Button(action: {
+                                gameViewModel.graveyardAllExile()
+                            }, label: {
+                                PurpleButtonLabel_iPhone(text: "Exile all", isPrimary: true, noMaxWidth: true, minWidth: 180)
+                            })
+                            
+                            Button(action: {
+                                gameViewModel.graveyardAllBattlefield()
+                            }, label: {
+                                PurpleButtonLabel_iPhone(text: "All battlefield", isPrimary: true, noMaxWidth: true, minWidth: 180)
+                            })
+                            
+                            Button(action: {
+                                gameViewModel.graveyardAllShuffle()
+                            }, label: {
+                                PurpleButtonLabel_iPhone(text: "Shuffle all", isPrimary: true, noMaxWidth: true, minWidth: 180)
+                            })
+                            
+                            Button(action: {
+                                gameViewModel.graveyardAllTop()
+                            }, label: {
+                                PurpleButtonLabel_iPhone(text: "All top", isPrimary: true, noMaxWidth: true, minWidth: 180)
+                            })
+                            
+                            Button(action: {
+                                gameViewModel.graveyardAllBottom()
+                            }, label: {
+                                PurpleButtonLabel_iPhone(text: "All bottom", isPrimary: true, noMaxWidth: true, minWidth: 180)
+                            })
+                        }.padding(.trailing, 10)
                         ForEach(0..<gameViewModel.cardsOnGraveyard.count, id: \.self) { i in
                             VStack(spacing: 15) {
                                 Button(action: {

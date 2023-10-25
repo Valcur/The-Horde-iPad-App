@@ -794,6 +794,52 @@ class GameViewModel: ObservableObject {
     }
 }
 
+extension GameViewModel {
+    private func graveyardAllCompleted() {
+        showGraveyard = false
+    }
+    
+    func graveyardAllExile() {
+        cardsOnGraveyard = []
+        graveyardAllCompleted()
+    }
+    
+    func graveyardAllBattlefield() {
+        var i = 0
+        while i < cardsOnGraveyard.count {
+            let card = cardsOnGraveyard[i]
+            if card.cardType != .instant && card.cardType != .sorcery {
+                addCardToBoard(card: card)
+                cardsOnGraveyard.remove(at: i)
+            } else {
+                i += 1
+            }
+        }
+        cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
+        graveyardAllCompleted()
+    }
+    
+    func graveyardAllShuffle() {
+        deck += cardsOnGraveyard
+        deck.shuffle()
+        showLibraryTopCard = false
+        graveyardAllExile()
+    }
+    
+    func graveyardAllTop() {
+        cardsOnGraveyard.shuffle()
+        deck.append(contentsOf: cardsOnGraveyard)
+        showLibraryTopCard = false
+        graveyardAllExile()
+    }
+    
+    func graveyardAllBottom() {
+        cardsOnGraveyard.shuffle()
+        deck.insert(contentsOf: cardsOnGraveyard, at: 0)
+        graveyardAllExile()
+    }
+}
+
 struct GameConfig: Codable {
     var isClassicMode: Bool
     var shared: SharedParameters
