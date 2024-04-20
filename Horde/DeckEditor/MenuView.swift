@@ -381,6 +381,8 @@ struct MenuContactView: View {
     
     var body: some View {
         LazyVStack(alignment: .leading, spacing: 30) {
+            CodePanel()
+            
             MenuTextTitleView(text: "Contact")
             
             MenuTextParagraphView(text: "If you have any problem or a suggestion about this app, feel free to contact me at")

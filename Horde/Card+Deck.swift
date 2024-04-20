@@ -14,16 +14,20 @@ class Card: Hashable, Identifiable, ObservableObject {
     let cardName: String
     var cardType: CardType // Can be changed in deckeditor
     let cardImageURL: String
+    let cardBackImageURL: String
     @Published var cardUIImage: Image = Image("BlackBackground")
+    @Published var cardBackUIImage: Image = Image("BlackBackground")
     var hasFlashback: Bool
     var hasDefender: Bool
     let specificSet: String
     let cardOracleId: String    // Unique id of a card but same for each reprints
     let cardId: String          // Unique id of card and unique between reprints
+    let isDoubleFacedCard: Bool
     @Published var cardCount: Int = 1
     @Published var countersOnCard: Int = 0
+    @Published var showFront = true
     
-    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, hasDefender: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = ""){
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardBackImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, hasDefender: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = ""){
         self.cardType = cardType
         self.hasFlashback = hasFlashback
         self.hasDefender = hasDefender
@@ -31,25 +35,22 @@ class Card: Hashable, Identifiable, ObservableObject {
         self.specificSet = specificSet.uppercased()
         self.cardOracleId = cardOracleId
         self.cardId = cardId
-        
-        // Remove after "//" in name, example : "Amethyst Dragon // Explosive Crystal" -> only keep Amethyst Dragon
-        var cardNameString = ""
-        if let index = cardName.range(of: " //")?.lowerBound {
-            let substring = cardName[..<index]
-            let string = String(substring)
-            cardNameString = "\(string)"
-        } else {
-            cardNameString = "\(cardName)"
-        }
-        cardNameString = cardNameString.trimmingCharacters(in: .whitespacesAndNewlines)
-        //self.cardName = "\(cardNameString)\(cardType == .token && !cardName.contains(specificSet) ?
-        self.cardName = cardNameString
+        self.cardName = cardName
+        self.isDoubleFacedCard = cardName.contains("//")
         
         if cardImageURL == "get-on-scryfall" {
             self.cardImageURL = Card.getScryfallImageUrl(id: cardId, specifiSet: specificSet)
+            if isDoubleFacedCard {
+                self.cardBackImageURL = self.cardImageURL + "&face=back"
+            } else {
+                self.cardBackImageURL = ""
+            }
         } else {
             self.cardImageURL = cardImageURL
+            self.cardBackImageURL = cardBackImageURL
         }
+        
+
     }
     
     static func == (lhs: Card, rhs: Card) -> Bool {
@@ -61,7 +62,7 @@ class Card: Hashable, Identifiable, ObservableObject {
     }
     
     func recreateCard() -> Card {
-        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, hasFlashback: self.hasFlashback, hasDefender: self.hasDefender, specificSet: self.specificSet, cardOracleId: self.cardOracleId, cardId: self.cardId)
+        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, cardBackImageURL: self.cardBackImageURL, hasFlashback: self.hasFlashback, hasDefender: self.hasDefender, specificSet: self.specificSet, cardOracleId: self.cardOracleId, cardId: self.cardId)
         tmpCard.cardCount = self.cardCount
         tmpCard.cardUIImage = self.cardUIImage
         return tmpCard

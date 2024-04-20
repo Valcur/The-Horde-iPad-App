@@ -61,7 +61,7 @@ class DeckBrowserViewModel: ObservableObject {
         // ??????
         if mostRecentDecks.count > 0 {
             decks = mostRecentDecks
-            resultStatus = .mostRecent
+            resultStatus = .mostLiked
             return
         }
         
@@ -76,7 +76,7 @@ class DeckBrowserViewModel: ObservableObject {
                 for deck in querySnapshot!.documents {
                     self.decks.append(self.newDeckWithData(deck.data(), deckId: deck.documentID))
                 }
-                self.resultStatus = .mostRecent
+                self.resultStatus = .mostLiked
                 self.mostRecentDecks = self.decks
             }
         }
@@ -95,9 +95,10 @@ extension DeckBrowserViewModel {
     func seeAllDecks() {
         searchResultMessage = "Loading all decks"
         decks = []
+        let oldStatus = resultStatus
         resultStatus = .progress
         
-        let query = db.collection("decks").whereField("public", isEqualTo: true).order(by: "lastModified", descending: true)
+        let query = db.collection("decks").whereField("public", isEqualTo: true).order(by: oldStatus == .mostLiked ? "likesCount" : "lastModified", descending: true)
         
         query.getDocuments() { (querySnapshot, err) in
             if let err = err {
@@ -107,7 +108,7 @@ extension DeckBrowserViewModel {
                 for deck in querySnapshot!.documents {
                     self.decks.append(self.newDeckWithData(deck.data(), deckId: deck.documentID))
                 }
-                self.resultStatus = .allRecent
+                self.resultStatus = oldStatus == .mostLiked ? .allLiked : .allRecent
             }
         }
     }
@@ -232,6 +233,8 @@ class DeckBrowserDeck: Identifiable, ObservableObject, Equatable {
 enum ResultStatus: Int {
     case mostRecent = 1
     case allRecent = 2
+    case mostLiked = 4
+    case allLiked = 5
     case nameSearch = 3
     case error = -1
     case progress = 0

@@ -105,7 +105,7 @@ struct MainView: View {
                                 DeckView(deck: deck)
                             }
 
-                            if deckBrowserVM.resultStatus == .mostRecent {
+                            if deckBrowserVM.resultStatus == .mostRecent || deckBrowserVM.resultStatus == .mostLiked {
                                 Button(action: {
                                     deckBrowserVM.seeAllDecks()
                                 }, label: {

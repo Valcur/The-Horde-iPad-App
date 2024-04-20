@@ -25,6 +25,7 @@ class HordeAppViewModel: ObservableObject {
     @Published var survivorStartingLife: Int
     @Published var numberOfDeckSlot: Int
     @Published var isPremium = false
+    @Published var paymentProcessing = false
     let userId: String
     
     init() {
@@ -50,40 +51,8 @@ class HordeAppViewModel: ObservableObject {
             UserDefaults.standard.setValue(self.userId, forKey: "UserId")
         }
         
-        let forcePremium = false
-        if forcePremium {
-            self.isPremium = true
-            var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
-            if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
-                testNbrOfDeckSlot += 1
-                UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
-            }
-            self.customSleeveArtId = UserDefaults.standard.object(forKey: "CustomSleeveArtId") as? Int ?? -1
-            self.numberOfDeckSlot = testNbrOfDeckSlot
-        }
-        
-        IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId()], sharedSecret: IAPManager.getSharedSecret())
-        IAPManager.shared.refreshSubscriptionsStatus(callback: {
-            let date = UserDefaults.standard.object(forKey: IAPManager.getSubscriptionId()) as? Date ?? Date()
-            if date > Date() {
-                print("IS PREMIUM UNTIL \(date)")
-                self.isPremium = true
-                var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
-                if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
-                    testNbrOfDeckSlot += 1
-                    UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
-                }
-                self.customSleeveArtId = UserDefaults.standard.object(forKey: "CustomSleeveArtId") as? Int ?? -1
-                self.numberOfDeckSlot = testNbrOfDeckSlot
-            } else {
-                print("IS NOT PREMIUM SINCE \(date)")
-                self.isPremium = false
-                UserDefaults.standard.set(false, forKey: "IsPremium")
-                self.lostPremiumSubscription()
-            }
-        }, failure: { error in
-            print("Error \(String(describing: error))")
-        })
+        IAPManager.shared.startWith(arrayOfIds: [IAPManager.getSubscriptionId(), IAPManager.getLifetimeId()], sharedSecret: IAPManager.getSharedSecret())
+        testPremium()
     }
     
     func lostPremiumSubscription() {
@@ -181,42 +150,6 @@ class HordeAppViewModel: ObservableObject {
         UserDefaults.standard.set(self.useLifepointsCounter, forKey: "UseLifePointsCounter")
         UserDefaults.standard.set(self.hordeGainLifeLostBySurvivor, forKey: "HordeGainLifeLostBySurvivor")
         UserDefaults.standard.set(self.survivorStartingLife, forKey: "SurvivorStartingLife")
-    }
-    
-    func buy() {
-        if IAPManager.shared.products != nil && IAPManager.shared.products!.first != nil {
-            IAPManager.shared.purchaseProduct(product: IAPManager.shared.products!.first!, success: {
-                if UserDefaults.standard.object(forKey: "IsPremium") as? Bool ?? false {
-                    self.isPremium = true
-                    var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
-                    if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
-                        testNbrOfDeckSlot += 1
-                        UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
-                    }
-                    self.numberOfDeckSlot = testNbrOfDeckSlot
-                }
-            }, failure: { error in
-                print("Buy Fail \(String(describing: error))")
-            })
-        }
-    }
-    
-    func restore() {
-        if IAPManager.shared.products != nil && IAPManager.shared.products!.first != nil {
-            IAPManager.shared.restorePurchases(success: {
-                if UserDefaults.standard.object(forKey: "IsPremium") as? Bool ?? false {
-                    self.isPremium = true
-                    var testNbrOfDeckSlot = UserDefaults.standard.object(forKey: "NumberOfDeckSlot") as? Int ?? 8
-                    if testNbrOfDeckSlot == 8 && (UserDefaults.standard.object(forKey: "Deck_\(7)_Exist") as? Bool ?? false) == true {
-                        testNbrOfDeckSlot += 1
-                        UserDefaults.standard.set(testNbrOfDeckSlot, forKey: "NumberOfDeckSlot")
-                    }
-                    self.numberOfDeckSlot = testNbrOfDeckSlot
-                }
-            }, failure: { error in
-                print("Restore Fail \(String(describing: error))")
-            })
-        }
     }
 }
 

@@ -23,16 +23,21 @@ import SwiftUI
     func startDownloading() {
         if card.cardImageURL != "" {
             //print(card.cardName + " -> " + card.cardImageURL + " -> " + card.cardOracleId + card.specificSet)
-            guard let url = URL(string: card.cardImageURL) else { return }
+            let showFront = card.showFront
+            guard let url = URL(string: card.showFront ? card.cardImageURL : card.cardBackImageURL) else { return }
 
-            self.loadData(cardName: card.cardId, url: url) { (data, error) in
+            self.loadData(cardName: card.cardId + (showFront ? "" : "_back"), url: url) { (data, error) in
                 // Handle the loaded file data
                 if error == nil {
                     DispatchQueue.main.async {
                         if data != nil {
                             self.data = data! as Data
                             self.imageReadyToShow = true
-                            self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
+                            if showFront {
+                                self.card.cardUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
+                            } else {
+                                self.card.cardBackUIImage = Image(uiImage: (UIImage(data: self.data)) ?? UIImage(named: "MTGBackground")!)
+                            }
                             self.card.objectWillChange.send()
                         }
                     }

@@ -529,14 +529,12 @@ extension DeckEditorViewModel {
                             
                             let cardId = cardDataArray.last ?? ""
                             let cardEffects = DeckEditorViewModel.getCardSpecialEffects(effects: cardDataArray[3])
-                            var card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), hasFlashback:  cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
                             
-                            if cardId.contains("https://i.imgur") {
-                                card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: cardId, hasFlashback: cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
-                            } else if card.cardId.contains("D::") {
-                                let discordURL = "https://media.discordapp.net/attachments/1127961672225673256/" + card.cardId.dropFirst(3) + "?width=488&height=680"
-                                card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: discordURL, hasFlashback: cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
-                            }
+                            let cardIds = cardId.components(separatedBy: "://:")
+                            let frontUrl = DeckManager.imageUrlFromCustomId(cardIds[0])
+                            let backUrl = DeckManager.imageUrlFromCustomId(cardIds.count >= 2 ? cardIds[1] : "")
+                            
+                            let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: frontUrl, cardBackImageURL: backUrl, hasFlashback:  cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
                             
                             card.cardCount = cardCount
                             addCardToSelectedDeck(card: card, onlyAddOne: false)

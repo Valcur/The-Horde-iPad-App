@@ -28,6 +28,9 @@ struct HordeAppNoHomeIndicatorView: View {
             HordeAppView(hordeVM: hordeAppViewModel)
                 .environmentObject(hordeAppViewModel)
         }.ignoresSafeArea()
+            .onAppear() {
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
     }
 }
 

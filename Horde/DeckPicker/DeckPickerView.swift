@@ -382,9 +382,9 @@ struct GetMoreDeckSlotView: View {
     
     @EnvironmentObject var deckPickerViewModel: DeckPickerViewModel
     @EnvironmentObject var hordeAppViewModel: HordeAppViewModel
-    @State private var showingBuyInfo = false
+    @State private var showingSubscriptionInfo = false
+    @State private var showingLifetimeInfo = false
     let rotationInDegrees: CGFloat = 5
-    @State var price = "Unknow"
     
     var body: some View {
         ZStack {
@@ -395,7 +395,7 @@ struct GetMoreDeckSlotView: View {
                     .fontWeight(.bold)
                     .font(.title)
                 
-                Text(" - As many deck slots as you want \n - Full control over the starting decks and the ability to delete them \n - Custom sleeves : choose one of ours or upload any art from your device")
+                Text(" - As many deck slots as you want \n - Full control over the starting decks and the ability to delete them \n - Custom sleeves : choose one of ours or upload any art from your device\n - Custom background image")
                     .foregroundColor(.white)
                     .fontWeight(.bold)
                     .font(.subheadline)
@@ -405,42 +405,56 @@ struct GetMoreDeckSlotView: View {
                         .font(.largeTitle)
                         .foregroundColor(.white)
                     
-                    Button(action: {
-                        showingBuyInfo = true
-                    }) {
-                        HStack(spacing: 0) {
-                            Text(price)
+                    VStack {
+                        Button(action: {
+                            showingSubscriptionInfo = true
+                        }) {
+                            Text("\(IAPManager.shared.price(forProduct: IAPManager.getSubscriptionId()) ?? "0.99$") /month")
                                 .foregroundColor(.white)
                                 .fontWeight(.bold)
                                 .font(.title)
-                            
-                            Text(" / Month")
-                                .foregroundColor(.white)
-                                .font(.title)
-                        }.padding(15)
-                        .background(Color("MainColor").cornerRadius(10))
-                        .onAppear() {
-                            price = IAPManager.shared.price() ?? "Unknow"
-                            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-                                if self.price == "Unknow" {
-                                    price = IAPManager.shared.price() ?? "Unknow"
-                                }
-                            }
+                                .padding(15)
+                                .background(Color("MainColor").cornerRadius(10))
                         }
-                    }
-                    .alert(isPresented: $showingBuyInfo) {
-                        Alert(
-                            title: Text("Subscription information"),
-                            message: Text("You may purchase an auto-renewing subscription through an In-App Purchase.\n\n • (in USD) Premium - 1 month ($1.99) \n\n • Your subscription will be charged to your iTunes account at confirmation of purchase and will automatically renew (at the duration selected) unless auto-renew is turned off at least 24 hours before the end of the current period.\n\n • Current subscription may not be cancelled during the active subscription period; however, you can manage your subscription and/or turn off auto-renewal by visiting your iTunes Account Settings after purchase\n\n • Being Premium will give you, for the duration of your subsription, acess to an unlimited number of deck slots and the ability to delete the 7 decks already in the app."),
-                            primaryButton: .destructive(
-                                Text("Cancel"),
-                                action: {showingBuyInfo = false}
-                            ),
-                            secondaryButton: .default(
-                                Text("Continue"),
-                                action: {hordeAppViewModel.buy()}
+                        .alert(isPresented: $showingSubscriptionInfo) {
+                            Alert(
+                                title: Text("Subscription information"),
+                                message: Text("You may purchase an auto-renewing subscription through an In-App Purchase.\n\n • (in USD) Premium - 1 month ($0.99) \n\n • Your subscription will be charged to your iTunes account at confirmation of purchase and will automatically renew (at the duration selected) unless auto-renew is turned off at least 24 hours before the end of the current period.\n\n • Current subscription may not be cancelled during the active subscription period; however, you can manage your subscription and/or turn off auto-renewal by visiting your iTunes Account Settings after purchase\n\n • Being Premium will give you, for the duration of your subsription, acess to an unlimited number of deck slots and the ability to delete the 7 decks already in the app and select custom background and sleeves."),
+                                primaryButton: .destructive(
+                                    Text("Cancel"),
+                                    action: {showingSubscriptionInfo = false}
+                                ),
+                                secondaryButton: .default(
+                                    Text("Continue"),
+                                    action: {hordeAppViewModel.buy(productId: IAPManager.getSubscriptionId())}
+                                )
                             )
-                        )
+                        }
+                        
+                        Button(action: {
+                            showingLifetimeInfo = true
+                        }) {
+                            Text("\(IAPManager.shared.price(forProduct: IAPManager.getLifetimeId()) ?? "9.99$") forever")
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
+                                .font(.title)
+                                .padding(15)
+                                .background(Color("MainColor").cornerRadius(10))
+                        }
+                        .alert(isPresented: $showingLifetimeInfo) {
+                            Alert(
+                                title: Text("Purchase information"),
+                                message: Text("You may purchase a lifetime premium access through an In-App Purchase.\n\n • (in USD) Premium - Lifetime ($9.99) \n\n • Being Premium will give you acess to an unlimited number of deck slots, the ability to delete the 7 decks already in the app and select custom background and sleeves."),
+                                primaryButton: .destructive(
+                                    Text("Cancel"),
+                                    action: {showingLifetimeInfo = false}
+                                ),
+                                secondaryButton: .default(
+                                    Text("Continue"),
+                                    action: {hordeAppViewModel.buy(productId: IAPManager.getLifetimeId())}
+                                )
+                            )
+                        }
                     }
                     
                     Text("Already premium ? ")

@@ -677,7 +677,7 @@ struct DeckListView: View {
                 LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
                     ForEach(deckListToShow) { card in
                         CardOnDeckListView(card: card, showCardCount: !(deckEditorViewModel.selectedDeckListNumber == DeckEditorViewModel.DeckSelectionNumber.availableTokensList))
-                            .transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                            .transition(.scale.combined(with: .opacity))
                     }
                 }.padding([.leading, .trailing], 10).padding(.bottom, 10)
             }.animation(Animation.easeInOut(duration: 0.5), value: deckListToShow)
@@ -693,18 +693,27 @@ struct CarouselCardView: View {
     @State var showCard: Bool = false
     
     var body: some View {
-        if showCard {
-            CardView(card: card, shouldImageBeSaved: false)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
-                .cornerRadius(EditorSize.cardToShowCornerRadius)
-        } else {
-            Rectangle().opacity(0.000001)
-                .onAppear() {
-                    Timer.scheduledTimer(withTimeInterval: Double(delay) * 0.1, repeats: false) { timer in
-                        self.showCard = true
+        ZStack {
+            if showCard {
+                CardView(card: card, shouldImageBeSaved: false)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: EditorSize.cardToShowWidth, height: EditorSize.cardToShowHeight)
+                    .cornerRadius(EditorSize.cardToShowCornerRadius)
+            } else {
+                Rectangle().opacity(0.000001)
+                    .onAppear() {
+                        Timer.scheduledTimer(withTimeInterval: Double(delay) * 0.1, repeats: false) { timer in
+                            self.showCard = true
+                        }
                     }
-                }
+            }
+            if card.isDoubleFacedCard {
+                Button(action: {
+                    card.showFront.toggle()
+                }, label: {
+                    ButtonLabelWithImage(imageName: "arrow.triangle.2.circlepath", customFont: .title)
+                })
+            }
         }
     }
 }
@@ -818,7 +827,7 @@ struct DeckListMainDeckView: View {
                         LazyVGrid(columns:  [GridItem(.adaptive(minimum: CardSize.width.normal))], alignment: .leading, spacing: 15) {
                             ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
                                 CardOnDeckListView(card: card)
-                                    .transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                                    .transition(.scale.combined(with: .opacity))
                             }
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
@@ -844,7 +853,7 @@ struct DeckListTooStrongView: View {
                             ForEach(deckEditorViewModel.getAllDecksInMainDeckList()[i]) { card in
                                 CardOnDeckListView(card: card, isSelectingTooStrongCards: true)
                                     .opacity(deckEditorViewModel.deck.tooStrongPermanentsList.contains(card) ? 1 : 0.5)
-                                    .transition(.scale.combined(with: .opacity)).disabled(deckEditorViewModel.isReadOnly)
+                                    .transition(.scale.combined(with: .opacity))
                             }
                         }
                     }.padding([.leading, .trailing], 10).padding(.bottom, 10)
@@ -897,16 +906,25 @@ struct CardOnDeckListView: View {
                         .iPhoneScaler(maxHeight: 40, scaleEffect: 0.65)
                 }.frame(width: CardSize.width.normal)
             }
+            if card.isDoubleFacedCard {
+                Button(action: {
+                    card.showFront.toggle()
+                }, label: {
+                    ButtonLabelWithImage(imageName: "arrow.triangle.2.circlepath", customFont: .title)
+                }).offset(y: CardSize.height.normal / 2 - 15)
+            }
         }
         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
         .onChange(of: card.cardCount) { _ in
             print("Change detected")
         }
         .onTapGesture(count: 1) {
-            if isSelectingTooStrongCards {
-                deckEditorViewModel.addCardToSelectedDeck(card: card)
-            } else {
-                deckEditorViewModel.showCard(card: card)
+            if !deckEditorViewModel.isReadOnly {
+                if isSelectingTooStrongCards {
+                    deckEditorViewModel.addCardToSelectedDeck(card: card)
+                } else {
+                    deckEditorViewModel.showCard(card: card)
+                }
             }
         }
         .gesture(LongPressGesture(minimumDuration: 0.1)

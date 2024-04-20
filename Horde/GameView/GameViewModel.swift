@@ -370,7 +370,7 @@ class GameViewModel: ObservableObject {
         while i < tmpArray.count {
             var j = i + 1
             while j < tmpArray.count {
-                if tmpArray[i] == tmpArray[j]  && tmpArray[i].countersOnCard == 0 && tmpArray[j].countersOnCard == 0 {
+                if tmpArray[i] == tmpArray[j] && tmpArray[i].countersOnCard == 0 && tmpArray[j].countersOnCard == 0 && tmpArray[i].showFront == tmpArray[j].showFront {
                     tmpArray[i].cardCount += tmpArray[j].cardCount
                     tmpArray.remove(at: j)
                     j -= 1
@@ -517,7 +517,7 @@ class GameViewModel: ObservableObject {
     func removeOneCardOnBoard(card: Card) {
         var tmpArray = cardsOnBoard
         for i in 0..<tmpArray.count {
-            if tmpArray[i] == card  && tmpArray[i].countersOnCard == card.countersOnCard {
+            if tmpArray[i] == card  && tmpArray[i].countersOnCard == card.countersOnCard && tmpArray[i].showFront == card.showFront {
                 card.cardCount -= 1
                 if card.cardCount <= 0 {
                     tmpArray.remove(at: i)
@@ -533,7 +533,7 @@ class GameViewModel: ObservableObject {
     func exileOneCardOnBoard(card: Card) {
         var tmpArray = cardsOnBoard
         for i in 0..<tmpArray.count {
-            if tmpArray[i] == card  && tmpArray[i].countersOnCard == card.countersOnCard {
+            if tmpArray[i] == card  && tmpArray[i].countersOnCard == card.countersOnCard && tmpArray[i].showFront == card.showFront {
                 card.cardCount -= 1
                 if card.cardCount <= 0 {
                     tmpArray.remove(at: i)
@@ -764,6 +764,18 @@ class GameViewModel: ObservableObject {
                 addNewLastMilledToken(card: card)
             }
         }
+    }
+    
+    func flipOne(card: Card) {
+        exileOneCardOnBoard(card: card)
+        let cardTmp = card.recreateCard()
+        cardTmp.showFront = !card.showFront
+        cardTmp.cardCount = 1
+        addCardToBoard(card: cardTmp)
+    }
+    
+    func regroupBoard() {
+        cardsOnBoard = regroupSameCardInArray(cardArray: cardsOnBoard)
     }
     
     private func addNewLastMilledToken(card: Card) {

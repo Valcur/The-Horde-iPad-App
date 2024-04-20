@@ -752,9 +752,8 @@ struct GraveyardView: View {
 struct CardView: View {
     @ObservedObject var downloadManager: DownloadManager
     @State var image:UIImage = UIImage()
-    let card: Card
+    @ObservedObject var card: Card
     let shouldImageBeSaved: Bool
-    @State var shouldStartDownloadingImage: Bool = false
     
     init(card: Card, shouldImageBeSaved: Bool = true) {
         self.downloadManager = DownloadManager(card: card, shouldImageBeSaved: shouldImageBeSaved)
@@ -764,28 +763,28 @@ struct CardView: View {
     
     var body: some View {
         ZStack {
-            if card.cardUIImage != Image("BlackBackground") {
-                card.cardUIImage
-                    .resizable()
-            } else if shouldStartDownloadingImage {
-                card.cardUIImage
-                    .resizable()
-                    .onAppear() {
-                        self.downloadManager.startDownloading()
-                    }
-            } else {
-                Image("BlackBackground")
-                    .resizable()
-                    .onAppear() {
-                        let interval = DownloadQueue.queue.getDelayBeforeDownload(card: card)
-                        if interval > 0 {
-                            Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { timer in
-                                self.shouldStartDownloadingImage = true
-                            }
-                        } else {
-                            self.shouldStartDownloadingImage = true
+            if card.showFront {
+                if card.cardUIImage != Image("BlackBackground") {
+                    card.cardUIImage
+                        .resizable()
+                } else {
+                    card.cardUIImage
+                        .resizable()
+                        .onAppear() {
+                            self.downloadManager.startDownloading()
                         }
-                    }
+                }
+            } else {
+                if card.cardBackUIImage != Image("BlackBackground") {
+                    card.cardBackUIImage
+                        .resizable()
+                } else {
+                    card.cardBackUIImage
+                        .resizable()
+                        .onAppear() {
+                            self.downloadManager.startDownloading()
+                        }
+                }
             }
         }
     }
@@ -900,6 +899,27 @@ struct CardOnBoardView: View {
                         .blurredBackground()
                         .offset(y: -CardSize.height.normal / 3.5)
                 }
+                if card.isDoubleFacedCard {
+                    HStack {
+                        if card.cardCount > 1 {
+                            Button(action: {
+                                gameViewModel.flipOne(card: card)
+                            }, label: {
+                                ZStack {
+                                    ButtonLabelWithImage(imageName: "arrow.triangle.2.circlepath", customFont: .title)
+                                    Text("1").headline()
+                                }
+                            }).offset(y: CardSize.height.normal / 2 - 15)
+                        }
+                        
+                        Button(action: {
+                            card.showFront.toggle()
+                            gameViewModel.regroupBoard()
+                        }, label: {
+                            ButtonLabelWithImage(imageName: "arrow.triangle.2.circlepath", customFont: .title)
+                        }).offset(y: CardSize.height.normal / 2 - 15)
+                    }
+                }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 4)
             .onTapGesture(count: 1) {
@@ -1010,11 +1030,17 @@ struct ContentView_Previews: PreviewProvider {
 
 struct ButtonLabelWithImage: View {
     
-    var imageName: String
+    let imageName: String
+    let customFont: Font
+    
+    init(imageName: String, customFont: Font = .subheadline) {
+        self.imageName = imageName
+        self.customFont = customFont
+    }
     
     var body: some View {
         Image(systemName: imageName)
-            .font(.subheadline)
+            .font(customFont)
             .frame(width: 50, height: 50)
             .padding()
             .frame(width: 50, height: 50)
