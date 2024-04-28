@@ -228,6 +228,7 @@ struct CardShowView: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State var card: Card
     @State var cardType: CardType
+    @State var hasCardCastFromGraveyard: Bool
     @State var hasCardFlashback: Bool
     @State var hasCardDefender: Bool
     
@@ -240,6 +241,7 @@ struct CardShowView: View {
     init(card: Card) {
         self.card = card
         self.cardType = card.cardType
+        self.hasCardCastFromGraveyard = card.hasCardCastFromGraveyard
         self.hasCardFlashback = card.hasFlashback
         self.hasCardDefender = card.hasDefender
     }
@@ -264,6 +266,7 @@ struct CardShowView: View {
                         Button(action: {
                             let tmpCard = selectedCard
                             tmpCard.cardType = self.cardType
+                            tmpCard.hasCardCastFromGraveyard = self.hasCardCastFromGraveyard
                             tmpCard.hasFlashback = self.hasCardFlashback
                             tmpCard.hasDefender = self.hasCardDefender
                             if deckEditorViewModel.removeCardShouldBeAnimated(card: tmpCard) {
@@ -286,6 +289,7 @@ struct CardShowView: View {
                         Button(action: {
                             let tmpCard = selectedCard
                             tmpCard.cardType = self.cardType
+                            tmpCard.hasCardCastFromGraveyard = self.hasCardCastFromGraveyard
                             tmpCard.hasFlashback = self.hasCardFlashback
                             tmpCard.hasDefender = self.hasCardDefender
                             if deckEditorViewModel.addCardShouldBeAnimated(card: tmpCard) {
@@ -319,28 +323,44 @@ struct CardShowView: View {
             }
             
             // Enable/Disable flashback
+
             
-            Toggle(isOn: $hasCardFlashback) {
-                VStack(alignment: .leading) {
+            VStack(alignment: .leading) {
+                Toggle(isOn: $hasCardCastFromGraveyard) {
                     Text("Cast from graveyard")
                         .foregroundColor(.white)
                         .font(.title3)
-                    Text("then exile")
-                        .foregroundColor(.white)
-                        .font(.subheadline)
                 }
-            }
-            .padding(20).padding(.top, 50)
+                
+                if hasCardCastFromGraveyard {
+                    Toggle(isOn: $hasCardFlashback) {
+                        HStack(spacing: 15) {
+                            Color.white.frame(width: 1, height: 40).padding(.leading, 5)
+                            Text("Then exile")
+                                .foregroundColor(.white)
+                                .font(.title3)
+                        }
+                    }
+                }
+            }.frame(maxWidth: .infinity).padding(20).padding(.top, 50)
             
             .onChange(of: deckEditorViewModel.carouselIndex) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
+                    self.hasCardCastFromGraveyard = selectedCard.hasCardCastFromGraveyard
                     self.hasCardFlashback = selectedCard.hasFlashback
                     self.hasCardDefender = selectedCard.hasDefender
                 }
             }.onChange(of: cardType) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.selectedCard.cardType = cardType
+                }
+            }.onChange(of: hasCardCastFromGraveyard) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.selectedCard.hasCardCastFromGraveyard = self.hasCardCastFromGraveyard
+                    withAnimation(nil) {
+                        deckEditorViewModel.changeCardGraveyardFromSelectedDeck(card: selectedCard, newGraveyardValue: hasCardCastFromGraveyard)
+                    }
                 }
             }.onChange(of: hasCardFlashback) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -359,12 +379,14 @@ struct CardShowView: View {
             }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
+                    self.hasCardCastFromGraveyard = selectedCard.hasCardCastFromGraveyard
                     self.hasCardFlashback = selectedCard.hasFlashback
                     self.hasCardDefender = selectedCard.hasDefender
                 }
             }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
+                    self.hasCardCastFromGraveyard = selectedCard.hasCardCastFromGraveyard
                     self.hasCardFlashback = selectedCard.hasFlashback
                     self.hasCardDefender = selectedCard.hasDefender
                 }
@@ -887,13 +909,21 @@ struct CardOnDeckListView: View {
                     .font(.title)
                     .foregroundColor(.white)
             }
-            if card.hasFlashback {
-                Image(systemName: "arrow.clockwise")
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
-                    .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
-                    .offset(x: CardSize.width.normal / 3)
-                    .scaleEffect(UIDevice.isIPhone ? 0.7 : 1, anchor: .trailing)
+            if card.hasCardCastFromGraveyard {
+                ZStack {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                        .rotationEffect(.degrees(90))
+                    Text("1")
+                        .font(.system(size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .offset(x: -3)
+                        .opacity(card.hasCardCastFromGraveyard && card.hasFlashback ? 1 : 0)
+                }.offset(x: CardSize.width.normal / 3)
+                .shadow(color: Color("ShadowColor"), radius: 6, x: 0, y: 4)
+                .scaleEffect(UIDevice.isIPhone ? 0.7 : 1, anchor: .trailing)
             }
             if card.hasDefender {
                 ZStack {

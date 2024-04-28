@@ -97,6 +97,17 @@ class DeckEditorViewModel: ObservableObject {
         return false
     }
     
+    func cardHasFlashbackKeyword(keywords: [String]) -> Bool {
+        let keywordToSearch: [String] = ["flashback", "aftermath"]
+        
+        for keyword in keywords {
+            if keywordToSearch.contains(keyword.lowercased()) {
+                return true
+            }
+        }
+        return false
+    }
+    
     func cardHasDefenderKeyword(keywords: [String]) -> Bool {
         let keywordToSearch: [String] = ["defender"]
         
@@ -262,6 +273,49 @@ class DeckEditorViewModel: ObservableObject {
         showSaveButton = true
     }
     
+    func changeCardGraveyardFromSelectedDeck(card : Card, newGraveyardValue: Bool) {
+        
+        var deckSelected = getSelectedDeck(card: card)
+        
+        if selectedDeckListNumber == DeckSelectionNumber.deckList
+        {
+            if deckSelected.contains(card) {
+                
+                let tmpCard = deckSelected[deckSelected.firstIndex(of: card)!].recreateCard()
+                tmpCard.hasCardCastFromGraveyard = newGraveyardValue
+                
+                // Remove
+                deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected, removeCompletely: true)
+                saveToSelectedDeck(deckSelected: deckSelected, card: card)
+                
+                // Add
+                addCardToSelectedDeck(card: tmpCard, onlyAddOne: false)
+                saveToSelectedDeck(deckSelected: getSelectedDeck(card: tmpCard), card: tmpCard)
+                
+                // Changing main deck type change in tooStrong at the same time
+                deck.tooStrongPermanentsList = changeCardGraveyardValueFromSpecificDeck(card: card, newCardGraveyardValue: newGraveyardValue, deck: deck.tooStrongPermanentsList)
+            }
+        } else {
+            // MUST BE CLEANED
+            if deckSelected.firstIndex(of: card) != nil{
+                let tmpCard = deckSelected[deckSelected.firstIndex(of: card)!].recreateCard()
+                tmpCard.hasCardCastFromGraveyard = newGraveyardValue
+                
+                // Remove
+                deckSelected = removeCardFromSpecificDeck(card: card, deck: deckSelected, removeCompletely: true)
+                saveToSelectedDeck(deckSelected: deckSelected, card: card)
+                
+                // Add
+                addCardToSelectedDeck(card: tmpCard, onlyAddOne: false)
+                saveToSelectedDeck(deckSelected: getSelectedDeck(card: tmpCard), card: tmpCard)
+            } else {
+                deckSelected = changeCardGraveyardValueFromSpecificDeck(card: card, newCardGraveyardValue: newGraveyardValue, deck: deckSelected)
+                saveToSelectedDeck(deckSelected: deckSelected)
+            }
+        }
+        showSaveButton = true
+    }
+    
     // If cardToShow is in the selected deck, change the flashback boolean
     func changeCardFlashbackFromSelectedDeck(card : Card, newFlashbackValue: Bool) {
         
@@ -384,6 +438,18 @@ class DeckEditorViewModel: ObservableObject {
         return deck
     }
     
+    func changeCardGraveyardValueFromSpecificDeck(card : Card, newCardGraveyardValue: Bool, deck: [Card]) -> [Card] {
+        let tmpArray = deck
+        for i in 0..<tmpArray.count {
+            if tmpArray[i] == card {
+                tmpArray[i].hasCardCastFromGraveyard = newCardGraveyardValue
+                
+                return tmpArray
+            }
+        }
+        return deck
+    }
+    
     func changeCardFlashbackValueFromSpecificDeck(card : Card, newCardFlashbackValue: Bool, deck: [Card]) -> [Card] {
         let tmpArray = deck
         for i in 0..<tmpArray.count {
@@ -446,7 +512,9 @@ class DeckEditorViewModel: ObservableObject {
             if c == card {
                 let tmpCard = card.recreateCard()
                 tmpCard.cardType = c.cardType
+                tmpCard.hasCardCastFromGraveyard = c.hasCardCastFromGraveyard
                 tmpCard.hasFlashback = c.hasFlashback
+                tmpCard.hasDefender = c.hasDefender
                 return tmpCard
             }
         }
@@ -470,7 +538,8 @@ class DeckEditorViewModel: ObservableObject {
         static let powerfullPermanents = "## Powerfull Permanents ##"
         static let cardHaveFlashbackOLD = "YES"
         static let cardDontHaveFlashbackOLD = "NO"
-        static let cardHaveFlashback = "f"
+        static let cardHaveCastFromGraveyard = "f"
+        static let cardHaveFlashback = "e"
         static let cardHaveDefender = "d"
     }
 }
@@ -534,7 +603,7 @@ extension DeckEditorViewModel {
                             let frontUrl = DeckManager.imageUrlFromCustomId(cardIds[0])
                             let backUrl = DeckManager.imageUrlFromCustomId(cardIds.count >= 2 ? cardIds[1] : "")
                             
-                            let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: frontUrl, cardBackImageURL: backUrl, hasFlashback:  cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
+                            let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: frontUrl, cardBackImageURL: backUrl, hasCardCastFromGraveyard: cardEffects.2, hasFlashback:  cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
                             
                             card.cardCount = cardCount
                             addCardToSelectedDeck(card: card, onlyAddOne: false)
@@ -610,21 +679,25 @@ extension DeckEditorViewModel {
     func getCardDataString(card: Card) -> String {
         // For tokens we remove the set from the name
         let cardName = card.cardType == .token ? card.cardName.replacingOccurrences(of: card.specificSet, with: "") : card.cardName
-        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(cardSpecialEffectsToString(cardHasFlashback: card.hasFlashback, cardHasDefender: card.hasDefender)) \(cardName) \(card.cardOracleId) \(card.cardId)\n"
+        let cardData: String = "\(card.cardCount) \(card.specificSet) \(card.cardType) \(cardSpecialEffectsToString(cardHasFlashback: card.hasFlashback, cardHasDefender: card.hasDefender, cardHasCastFromGraveyard: card.hasCardCastFromGraveyard)) \(cardName) \(card.cardOracleId) \(card.cardId)\n"
         return cardData
     }
     
-    static func getCardSpecialEffects(effects: String) -> (Bool, Bool) {
+    static func getCardSpecialEffects(effects: String) -> (Bool, Bool, Bool) {
         // Old format
         if effects == DeckDataPattern.cardHaveFlashbackOLD || effects == DeckDataPattern.cardDontHaveFlashbackOLD {
-            return (effects == DeckDataPattern.cardHaveFlashbackOLD, false)
+            let hasOldFlashback = effects == DeckDataPattern.cardHaveFlashbackOLD
+            return (hasOldFlashback, false, hasOldFlashback)
         }
-        return (effects.contains(DeckDataPattern.cardHaveFlashback),
-                effects.contains(DeckDataPattern.cardHaveDefender))
+        
+        let hasCastFromGraveyard = effects.contains(DeckDataPattern.cardHaveCastFromGraveyard)
+        return (!effects.contains(DeckDataPattern.cardHaveFlashback) && hasCastFromGraveyard,
+                effects.contains(DeckDataPattern.cardHaveDefender),
+                hasCastFromGraveyard)
     }
     
-    private func cardSpecialEffectsToString(cardHasFlashback: Bool, cardHasDefender: Bool) -> String {
-        return "-\(cardHasFlashback ? DeckDataPattern.cardHaveFlashback : "")\(cardHasDefender ? DeckDataPattern.cardHaveDefender : "")"
+    private func cardSpecialEffectsToString(cardHasFlashback: Bool, cardHasDefender: Bool, cardHasCastFromGraveyard: Bool) -> String {
+        return "-\(cardHasCastFromGraveyard ? DeckDataPattern.cardHaveCastFromGraveyard : "")\(!cardHasFlashback && cardHasCastFromGraveyard ? DeckDataPattern.cardHaveFlashback : "")\(cardHasDefender ? DeckDataPattern.cardHaveDefender : "")"
     }
 }
 
@@ -711,7 +784,9 @@ extension DeckEditorViewModel {
                             if decodedData.data != nil {
                                 self.searchResult = []
                                 decodedData.data!.forEach {
-                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), hasDefender: self.cardHasDefenderKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
+                                    self.searchResult.append(CardFromCardSearch(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"),
+                                                                                hasCardCastFromGraveyard: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []),
+                                                                                hasFlashback: self.cardHasFlashbackKeyword(keywords: $0.keywords ?? []), hasDefender: self.cardHasDefenderKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? "", manaCost: $0.mana_cost ?? ""))
                                 }
                             }
                             self.searchProgressInfo = "Nothing found"
@@ -768,7 +843,10 @@ extension DeckEditorViewModel {
                                 self.cardToShowReprints = []
                                 decodedData.data!.forEach {
                                     if ($0.id ?? "") != card.cardId {
-                                        self.cardToShowReprints.append(Card(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"), hasFlashback: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []), hasDefender: self.cardHasDefenderKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? ""))
+                                        self.cardToShowReprints.append(Card(cardName: $0.name ?? "", cardType: self.getCardTypeFromTypeLine(typeLine: $0.type_line ?? "Artifact"),
+                                                                            hasCardCastFromGraveyard: self.cardHasGraveyardKeyword(keywords: $0.keywords ?? []),
+                                                                            hasFlashback: self.cardHasFlashbackKeyword(keywords: $0.keywords ?? []),
+                                                                            hasDefender: self.cardHasDefenderKeyword(keywords: $0.keywords ?? []), specificSet: $0.set ?? "", cardOracleId: $0.oracle_id ?? "", cardId: $0.id ?? ""))
                                     }
                                 }
                             }

@@ -17,6 +17,7 @@ class Card: Hashable, Identifiable, ObservableObject {
     let cardBackImageURL: String
     @Published var cardUIImage: Image = Image("BlackBackground")
     @Published var cardBackUIImage: Image = Image("BlackBackground")
+    var hasCardCastFromGraveyard: Bool
     var hasFlashback: Bool
     var hasDefender: Bool
     let specificSet: String
@@ -27,8 +28,9 @@ class Card: Hashable, Identifiable, ObservableObject {
     @Published var countersOnCard: Int = 0
     @Published var showFront = true
     
-    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardBackImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, hasDefender: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = ""){
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardBackImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasCardCastFromGraveyard: Bool = false, hasFlashback: Bool = false, hasDefender: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = ""){
         self.cardType = cardType
+        self.hasCardCastFromGraveyard = hasCardCastFromGraveyard
         self.hasFlashback = hasFlashback
         self.hasDefender = hasDefender
         self.cardUIImage = cardUIImage
@@ -62,7 +64,7 @@ class Card: Hashable, Identifiable, ObservableObject {
     }
     
     func recreateCard() -> Card {
-        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, cardBackImageURL: self.cardBackImageURL, hasFlashback: self.hasFlashback, hasDefender: self.hasDefender, specificSet: self.specificSet, cardOracleId: self.cardOracleId, cardId: self.cardId)
+        let tmpCard = Card(cardName: self.cardName, cardType: self.cardType, cardImageURL: self.cardImageURL, cardBackImageURL: self.cardBackImageURL, hasCardCastFromGraveyard: self.hasCardCastFromGraveyard, hasFlashback: self.hasFlashback, hasDefender: self.hasDefender, specificSet: self.specificSet, cardOracleId: self.cardOracleId, cardId: self.cardId)
         tmpCard.cardCount = self.cardCount
         tmpCard.cardUIImage = self.cardUIImage
         return tmpCard
@@ -119,9 +121,9 @@ class Card: Hashable, Identifiable, ObservableObject {
 class CardFromCardSearch: Card {
     let manaCost: String
     
-    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasFlashback: Bool = false, hasDefender: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = "", manaCost: String){
+    init(cardName: String, cardType: CardType, cardImageURL: String = "get-on-scryfall", cardUIImage: Image = Image("BlackBackground"), hasCardCastFromGraveyard: Bool = false, hasFlashback: Bool = false, hasDefender: Bool = false, specificSet: String = "", cardOracleId: String = "", cardId: String = "", manaCost: String){
         self.manaCost = manaCost
-        super.init(cardName: cardName, cardType: cardType, cardImageURL: cardImageURL, cardUIImage: cardUIImage, hasFlashback: hasFlashback, hasDefender: hasDefender, specificSet: specificSet, cardOracleId: cardOracleId, cardId: cardId)
+        super.init(cardName: cardName, cardType: cardType, cardImageURL: cardImageURL, cardUIImage: cardUIImage, hasCardCastFromGraveyard: hasCardCastFromGraveyard, hasFlashback: hasFlashback, hasDefender: hasDefender, specificSet: specificSet, cardOracleId: cardOracleId, cardId: cardId)
     }
     
     // From {3}{R}{W} to ["3", "R", "W"]

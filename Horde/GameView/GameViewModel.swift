@@ -140,6 +140,12 @@ class GameViewModel: ObservableObject {
                 addCardToBoard(card: cardsToCast.cardFromLibrary)
             }
             
+            for graveyard in cardsToCast.cardsFromGraveyard {
+                if !graveyard.hasFlashback && graveyard.cardType != .instant && graveyard.cardType != .sorcery {
+                    castCard(card: graveyard)
+                }
+            }
+            
             for token in cardsToCast.tokensFromLibrary {
                 castCard(card: token)
             }
@@ -386,14 +392,22 @@ class GameViewModel: ObservableObject {
         var cardsFromGraveyard: [Card] = []
         var i = 0
         while i < cardsOnGraveyard.count {
-            if cardsOnGraveyard[i].hasFlashback {
-                let tmpCard = cardsOnGraveyard.remove(at: i)
+            if cardsOnGraveyard[i].hasCardCastFromGraveyard {
+                let tmpCard = cardsOnGraveyard[i].recreateCard()
+                if cardsOnGraveyard[i].hasFlashback ||
+                    cardsOnGraveyard[i].cardType == .creature ||
+                    cardsOnGraveyard[i].cardType == .artifact ||
+                    cardsOnGraveyard[i].cardType == .enchantment ||
+                    cardsOnGraveyard[i].cardType == .token {
+                    print("has flashback")
+                    cardsOnGraveyard.remove(at: i)
+                    i -= 1
+                }
                 cardsFromGraveyard.append(tmpCard)
-                i -= 1
             }
             i += 1
         }
-        //cardsFromGraveyard = regroupSameCardInArray(cardArray: cardsFromGraveyard)
+        cardsFromGraveyard = regroupSameCardInArray(cardArray: cardsFromGraveyard)
         return cardsFromGraveyard
     }
     
@@ -402,6 +416,7 @@ class GameViewModel: ObservableObject {
             let tmpCard = card.recreateCard()
             tmpCard.cardCount = 1
             cardsOnGraveyard.append(tmpCard)
+            lastMilledToken = []
         } else {
             addNewLastMilledToken(card: card)
         }

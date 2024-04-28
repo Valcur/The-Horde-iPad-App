@@ -20,7 +20,7 @@ struct DeckBrowserView: View {
                 
                 SelectedDeckView(selectedDeck: deckBrowserVM.selectedDeck).shadow(radius: 5)
             }.background(GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true))
-        }
+        }.ignoresSafeArea()
     }
 }
 

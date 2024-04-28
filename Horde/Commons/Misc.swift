@@ -21,7 +21,7 @@ extension View {
     
     func blurredBackground() -> some View {
         self
-            .background( VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+            .background(VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
                 .cornerRadius(15)
                 .shadowed())
     }

@@ -20,28 +20,14 @@ struct GameView_iPhone: View {
     
     var body: some View {
         ZStack {
-            GradientView(gradientId: hordeAppViewModel.gradientId)
-                .onChange(of: gameIntroViewOpacity) { opacity in
-                    if opacity == 0 {
-                        lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
-                    }
-                }
-            
             VStack {
-                HordeBoardView_iPhone()
-                    .frame(height: CardSize_iPhone.height.normal * 2 + 10)
-                
                 Spacer()
                 
-                if hordeAppViewModel.gradientId == -1 {
-                    ControlBarView_iPhone().frame(height: 50).background(
-                        LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.7), Color.black.opacity(0.7), Color.black.opacity(0)]),
-                                                          startPoint: .bottom,
-                                                          endPoint: .top))
-                } else {
-                    ControlBarView_iPhone().frame(height: 50)
-                }
+                HordeBoardView_iPhone()
+                    .frame(height: CardSize_iPhone.height.normal * 2 + 10)
+                    .padding(.bottom, UIApplication.shared.windows.first?.safeAreaInsets.bottom == 0 ? 15 : 0)
             }
+            
             
             if lifepointsViewModel != nil && hordeAppViewModel.useLifepointsCounter && lifepointsViewModel != nil {
                 HStack {
@@ -52,10 +38,11 @@ struct GameView_iPhone: View {
                         .cornerRadius(15)
                         .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)
                         .scaleEffect(0.7, anchor: .trailing)
-                }.padding(.trailing, (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0))
+                        .padding(.trailing, 5)
+                }.ignoresSafeArea()
             }
             
-            Group {
+            ZStack(alignment: .bottomTrailing) {
                 HandView()
                 
                 if gameViewModel.hand.count > 0 {
@@ -63,8 +50,16 @@ struct GameView_iPhone: View {
                         gameViewModel.playHand()
                     }, label: {
                         PurpleButtonLabel(text: "Play hand")
-                    }).scaleEffect(0.7).position(x: UIScreen.main.bounds.width - 70, y: 25)
+                    }).scaleEffect(0.7, anchor: .topTrailing).offset(y: 25)
                 }
+            }
+            
+            VStack {
+                ControlBarView_iPhone()
+                    .frame(height: 50)
+                    .background(Color.black.opacity(0.65).ignoresSafeArea())
+                
+                Spacer()
             }
             
             ZStack {
@@ -94,80 +89,89 @@ struct GameView_iPhone: View {
                 }
             }.transition(.move(edge: .top))
             
-            StrongPermanentView()
-                .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
-                .onChange(of: gameViewModel.shouldShowStrongPermanent) { show in
-                    if show {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            strongPermanentsViewOpacity = 1
-                        }
-                    } else {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            strongPermanentsViewOpacity = 0
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            gameViewModel.strongPermanentsToSpawn = []
-                        }
-                    }
-                }
-            
-            CastedCardView_iPhone()
-                .opacity(castedCardViewOpacity)
-                .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep == 1 {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            castedCardViewOpacity = 1
-                        }
-                    }
-                    if gameViewModel.turnStep == 2 {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            castedCardViewOpacity = 0
+            ZStack {
+                StrongPermanentView()
+                    .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
+                    .onChange(of: gameViewModel.shouldShowStrongPermanent) { show in
+                        if show {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                strongPermanentsViewOpacity = 1
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                strongPermanentsViewOpacity = 0
+                            }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardsFromHand: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
+                                gameViewModel.strongPermanentsToSpawn = []
                             }
                         }
                     }
-                }
-            
-            GraveyardView_iPhone()
-                .opacity(graveyardViewOpacity)
-                .onChange(of: gameViewModel.showGraveyard) { _ in
-                    if gameViewModel.showGraveyard {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            graveyardViewOpacity = 1
+                
+                CastedCardView_iPhone()
+                    .opacity(castedCardViewOpacity)
+                    .onChange(of: gameViewModel.turnStep) { _ in
+                        if gameViewModel.turnStep == 1 {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                castedCardViewOpacity = 1
+                            }
                         }
-                    } else {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            graveyardViewOpacity = 0
-                        }
-                    }
-                }
-            
-            ZoomOnCardView()
-                .opacity(zoomViewOpacity)
-                .scaleEffect(1.4)
-                .onChange(of: gameViewModel.shouldZoomOnCard) { _ in
-                    if gameViewModel.shouldZoomOnCard {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            zoomViewOpacity = 1
-                        }
-                    } else {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            zoomViewOpacity = 0
+                        if gameViewModel.turnStep == 2 {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                castedCardViewOpacity = 0
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardsFromHand: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
+                                }
+                            }
                         }
                     }
-                }
-            
-            GameIntroView()
-                .opacity(gameIntroViewOpacity)
-                .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep >= 0 {
-                        withAnimation(.easeInOut(duration: 0.3).delay(0.1)) {
-                            gameIntroViewOpacity = 0
+                
+                GraveyardView_iPhone()
+                    .opacity(graveyardViewOpacity)
+                    .onChange(of: gameViewModel.showGraveyard) { _ in
+                        if gameViewModel.showGraveyard {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                graveyardViewOpacity = 1
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                graveyardViewOpacity = 0
+                            }
                         }
                     }
+                
+                ZoomOnCardView()
+                    .opacity(zoomViewOpacity)
+                    .scaleEffect(1.4)
+                    .onChange(of: gameViewModel.shouldZoomOnCard) { _ in
+                        if gameViewModel.shouldZoomOnCard {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                zoomViewOpacity = 1
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                zoomViewOpacity = 0
+                            }
+                        }
+                    }
+                
+                GameIntroView()
+                    .opacity(gameIntroViewOpacity)
+                    .onChange(of: gameViewModel.turnStep) { _ in
+                        if gameViewModel.turnStep >= 0 {
+                            withAnimation(.easeInOut(duration: 0.3).delay(0.1)) {
+                                gameIntroViewOpacity = 0
+                            }
+                        }
+                    }
+            }.ignoresSafeArea()
+        }
+        .background(
+            GradientView(gradientId: hordeAppViewModel.gradientId)
+            .onChange(of: gameIntroViewOpacity) { opacity in
+                if opacity == 0 {
+                    lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
                 }
-        }.ignoresSafeArea()
+            })
     }
 }
 
@@ -332,7 +336,9 @@ struct HordeBoardView_iPhone: View {
                         .foregroundColor(.white)
                         .offset(y: -deckThickness)
                 }
-            }.frame(height: CardSize_iPhone.height.normal * 2 + 10).padding(.top, 20).padding(.leading, (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0) + 5)
+            }
+            .frame(height: CardSize_iPhone.height.normal * 2 + 10)
+            .padding(.top, 20)
             
             // Board
             
@@ -856,6 +862,27 @@ struct CardOnBoardView_iPhone: View {
                             .offset(y: -CardSize.height.big / 3.5)
                             .scaleEffect(0.65)
                     }.frame(width: CardSize_iPhone.width.normal)
+                }
+                if card.isDoubleFacedCard {
+                    HStack {
+                        if card.cardCount > 1 {
+                            Button(action: {
+                                gameViewModel.flipOne(card: card)
+                            }, label: {
+                                ZStack {
+                                    ButtonLabelWithImage(imageName: "arrow.triangle.2.circlepath", customFont: .title)
+                                    Text("1").headline()
+                                }
+                            }).offset(y: CardSize.height.normal / 2 - 15)
+                        }
+                        
+                        Button(action: {
+                            card.showFront.toggle()
+                            gameViewModel.regroupBoard()
+                        }, label: {
+                            ButtonLabelWithImage(imageName: "arrow.triangle.2.circlepath", customFont: .title)
+                        }).offset(y: CardSize.height.normal / 2 - 15)
+                    }
                 }
             }
             .shadow(color: Color("ShadowColor"), radius: 3, x: 0, y: 2)

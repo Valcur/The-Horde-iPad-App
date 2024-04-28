@@ -54,7 +54,7 @@ struct DeckManager {
                         let frontUrl = DeckManager.imageUrlFromCustomId(cardIds[0])
                         let backUrl = DeckManager.imageUrlFromCustomId(cardIds.count >= 2 ? cardIds[1] : "")
      
-                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: frontUrl, cardBackImageURL: backUrl, hasFlashback: cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
+                        let card = Card(cardName: cardName, cardType: getCardTypeFromTypeLine(typeLine: cardDataArray[2]), cardImageURL: frontUrl, cardBackImageURL: backUrl, hasCardCastFromGraveyard: cardEffects.2, hasFlashback: cardEffects.0, hasDefender: cardEffects.1, specificSet: cardDataArray[1], cardOracleId: cardDataArray[cardDataArray.count - 2], cardId: cardId)
                         
                         card.cardCount = cardCount
                         deck = addCardToSelectedDeck(card: card, selectedDeckListNumber: selectedDeckListNumber, deckList: deck)

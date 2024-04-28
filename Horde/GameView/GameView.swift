@@ -20,28 +20,13 @@ struct GameView: View {
     
     var body: some View {
         ZStack {
-            GradientView(gradientId: hordeAppViewModel.gradientId)
-                .onChange(of: gameIntroViewOpacity) { opacity in
-                    if opacity == 0 {
-                        lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
-                    }
-                }
-            
             VStack {
-                HordeBoardView()
-                    .frame(height: CardSize.height.normal * 2 + 60)
-                
                 Spacer()
                 
-                if hordeAppViewModel.gradientId == -1 {
-                    ControlBarView().background(
-                        LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.7), Color.black.opacity(0.7), Color.black.opacity(0)]),
-                                                          startPoint: .bottom,
-                                                          endPoint: .top))
-                } else {
-                    ControlBarView()
-                }
-            }.ignoresSafeArea()
+                HordeBoardView()
+                    .frame(height: CardSize.height.normal * 2 + 60)
+                    .padding(.bottom, UIApplication.shared.windows.first?.safeAreaInsets.bottom == 0 ? 20 : 0)
+            }
                 
             if lifepointsViewModel != nil && gameViewModel.turnStep != -1 && hordeAppViewModel.useLifepointsCounter {
                 HStack {
@@ -55,7 +40,7 @@ struct GameView: View {
                 }
             }
             
-            Group {
+            ZStack(alignment: .bottomTrailing) {
                 HandView()
                 
                 if gameViewModel.hand.count > 0 {
@@ -63,8 +48,15 @@ struct GameView: View {
                         gameViewModel.playHand()
                     }, label: {
                         PurpleButtonLabel(text: "Play hand")
-                    }).position(x: UIScreen.main.bounds.width - 85, y: 35)
+                    })
                 }
+            }
+            
+            VStack {
+                ControlBarView()
+                    .background(Color.black.opacity(0.65).ignoresSafeArea())
+                
+                Spacer()
             }
             
             ZStack {
@@ -93,84 +85,92 @@ struct GameView: View {
                 }
             }.transition(.move(edge: .top))
 
-            StrongPermanentView()
-                .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
-                .onChange(of: gameViewModel.shouldShowStrongPermanent) { show in
-                    if show {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            strongPermanentsViewOpacity = 1
-                        }
-                    } else {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            strongPermanentsViewOpacity = 0
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            gameViewModel.strongPermanentsToSpawn = []
-                        }
-                    }
-                }
-
-            CastedCardView()
-                .opacity(castedCardViewOpacity)
-                .ignoresSafeArea()
-                .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep == 1 {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            castedCardViewOpacity = 1
-                        }
-                    }
-                    if gameViewModel.turnStep == 2 {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            castedCardViewOpacity = 0
+            ZStack {
+                StrongPermanentView()
+                    .opacity(castedCardViewOpacity == 1 ? 0 : strongPermanentsViewOpacity)
+                    .onChange(of: gameViewModel.shouldShowStrongPermanent) { show in
+                        if show {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                strongPermanentsViewOpacity = 1
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                strongPermanentsViewOpacity = 0
+                            }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardsFromHand: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
+                                gameViewModel.strongPermanentsToSpawn = []
                             }
                         }
                     }
-                }
-            
-            GraveyardView()
-                .opacity(graveyardViewOpacity)
-                .ignoresSafeArea()
-                .onChange(of: gameViewModel.showGraveyard) { _ in
-                    if gameViewModel.showGraveyard {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            graveyardViewOpacity = 1
+                
+                CastedCardView()
+                    .opacity(castedCardViewOpacity)
+                    .ignoresSafeArea()
+                    .onChange(of: gameViewModel.turnStep) { _ in
+                        if gameViewModel.turnStep == 1 {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                castedCardViewOpacity = 1
+                            }
                         }
-                    } else {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            graveyardViewOpacity = 0
-                        }
-                    }
-                }
-            
-            ZoomOnCardView()
-                .opacity(zoomViewOpacity)
-                .scaleEffect(1.4)
-                .onChange(of: gameViewModel.shouldZoomOnCard) { _ in
-                    if gameViewModel.shouldZoomOnCard {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            zoomViewOpacity = 1
-                        }
-                    } else {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            zoomViewOpacity = 0
+                        if gameViewModel.turnStep == 2 {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                castedCardViewOpacity = 0
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    gameViewModel.cardsToCast = CardsToCast(cardsFromGraveyard: [], tokensFromLibrary: [], cardsFromHand: [], cardFromLibrary: Card(cardName: "", cardType: .token, cardImageURL: ""))
+                                }
+                            }
                         }
                     }
-                }
-            
-            GameIntroView()
-                .opacity(gameIntroViewOpacity)
-                .ignoresSafeArea()
-                .onChange(of: gameViewModel.turnStep) { _ in
-                    if gameViewModel.turnStep >= 0 {
-                        withAnimation(.easeInOut(duration: 0.3).delay(0.1)) {
-                            gameIntroViewOpacity = 0
+                
+                GraveyardView()
+                    .opacity(graveyardViewOpacity)
+                    .ignoresSafeArea()
+                    .onChange(of: gameViewModel.showGraveyard) { _ in
+                        if gameViewModel.showGraveyard {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                graveyardViewOpacity = 1
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                graveyardViewOpacity = 0
+                            }
                         }
                     }
-                }
+                
+                ZoomOnCardView()
+                    .opacity(zoomViewOpacity)
+                    .scaleEffect(1.4)
+                    .onChange(of: gameViewModel.shouldZoomOnCard) { _ in
+                        if gameViewModel.shouldZoomOnCard {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                zoomViewOpacity = 1
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                zoomViewOpacity = 0
+                            }
+                        }
+                    }
+                
+                GameIntroView()
+                    .opacity(gameIntroViewOpacity)
+                    .onChange(of: gameViewModel.turnStep) { _ in
+                        if gameViewModel.turnStep >= 0 {
+                            withAnimation(.easeInOut(duration: 0.3).delay(0.1)) {
+                                gameIntroViewOpacity = 0
+                            }
+                        }
+                    }
+            }.ignoresSafeArea()
             
-        }.ignoresSafeArea()
+        }
+        .background(
+            GradientView(gradientId: hordeAppViewModel.gradientId)
+            .onChange(of: gameIntroViewOpacity) { opacity in
+                if opacity == 0 {
+                    lifepointsViewModel = LifePointsViewModel(startingLife: hordeAppViewModel.survivorStartingLife)
+                }
+            })
     }
 }
 
@@ -940,8 +940,10 @@ struct CardOnBoardView: View {
                     switch value {
                         case .second(true, nil): //This means the first Gesture completed
                             state = true //Update the GestureState
-                        gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
-                        gameViewModel.cardToZoomIn = self.card
+                        DispatchQueue.main.async {
+                            gameViewModel.shouldZoomOnCard = true //Update the @ObservedObject property
+                            gameViewModel.cardToZoomIn = self.card
+                        }
                         default: break
                     }
                 })

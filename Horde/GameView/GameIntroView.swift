@@ -20,7 +20,7 @@ struct GameIntroView: View {
             VStack(spacing: 50) {
                 IntroSetupView(isDeckBeingGenerated: $isDeckBeingGenerated)
             }.transition(AnyTransition.slide)
-        }.ignoresSafeArea().frame(width: UIScreen.main.bounds.width)
+        }.ignoresSafeArea()//.frame(width: UIScreen.main.bounds.width)
     }
 }
 

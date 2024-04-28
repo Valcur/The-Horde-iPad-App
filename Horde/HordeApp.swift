@@ -27,7 +27,7 @@ struct HordeAppNoHomeIndicatorView: View {
         GeometryReader { _ in
             HordeAppView(hordeVM: hordeAppViewModel)
                 .environmentObject(hordeAppViewModel)
-        }.ignoresSafeArea()
+        }
             .onAppear() {
                 UIApplication.shared.isIdleTimerDisabled = true
             }

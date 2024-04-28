@@ -41,7 +41,7 @@ struct DeckEditorView_iPhone: View {
                         }
                     }
             }
-        }.ignoresSafeArea()
+        }
     }
 }
 
@@ -54,13 +54,14 @@ struct RightPanelView_iPhone: View {
         ZStack {
             GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true)
             VStack(spacing: 0) {
-                TopTopControlRowView_iPhone().background(Color("DarkGray"))
+                TopTopControlRowView_iPhone()
+                    .background(Color("DarkGray").ignoresSafeArea())
                 TopControlRowView_iPhone()
                 Spacer()
-                DeckListView()
+                DeckListView().ignoresSafeArea(edges: [.trailing, .bottom])
                 Spacer()
 
-            }.ignoresSafeArea()
+            }
         }
     }
 }
@@ -227,7 +228,7 @@ struct TopControlRowView_iPhone: View {
                 DeckListSelectorView_iPhone(deckListName: "Start", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.weakPermanentsList)
                 Spacer()
                 DeckListSelectorView_iPhone(deckListName: "Milestones", deckListNumber: DeckEditorViewModel.DeckSelectionNumber.powerfullPermanentsList)
-            }.frame(height: 28).background(Color("DarkGray")).shadowed()
+            }.frame(height: 28).background(Color("DarkGray").shadowed().ignoresSafeArea())
             
             HStack() {
                 Text(deckEditorViewModel.deckSelectionInfo)
@@ -284,18 +285,21 @@ struct LeftPanelView_iPhone: View {
     var body: some View {
         ZStack {
             GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true)
-            VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
+            
             
             ZStack {
                 CardSearchView_iPhone()
                 ZStack {
                     if deckEditorViewModel.cardToShow != nil {
-                        GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true).transition(.move(edge: .trailing))
-                        VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).transition(.move(edge: .trailing))
-                        CardShowView_iPhone(card: deckEditorViewModel.cardToShow!).transition(.move(edge: .trailing))
+                        ZStack {
+                            GradientView(gradientId: hordeAppViewModel.gradientId, colorOnly: true).transition(.move(edge: .trailing))
+                            CardShowView_iPhone(card: deckEditorViewModel.cardToShow!).transition(.move(edge: .trailing))
+                                .background(VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).ignoresSafeArea())
+                        }
+                        
                     }
                 }.animation(.easeInOut(duration: 0.3), value: deckEditorViewModel.cardToShow)
-            }
+            }.background(VisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark)).ignoresSafeArea())
         }
     }
 }
@@ -305,10 +309,9 @@ struct CardShowView_iPhone: View {
     @EnvironmentObject var deckEditorViewModel: DeckEditorViewModel
     @State var card: Card
     @State var cardType: CardType
+    @State var hasCardCastFromGraveyard: Bool
     @State var hasCardFlashback: Bool
     @State var hasCardDefender: Bool
-    
-    private let gradient = Gradient(colors: [Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.3), Color(.sRGB, red: 0, green: 0, blue: 0, opacity: 0.0)])
     
     private var selectedCard: Card {
         return deckEditorViewModel.changeCardToFitCardInSelectedDeck(card: self.getSelectedCardFromCarousel())
@@ -317,6 +320,7 @@ struct CardShowView_iPhone: View {
     init(card: Card) {
         self.card = card
         self.cardType = card.cardType
+        self.hasCardCastFromGraveyard = card.hasCardCastFromGraveyard
         self.hasCardFlashback = card.hasFlashback
         self.hasCardDefender = card.hasDefender
     }
@@ -341,6 +345,7 @@ struct CardShowView_iPhone: View {
                         Button(action: {
                             let tmpCard = selectedCard
                             tmpCard.cardType = self.cardType
+                            tmpCard.hasCardCastFromGraveyard = self.hasCardCastFromGraveyard
                             tmpCard.hasFlashback = self.hasCardFlashback
                             if deckEditorViewModel.removeCardShouldBeAnimated(card: tmpCard) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -362,6 +367,7 @@ struct CardShowView_iPhone: View {
                         Button(action: {
                             let tmpCard = selectedCard
                             tmpCard.cardType = self.cardType
+                            tmpCard.hasCardCastFromGraveyard = self.hasCardCastFromGraveyard
                             tmpCard.hasFlashback = self.hasCardFlashback
                             if deckEditorViewModel.addCardShouldBeAnimated(card: tmpCard) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -380,8 +386,6 @@ struct CardShowView_iPhone: View {
                     }.offset(y: 25)
                 }.padding(.horizontal, 10).padding(.top, 2)
                 
-                LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom).frame(height: 40)
-                
                 // Return Button
                 Button(action: {
                     deckEditorViewModel.cardToShow = nil
@@ -395,26 +399,43 @@ struct CardShowView_iPhone: View {
             
             // Enable/Disable flashback
             
-            Toggle(isOn: $hasCardFlashback) {
-                VStack(alignment: .leading) {
+            VStack(alignment: .leading) {
+                Toggle(isOn: $hasCardCastFromGraveyard) {
                     Text("Cast from graveyard")
                         .foregroundColor(.white)
                         .font(.body)
-                    Text("then exile")
-                        .foregroundColor(.white)
-                        .font(.subheadline)
-                }.frame(width: EditorSize.cardSearchPanelWidth)
-            }.padding(.top, 35)
-            .scaleEffect(0.7).frame(width: EditorSize.cardSearchPanelWidth)
+                }
+                
+                if hasCardCastFromGraveyard {
+                    Toggle(isOn: $hasCardFlashback) {
+                        HStack(spacing: 15) {
+                            Color.white.frame(width: 1, height: 30).padding(.leading, 5)
+                            Text("Then exile")
+                                .foregroundColor(.white)
+                                .font(.body)
+                        }
+                    }
+                }
+            }.frame(width: EditorSize.cardSearchPanelWidth * 1.3)
+            .scaleEffect(0.7, anchor: .top).frame(width: EditorSize.cardSearchPanelWidth)
+            .padding(.top, 35)
             .onChange(of: deckEditorViewModel.carouselIndex) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
+                    self.hasCardCastFromGraveyard = selectedCard.hasCardCastFromGraveyard
                     self.hasCardFlashback = selectedCard.hasFlashback
                     self.hasCardDefender = selectedCard.hasDefender
                 }
             }.onChange(of: cardType) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.selectedCard.cardType = cardType
+                }
+            }.onChange(of: hasCardCastFromGraveyard) { _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.selectedCard.hasCardCastFromGraveyard = self.hasCardCastFromGraveyard
+                    withAnimation(nil) {
+                        deckEditorViewModel.changeCardGraveyardFromSelectedDeck(card: selectedCard, newGraveyardValue: hasCardCastFromGraveyard)
+                    }
                 }
             }.onChange(of: hasCardFlashback) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -433,12 +454,14 @@ struct CardShowView_iPhone: View {
             }.onChange(of: deckEditorViewModel.selectedDeckListNumber) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
+                    self.hasCardCastFromGraveyard = selectedCard.hasCardCastFromGraveyard
                     self.hasCardFlashback = selectedCard.hasFlashback
                     self.hasCardDefender = selectedCard.hasDefender
                 }
             }.onChange(of: deckEditorViewModel.cardToShow) { _ in
                 withAnimation(.easeInOut(duration: 0.3)) {
                     self.cardType = selectedCard.cardType
+                    self.hasCardCastFromGraveyard = selectedCard.hasCardCastFromGraveyard
                     self.hasCardFlashback = selectedCard.hasFlashback
                     self.hasCardDefender = selectedCard.hasDefender
                 }
@@ -452,9 +475,10 @@ struct CardShowView_iPhone: View {
                         Text("Can't attack")
                             .foregroundColor(.white)
                             .font(.body)
-                    }.frame(width: EditorSize.cardSearchPanelWidth)
+                    }
                 }
-                .padding(.horizontal, 20).padding(.top, 0).padding(.bottom, 10)
+                .frame(width: EditorSize.cardSearchPanelWidth * 1.3)
+                .padding(.top, 0).padding(.bottom, 10)
                 .scaleEffect(0.7).frame(width: EditorSize.cardSearchPanelWidth)
                 
                 // Select card type
